@@ -25,7 +25,7 @@ export async function sendEmail(_prevState: unknown, formData: FormData) {
 
 	try {
 		await resend.emails.send({
-			from: "Contact <onboarding@resend.dev>", // Utilise ton domaine verifié en prod
+			from: "Portfolio <noreply@willisback.fr>",
 			to: "william.derue@gmail.com",
 			subject: `[Portfolio] ${validatedFields.data.sujet}`,
 			text: `De: ${validatedFields.data.email}\n\n${validatedFields.data.message}`,
