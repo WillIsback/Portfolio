@@ -27,11 +27,11 @@ function parseFilters(params: URLSearchParams): ProjectFilters {
 	};
 }
 
-export default function ProjectGrid() {
+// Composant interne qui utilise useSearchParams
+function ProjectGridContent() {
 	const searchParams = useSearchParams();
 	const filters = parseFilters(searchParams);
 	const { projects, error, isLoading } = useProjects(filters);
-	console.log(projects);
 
 	return (
 		<section className="space-y-6">
@@ -61,5 +61,14 @@ export default function ProjectGrid() {
 				)}
 			</ErrorBoundary>
 		</section>
+	);
+}
+
+// Export avec Suspense boundary pour le pre-rendering
+export default function ProjectGrid() {
+	return (
+		<Suspense fallback={<ProjectGridSkeleton />}>
+			<ProjectGridContent />
+		</Suspense>
 	);
 }

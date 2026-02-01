@@ -1,9 +1,19 @@
 "use server";
 
 import { unstable_cache } from "next/cache";
-import prisma from "@/lib/db";
+import {
+	getProjectsFromJson,
+	type NormalizedProject,
+} from "@/lib/projects-data";
 import { type ProjectFilters, ProjectFiltersSchema } from "@/schemas";
-import type { Prisma } from "../../prisma/generated/prisma/client";
+
+// Déterminer si on utilise Prisma ou JSON
+// Sur Vercel (production), on utilise JSON car SQLite n'est pas supporté
+// La variable VERCEL est automatiquement définie par Vercel lors du build
+const USE_JSON_DATA =
+	process.env.VERCEL === "1" ||
+	process.env.USE_JSON_DATA === "true" ||
+	process.env.NODE_ENV === "production";
 
 // Simple rate limiter en mémoire (désactivé en développement)
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
@@ -11,8 +21,8 @@ const RATE_LIMIT_WINDOW = 60000; // 1 minute
 const RATE_LIMIT_MAX = 100; // 100 requêtes par minute
 const IS_DEV = process.env.NODE_ENV === "development";
 
-// Cache duration: 5 minutes en prod, false en dev pour toujours avoir les données fraîches
-// const CACHE_REVALIDATE = IS_DEV ? false : 300;
+// Type pour le projet retourné
+export type ProjectWithRelations = NormalizedProject;
 
 function checkRateLimit(identifier: string): boolean {
 	// Désactiver le rate limiting en développement
@@ -34,14 +44,20 @@ function checkRateLimit(identifier: string): boolean {
 	return true;
 }
 
-// Type pour le projet retourné avec ses relations
-export type ProjectWithRelations = Awaited<
-	ReturnType<typeof getProjectsFromDb>
->[number];
+// Fonction de base pour récupérer les projets depuis Prisma
+async function getProjectsFromDb(
+	filters?: ProjectFilters,
+): Promise<NormalizedProject[]> {
+	// Import dynamique de Prisma seulement si nécessaire (évite l'erreur au build sur Vercel)
+	if (USE_JSON_DATA) {
+		return getProjectsFromJson(filters);
+	}
 
-// Fonction de base pour récupérer les projets (non cachée)
-async function getProjectsFromDb(filters?: ProjectFilters) {
-	const where: Prisma.ProjectWhereInput = {};
+	// Import dynamique pour éviter l'erreur de build sur Vercel
+	const { default: prisma } = await import("@/lib/db");
+
+	// biome-ignore lint/suspicious/noExplicitAny: Prisma types are dynamically imported
+	const where: any = {};
 
 	if (filters?.search) {
 		where.OR = [
@@ -90,7 +106,7 @@ async function getProjectsFromDb(filters?: ProjectFilters) {
 		};
 	}
 
-	return prisma.project.findMany({
+	const dbProjects = await prisma.project.findMany({
 		where,
 		select: {
 			id: true,
@@ -111,6 +127,16 @@ async function getProjectsFromDb(filters?: ProjectFilters) {
 		},
 		orderBy: { lastUpdate: "desc" },
 	});
+
+	// Transformer en NormalizedProject
+	return dbProjects.map((p) => ({
+		...p,
+		languages: p.languages.map((l) => ({ language: l.language })),
+		databases: p.databases.map((d) => ({ database: d.database })),
+		backends: p.backends.map((b) => ({ backend: b.backend })),
+		frontends: p.frontends.map((f) => ({ frontend: f.frontend })),
+		devops: p.devops.map((d) => ({ devops: d.devops })),
+	}));
 }
 
 // Server Action principale avec caching et rate limiting
@@ -156,6 +182,14 @@ export async function getProjectById(id: number) {
 		throw new Error("Trop de requêtes. Veuillez réessayer plus tard.");
 	}
 
+	// Utiliser JSON sur Vercel
+	if (USE_JSON_DATA) {
+		const projects = getProjectsFromJson();
+		return projects.find((p) => p.id === id) || null;
+	}
+
+	const { default: prisma } = await import("@/lib/db");
+
 	const getCachedProject = unstable_cache(
 		async () =>
 			prisma.project.findUnique({
@@ -194,6 +228,34 @@ export async function getFilterOptions() {
 	if (!checkRateLimit(identifier)) {
 		throw new Error("Trop de requêtes. Veuillez réessayer plus tard.");
 	}
+
+	// Utiliser JSON sur Vercel
+	if (USE_JSON_DATA) {
+		const projects = getProjectsFromJson();
+		const languages = new Set<string>();
+		const databases = new Set<string>();
+		const backends = new Set<string>();
+		const frontends = new Set<string>();
+		const devops = new Set<string>();
+
+		for (const p of projects) {
+			for (const l of p.languages) languages.add(l.language);
+			for (const d of p.databases) databases.add(d.database);
+			for (const b of p.backends) backends.add(b.backend);
+			for (const f of p.frontends) frontends.add(f.frontend);
+			for (const d of p.devops) devops.add(d.devops);
+		}
+
+		return {
+			languages: Array.from(languages),
+			databases: Array.from(databases),
+			backends: Array.from(backends),
+			frontends: Array.from(frontends),
+			devops: Array.from(devops),
+		};
+	}
+
+	const { default: prisma } = await import("@/lib/db");
 
 	const getCachedOptions = unstable_cache(
 		async () => {
