@@ -20,6 +20,7 @@ const initialFormValues = { email: "", sujet: "", message: "" };
 
 export default function Contact() {
 	const contactBtnRef = useRef<HTMLButtonElement>(null);
+	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
 
 	const {
@@ -37,31 +38,29 @@ export default function Contact() {
 
 	// Gestion des réponses serveur
 	useEffect(() => {
-		if (!state) return;
+		// Éviter de traiter le même état plusieurs fois
+		if (!state || state === lastHandledState.current) return;
+		lastHandledState.current = state;
 
-		const handleStateChange = () => {
-			if (state.success) {
-				toast.success("Message envoyé !", {
-					description:
-						"Votre message a bien été envoyé. Je vous répondrai rapidement.",
+		if (state.success) {
+			toast.success("Message envoyé !", {
+				description:
+					"Votre message a bien été envoyé. Je vous répondrai rapidement.",
+			});
+			resetForm();
+		}
+
+		if (state.error) {
+			if (typeof state.error === "string") {
+				toast.error("Erreur d'envoi", {
+					description: state.error,
 				});
-				resetForm();
+			} else {
+				toast.error("Erreurs de validation", {
+					description: "Veuillez vérifier les champs du formulaire.",
+				});
 			}
-
-			if (state.error) {
-				if (typeof state.error === "string") {
-					toast.error("Erreur d'envoi", {
-						description: state.error,
-					});
-				} else {
-					toast.error("Erreurs de validation", {
-						description: "Veuillez vérifier les champs du formulaire.",
-					});
-				}
-			}
-		};
-
-		handleStateChange();
+		}
 	}, [state, resetForm]);
 
 	return (

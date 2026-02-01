@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { z } from "zod";
 
 type FormErrors<T> = Partial<Record<keyof T, string>>;
@@ -47,10 +47,10 @@ export function useFormValidation<T extends Record<string, unknown>>({
 		setTouched((prev) => ({ ...prev, [name]: true }));
 	};
 
-	const resetForm = () => {
+	const resetForm = useCallback(() => {
 		setFormData(initialValues);
 		setTouched({});
-	};
+	}, [initialValues]);
 
 	const getFieldError = (field: keyof T): string | undefined => {
 		return touched[field] ? errors[field] : undefined;

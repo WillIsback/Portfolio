@@ -3,8 +3,6 @@
 import { Resend } from "resend";
 import { z } from "zod";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // Schéma de validation
 const schema = z.object({
 	email: z.email("Adresse email invalide"),
@@ -24,6 +22,7 @@ export async function sendEmail(_prevState: unknown, formData: FormData) {
 	}
 
 	try {
+		const resend = new Resend(process.env.RESEND_API_KEY);
 		await resend.emails.send({
 			from: "Portfolio <noreply@willisback.fr>",
 			to: "william.derue@gmail.com",
