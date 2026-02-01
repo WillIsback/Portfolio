@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Enum pour les bases de données
+enum Database {
+  Postgresql
+  MongoDB
+  Informix
+  SQLite
+}
+
+// Enum pour les backends
+enum BackendApi {
+  FastAPI
+  Fastify
+  ExpressJs
+}
+
+// Enum pour les frameworks frontend
+enum Frontend {
+  React
+  NextJs
+  Tanstack
+  Svelte
+  SvelteKit
+}
+
+// Enum pour les outils DevOps
+enum DevOps {
+  Docker
+  GithubActions
+}
+
+// Enum pour les langages
+enum Language {
+  Python
+  TypeScript
+  JavaScript
+  Rust
+}
+
+// Modèle principal Project
+model Project {
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String
+  imagePath     String?
+  github        String?
+  lastUpdate    DateTime?
+  isPrivate     Boolean  @default(false)
+  isAiGenerated Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations many-to-many via tables de jonction
+  languages   ProjectLanguage[]
+  databases   ProjectDatabase[]
+  backends    ProjectBackend[]
+  frontends   ProjectFrontend[]
+  devops      ProjectDevOps[]
+}
+
+// Tables de jonction pour les relations many-to-many
+model ProjectLanguage {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  language  Language
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, language])
+}
+
+model ProjectDatabase {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  database  Database
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, database])
+}
+
+model ProjectBackend {
+  id        Int        @id @default(autoincrement())
+  projectId Int
+  backend   BackendApi
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, backend])
+}
+
+model ProjectFrontend {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  frontend  Frontend
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, frontend])
+}
+
+model ProjectDevOps {
+  id        Int     @id @default(autoincrement())
+  projectId Int
+  devops    DevOps
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, devops])
+}

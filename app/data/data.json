@@ -1,0 +1,20 @@
+{
+	"projects": [
+		{
+			"id": 0,
+			"name": "Cléa",
+			"description": "Application RAG (Retrieval Augmented Generation) Cléa pour 'client local expert assistant'",
+			"image_path": "/images/Clea.png",
+			"type": "IAG-RAG",
+			"github": "https://github.com/WillIsback/clea"
+		},
+		{
+			"id": 1,
+			"name": "Report Maker",
+			"description": "AI Report Maker est un outil conçu pour automatiser la transcription et le résumé de réunions.",
+			"image_path": "/images/Ai_report_maker_poster.jpg",
+			"type": "IAG-NLP",
+			"github": "https://github.com/WillIsback/Report_Maker"
+		}
+	]
+}

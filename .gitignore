@@ -39,3 +39,51 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib/generated/prisma
+
+# ...existing patterns...
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+.nyc_output/
+coverage/
+
+# Misc
+*.bak
+.turbo/
+dist/

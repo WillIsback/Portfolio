@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Biome check
+        run: pnpm exec biome check --write
+
+      - name: Check for uncommitted changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Biome made changes. Please run 'pnpm exec biome check --write' locally and commit the changes."
+            git diff
+            exit 1
+          fi

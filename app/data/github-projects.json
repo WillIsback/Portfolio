@@ -1,0 +1,180 @@
+{
+	"projects": [
+		{
+			"title": "Abricot.co",
+			"description": "Plateforme SaaS de gestion de projet collaboratif augmentée par l'IA. Permet aux freelances et équipes de gérer leurs projets avec génération automatique de tâches via RAG (Retrieval Augmented Generation) et Mistral AI.",
+			"imagePath": "logo/Abricot.svg",
+			"github": "https://github.com/WillIsback/P11-Abricot",
+			"lastUpdate": "2026-02-01T12:00:00.000Z",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["TypeScript"],
+			"techStack": {
+				"frontend": ["NextJs", "React"],
+				"devOps": ["GithubActions"]
+			}
+		},
+		{
+			"title": "CLEA - Document Search Platform",
+			"description": "Framework de recherche documentaire hybride pour PostgreSQL + pgvector. Charge des documents multi-formats, les segmente, les vectorise et fournit une recherche hybride (vectorielle + filtres SQL). Inclut un module RAG avec des LLMs légers Qwen3.",
+			"github": "https://github.com/WillIsback/clea-api",
+			"lastUpdate": "2025-05-11T00:00:00.000Z",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"],
+			"techStack": {
+				"database": ["Postgresql"],
+				"backendApi": ["FastAPI"],
+				"devOps": ["Docker", "GithubActions"]
+			}
+		},
+		{
+			"title": "CLEA WebUI",
+			"description": "Interface web pour CLEA (Corpus Linker & Exploratory Assistant). Plateforme de recherche et d'exploration documentaire intelligente basée sur les technologies RAG. Recherche sémantique, gestion de documents, assistant IA et tableaux de bord statistiques.",
+			"github": "https://github.com/WillIsback/clea-webui",
+			"lastUpdate": "2025-05-11T00:00:00.000Z",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["TypeScript"],
+			"techStack": {
+				"frontend": ["Svelte", "SvelteKit"],
+				"devOps": ["Docker"]
+			}
+		},
+		{
+			"title": "Lazy-Locker",
+			"description": "Gestionnaire de secrets sécurisé avec interface TUI et support SDK. Remplace les fichiers .env en clair par un stockage chiffré local (AES-256-GCM, Argon2id). Intégration seamless avec Python et JavaScript/TypeScript.",
+			"github": "https://github.com/WillIsback/lazy-locker",
+			"lastUpdate": "2025-12-07T00:00:00.000Z",
+			"isPrivate": false,
+			"isAiGenerated": true,
+			"languages": ["Rust", "TypeScript", "Python"],
+			"techStack": {
+				"devOps": ["GithubActions"]
+			}
+		},
+		{
+			"title": "TypeScript REST API Vanilla",
+			"description": "API REST complète construite sans framework en TypeScript avec Node.js et SQLite. Projet pédagogique suivant les principes SOLID : validation Zod, documentation Swagger auto-générée, prepared statements pour la sécurité SQL.",
+			"github": "https://github.com/WillIsback/typescript-rest-api-vanilla",
+			"lastUpdate": "2025-10-17T00:00:00.000Z",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["TypeScript"],
+			"techStack": {
+				"database": ["SQLite"]
+			}
+		},
+		{
+			"title": "OC-P10 TechNova Livrable",
+			"description": "Version livrable du projet OpenClassrooms P10. Documentation complète et notebooks finaux pour la présentation du projet machine learning.",
+			"github": "https://github.com/WillIsback/OC-P10-TechNova-Livrable",
+			"lastUpdate": "2026-01-15T00:00:00.000Z",
+			"imagePath": "logo/ML.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "OC-P9 Fisheye",
+			"description": "Projet OpenClassrooms P9 - Application de photographie avec accessibilité optimisée et navigation clavier complète.",
+			"github": "https://github.com/WillIsback/OC-P9-fisheye",
+			"lastUpdate": "2025-11-24T00:00:00.000Z",
+			"imagePath": "logo/FishEye.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["TypeScript"],
+			"techStack": {
+				"frontend": ["React"]
+			}
+		},
+		{
+			"title": "P8 Bottleneck",
+			"description": "Projet OpenClassrooms P8 - Analyse de données et détection de goulots d'étranglement avec notebooks Jupyter.",
+			"github": "https://github.com/WillIsback/P8-bottleneck",
+			"lastUpdate": "2025-11-05T00:00:00.000Z",
+			"imagePath": "logo/Data.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "OC-P7 DataImmo",
+			"description": "Projet OpenClassrooms P7 - Analyse de données immobilières et prédiction de prix.",
+			"github": "https://github.com/WillIsback/OC-P7-DataImmo",
+			"lastUpdate": "2025-10-18T00:00:00.000Z",
+			"imagePath": "logo/Data.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "SportSee",
+			"description": "Application de coaching sportif avec tableau de bord analytique. Visualisation des performances et statistiques d'entraînement.",
+			"github": "https://github.com/WillIsback/sportsee",
+			"lastUpdate": "2025-10-03T00:00:00.000Z",
+			"imagePath": "logo/Sportsee.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["JavaScript"],
+			"techStack": {
+				"frontend": ["React"]
+			}
+		},
+		{
+			"title": "Les Petits Plats",
+			"description": "Application de recherche de recettes de cuisine. Algorithmes de recherche optimisés et interface utilisateur responsive.",
+			"github": "https://github.com/WillIsback/les_petits_plats",
+			"lastUpdate": "2025-09-20T00:00:00.000Z",
+			"imagePath": "logo/LesPetitsPlats.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["JavaScript"]
+		},
+		{
+			"title": "Fashion Trend Intelligence",
+			"description": "Projet de segmentation d'images de mode utilisant l'API Hugging Face. Structuré pour faciliter la maintenance et l'extensibilité avec des modèles de deep learning.",
+			"github": "https://github.com/WillIsback/fashion_trend_intelligene",
+			"lastUpdate": "2025-09-08T00:00:00.000Z",
+			"imagePath": "logo/Data.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "AI Report Maker",
+			"description": "Outil puissant pour automatiser la transcription et la synthèse de réunions. Utilise Whisper Large v3 pour l'ASR, Pyannote v3 pour la diarisation des locuteurs, et différents LLMs (GPT-3.5, GEMMA, MISTRAL, BART) pour la génération de rapports.",
+			"github": "https://github.com/WillIsback/Report_Maker",
+			"lastUpdate": "2024-04-15T00:00:00.000Z",
+			"imagePath": "logo/AiReportMaker.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "LLM Summarizer Trainer",
+			"description": "Entraînement de Large Language Models pour la tâche de résumé en utilisant QLoRA comme méthode de fine-tuning avec le package Unsloth. Projet d'apprentissage pour le fine-tuning de modèles de langage.",
+			"github": "https://github.com/WillIsback/LLM_Summarizer_Trainer",
+			"lastUpdate": "2024-04-14T00:00:00.000Z",
+			"imagePath": "logo/ML.svg",
+			"isPrivate": false,
+			"isAiGenerated": false,
+			"languages": ["Python"]
+		},
+		{
+			"title": "Portfolio Personnel",
+			"description": "Mon portfolio personnel construit avec Next.js 16, Prisma, TailwindCSS et shadcn/ui. Présente mes projets et compétences avec un système de filtrage avancé.",
+			"github": "",
+			"lastUpdate": "2026-02-01T00:00:00.000Z",
+			"isPrivate": true,
+			"imagePath": "logo/Portfolio.svg",
+			"isAiGenerated": false,
+			"languages": ["TypeScript"],
+			"techStack": {
+				"database": ["SQLite"],
+				"frontend": ["NextJs", "React"],
+				"devOps": ["GithubActions"]
+			}
+		}
+	]
+}
