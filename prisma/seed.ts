@@ -1,11 +1,29 @@
-import "dotenv/config";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { resolve } from "node:path";
+import { config } from "dotenv";
+
+// Charger .env.local en priorité (variables Neon de Vercel), puis .env comme fallback
+config({ path: resolve(__dirname, "../.env.local") });
+config({ path: resolve(__dirname, "../.env") });
+
+import { PrismaNeon } from "@prisma/adapter-neon";
 import githubProjects from "../app/data/github-projects.json";
 import { PrismaClient } from "./generated/prisma/client";
 
-const adapter = new PrismaBetterSqlite3({
-	url: "file:./prisma/dev.db",
-});
+// Construire la connection string à partir des variables individuelles si DATABASE_URL n'est pas définie
+const connectionString =
+	process.env.DATABASE_URL ||
+	`postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}/${process.env.PGDATABASE}?sslmode=require`;
+
+if (!connectionString || connectionString.includes("undefined")) {
+	throw new Error(
+		"Database connection not configured. Check .env.local or .env",
+	);
+}
+
+console.log("Connecting to:", connectionString.replace(/:[^:@]+@/, ":***@"));
+
+// Utiliser PrismaNeon avec connectionString directement
+const adapter = new PrismaNeon({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 // Types pour les enums

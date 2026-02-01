@@ -1,19 +1,15 @@
 "use server";
 
 import { unstable_cache } from "next/cache";
+import prisma from "@/lib/db";
 import {
 	getProjectsFromJson,
 	type NormalizedProject,
 } from "@/lib/projects-data";
 import { type ProjectFilters, ProjectFiltersSchema } from "@/schemas";
 
-// Déterminer si on utilise Prisma ou JSON
-// Sur Vercel (production), on utilise JSON car SQLite n'est pas supporté
-// La variable VERCEL est automatiquement définie par Vercel lors du build
-const USE_JSON_DATA =
-	process.env.VERCEL === "1" ||
-	process.env.USE_JSON_DATA === "true" ||
-	process.env.NODE_ENV === "production";
+// Utiliser JSON si explicitement demandé (fallback sans BDD)
+const USE_JSON_DATA = process.env.USE_JSON_DATA === "true";
 
 // Simple rate limiter en mémoire (désactivé en développement)
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
@@ -53,10 +49,7 @@ async function getProjectsFromDb(
 		return getProjectsFromJson(filters);
 	}
 
-	// Import dynamique pour éviter l'erreur de build sur Vercel
-	const { default: prisma } = await import("@/lib/db");
-
-	// biome-ignore lint/suspicious/noExplicitAny: Prisma types are dynamically imported
+	// biome-ignore lint/suspicious/noExplicitAny: Prisma types dynamiques
 	const where: any = {};
 
 	if (filters?.search) {
@@ -182,13 +175,11 @@ export async function getProjectById(id: number) {
 		throw new Error("Trop de requêtes. Veuillez réessayer plus tard.");
 	}
 
-	// Utiliser JSON sur Vercel
+	// Utiliser JSON si demandé
 	if (USE_JSON_DATA) {
 		const projects = getProjectsFromJson();
 		return projects.find((p) => p.id === id) || null;
 	}
-
-	const { default: prisma } = await import("@/lib/db");
 
 	const getCachedProject = unstable_cache(
 		async () =>
@@ -229,7 +220,7 @@ export async function getFilterOptions() {
 		throw new Error("Trop de requêtes. Veuillez réessayer plus tard.");
 	}
 
-	// Utiliser JSON sur Vercel
+	// Utiliser JSON si demandé
 	if (USE_JSON_DATA) {
 		const projects = getProjectsFromJson();
 		const languages = new Set<string>();
@@ -254,8 +245,6 @@ export async function getFilterOptions() {
 			devops: Array.from(devops),
 		};
 	}
-
-	const { default: prisma } = await import("@/lib/db");
 
 	const getCachedOptions = unstable_cache(
 		async () => {

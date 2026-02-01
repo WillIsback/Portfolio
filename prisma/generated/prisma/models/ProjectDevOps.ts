@@ -388,6 +388,7 @@ export type ProjectDevOpsCreateOrConnectWithoutProjectInput = {
 
 export type ProjectDevOpsCreateManyProjectInputEnvelope = {
   data: Prisma.ProjectDevOpsCreateManyProjectInput | Prisma.ProjectDevOpsCreateManyProjectInput[]
+  skipDuplicates?: boolean
 }
 
 export type ProjectDevOpsUpsertWithWhereUniqueWithoutProjectInput = {
@@ -1139,6 +1140,7 @@ export type ProjectDevOpsCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many ProjectDevOps.
    */
   data: Prisma.ProjectDevOpsCreateManyInput | Prisma.ProjectDevOpsCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1157,6 +1159,7 @@ export type ProjectDevOpsCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many ProjectDevOps.
    */
   data: Prisma.ProjectDevOpsCreateManyInput | Prisma.ProjectDevOpsCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

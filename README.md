@@ -102,6 +102,10 @@ pnpm run format
 
 # Lancer les tests
 pnpm test
+
+# Lancer le build avec les datas JSON
+USE_JSON_DATA=true pnpm build
+
 ```
 
 ### Gestion de la Base de Données

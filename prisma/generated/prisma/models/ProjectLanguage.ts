@@ -388,6 +388,7 @@ export type ProjectLanguageCreateOrConnectWithoutProjectInput = {
 
 export type ProjectLanguageCreateManyProjectInputEnvelope = {
   data: Prisma.ProjectLanguageCreateManyProjectInput | Prisma.ProjectLanguageCreateManyProjectInput[]
+  skipDuplicates?: boolean
 }
 
 export type ProjectLanguageUpsertWithWhereUniqueWithoutProjectInput = {
@@ -1139,6 +1140,7 @@ export type ProjectLanguageCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many ProjectLanguages.
    */
   data: Prisma.ProjectLanguageCreateManyInput | Prisma.ProjectLanguageCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1157,6 +1159,7 @@ export type ProjectLanguageCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many ProjectLanguages.
    */
   data: Prisma.ProjectLanguageCreateManyInput | Prisma.ProjectLanguageCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
