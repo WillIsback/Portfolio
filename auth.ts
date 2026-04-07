@@ -8,6 +8,12 @@ declare module "next-auth" {
   }
 }
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    githubId?: string;
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [GitHub],
   callbacks: {
@@ -16,7 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      session.user.githubId = token.githubId as string;
+      session.user.githubId = token.githubId ?? "";
       return session;
     },
     authorized({ auth: session, request: { nextUrl } }) {
