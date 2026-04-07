@@ -49,7 +49,6 @@ async function getProjectsFromDb(
 		return getProjectsFromJson(filters);
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: Prisma types dynamiques
 	const where: any = {};
 
 	if (filters?.search) {

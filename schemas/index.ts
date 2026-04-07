@@ -67,18 +67,18 @@ export type ProjectFilters = z.infer<typeof ProjectFiltersSchema>;
 
 // Schema used by admin forms — all tech stack fields required for DB writes
 export const AdminProjectSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
-  imagePath: z.string().optional(),
-  github: z.string().optional(),
-  lastUpdate: z.string().optional(),
-  isPrivate: z.boolean().default(false),
-  isAiGenerated: z.boolean().default(false),
-  languages: z.array(LanguageEnum).default([]),
-  databases: z.array(DatabaseEnum).default([]),
-  backends: z.array(BackendApiEnum).default([]),
-  frontends: z.array(FrontendEnum).default([]),
-  devops: z.array(DevOpsEnum).default([]),
+	title: z.string().min(1, "Le titre est requis"),
+	description: z.string().min(1, "La description est requise"),
+	imagePath: z.string().optional(),
+	github: z.string().optional(),
+	lastUpdate: z.string().optional(),
+	isPrivate: z.boolean().default(false),
+	isAiGenerated: z.boolean().default(false),
+	languages: z.array(LanguageEnum).default([]),
+	databases: z.array(DatabaseEnum).default([]),
+	backends: z.array(BackendApiEnum).default([]),
+	frontends: z.array(FrontendEnum).default([]),
+	devops: z.array(DevOpsEnum).default([]),
 });
 
 export type AdminProject = z.infer<typeof AdminProjectSchema>;

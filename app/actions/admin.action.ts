@@ -14,7 +14,6 @@ async function requireAdmin(): Promise<void> {
 }
 
 async function upsertProjectRelations(
-	// biome-ignore lint/suspicious/noExplicitAny: Prisma transaction client type extraction is complex
 	tx: any,
 	projectId: number,
 	data: AdminProject,

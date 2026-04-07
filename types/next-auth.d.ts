@@ -1,4 +1,4 @@
-/// <reference types="next-auth" />
+import "next-auth";
 import type { DefaultSession } from "next-auth";
 
 declare module "next-auth" {

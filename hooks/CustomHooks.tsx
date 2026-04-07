@@ -31,14 +31,18 @@ export function useProjects(filters: ProjectFilters) {
 		// Vérifier le cache d'abord
 		const cached = projectsCache.get(cacheKey);
 		if (cached) {
-			setProjects(cached);
-			setIsLoading(false);
-			setError(null);
+			startTransition(() => {
+				setProjects(cached);
+				setIsLoading(false);
+				setError(null);
+			});
 			return;
 		}
 
 		// Sinon, fetch les données
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setIsLoading(true);
+
 		setError(null);
 
 		startTransition(() => {
