@@ -3,8 +3,8 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { fetchRepoFilePaths, detectTechStack, type GitHubRepo } from "@/lib/github";
-import { importFromGitHub } from "@/app/actions/admin.action";
+import { detectTechStack, type GitHubRepo } from "@/lib/github";
+import { importFromGitHub, fetchRepoFilePathsAction } from "@/app/actions/admin.action";
 import type { AdminProject } from "@/schemas";
 import {
   LanguageEnum,
@@ -52,7 +52,7 @@ export function GitHubReposBrowser({
       const previews: ReviewProject[] = await Promise.all(
         selectedRepos.map(async (repo) => {
           const [owner, name] = repo.full_name.split("/");
-          const filePaths = await fetchRepoFilePaths(owner, name);
+          const filePaths = await fetchRepoFilePathsAction(owner, name);
           const detected = detectTechStack(filePaths, repo.language);
           return {
             repoName: repo.name,

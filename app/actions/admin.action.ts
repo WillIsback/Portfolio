@@ -125,3 +125,12 @@ export async function importFromGitHub(projects: AdminProject[]): Promise<void> 
     }
   }
 }
+
+export async function fetchRepoFilePathsAction(
+  owner: string,
+  repo: string,
+): Promise<string[]> {
+  await requireAdmin();
+  const { fetchRepoFilePaths } = await import("@/lib/github");
+  return fetchRepoFilePaths(owner, repo);
+}
