@@ -88,3 +88,6 @@ coverage/
 .turbo/
 dist/
 .env*.local
+
+# Git worktrees
+.worktrees/
