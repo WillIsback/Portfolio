@@ -12,7 +12,8 @@ const firaCode = Fira_Code({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
 	title: "William Derue | Développeur FullStack IA",
-	description: "Portfolio de William Derue - Développeur fullstack spécialisé en IA. Architectures full-stack propulsées par l'intelligence artificielle.",
+	description:
+		"Portfolio de William Derue - Développeur fullstack spécialisé en IA. Architectures full-stack propulsées par l'intelligence artificielle.",
 	keywords: [
 		"développeur fullstack",
 		"IA",

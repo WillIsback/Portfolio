@@ -19,6 +19,7 @@
 		"seed": "tsx prisma/seed.ts"
 	},
 	"dependencies": {
+		"@auth/core": "^0.34.3",
 		"@libsql/client": "^0.17.0",
 		"@prisma/adapter-better-sqlite3": "^7.3.0",
 		"@prisma/adapter-libsql": "^7.3.0",
