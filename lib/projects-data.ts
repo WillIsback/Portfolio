@@ -29,6 +29,8 @@ export interface NormalizedProject {
 	lastUpdate: Date | null;
 	isPrivate: boolean;
 	isAiGenerated: boolean;
+	isML: boolean;
+	isIAG: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	languages: { language: string }[];
@@ -53,6 +55,8 @@ function normalizeProject(
 		lastUpdate,
 		isPrivate: project.isPrivate,
 		isAiGenerated: project.isAiGenerated,
+		isML: false,
+		isIAG: false,
 		createdAt: lastUpdate,
 		updatedAt: lastUpdate,
 		languages: project.languages.map((lang) => ({ language: lang })),

@@ -74,6 +74,8 @@ export const AdminProjectSchema = z.object({
 	lastUpdate: z.string().optional(),
 	isPrivate: z.boolean().default(false),
 	isAiGenerated: z.boolean().default(false),
+	isML: z.boolean().default(false),
+	isIAG: z.boolean().default(false),
 	languages: z.array(LanguageEnum).default([]),
 	databases: z.array(DatabaseEnum).default([]),
 	backends: z.array(BackendApiEnum).default([]),

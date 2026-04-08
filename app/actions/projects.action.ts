@@ -109,6 +109,8 @@ async function getProjectsFromDb(
 			lastUpdate: true,
 			isPrivate: true,
 			isAiGenerated: true,
+			isML: true,
+			isIAG: true,
 			createdAt: true,
 			updatedAt: true,
 			languages: true,
