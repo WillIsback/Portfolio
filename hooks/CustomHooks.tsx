@@ -13,7 +13,7 @@ export function useProjects(filters: ProjectFilters) {
 	const [projects, setProjects] = useState<ProjectWithRelations[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
-	const [isPending, startTransition] = useTransition();
+	const [, startTransition] = useTransition();
 
 	// Ref pour éviter les race conditions
 	const abortControllerRef = useRef<AbortController | null>(null);
@@ -21,6 +21,10 @@ export function useProjects(filters: ProjectFilters) {
 	// Clé de cache basée sur les filtres
 	const cacheKey = JSON.stringify(filters);
 
+	// cacheKey is JSON.stringify(filters), so it already encodes filter content as a stable
+	// primitive. Including `filters` (object) would re-run the effect on every render because
+	// parseFilters() returns a new reference each time, causing an infinite fetch loop.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: cacheKey encodes filters content
 	useEffect(() => {
 		// Annuler la requête précédente si elle existe
 		if (abortControllerRef.current) {
@@ -40,9 +44,7 @@ export function useProjects(filters: ProjectFilters) {
 		}
 
 		// Sinon, fetch les données
-		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setIsLoading(true);
-
 		setError(null);
 
 		startTransition(() => {
@@ -66,12 +68,13 @@ export function useProjects(filters: ProjectFilters) {
 		return () => {
 			abortControllerRef.current?.abort();
 		};
-	}, [cacheKey, filters]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cacheKey]);
 
 	return {
 		projects,
 		error,
-		isLoading: isLoading || isPending,
+		isLoading,
 	};
 }
 
