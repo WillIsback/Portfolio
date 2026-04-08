@@ -195,6 +195,8 @@ export async function getProjectById(id: number) {
 					lastUpdate: true,
 					isPrivate: true,
 					isAiGenerated: true,
+					isML: true,
+					isIAG: true,
 					createdAt: true,
 					updatedAt: true,
 					languages: true,
