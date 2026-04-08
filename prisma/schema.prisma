@@ -59,6 +59,8 @@ model Project {
   lastUpdate    DateTime?
   isPrivate     Boolean  @default(false)
   isAiGenerated Boolean  @default(false)
+  isML          Boolean  @default(false)
+  isIAG         Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

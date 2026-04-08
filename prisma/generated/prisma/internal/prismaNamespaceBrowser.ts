@@ -84,6 +84,8 @@ export const ProjectScalarFieldEnum = {
   lastUpdate: 'lastUpdate',
   isPrivate: 'isPrivate',
   isAiGenerated: 'isAiGenerated',
+  isML: 'isML',
+  isIAG: 'isIAG',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
