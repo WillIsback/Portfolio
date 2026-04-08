@@ -65,6 +65,8 @@ export async function createProject(raw: AdminProject): Promise<void> {
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
+				isML: data.isML,
+				isIAG: data.isIAG,
 			},
 		});
 		await upsertProjectRelations(tx, project.id, data);
@@ -91,6 +93,8 @@ export async function updateProject(
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
+				isML: data.isML,
+				isIAG: data.isIAG,
 			},
 		});
 		await upsertProjectRelations(tx, id, data);
