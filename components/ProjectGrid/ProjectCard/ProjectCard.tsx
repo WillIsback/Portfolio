@@ -1,4 +1,4 @@
-import { Bot, Camera, Leaf, Lock, Map, Users } from "lucide-react";
+import { Bot, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type React from "react";
@@ -12,17 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LUCIDE_ICONS } from "@/lib/icon-bank";
 
-const LUCIDE_ICON_MAP: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
-  "lucide:Bot": Bot,
-  "lucide:Map": Map,
-  "lucide:Camera": Camera,
-  "lucide:Leaf": Leaf,
-  "lucide:Users": Users,
-};
+const LUCIDE_ICON_MAP = Object.fromEntries(
+  LUCIDE_ICONS.map((e) => [e.id, e.component]),
+) as Record<string, React.ComponentType<{ className?: string }>>;
 
 type ProjectProps = {
   id: number;

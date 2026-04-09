@@ -1,13 +1,13 @@
 // app/(admin)/projects/[id]/ProjectEditForm.tsx
 "use client";
 
-import { Bot, Camera, Leaf, Map, Users } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateProject } from "@/app/actions/admin.action";
 import { IconPickerModal } from "@/components/admin/IconPickerModal";
+import { LUCIDE_ICONS } from "@/lib/icon-bank";
 import {
   type AdminProject,
   BackendApiEnum,
@@ -17,16 +17,9 @@ import {
   LanguageEnum,
 } from "@/schemas";
 
-const LUCIDE_COMPONENT_MAP: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
-  "lucide:Bot": Bot,
-  "lucide:Map": Map,
-  "lucide:Camera": Camera,
-  "lucide:Leaf": Leaf,
-  "lucide:Users": Users,
-};
+const LUCIDE_COMPONENT_MAP = Object.fromEntries(
+  LUCIDE_ICONS.map((e) => [e.id, e.component]),
+) as Record<string, React.ComponentType<{ className?: string }>>;
 
 export function ProjectEditForm({
   id,
@@ -83,9 +76,13 @@ export function ProjectEditForm({
     }
     if (path.startsWith("lucide:")) {
       const LucideComponent = LUCIDE_COMPONENT_MAP[path];
-      if (LucideComponent) {
-        return <LucideComponent className="w-10 h-10 text-zinc-300" />;
-      }
+      return LucideComponent ? (
+        <LucideComponent className="w-10 h-10 text-zinc-300" />
+      ) : (
+        <div className="w-10 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-600 text-xs">
+          ?
+        </div>
+      );
     }
     const src = path.startsWith("/") ? path : `/${path}`;
     return (
