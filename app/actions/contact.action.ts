@@ -28,9 +28,10 @@ export async function sendEmail(_prevState: unknown, formData: FormData) {
 			};
 		}
 
+		const smtpPort = Number.parseInt(process.env.SMTP_PORT || "465", 10);
 		const transporter = nodemailer.createTransport({
 			host: process.env.SMTP_HOST || "smtp.hostinger.com",
-			port: Number(process.env.SMTP_PORT || 465),
+			port: Number.isNaN(smtpPort) ? 465 : smtpPort,
 			secure: true,
 			auth: {
 				user: process.env.SMTP_USER,
@@ -43,7 +44,7 @@ export async function sendEmail(_prevState: unknown, formData: FormData) {
 			to: process.env.CONTACT_EMAIL_TO || "william.derue@gmail.com",
 			subject: `[Portfolio] ${validatedFields.data.sujet}`,
 			text: `De: ${validatedFields.data.email}\n\n${validatedFields.data.message}`,
-			replyTo: validatedFields.data.email as string,
+			replyTo: validatedFields.data.email,
 		});
 
 		return { success: true };
