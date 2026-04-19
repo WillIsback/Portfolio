@@ -186,8 +186,13 @@ NEXT_PUBLIC_APP_URL="http://localhost:3001"
 # Endpoints API
 NEXT_PUBLIC_API_URL="http://localhost:3001/api"
 
-# Email (pour le formulaire de contact)
-RESEND_API_KEY="votre_clé_api_resend"
+# Email (pour le formulaire de contact via SMTP Hostinger)
+SMTP_HOST="smtp.hostinger.com"
+SMTP_PORT="465"
+SMTP_USER="no-reply@willisback.fr"
+SMTP_PASSWORD="votre_mot_de_passe_mailbox"
+SMTP_FROM="Portfolio <no-reply@willisback.fr>"
+CONTACT_EMAIL_TO="william.derue@gmail.com"
 ```
 
 ## Scripts Disponibles
@@ -304,7 +309,12 @@ Mettre à jour `.env.production` :
 ```env
 DATABASE_URL="postgresql://user:password@host/portfolio"
 NEXT_PUBLIC_APP_URL="https://votredomaine.com"
-RESEND_API_KEY="votre_clé_production"
+SMTP_HOST="smtp.hostinger.com"
+SMTP_PORT="465"
+SMTP_USER="no-reply@willisback.fr"
+SMTP_PASSWORD="votre_secret_production"
+SMTP_FROM="Portfolio <no-reply@willisback.fr>"
+CONTACT_EMAIL_TO="william.derue@gmail.com"
 ```
 
 ## Optimisations de Performance
