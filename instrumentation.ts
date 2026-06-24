@@ -19,8 +19,8 @@ export async function register() {
 			return;
 		}
 
-		const authHeader = process.env.OTEL_EXPORTER_OTLP_AUTH_HEADER;
-
+		// OTEL_EXPORTER_OTLP_HEADERS est lu automatiquement par le SDK
+		// Format Vercel : Authorization=Basic <base64>
 		const sdk = new NodeSDK({
 			resource: resourceFromAttributes({
 				[ATTR_SERVICE_NAME]: "portfolio",
@@ -29,7 +29,6 @@ export async function register() {
 			}),
 			traceExporter: new OTLPTraceExporter({
 				url: `${endpoint}/v1/traces`,
-				headers: authHeader ? { Authorization: authHeader } : {},
 			}),
 			instrumentations: [
 				new HttpInstrumentation(),
