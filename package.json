@@ -21,8 +21,9 @@
 	"dependencies": {
 		"@auth/core": "^0.34.3",
 		"@libsql/client": "^0.17.0",
-		"@opentelemetry/auto-instrumentations-node": "^0.77.0",
 		"@opentelemetry/exporter-trace-otlp-http": "^0.219.0",
+		"@opentelemetry/instrumentation-http": "^0.219.0",
+		"@opentelemetry/instrumentation-undici": "^0.29.0",
 		"@opentelemetry/resources": "^2.8.0",
 		"@opentelemetry/sdk-node": "^0.219.0",
 		"@opentelemetry/semantic-conventions": "^1.41.1",

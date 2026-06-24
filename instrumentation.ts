@@ -1,11 +1,11 @@
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
+import { UndiciInstrumentation } from "@opentelemetry/instrumentation-undici";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 
 export async function register() {
-  // Uniquement côté serveur Node.js (pas dans le runtime Edge de Next.js)
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const endpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
 
@@ -27,10 +27,8 @@ export async function register() {
         headers: authHeader ? { Authorization: authHeader } : {},
       }),
       instrumentations: [
-        getNodeAutoInstrumentations({
-          // Désactive le file system (trop verbeux)
-          "@opentelemetry/instrumentation-fs": { enabled: false },
-        }),
+        new HttpInstrumentation(),
+        new UndiciInstrumentation(),
       ],
     });
 
