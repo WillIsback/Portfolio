@@ -25,7 +25,7 @@ export async function sendEmail(_prevState: unknown, formData: FormData) {
 		const resend = new Resend(process.env.RESEND_API_KEY);
 		await resend.emails.send({
 			from: "Portfolio <noreply@willisback.fr>",
-			to: "william.derue@gmail.com",
+			to: "no-reply@willisback.fr",
 			subject: `[Portfolio] ${validatedFields.data.sujet}`,
 			text: `De: ${validatedFields.data.email}\n\n${validatedFields.data.message}`,
 			replyTo: validatedFields.data.email,
