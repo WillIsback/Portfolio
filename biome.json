@@ -13,7 +13,8 @@
 			"**/*.js",
 			"**/*.jsx",
 			"**/*.json",
-			"!prisma/generated"
+			"!prisma/generated",
+			"!.claude"
 		]
 	},
 	"formatter": {
