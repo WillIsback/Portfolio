@@ -42,7 +42,7 @@ const timelineItems = [
 			"Intégration au ministère de l'Éducation nationale en tant qu'administrateur système, poste que j'occupe toujours avec responsabilités croissantes.",
 	},
 	{
-		year: "2025 – juillet 2026",
+		year: "Septembre 2025 – juillet 2026",
 		title: "Diplômé Développeur full stack",
 		description:
 			"Parcours Développeur FullStack IA chez OpenClassrooms, validé en juillet 2026 par le titre « Développeur full stack » (RNCP42641), niveau 6 (bac +3/4, EQF 6).",
@@ -54,10 +54,10 @@ const timelineItems = [
 			"Membre actif de la cellule IA de la DSI régionale, déterminé à concrétiser des projets exploitant le potentiel de l'IA pour répondre aux besoins métier.",
 	},
 	{
-		year: "2026 – en cours",
+		year: "Septembre 2026 – en cours",
 		title: "Parcours AI Engineer",
 		description:
-			"Parcours AI Engineer chez OpenClassrooms, qui prépare au titre « Expert en ingénierie et science des données », enregistré au RNCP, niveau 7 (bac +5, EQF 7).",
+			"Dans la continuité, parcours AI Engineer chez OpenClassrooms, qui prépare au titre « Expert en ingénierie et science des données », enregistré au RNCP, niveau 7 (bac +5, EQF 7).",
 	},
 ];
 
