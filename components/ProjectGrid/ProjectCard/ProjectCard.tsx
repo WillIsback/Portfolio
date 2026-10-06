@@ -13,6 +13,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { LUCIDE_ICONS } from "@/lib/icon-bank";
+import { invertOnDark } from "@/lib/theme-icons";
+import { cn } from "@/lib/utils";
 
 const LUCIDE_ICON_MAP = Object.fromEntries(
 	LUCIDE_ICONS.map((e) => [e.id, e.component]),
@@ -57,20 +59,27 @@ export default function ProjectCard({
 	const allTags = [
 		...languages.map((l) => ({
 			label: l,
-			color: "bg-yellow-100 text-yellow-800",
+			color:
+				"bg-yellow-100 text-yellow-800 dark:bg-yellow-400/15 dark:text-yellow-200",
 		})),
-		...databases.map((d) => ({ label: d, color: "bg-blue-100 text-blue-800" })),
+		...databases.map((d) => ({
+			label: d,
+			color: "bg-blue-100 text-blue-800 dark:bg-blue-400/15 dark:text-blue-200",
+		})),
 		...backends.map((b) => ({
 			label: b,
-			color: "bg-green-100 text-green-800",
+			color:
+				"bg-green-100 text-green-800 dark:bg-green-400/15 dark:text-green-200",
 		})),
 		...frontends.map((f) => ({
 			label: f,
-			color: "bg-purple-100 text-purple-800",
+			color:
+				"bg-purple-100 text-purple-800 dark:bg-purple-400/15 dark:text-purple-200",
 		})),
 		...devops.map((d) => ({
 			label: d,
-			color: "bg-orange-100 text-orange-800",
+			color:
+				"bg-orange-100 text-orange-800 dark:bg-orange-400/15 dark:text-orange-200",
 		})),
 	];
 
@@ -90,14 +99,14 @@ export default function ProjectCard({
 		if (effectivePath.startsWith("lucide:")) {
 			const LucideComponent = LUCIDE_ICON_MAP[effectivePath];
 			mediaContent = LucideComponent ? (
-				<LucideComponent className="h-24 w-24 text-gray-500 dark:text-gray-400" />
+				<LucideComponent className="h-24 w-24 text-muted-foreground" />
 			) : (
 				<Image
 					src="/icon/Github.svg"
 					alt={`Image du projet ${name}`}
 					width={100}
 					height={100}
-					className="h-24 w-24 object-contain"
+					className="h-24 w-24 object-contain dark:invert"
 				/>
 			);
 		} else {
@@ -110,16 +119,13 @@ export default function ProjectCard({
 					alt={`Image du projet ${name}`}
 					width={100}
 					height={100}
-					className="h-24 w-24 object-contain"
+					className={cn("h-24 w-24 object-contain", invertOnDark(src))}
 				/>
 			);
 		}
 
 		return (
-			<div
-				className="flex h-32 w-full items-center justify-center rounded-lg bg-linear-to-br
-         from-gray-50 to-gray-100 p-2 dark:from-gray-800 dark:to-gray-900"
-			>
+			<div className="flex h-32 w-full items-center justify-center rounded-lg bg-linear-to-br from-muted to-secondary p-2">
 				{mediaContent}
 			</div>
 		);
@@ -128,8 +134,8 @@ export default function ProjectCard({
 	return (
 		<Card className={`relative overflow-hidden ${isPrivate ? "group" : ""}`}>
 			{isPrivate && (
-				<div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-[2px] transition-all duration-300 group-hover:bg-white/40 dark:bg-black/60 dark:group-hover:bg-black/40">
-					<div className="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400">
+				<div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-[2px] transition-all duration-300 group-hover:bg-background/40">
+					<div className="flex flex-col items-center gap-2 text-muted-foreground">
 						<Lock className="h-8 w-8" />
 						<span className="text-sm font-medium">Projet privé</span>
 					</div>
@@ -202,9 +208,11 @@ export default function ProjectCard({
 				)}
 			</CardContent>
 			<CardFooter className="flex justify-between">
-				<p className="text-sm text-gray-500">{type}</p>
+				<p className="text-sm text-muted-foreground">{type}</p>
 				{formattedDate && (
-					<p className="text-xs text-gray-400">Màj : {formattedDate}</p>
+					<p className="text-xs text-muted-foreground/80">
+						Màj : {formattedDate}
+					</p>
 				)}
 			</CardFooter>
 		</Card>

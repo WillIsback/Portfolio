@@ -36,23 +36,23 @@ function ProjectGridContent() {
 	return (
 		<section className="space-y-6">
 			<Suspense
-				fallback={<div className="h-24 bg-gray-100 rounded-xl animate-pulse" />}
+				fallback={<div className="h-24 bg-muted rounded-xl animate-pulse" />}
 			>
 				<FilterBar />
 			</Suspense>
 
 			<ErrorBoundary
 				fallback={
-					<div className="p-6 bg-red-50 border border-red-200 rounded-xl text-center">
-						<p className="text-red-600">
+					<div className="p-6 bg-destructive/10 border border-destructive/30 rounded-xl text-center">
+						<p className="text-destructive">
 							Erreur lors du chargement des projets
 						</p>
 					</div>
 				}
 			>
 				{error ? (
-					<div className="p-6 bg-red-50 border border-red-200 rounded-xl text-center">
-						<p className="text-red-600">{error}</p>
+					<div className="p-6 bg-destructive/10 border border-destructive/30 rounded-xl text-center">
+						<p className="text-destructive">{error}</p>
 					</div>
 				) : isLoading ? (
 					<ProjectGridSkeleton />

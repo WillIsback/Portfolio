@@ -217,7 +217,7 @@ export default function SkillsStack() {
 
 			{/* Pile sticky positionnée absolument */}
 			<div
-				className="absolute left-0 right-0 pointer-events-none"
+				className="pointer-events-none absolute left-0 right-0 hidden lg:block"
 				style={{
 					top: "150px", // Limite haute (ajuste cette valeur)
 					bottom: "150px", // Limite basse (ajuste cette valeur)

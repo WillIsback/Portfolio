@@ -105,10 +105,10 @@ export default function FilterBar() {
 		devops.length;
 
 	return (
-		<div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+		<div className="flex flex-col gap-4 p-4 bg-muted/50 rounded-xl border border-border">
 			{/* Barre de recherche */}
 			<div className="relative">
-				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 				<Input
 					type="search"
 					placeholder="Rechercher un projet..."
@@ -178,7 +178,7 @@ export default function FilterBar() {
 						variant="ghost"
 						size="sm"
 						onClick={resetFilters}
-						className="text-gray-500 hover:text-gray-700"
+						className="text-muted-foreground hover:text-foreground"
 					>
 						<X className="h-4 w-4 mr-1" />
 						Réinitialiser
@@ -187,7 +187,9 @@ export default function FilterBar() {
 			</div>
 
 			{/* Indicateur de chargement */}
-			{isPending && <div className="text-sm text-gray-500">Chargement...</div>}
+			{isPending && (
+				<div className="text-sm text-muted-foreground">Chargement...</div>
+			)}
 		</div>
 	);
 }

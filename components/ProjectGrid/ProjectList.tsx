@@ -10,7 +10,7 @@ interface ProjectListProps {
 export default function ProjectList({ projects }: ProjectListProps) {
 	if (!projects.length) {
 		return (
-			<div className="text-center py-12 text-gray-500">
+			<div className="text-center py-12 text-muted-foreground">
 				<p className="text-lg">Aucun projet trouvé</p>
 				<p className="text-sm mt-2">Essayez de modifier vos filtres</p>
 			</div>

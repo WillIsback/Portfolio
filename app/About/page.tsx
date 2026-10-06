@@ -61,7 +61,7 @@ export default function About() {
 
 	return (
 		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 p-6 flex justify-center w-full">
+			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
 
