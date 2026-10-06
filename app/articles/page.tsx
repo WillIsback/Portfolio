@@ -7,7 +7,8 @@ import {
 } from "@/components/articles/ArticleMeta";
 import { getAllArticles } from "@/lib/articles/loader";
 
-const title = "Articles | William Derue - Développeur FullStack IA";
+const title =
+	"Articles | William Derue - Développeur IA · parcours AI Engineer";
 const description =
 	"Retours d'expérience chiffrés sur les agents autonomes, les LLM servis en local, l'observabilité et l'infrastructure.";
 

@@ -15,12 +15,15 @@ export default function Footer() {
 			</div>
 			<div className="flex gap-2 items-center">
 				<p className="text-sm text-muted-foreground">
-					Copyright notice (e.g., © 2026 Willam Derue)
+					© {new Date().getFullYear()} William Derue
 				</p>
-				<Link href="https://github.com/WillIsback/">
+				<Link
+					href="https://github.com/WillIsback/"
+					aria-label="Profil GitHub de William Derue"
+				>
 					<Image
 						src={"/icon/Github.svg"}
-						alt="lien vers le github"
+						alt=""
 						width={24}
 						height={24}
 						className="dark:invert"
