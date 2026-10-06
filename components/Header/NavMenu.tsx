@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface NavMenuProps {
 	highlightContact: boolean;
-	contactBtnRef: React.RefObject<HTMLButtonElement | null>;
+	contactBtnRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 export default function NavMenu({
@@ -19,17 +19,18 @@ export default function NavMenu({
 	const isAboutPage = pathname === "/About";
 	const isContactPage = pathname === "/Contact";
 	const isHomePage = pathname === "/";
+	const isArticlesPage = pathname?.startsWith("/articles") ?? false;
 
 	return (
 		<nav>
-			<ul className="flex items-center gap-2 rounded-full bg-secondary/60 px-2 py-1 ring-1 ring-border/70 backdrop-blur sm:gap-3">
+			<ul className="flex flex-wrap items-center justify-center gap-1 rounded-2xl bg-secondary/60 px-1.5 py-1 sm:flex-nowrap sm:rounded-full sm:px-2 ring-1 ring-border/70 backdrop-blur sm:gap-3">
 				<li>
 					<Button
 						asChild
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"rounded-full px-3 text-sm font-medium transition-all duration-300",
+							"rounded-full px-2.5 text-sm font-medium sm:px-3 transition-all duration-300",
 							isAboutPage
 								? "bg-primary text-primary-foreground hover:bg-primary/90"
 								: "hover:bg-primary/10 hover:text-primary",
@@ -44,7 +45,7 @@ export default function NavMenu({
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"rounded-full px-3 text-sm font-medium transition-all duration-300",
+							"rounded-full px-2.5 text-sm font-medium sm:px-3 transition-all duration-300",
 							isHomePage
 								? "hover:bg-primary/10 hover:text-primary"
 								: "hover:bg-primary/10 hover:text-primary opacity-70",
@@ -55,12 +56,27 @@ export default function NavMenu({
 				</li>
 				<li>
 					<Button
+						asChild
+						variant="ghost"
+						size="sm"
+						className={cn(
+							"rounded-full px-2.5 text-sm font-medium sm:px-3 transition-all duration-300",
+							isArticlesPage
+								? "bg-primary text-primary-foreground hover:bg-primary/90"
+								: "hover:bg-primary/10 hover:text-primary",
+						)}
+					>
+						<Link href="/articles">Articles</Link>
+					</Button>
+				</li>
+				<li>
+					<Button
 						ref={contactBtnRef}
 						asChild
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"rounded-full px-3 text-sm font-medium transition-all duration-500",
+							"rounded-full px-2.5 text-sm font-medium sm:px-3 transition-all duration-500",
 							isContactPage
 								? "bg-primary text-primary-foreground hover:bg-primary/90"
 								: "hover:bg-primary/10 hover:text-primary",
