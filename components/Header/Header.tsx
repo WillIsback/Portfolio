@@ -5,7 +5,7 @@ import NavMenu from "./NavMenu";
 
 interface HeaderProps {
 	highlightContact: boolean;
-	contactBtnRef: React.RefObject<HTMLButtonElement | null>;
+	contactBtnRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 export default function Header({
@@ -13,8 +13,8 @@ export default function Header({
 	contactBtnRef,
 }: Readonly<HeaderProps>) {
 	return (
-		<header className="w-full rounded-2xl border border-border/60 bg-linear-to-r from-white/90 via-white to-slate-50/70 py-4 shadow-[0_12px_60px_-25px_rgba(59,130,246,0.45)] backdrop-blur dark:from-black/80 dark:via-slate-950 dark:to-black/60 px-32">
-			<div className="flex items-center justify-between gap-6">
+		<header className="w-full rounded-2xl border border-border/60 bg-linear-to-r from-white/90 via-white to-slate-50/70 py-4 shadow-[0_12px_60px_-25px_rgba(59,130,246,0.45)] backdrop-blur dark:from-black/80 dark:via-slate-950 dark:to-black/60 px-3 sm:px-8 xl:px-32">
+			<div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 lg:flex-nowrap lg:justify-between">
 				<Link
 					href="/"
 					className="flex items-center gap-3 hover:opacity-90 transition-opacity"
@@ -32,7 +32,7 @@ export default function Header({
 								IA/ML
 							</span>
 						</div>
-						<p className="text-sm text-muted-foreground">
+						<p className="hidden text-sm text-muted-foreground lg:block">
 							Full-stack · Solutions IA génératives et ML
 						</p>
 					</div>

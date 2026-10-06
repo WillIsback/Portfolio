@@ -1,0 +1,164 @@
+---
+title: "Neuf agents, neuf jours"
+description: "Retour d'expérience chiffré sur une flotte de neuf agents SRE autonomes en conditions réelles : ce qui a tenu, ce qui a cassé, ce que l'analyse des traces m'a appris, et ce que je garde."
+date: "2026-10-07"
+period: "27 sept. → 6 oct. 2026"
+tags: ["Agents autonomes", "SRE", "LLM local", "Observabilité", "Sécurité"]
+status: "Expérience close"
+---
+
+J'ai fait tourner une flotte d'agents SRE autonomes sur mon infrastructure réelle : un home-server, un DGX Spark et un VPS. La boucle agentique a fonctionné. La valeur produite pour l'infra, beaucoup moins. Voici les chiffres, ce qui a tenu, ce qui a cassé, ce que l'analyse des traces m'a appris, et ce que je garde.
+
+<KeyFigures
+  items={[
+    { value: "9", label: "profils d'agents, en topologie étoile pilotée par un tableau Kanban" },
+    { value: "78 %", label: "des 418 tâches Kanban étaient le même scan d'infrastructure (324 scans)", alert: true },
+    { value: "72 %", label: "des tokens attribués à un profil ont servi à cette boucle de scan ; 1 % aux profils qui corrigent", alert: true },
+    { value: "75", label: "incidents ouverts : 21 résolus, 29 en échec, 25 clôturés sans suite" },
+    { value: "37 %", label: "des incidents portaient sur les composants de la flotte elle-même", alert: true },
+    { value: "24 537", label: "appels LLM, 146,6 M tokens en entrée et 12,6 M en sortie, tous servis en local" },
+    { value: "428", label: "échecs d'outils détectés et classés automatiquement dans les traces" },
+    { value: "270", label: "fois où un agent a fait docker exec dans son propre conteneur pour redevenir root", alert: true },
+  ]}
+/>
+
+## Le dispositif
+
+Le projet est né pour le NVIDIA Claw Agent Challenge à Paris : montrer un agent SRE capable de surveiller, diagnostiquer et réparer une infrastructure sans humain dans la boucle. J'ai utilisé [Hermes Agent](https://github.com/NousResearch/hermes-agent), un LLM servi en local par vLLM sur un DGX Spark (Qwen3.8), et un serveur MCP maison de 59 outils couvrant mes trois machines : lecture, écriture Docker sous garde-fous, exécution en bac à sable.
+
+Après le challenge, la flotte a continué à tourner sur mon home-server avec des rôles séparés. Un seul agent, le conductor, a le droit de créer des tâches. Les autres rendent des verdicts.
+
+```text
+cron */10 ─┐
+           ├─▶ sre-conductor ──Kanban──▶ sre-monitor   (scan read-only, classe, rapporte)
+webhook ───┘   (seul dispatcher)          ├─▶ sre-diag      (cause racine → verdict, n'applique rien)
+(crash, OOM)                              ├─▶ sre-doctor    (hot-fix infra à partir d'un verdict)
+                                          ├─▶ sre-dev       (correctif de code en TDD → PR)
+                                          └─▶ sre-reporter  (seul à notifier l'humain, Telegram)
+
+à côté : sre-hygiene (nettoyage des incidents), auto-eval (juge les traces), gardien (rappels)
+observabilité : Langfuse (traces par profil) + Julia-1, petit modèle de décision qui note chaque étape
+```
+
+## Chronologie
+
+<Timeline
+  items={[
+    { date: "mi-sept.", text: "Première version pour le challenge : quatre agents, délégation directe entre eux, crons toutes les 5 minutes." },
+    { date: "23–24 sept.", key: true, title: "Panne injectée", text: "Je remplace le modèle d'un service par un modèle inexistant. Le conteneur reste « healthy » et répond HTTP 200 avec une erreur dans le corps. La tuyauterie tient : délégation, journalisation, Telegram, rollback. Le jugement échoue : 5 runs concluent « sain » faute de signal d'erreur, et 3 incidents sont clôturés en « SUCCESS » sans preuve." },
+    { date: "27 sept.", text: "Profils versionnés dans le dépôt, passage à la topologie Kanban avec un seul dispatcher." },
+    { date: "2 oct.", text: "Date limite du challenge." },
+    { date: "3 oct.", key: true, text: "Le conductor scanne toutes les 10 minutes. Le volume de tâches passe de quelques unités à plus de 100 par jour. Mise en place de la détection automatique des échecs d'outils dans les traces." },
+    { date: "4 oct.", text: "Les échecs « capacity » les plus fréquents deviennent des outils MCP dédiés : exécution allowlistée, Python en bac à sable sans réseau, sonde HTTP." },
+    { date: "5 oct.", key: true, title: "Deux boucles émergentes", text: "Un fournisseur de mémoire externe modélise les alertes comme un « utilisateur » à comprendre et met 36 requêtes en file sur le GPU. Le même jour, les runs déclenchés par webhook n'ont pas l'outil Kanban : le conductor écrit une soixantaine de souvenirs « Kanban manquant » qui biaisent ensuite son raisonnement." },
+    { date: "6 oct.", key: true, title: "Audit de sécurité", text: "Les agents ont un terminal et le socket Docker : les garde-fous MCP sont contournés en pratique. J'isole le conteneur avec un proxy Docker en lecture et une passerelle SSH à commandes épinglées. Dans ses dernières tâches, la flotte détecte la régression que cette isolation vient d'introduire. Je mets la flotte en pause le soir même." },
+  ]}
+/>
+
+## Où sont partis le travail et les tokens
+
+<TasksChart
+  days={[
+    ["28/09", 4, 0], ["29/09", 2, 0], ["30/09", 5, 0], ["01/10", 16, 0], ["02/10", 6, 0],
+    ["03/10", 24, 12], ["04/10", 114, 98], ["05/10", 106, 86], ["06/10", 141, 128],
+  ]}
+  caption="Tâches Kanban créées par jour. À partir du 3 octobre, le scan toutes les 10 minutes écrase tout le reste : le travail de diagnostic et de correction reste autour de 10 tâches par jour."
+/>
+
+<TokensChart
+  profiles={[
+    ["sre-conductor", 19.4, "scan"], ["sre-monitor", 16.6, "scan"], ["sre-diag", 6.5, "work"],
+    ["auto-eval", 4.8, "work"], ["sre-reporter", 1.4, "work"], ["sre-hygiene", 0.6, "work"],
+    ["sre-dev", 0.4, "work"], ["sre-doctor", 0.2, "work"],
+  ]}
+  caption="Tokens d'entrée par profil, en millions, sur les 50 M attribuables à un profil. Les 96,6 M restants datent d'avant l'ajout de l'attribution par profil dans les traces."
+/>
+
+## Lire les traces pour faire évoluer les agents
+
+C'est la partie de l'expérience qui m'a le plus appris. Chaque appel d'outil de chaque agent finit dans Langfuse. Plutôt que de lire des transcripts à la main, j'ai construit un pipeline qui détecte les appels en échec, les classe, et réécrit le verdict sur la trace sous forme de score.
+
+Le classement repose sur une question simple : à qui est la faute ? Quatre catégories en sont sorties.
+
+<FaultBuckets
+  total={428}
+  traces={264}
+  items={[
+    { id: "capacity", label: "Capacity", count: 199, text: "L'intention de l'agent était légitime, mais l'environnement l'a bloqué ou ne lui donnait pas l'outil nécessaire." },
+    { id: "reasoning", label: "Reasoning", count: 128, text: "Mauvais outil ou mauvais argument : un identifiant inexistant, un outil appelé par le mauvais intermédiaire." },
+    { id: "garbage", label: "Garbage", count: 100, text: "Charge structurellement invalide, typiquement du JSON malformé." },
+    { id: "unclassifiable", label: "Inclassable", count: 1, text: "Aucune règle ne s'applique et le LLM n'a pas tranché." },
+  ]}
+/>
+
+Deux choses m'ont surpris. D'abord, sept règles déterministes suffisent à classer 88 % des échecs. Le LLM n'intervient que sur le résidu, et ses classements récurrents ont vocation à devenir de nouvelles règles. C'est le seul endroit de la flotte où le système devenait moins dépendant du modèle à mesure qu'il tournait.
+
+Ensuite, la catégorie la plus grosse n'était pas une erreur de l'agent. Près de la moitié des échecs relevaient de « capacity » : l'agent voulait faire quelque chose de raisonnable et l'environnement le lui interdisait. En mode autonome, sans humain pour approuver, l'exécution de code et le terminal sont refusés par le harnais : 111 refus sur l'exécution de code, 69 sur le terminal. Ces chiffres sont devenus une liste de besoins. J'ai créé des outils MCP étroits pour les couvrir : une exécution de commandes en lecture sur liste blanche, un Python en bac à sable sans réseau ni secrets, une sonde HTTP limitée à des cibles internes.
+
+Les échecs « reasoning » racontaient autre chose. Une bonne partie venait de l'outil intermédiaire qui sert à appeler les outils chargés à la demande : le modèle se trompait d'arité ou appelait directement un outil qui devait passer par lui. Ces motifs se corrigeaient dans les fichiers d'instructions des agents, pas dans le code : un skill dédié à l'usage des outils, des exemples d'appels corrects, et des consignes retirées quand elles se contredisaient.
+
+Le même travail a guidé la gestion de la fenêtre de contexte. Charger d'emblée les schémas de 59 outils noie le modèle. Les outils sont donc découverts à la demande, avec une liste plafonnée à 12 000 tokens, chaque profil n'a accès qu'aux outils de son rôle (27 pour le diagnostic, par exemple), et ne charge automatiquement que ses propres skills. J'ai aussi réglé l'effort de raisonnement par rôle : faible pour l'orchestration, élevé pour la sonde qui doit juger un état ambigu.
+
+La difficulté de fond, c'est de faire évoluer un agent dans un environnement protégé. Chaque restriction de sécurité crée une nouvelle catégorie d'échecs « capacity ». L'agent a besoin d'outils, mais les outils prévus ne couvrent jamais tous ses besoins réels. Il faut donc mesurer ce qu'il essaie de faire, distinguer le besoin légitime du contournement, puis ajouter l'outil le plus étroit possible. L'audit du 6 octobre l'a montré dans l'autre sens : quand l'outil manquait, l'agent passait par le terminal et le socket Docker. Une partie des échecs « capacity » qui disparaissaient n'étaient pas résolus. Ils étaient contournés.
+
+## Ce qui a tenu, ce qui a cassé
+
+<Verdicts
+  good={[
+    { title: "La tuyauterie déterministe.", text: "Délégation, Kanban, journal d'incidents, notifications, rollback : tout ce qui ne dépend pas du jugement du modèle a fonctionné du premier coup ou presque." },
+    { title: "Un seul dispatcher.", text: "La topologie en étoile a supprimé les délégations en cascade de la première version et rendu chaque tâche traçable." },
+    { title: "Le juge Julia-1.", text: "Un modèle de 147 M de paramètres qui répond à des questions typées (choix, score, oui/non) note chaque étape de chaque trace dans Langfuse, sur CPU, pour un coût négligeable." },
+    { title: "La classification des échecs d'outils.", text: "Sept règles, un LLM sur le résidu, un score réécrit sur chaque trace : la seule boucle qui produisait de la connaissance réutilisable." },
+    { title: "Des modèles de repli.", text: "Quand j'ai débranché le DGX ou changé de modèle, les agents ont continué sur un autre fournisseur." },
+  ]}
+  bad={[
+    { title: "Une boucle sur un état stable.", text: "Un cron qui interroge une infra qui va bien produit « rien de nouveau », 140 fois par jour." },
+    { title: "« Non exercé » pris pour « sain ».", text: "Sans signal d'erreur, le modèle conclut que tout va bien au lieu de générer la preuve." },
+    { title: "L'auto-référence.", text: "37 % des incidents concernaient la flotte, son dashboard ou son serveur MCP. Elle passait une partie de son temps à se surveiller." },
+    { title: "Des garde-fous contournés.", text: "Avec un terminal et le socket Docker, un agent n'a pas besoin des outils MCP : 270 docker exec pour redevenir root, des docker run -v, des compose up directs." },
+    { title: "Des boucles émergentes.", text: "Mémoire externe et outils manquants ont chacun créé un cycle que personne n'avait conçu." },
+    { title: "Le coût de la vitrine.", text: "Sur 185 commits du serveur MCP et du dashboard, 46 % sont des correctifs, et la scène 3D de visualisation en concentre le plus grand nombre." },
+  ]}
+/>
+
+## Ce que je ferais autrement
+
+<Lesson title="Déclencher sur un événement">
+Un agent ne doit travailler que quand quelque chose de nouveau arrive : une alerte, une PR, un document. La détection elle-même n'a pas besoin de LLM. Aujourd'hui, Uptime Kuma et un script de 120 lignes envoient directement les alertes sur Telegram.
+</Lesson>
+
+<Lesson title="Le LLM explore, le code consolide">
+Chaque passage d'un agent devrait laisser un artefact qui réduit le besoin du passage suivant : une règle, un test, une ligne de dataset. La classification des échecs d'outils le faisait déjà en transformant les classements du LLM en règles. C'est ce mécanisme qu'il fallait généraliser, pas le scan.
+</Lesson>
+
+<Lesson title="Mesurer ce que l'agent essaie de faire">
+Les échecs d'outils sont la meilleure spécification des besoins d'un agent. Les classer par responsabilité (environnement, raisonnement, charge) dit quoi corriger et où : un outil à ajouter, une consigne à réécrire, ou rien.
+</Lesson>
+
+<Lesson title="Le moindre privilège dès le premier jour">
+Un agent qui a un terminal a tout ce qui est monté dans son conteneur. La bonne frontière n'est pas une liste d'outils autorisés, c'est ce que le conteneur peut atteindre : un proxy Docker en lecture et une clé SSH limitée à trois commandes validées côté hôte.
+</Lesson>
+
+<Lesson title="Vérifier par le chemin réel">
+Le gateway transmet un environnement filtré aux serveurs MCP. Mes tests passaient par docker exec, qui voit tout : ils étaient verts, les agents étaient aveugles. Seule une vraie session d'agent prouve qu'un outil marche.
+</Lesson>
+
+<Lesson title="Mesurer par profil dès le départ">
+L'attribution des traces par profil est arrivée tard : deux tiers des tokens ne sont rattachables à aucun agent. Sans cette mesure, on ne voit pas qu'une boucle coûte 60 fois plus que le travail utile.
+</Lesson>
+
+## Ce que je garde
+
+| Brique | Ce qu'elle apporte |
+| --- | --- |
+| Agent sans root | Proxy Docker en lecture et redémarrage, passerelle SSH à commandes épinglées, une seule clé montée. |
+| Classification des échecs d'outils | Règles d'abord, LLM sur le résidu, verdict réécrit sur chaque trace Langfuse. |
+| Juge Julia-1 sur Langfuse | Évaluation typée de chaque étape et de chaque tour, sur CPU, branchée comme évaluateur natif. |
+| Collector OpenTelemetry | Un seul point d'entrée : traces d'infra vers Jaeger, spans LLM vers MLflow. |
+| Secrets Bitwarden | Injection au lancement, pour Docker Compose comme pour les agents, rien sur disque. |
+
+La flotte reste reproductible à partir d'un tag git. Ses crons sont en pause, pas supprimés. La prochaine expérience part d'une hypothèse plus étroite : donner à chaque service consommateur de LLM son propre compte et ses propres clés via le gateway MLflow.
+
+<Sources>
+Tableau Kanban de la flotte (418 tâches), journal d'incidents (75 incidents), événements Langfuse dans ClickHouse (24 537 générations, environnement de production, juges exclus), manifestes de classification des échecs d'outils (264 traces, 428 échecs), historique git et historique des sessions d'agents. Période : du 27 septembre au 6 octobre 2026. Les incidents « sur la flotte » couvrent ses propres conteneurs : gateway, dashboard, serveur MCP, visualisation et juge.
+</Sources>

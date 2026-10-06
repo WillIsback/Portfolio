@@ -1,0 +1,344 @@
+/*
+ * Articles: scoped long-form typography and chart styles.
+ * Built on the site tokens from globals.css (light + .dark).
+ */
+
+.articles-scope {
+  /*
+   * Accent: the indigo / electric-violet that globals.css declares as the
+   * site's primary inside @layer base. That layered block currently loses to
+   * the unlayered neutral :root/.dark blocks, so --primary resolves to
+   * near-black site-wide; articles use the intended brand accent explicitly.
+   */
+  --primary: oklch(0.45 0.15 270);
+  --primary-foreground: oklch(0.98 0 0);
+  --ring: oklch(0.45 0.15 270);
+  --article-body: color-mix(in oklch, var(--foreground) 80%, var(--muted-foreground));
+  --article-good: oklch(0.52 0.13 155);
+  --article-bad: oklch(0.55 0.2 27);
+  --chart-scan: color-mix(in oklch, var(--muted-foreground) 55%, var(--background));
+  --chart-work: var(--primary);
+}
+
+.dark .articles-scope {
+  --primary: oklch(0.65 0.22 270);
+  --primary-foreground: oklch(0.12 0.03 265);
+  --ring: oklch(0.65 0.22 270);
+  --article-body: oklch(0.86 0.02 260);
+  --article-good: oklch(0.76 0.15 155);
+  --article-bad: oklch(0.72 0.17 25);
+  --chart-scan: color-mix(in oklch, var(--muted-foreground) 55%, var(--background));
+}
+
+.text-article-body {
+  color: var(--article-body);
+}
+
+.font-code {
+  font-family: var(--font-mono);
+}
+
+/* ---------- Prose ---------- */
+
+.article-prose {
+  color: var(--article-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 640px) {
+  .article-prose {
+    font-size: 1.125rem;
+  }
+}
+
+.article-prose > p,
+.article-prose > ul,
+.article-prose > ol {
+  margin-block: 1.25em;
+}
+
+.article-prose > :first-child {
+  margin-top: 0;
+}
+
+.article-prose > h2 {
+  margin-top: 2.6em;
+  margin-bottom: 0.8em;
+  font-size: 1.55rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--foreground);
+  scroll-margin-top: 8rem;
+}
+
+.article-prose > h2::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-bottom: 0.7em;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--primary), oklch(0.9 0.08 60));
+}
+
+.article-prose > h3 {
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--foreground);
+  scroll-margin-top: 8rem;
+}
+
+.article-prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.article-prose a {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+}
+
+.article-prose a:hover {
+  text-decoration-color: var(--primary);
+}
+
+.article-prose > ul,
+.article-prose > ol {
+  padding-left: 1.4em;
+}
+
+.article-prose > ul {
+  list-style: disc;
+}
+
+.article-prose > ol {
+  list-style: decimal;
+}
+
+.article-prose > ul > li + li,
+.article-prose > ol > li + li {
+  margin-top: 0.4em;
+}
+
+.article-prose > ul > li::marker,
+.article-prose > ol > li::marker {
+  color: var(--primary);
+}
+
+.article-prose > blockquote {
+  margin-block: 1.75em;
+  padding: 0.25em 0 0.25em 1.1em;
+  border-left: 3px solid var(--primary);
+  color: var(--foreground);
+  font-style: italic;
+}
+
+.article-prose > hr {
+  margin-block: 3em;
+  border-color: var(--border);
+}
+
+/* Inline code */
+.article-prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.12em 0.38em;
+  border-radius: 0.35rem;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+/* Code blocks: keep monospace alignment, scroll horizontally */
+.article-prose > pre {
+  margin-block: 1.75em;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--muted);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  tab-size: 2;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.article-prose > pre code {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+@media (min-width: 1100px) {
+  .article-prose > pre {
+    margin-inline: -4rem;
+  }
+}
+
+.article-prose > pre:focus-visible,
+.table-scroll:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Tables */
+.article-prose .table-scroll {
+  margin-block: 1.75em;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
+
+.article-prose table {
+  width: 100%;
+  min-width: 32rem;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.article-prose thead th {
+  background: var(--muted);
+  color: var(--foreground);
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.article-prose th,
+.article-prose td {
+  padding: 0.7rem 1rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.article-prose tbody td:first-child {
+  color: var(--foreground);
+  font-weight: 600;
+  width: 38%;
+  min-width: 9.5rem;
+}
+
+/* ---------- Figures & charts ---------- */
+
+.article-figure figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+}
+
+.chart-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-display);
+}
+
+.chart-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.chart-axis {
+  stroke: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  stroke-width: 1;
+}
+
+.chart-tick {
+  fill: var(--muted-foreground);
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+.chart-label {
+  fill: var(--foreground);
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+.chart-value {
+  fill: var(--foreground);
+  font-size: 13.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-bar-scan {
+  fill: var(--chart-scan);
+}
+
+.chart-bar-work {
+  fill: var(--chart-work);
+}
+
+.chart-swatch {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 0.2rem;
+  flex-shrink: 0;
+}
+
+.chart-swatch-scan {
+  background: var(--chart-scan);
+}
+
+.chart-swatch-work {
+  background: var(--chart-work);
+}
+
+/* Two server-rendered variants per chart; CSS shows exactly one
+   (display:none also removes the hidden one from the a11y tree). */
+.chart-svg--compact {
+  display: none;
+}
+
+.chart-svg--compact .chart-tick {
+  font-size: 10.5px;
+}
+
+.chart-svg--compact .chart-label,
+.chart-svg--compact .chart-value {
+  font-size: 11px;
+}
+
+@media (max-width: 559.98px) {
+  .chart-svg--full {
+    display: none;
+  }
+
+  .chart-svg--compact {
+    display: block;
+  }
+}
