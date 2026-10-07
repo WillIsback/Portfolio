@@ -65,11 +65,11 @@ export default function Contact() {
 
 	return (
 		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 p-6 flex justify-center w-full">
+			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
-			<div className="max-w-6xl mx-auto min-w-3/5">
-				<div className="mb-20 flex items-center gap-8">
+			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 sm:w-auto">
+				<div className="mb-20 flex items-center gap-4 sm:gap-8">
 					<motion.div
 						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
@@ -90,12 +90,12 @@ export default function Contact() {
 				</div>
 				<form
 					action={formAction}
-					className="flex flex-col gap-6 border border-gray-200 rounded-xl px-13 py-13 w-full"
+					className="flex flex-col gap-6 border border-border bg-card rounded-xl px-6 py-8 sm:px-13 sm:py-13 w-full"
 				>
 					<div className="mb-6">
 						<label
 							htmlFor="email"
-							className="block mb-2.5 text-sm font-medium text-heading"
+							className="block mb-2.5 text-sm font-medium text-foreground"
 						>
 							Adresse mail
 						</label>
@@ -106,10 +106,10 @@ export default function Contact() {
 							value={formData.email}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-neutral-secondary-medium border text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body transition-colors ${
+							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full px-3 py-2.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
 								isFieldInvalid("email")
-									? "border-red-500 focus:ring-red-500 focus:border-red-500"
-									: "border-default-medium"
+									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
+									: "border-input"
 							}`}
 							placeholder="john.doe@company.com"
 							required
@@ -118,7 +118,7 @@ export default function Contact() {
 							<motion.p
 								initial={{ opacity: 0, y: -5 }}
 								animate={{ opacity: 1, y: 0 }}
-								className="mt-1.5 text-xs text-red-500"
+								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("email")}
 							</motion.p>
@@ -128,7 +128,7 @@ export default function Contact() {
 					<div className="mb-6">
 						<label
 							htmlFor="sujet"
-							className="block mb-2.5 text-sm font-medium text-heading"
+							className="block mb-2.5 text-sm font-medium text-foreground"
 						>
 							Sujet
 						</label>
@@ -139,10 +139,10 @@ export default function Contact() {
 							value={formData.sujet}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-neutral-secondary-medium border text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body transition-colors ${
+							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full px-3 py-2.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
 								isFieldInvalid("sujet")
-									? "border-red-500 focus:ring-red-500 focus:border-red-500"
-									: "border-default-medium"
+									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
+									: "border-input"
 							}`}
 							placeholder="Sujet du mail..."
 							required
@@ -151,7 +151,7 @@ export default function Contact() {
 							<motion.p
 								initial={{ opacity: 0, y: -5 }}
 								animate={{ opacity: 1, y: 0 }}
-								className="mt-1.5 text-xs text-red-500"
+								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("sujet")}
 							</motion.p>
@@ -161,7 +161,7 @@ export default function Contact() {
 					<div className="mb-6">
 						<label
 							htmlFor="message"
-							className="block mb-2.5 text-sm font-medium text-heading"
+							className="block mb-2.5 text-sm font-medium text-foreground"
 						>
 							Message
 						</label>
@@ -172,10 +172,10 @@ export default function Contact() {
 							value={formData.message}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-neutral-secondary-medium border text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body transition-colors ${
+							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full p-3.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
 								isFieldInvalid("message")
-									? "border-red-500 focus:ring-red-500 focus:border-red-500"
-									: "border-default-medium"
+									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
+									: "border-input"
 							}`}
 							placeholder="Votre message..."
 						/>
@@ -183,7 +183,7 @@ export default function Contact() {
 							<motion.p
 								initial={{ opacity: 0, y: -5 }}
 								animate={{ opacity: 1, y: 0 }}
-								className="mt-1.5 text-xs text-red-500"
+								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("message")}
 							</motion.p>
@@ -193,7 +193,7 @@ export default function Contact() {
 					<button
 						type="submit"
 						disabled={isPending || !isValid}
-						className="group flex items-center gap-2 border rounded-xl px-4 py-2 bg-gray-100 cursor-pointer w-fit hover:bg-gray-950 hover:text-white transition-colors duration-300 ease-in-out hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-gray-100 disabled:hover:text-inherit"
+						className="group flex items-center gap-2 border rounded-xl px-4 py-2 bg-secondary text-secondary-foreground cursor-pointer w-fit hover:bg-primary hover:text-primary-foreground transition-colors duration-300 ease-in-out hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-secondary disabled:hover:text-secondary-foreground"
 					>
 						{isPending ? (
 							<>

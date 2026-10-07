@@ -70,7 +70,7 @@ export default function Home() {
 
 	return (
 		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 p-6 flex justify-center w-full">
+			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
 				<Header
 					highlightContact={highlightContact}
 					contactBtnRef={contactBtnRef}
@@ -80,7 +80,7 @@ export default function Home() {
 			<div className="mt-20 flex flex-col items-center text-center space-y-6 px-4">
 				<h2 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
 					De la Data à la{" "}
-					<span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-orange-200">
+					<span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-brand-warm">
 						Décision.
 					</span>
 				</h2>
@@ -143,7 +143,7 @@ export default function Home() {
 				</h3>
 				<SkillsStack />
 			</div>
-			<section id="realisations" className="px-30 h-fit">
+			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
 				<ProjectGrid />
 			</section>
 			<Footer />

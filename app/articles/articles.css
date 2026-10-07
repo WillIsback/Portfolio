@@ -4,15 +4,7 @@
  */
 
 .articles-scope {
-  /*
-   * Accent: the indigo / electric-violet that globals.css declares as the
-   * site's primary inside @layer base. That layered block currently loses to
-   * the unlayered neutral :root/.dark blocks, so --primary resolves to
-   * near-black site-wide; articles use the intended brand accent explicitly.
-   */
-  --primary: oklch(0.45 0.15 270);
-  --primary-foreground: oklch(0.98 0 0);
-  --ring: oklch(0.45 0.15 270);
+  /* Accent: the site's --primary (indigo in light, violet in dark). */
   --article-body: color-mix(in oklch, var(--foreground) 80%, var(--muted-foreground));
   --article-good: oklch(0.52 0.13 155);
   --article-bad: oklch(0.55 0.2 27);
@@ -21,9 +13,6 @@
 }
 
 .dark .articles-scope {
-  --primary: oklch(0.65 0.22 270);
-  --primary-foreground: oklch(0.12 0.03 265);
-  --ring: oklch(0.65 0.22 270);
   --article-body: oklch(0.86 0.02 260);
   --article-good: oklch(0.76 0.15 155);
   --article-bad: oklch(0.72 0.17 25);

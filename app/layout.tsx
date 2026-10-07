@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fira_Code, Space_Grotesk } from "next/font/google";
-import { Toaster } from "sonner";
+import ThemedToaster from "@/components/theme/ThemedToaster";
+import ThemeProvider from "@/components/theme/ThemeProvider";
 
 import "./globals.css";
 
@@ -60,12 +61,19 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="fr">
+		<html lang="fr" suppressHydrationWarning>
 			<body
 				className={`${spaceGrotesk.variable} ${firaCode.variable} antialiased`}
 			>
-				{children}
-				<Toaster richColors position="bottom-right" />
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					{children}
+					<ThemedToaster />
+				</ThemeProvider>
 			</body>
 		</html>
 	);
