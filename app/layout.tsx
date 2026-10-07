@@ -88,10 +88,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="fr" suppressHydrationWarning>
-			<body
-				className={`${bricolage.variable} ${sourceSerif.variable} ${caveat.variable} ${firaCode.variable} paper antialiased`}
-			>
+		<html
+			lang="fr"
+			suppressHydrationWarning
+			className={`${bricolage.variable} ${sourceSerif.variable} ${caveat.variable} ${firaCode.variable}`}
+		>
+			<body className="paper antialiased">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"
