@@ -5,6 +5,10 @@ from pathlib import Path
 
 import numpy as np
 
+TEACHER = "lightonai/mDenseOn"
+# Révision Hugging Face épinglée du professeur (reproductibilité de la distillation).
+TEACHER_REVISION = "a5fdb000f7a21da96c3bddde3a782ef777316df3"
+
 
 def quantize_rows(m: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     scales = np.abs(m).max(axis=1) / 127.0

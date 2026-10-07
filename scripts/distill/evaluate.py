@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from carnet_static import embed_tokens, load_student
+from carnet_static import TEACHER, TEACHER_REVISION, embed_tokens, load_student
 from carnet_text import tokenize
 
 HERE = Path(__file__).parent
@@ -22,7 +22,7 @@ def main() -> None:
     queries = json.loads((HERE / "queries.json").read_text())
     docs = [item["text"] for item in corpus]
 
-    teacher = SentenceTransformer("lightonai/mDenseOn")
+    teacher = SentenceTransformer(TEACHER, revision=TEACHER_REVISION)
     td = teacher.encode(docs, prompt_name="document", normalize_embeddings=True)
     tq = teacher.encode([q["q"] for q in queries], prompt_name="query", normalize_embeddings=True)
     teacher_top = np.argsort(-(tq @ td.T), axis=1)

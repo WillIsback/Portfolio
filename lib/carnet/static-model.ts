@@ -3,6 +3,7 @@ import { tokenize } from "./tokenize";
 export interface StaticModelMeta {
 	version: string;
 	teacher: string;
+	teacherRevision?: string;
 	dim: number;
 	vocabSize: number;
 	wordPrompt: string;

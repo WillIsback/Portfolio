@@ -9,10 +9,9 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from wordfreq import word_frequency
 
-from carnet_static import embed_tokens, quantize_rows
+from carnet_static import TEACHER, TEACHER_REVISION, embed_tokens, quantize_rows
 from carnet_text import tokenize
 
-TEACHER = "lightonai/mDenseOn"
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -44,13 +43,13 @@ def main() -> None:
     words = Path(args.vocab).read_text().split()
     if args.limit:
         import time
-        model = SentenceTransformer(TEACHER, device=args.device)
+        model = SentenceTransformer(TEACHER, revision=TEACHER_REVISION, device=args.device)
         start = time.perf_counter()
         model.encode(words[: args.limit], batch_size=args.batch, convert_to_numpy=True)
         per_word = (time.perf_counter() - start) / args.limit
         print(f"{per_word * 1000:.2f} ms/mot -> estimation {per_word * len(words) / 60:.1f} min pour {len(words)} mots")
         return
-    model = SentenceTransformer(TEACHER, device=args.device)
+    model = SentenceTransformer(TEACHER, revision=TEACHER_REVISION, device=args.device)
     kwargs = {} if args.word_prompt == "none" else {"prompt_name": args.word_prompt}
     emb = model.encode(
         words, batch_size=args.batch, normalize_embeddings=True,
@@ -67,7 +66,7 @@ def main() -> None:
     (out / "vocab.json").write_text(json.dumps(words, ensure_ascii=False))
     digest = hashlib.sha256(q.tobytes() + scales.tobytes()).hexdigest()[:12]
     meta = {
-        "version": digest, "teacher": TEACHER, "dim": args.dims, "vocabSize": len(words),
+        "version": digest, "teacher": TEACHER, "teacherRevision": TEACHER_REVISION, "dim": args.dims, "vocabSize": len(words),
         "wordPrompt": args.word_prompt, "sifA": args.sif_a,
     }
     (out / "meta.json").write_text(json.dumps(meta, indent=2) + "\n")
