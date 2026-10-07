@@ -399,7 +399,7 @@ requires-python = ">=3.11,<3.13"
 dependencies = [
   "sentence-transformers==5.4.1",
   "transformers==5.6.2",
-  "torch>=2.6",
+  "torch>=2.8",  # 2.8+ : roues CUDA 12.8 (Blackwell / RTX 50xx) et CPU
   "numpy>=2.0",
   "wordfreq==3.1.1",
 ]
@@ -633,10 +633,19 @@ def main() -> None:
     parser.add_argument("--sif-a", type=float, default=1e-4)
     parser.add_argument("--batch", type=int, default=512)
     parser.add_argument("--device", default=None)
+    parser.add_argument("--limit", type=int, default=None, help="chronométrer sur les N premiers mots (aucun fichier écrit)")
     parser.add_argument("--out", default=str(ROOT / "public" / "models" / "carnet-static"))
     args = parser.parse_args()
 
     words = Path(args.vocab).read_text().split()
+    if args.limit:
+        import time
+        model = SentenceTransformer(TEACHER, device=args.device)
+        start = time.perf_counter()
+        model.encode(words[: args.limit], batch_size=args.batch, convert_to_numpy=True)
+        per_word = (time.perf_counter() - start) / args.limit
+        print(f"{per_word * 1000:.2f} ms/mot -> estimation {per_word * len(words) / 60:.1f} min pour {len(words)} mots")
+        return
     model = SentenceTransformer(TEACHER, device=args.device)
     kwargs = {} if args.word_prompt == "none" else {"prompt_name": args.word_prompt}
     emb = model.encode(
@@ -677,14 +686,25 @@ if __name__ == "__main__":
 
 - [ ] **Step 10: Construire le vocabulaire et distiller**
 
-Le calcul (~40 000 passes avant de mots dans un modèle de 307 M de paramètres) est plus rapide sur le GPU du DGX Spark ; il tourne aussi sur CPU (compter plusieurs dizaines de minutes).
+Le calcul (~40 000 mots isolés de quelques tokens dans un modèle de 307 M de paramètres) doit tenir en quelques minutes sur le CPU du home-server. Chronométrer d'abord :
 
 ```bash
 cd /home/will/dev-project/portfolio/scripts/distill
 uv run python build_vocab.py --corpus corpus.json --common 20000 --out vocab.txt
-# GPU disponible localement : --device cuda ; sinon omettre --device
-uv run python distill.py --vocab vocab.txt --dims 128 --word-prompt none
+uv run python distill.py --vocab vocab.txt --limit 1000 --device cpu
 ```
+
+- **Estimation ≤ 30 min** : lancer la distillation sur le home-server :
+  `uv run python distill.py --vocab vocab.txt --dims 128 --word-prompt none --device cpu`
+- **Estimation > 30 min** : STOP. Demander à William de lancer la distillation sur son PC (RTX 5080) et lui fournir ces instructions, puis attendre qu'il pousse le résultat :
+  ```bash
+  git fetch origin && git switch feat/v2-l0-embeddings
+  # copier scripts/distill/vocab.txt depuis le home-server (fichier non versionné), puis :
+  cd scripts/distill && uv sync
+  uv run python distill.py --vocab vocab.txt --dims 128 --word-prompt none --device cuda
+  cd ../.. && git add public/models/carnet-static lib/carnet/__fixtures__/golden.json
+  git commit -m "feat(carnet): modèle distillé (RTX 5080)" && git push
+  ```
 
 Expected: `modèle <hash> : ~3xxxx mots × 128 dims -> …/public/models/carnet-static`, et les fichiers `meta.json`, `vocab.json`, `vectors.i8`, `scales.f32`, `lib/carnet/__fixtures__/golden.json` présents. Ajouter `vocab.txt` au `.gitignore` (régénérable).
 
