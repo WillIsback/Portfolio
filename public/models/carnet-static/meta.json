@@ -1,0 +1,9 @@
+{
+  "version": "f63393960f37",
+  "teacher": "lightonai/mDenseOn",
+  "teacherRevision": "a5fdb000f7a21da96c3bddde3a782ef777316df3",
+  "dim": 128,
+  "vocabSize": 17416,
+  "wordPrompt": "none",
+  "sifA": 0.0001
+}

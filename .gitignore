@@ -91,3 +91,10 @@ dist/
 
 # Git worktrees
 .worktrees/
+
+# Carnet : artefacts de distillation non publiés
+scripts/distill/corpus.json
+scripts/distill/.venv/
+scripts/distill/report.json
+scripts/distill/vocab.txt
+scripts/distill/__pycache__/

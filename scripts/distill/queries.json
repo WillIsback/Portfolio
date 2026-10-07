@@ -1,0 +1,22 @@
+[
+	{ "q": "vision par ordinateur", "lang": "fr" },
+	{ "q": "classification de texte avec un transformer", "lang": "fr" },
+	{ "q": "agents autonomes pour l'infrastructure", "lang": "fr" },
+	{ "q": "transcription audio et diarisation", "lang": "fr" },
+	{ "q": "génération de docstrings avec un LLM local", "lang": "fr" },
+	{ "q": "correcteur grammatical", "lang": "fr" },
+	{ "q": "recherche documentaire et RAG", "lang": "fr" },
+	{ "q": "prévision avec du machine learning tabulaire", "lang": "fr" },
+	{ "q": "tableau de bord et visualisation de données", "lang": "fr" },
+	{ "q": "sécurité et détection de secrets", "lang": "fr" },
+	{ "q": "computer vision", "lang": "en" },
+	{ "q": "fine-tuning a text classifier", "lang": "en" },
+	{ "q": "autonomous SRE agents", "lang": "en" },
+	{ "q": "speech to text", "lang": "en" },
+	{ "q": "local LLM inference", "lang": "en" },
+	{ "q": "meeting report generation", "lang": "en" },
+	{ "q": "secret detection", "lang": "en" },
+	{ "q": "Rust command line tool", "lang": "en" },
+	{ "q": "project management SaaS", "lang": "en" },
+	{ "q": "observability and tracing", "lang": "en" }
+]

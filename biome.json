@@ -14,6 +14,9 @@
 			"**/*.jsx",
 			"**/*.json",
 			"!prisma/generated",
+			"!public/models",
+			"!lib/carnet/__fixtures__",
+			"!content/map.json",
 			"!.claude"
 		]
 	},
