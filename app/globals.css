@@ -38,6 +38,9 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-brand-warm: var(--brand-warm);
+  --color-paper-grid: var(--paper-grid);
+  --color-ink-soft: var(--ink-soft);
+  --color-note: var(--note);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -81,6 +84,11 @@
   --input: oklch(0.92 0.02 260);
   --ring: oklch(0.45 0.15 270);
   --brand-warm: oklch(0.68 0.17 50); /* fin du dégradé du hero */
+
+  /* Carnet de labo */
+  --paper-grid: oklch(0.13 0.03 260 / 0.06);
+  --ink-soft: oklch(0.45 0.04 262);
+  --note: oklch(0.45 0.09 45);
 
   /* Texte éditorial (titres / paragraphes / secondaires) */
   --text-strong: var(--foreground);
@@ -146,6 +154,11 @@
   --sidebar-accent-foreground: oklch(0.98 0.01 260);
   --sidebar-border: oklch(0.25 0.03 265);
   --sidebar-ring: oklch(0.65 0.22 270);
+
+  /* Carnet de nuit */
+  --paper-grid: oklch(0.98 0.01 260 / 0.08);
+  --ink-soft: oklch(0.76 0.03 262);
+  --note: oklch(0.82 0.08 70);
 }
 
 @layer base {
@@ -164,5 +177,27 @@
   }
   .text-muted {
     color: var(--text-muted);
+  }
+}
+
+@layer components {
+  /* Papier millimétré : grille fine tous les 6 px, trait plus marqué tous les 30 px, estompée vers le bas. */
+  .paper {
+    position: relative;
+    isolation: isolate;
+  }
+  .paper::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--paper-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--paper-grid) 1px, transparent 1px),
+      linear-gradient(to right, var(--paper-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--paper-grid) 1px, transparent 1px);
+    background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 90%);
   }
 }
