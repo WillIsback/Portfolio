@@ -137,10 +137,10 @@ export default function Home() {
 			</AnimatePresence>
 			<hr />
 			<div className="flex flex-col py-10">
-				<h3 className="m-auto text-center text-2xl font-bold">
+				<h2 className="m-auto text-center text-2xl font-bold">
 					{" "}
 					Mes skills à travers les stacks
-				</h3>
+				</h2>
 				<SkillsStack />
 			</div>
 			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
