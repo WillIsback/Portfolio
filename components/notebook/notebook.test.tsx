@@ -25,6 +25,13 @@ describe("MarginNote", () => {
 		expect(html).toContain("font-hand");
 		expect(html).toContain("essaie « vision »");
 	});
+
+	it("ne cache jamais le contenu avec opacity:0 au repos", () => {
+		const html = renderToStaticMarkup(
+			<MarginNote>essaie « vision »</MarginNote>,
+		);
+		expect(html).not.toContain("opacity:0");
+	});
 });
 
 describe("InkPath", () => {
