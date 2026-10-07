@@ -15,7 +15,8 @@
 		"db:seed": "tsx prisma/seed.ts",
 		"db:reset": "prisma migrate reset --force",
 		"carnet:corpus": "tsx --env-file=.env.local scripts/carnet/export-corpus.ts",
-		"carnet:bench": "tsx scripts/carnet/bench.ts"
+		"carnet:bench": "tsx scripts/carnet/bench.ts",
+		"embeddings": "tsx --env-file=.env.local scripts/carnet/build-map.ts"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
