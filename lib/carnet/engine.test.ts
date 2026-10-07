@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+	absoluteModelBase,
 	createSearchEngine,
 	type FetchLike,
 	loadStaticModel,
@@ -83,5 +84,13 @@ describe("engine", () => {
 		await expect(
 			loadStaticModel(MODEL_BASE_URL, "autre-version", diskFetch),
 		).rejects.toThrow("autre-version");
+	});
+});
+
+describe("absoluteModelBase", () => {
+	it("ancre la base du modèle sur l'origine (les Workers blob n'acceptent pas les URL relatives)", () => {
+		const base = absoluteModelBase("http://localhost:3312", MODEL_BASE_URL);
+		expect(base).toBe("http://localhost:3312/models/carnet-static");
+		expect(() => new URL(modelUrl(base, "meta.json", "v"))).not.toThrow();
 	});
 });

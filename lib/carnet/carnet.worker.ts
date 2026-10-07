@@ -1,5 +1,6 @@
 import mapJson from "@/content/map.json";
 import {
+	absoluteModelBase,
 	createSearchEngine,
 	loadStaticModel,
 	MODEL_BASE_URL,
@@ -19,7 +20,7 @@ scope.onmessage = (event) => {
 	const message = event.data;
 	if (message.type === "init") {
 		engine ??= loadStaticModel(
-			MODEL_BASE_URL,
+			absoluteModelBase(self.location.origin, MODEL_BASE_URL),
 			versionOf(mapJson.model),
 			(url) => fetch(url),
 		).then((model) => createSearchEngine(model, mapJson.items));

@@ -1,144 +1,60 @@
-// app/page.tsx
-"use client";
-
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import HeroPrompt from "@/components/animation/HeroPrompt";
+import CarnetExplorer from "@/components/carnet/CarnetExplorer";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import MarginNote from "@/components/notebook/MarginNote";
 import ProjectGrid from "@/components/ProjectGrid/ProjectGrid";
 import SkillsStack from "@/components/Skills/SkillsStack";
+import mapJson from "@/content/map.json";
+import { clusterLabels } from "@/content/map-clusters";
+import { MapDataSchema } from "@/lib/carnet/map-types";
+import { toMapView, toSearchItems } from "@/lib/carnet/map-view";
+
+const map = MapDataSchema.parse(mapJson);
+const view = toMapView(map, clusterLabels);
+const searchItems = toSearchItems(map);
+
 export default function Home() {
-	const [highlightContact, setHighlightContact] = useState(false);
-	const [showPath, setShowPath] = useState(false);
-	const [svgPath, setSvgPath] = useState("");
-
-	// 1. Nouvel état pour forcer le reset du composant HeroPrompt
-	const [promptKey, setPromptKey] = useState(0);
-
-	const contactBtnRef = useRef<HTMLButtonElement>(null);
-	const sendBtnRef = useRef<HTMLButtonElement>(null);
-
-	const calculatePath = () => {
-		if (!contactBtnRef.current || !sendBtnRef.current) return;
-
-		const startRect = sendBtnRef.current.getBoundingClientRect();
-		const endRect = contactBtnRef.current.getBoundingClientRect();
-
-		const startX = startRect.left + startRect.width / 2;
-		const startY = startRect.top + startRect.height / 2;
-		const endX = endRect.left + endRect.width / 2;
-		const endY = endRect.top + endRect.height / 2;
-
-		const controlPoint1X = startX + 50;
-		const controlPoint1Y = startY - 150;
-		const controlPoint2X = endX - 50;
-		const controlPoint2Y = endY + 150;
-
-		const path = `M ${startX} ${startY} C ${controlPoint1X} ${controlPoint1Y}, ${controlPoint2X} ${controlPoint2Y}, ${endX} ${endY}`;
-		setSvgPath(path);
-	};
-
-	// On recalcule le chemin à chaque fois que le composant Hero est reset (car le bouton peut bouger légèrement)
-	// biome-ignore lint/correctness/useExhaustiveDependencies: calculatePath uses refs that don't change
-	useEffect(() => {
-		// Petit délai pour laisser le temps au DOM de se placer
-		setTimeout(calculatePath, 100);
-		window.addEventListener("resize", calculatePath);
-		return () => window.removeEventListener("resize", calculatePath);
-	}, [promptKey]); // Dépendance ajoutée ici
-
-	const handleStartAnimation = () => {
-		calculatePath();
-		setShowPath(true);
-	};
-
-	const resetAnimation = () => {
-		setPromptKey((prev) => prev + 1);
-	};
-
-	const disableHighlightAndReset = () => {
-		setHighlightContact(false);
-		setTimeout(resetAnimation, 1000);
-	};
-
-	const handlePathComplete = () => {
-		setShowPath(false);
-		setHighlightContact(true);
-		setTimeout(disableHighlightAndReset, 3000);
-	};
-
 	return (
-		<main className="relative min-h-screen flex flex-col">
+		<main className="relative flex min-h-screen flex-col">
 			<div className="sticky top-0 z-50 w-full">
-				<Header
-					highlightContact={highlightContact}
-					contactBtnRef={contactBtnRef}
-				/>
+				<Header />
 			</div>
 
-			<div className="mt-20 flex flex-col items-center text-center space-y-6 px-4">
-				<h1 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
-					De la Data à la{" "}
-					<span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-brand-warm">
-						Décision.
-					</span>
-				</h1>
-				<p className="max-w-2xl text-lg text-muted-foreground">
-					Je conçois des architectures full-stack propulsées par
-					l&apos;intelligence artificielle.
-				</p>
-
-				{/* 3. On passe la KEY ici */}
-				{/* Chaque fois que promptKey change, ce composant est détruit et recréé à neuf */}
-				<HeroPrompt
-					key={promptKey}
-					onSendTrigger={handleStartAnimation}
-					sendBtnRef={sendBtnRef}
+			<section
+				aria-labelledby="carnet-title"
+				className="mx-auto w-full max-w-6xl px-4 pt-10 pb-16 sm:px-6 lg:pt-16"
+			>
+				<CarnetExplorer
+					points={view.points}
+					clusters={view.clusters}
+					searchItems={searchItems}
+					intro={
+						<>
+							<h1
+								id="carnet-title"
+								className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+							>
+								Carnet de labo
+							</h1>
+							<p className="mt-4 max-w-prose text-lg leading-relaxed">
+								William Derue, développeur IA en parcours AI Engineer. Ce carnet
+								consigne mes expériences : modèles entraînés, agents,
+								infrastructure.
+							</p>
+						</>
+					}
+					note={
+						<MarginNote inline>
+							essaie « vision », « agents » ou « LLM local » : la carte cherche
+							avec un vrai modèle d&apos;embeddings, dans ton navigateur
+						</MarginNote>
+					}
 				/>
-			</div>
+			</section>
 
-			<AnimatePresence>
-				{showPath && (
-					<svg
-						className="fixed inset-0 pointer-events-none z-100 w-full h-full overflow-visible"
-						aria-label="Animation path from hero to contact"
-					>
-						<title>Animation path</title>
-						<motion.path
-							d={svgPath}
-							fill="transparent"
-							stroke="var(--primary)"
-							strokeWidth="4"
-							strokeLinecap="round"
-							strokeDasharray="10 10"
-							initial={{ pathLength: 0, opacity: 1 }}
-							animate={{ pathLength: 1, opacity: 1 }}
-							exit={{ opacity: 0, transition: { duration: 0.5 } }}
-							transition={{ duration: 1.2, ease: "easeInOut" }}
-							onAnimationComplete={handlePathComplete}
-						/>
-
-						<motion.circle
-							r="6"
-							fill="var(--background)"
-							stroke="var(--primary)"
-							strokeWidth="2"
-						>
-							<animateMotion
-								dur="1.2s"
-								repeatCount={1}
-								path={svgPath}
-								fill="freeze"
-							/>
-						</motion.circle>
-					</svg>
-				)}
-			</AnimatePresence>
 			<hr />
 			<div className="flex flex-col py-10">
 				<h2 className="m-auto text-center text-2xl font-bold">
-					{" "}
 					Mes skills à travers les stacks
 				</h2>
 				<SkillsStack />

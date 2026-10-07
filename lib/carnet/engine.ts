@@ -8,6 +8,11 @@ import {
 
 export const MODEL_BASE_URL = "/models/carnet-static";
 
+/** Un Worker créé depuis un blob ne résout pas les URL relatives : on ancre sur l'origine de la page. */
+export function absoluteModelBase(origin: string, base: string): string {
+	return `${origin}${base}`;
+}
+
 export type FetchLike = (url: string) => Promise<{
 	ok: boolean;
 	status: number;
