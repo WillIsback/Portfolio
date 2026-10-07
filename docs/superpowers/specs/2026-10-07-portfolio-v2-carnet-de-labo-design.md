@@ -102,7 +102,7 @@ Ordre de haut en bas :
 ### 7.1 Modèle : distillation de mDenseOn en embeddings statiques
 
 - **Professeur** : `lightonai/mDenseOn` (variante à vecteur unique de la famille mLateOn de LightOn, multilingue). mLateOn lui-même est écarté : multi-vecteurs (ColBERT), donc inadapté à une projection 2D, et 313 Mo en ONNX int8.
-- **Élève** : un modèle statique distillé avec `model2vec` (un vecteur par token du vocabulaire, embedding d'un texte = moyenne des vecteurs de ses tokens). Vocabulaire restreint au corpus du site et aux mots courants en français et en anglais ; dimensions réduites par PCA.
+- **Élève** : un modèle statique par mot, distillé selon la méthode de `model2vec` (un embedding par mot calculé par le professeur, réduction PCA, pondération SIF, quantification int8 par ligne ; embedding d'un texte = moyenne normalisée des vecteurs de ses mots connus). La méthode est implémentée directement : `model2vec` 0.9 ajoute le vocabulaire au tokenizer sous-mots de mmBERT (256 000 tokens), trop lourd pour le navigateur. Vocabulaire : mots du corpus du site puis mots courants en français et en anglais.
 - **Où** : distillation exécutée une fois, hors ligne, sur le DGX Spark (Python). Aucune inférence côté serveur en production.
 - **Artefacts versionnés dans le dépôt** :
   - `public/models/carnet-static/` : vecteurs du modèle et tokenizer, servis comme fichiers statiques par Vercel ;
@@ -110,7 +110,7 @@ Ordre de haut en bas :
 
 ### 7.2 Mesure de L0 (décision d'avancer)
 
-Mesures dans un banc d'essai navigateur temporaire (page non publiée, réseau 4G simulé) et sur 20 requêtes test (10 en français, 10 en anglais), rédigées à l'avance dans `scripts/distill/queries.json` avec les éléments attendus :
+Mesures sur 20 requêtes test (10 en français, 10 en anglais) rédigées à l'avance dans `scripts/distill/queries.json` ; la référence est le classement de mDenseOn complet (prompts `query: ` / `document: `). La taille compressée est mesurée, le temps 4G est calculé (9 Mbit/s, latence 150 ms), le calcul d'embedding est mesuré dans Node ; la vérification en navigateur réel se fait en L2 (Lighthouse sur la prévisualisation) :
 
 | Critère | Seuil |
 | --- | --- |
@@ -121,7 +121,7 @@ Mesures dans un banc d'essai navigateur temporaire (page non publiée, réseau 4
 
 **Décision.** Si tous les seuils sont tenus, la recherche sémantique est l'expérience principale. Sinon, la correspondance par mots-clés (7.4) devient l'expérience principale et la sémantique une amélioration chargée en différé ; le reste du design ne change pas. La décision et les chiffres sont consignés dans la PR de L0.
 
-**Tokenisation côté navigateur.** L0 choisit entre deux options selon la taille et la latence mesurées : le tokenizer de `@huggingface/transformers` (`AutoTokenizer`, sans modèle ONNX) ou un tokenizer minimal maison sur le vocabulaire restreint. Le même code de tokenisation et de moyenne sert à la commande `pnpm embeddings` et au navigateur, ce qui garantit que corpus et requêtes vivent dans le même espace.
+**Tokenisation.** Un tokenizer par mot minimal (normalisation NFKD, suppression des diacritiques, minuscules, mots `[a-z0-9]+` d'au moins 2 caractères), écrit à l'identique en Python (distillation) et en TypeScript (build et navigateur) ; un test de parité compare tokens et embeddings des deux implémentations. Les mots inconnus sont ignorés ; une requête sans aucun mot connu bascule sur la correspondance par mots-clés.
 
 ### 7.3 Préparation du corpus (`pnpm embeddings`)
 
@@ -222,7 +222,7 @@ Chaque livraison = une branche, une PR, une prévisualisation Vercel, un merge p
 | Risque | Parade |
 | --- | --- |
 | Qualité insuffisante du modèle statique sur des phrases longues | Requêtes courtes encouragées par le texte d'aide ; décision chiffrée en L0 ; repli par mots-clés toujours disponible |
-| Tokenizer multilingue trop lourd pour le navigateur | Choix mesuré en L0 entre `AutoTokenizer` et tokenizer minimal sur vocabulaire restreint |
+| Mots absents du vocabulaire (jargon, fautes de frappe) | Vocabulaire du corpus + 20 000 mots courants FR et EN ; repli par mots-clés quand aucun mot n'est connu |
 | Carte qui change de forme à chaque régénération | Graine UMAP fixée ; régénération uniquement quand le contenu change |
 | `map.json` en retard sur le catalogue | Commande documentée dans le README ; test sur les articles ; projets ajoutés rarement |
 | Quatre familles de polices alourdissent le chargement | Sous-ensemble latin, graisses limitées, `display: swap` ; mesure Lighthouse en L1 |
