@@ -1,8 +1,8 @@
 {
-  "version": "bd7a72de99e5",
-  "teacher": "lightonai/mDenseOn",
-  "dim": 128,
-  "vocabSize": 33760,
-  "wordPrompt": "none",
-  "sifA": 0.0001
+	"version": "f63393960f37",
+	"teacher": "lightonai/mDenseOn",
+	"dim": 128,
+	"vocabSize": 17416,
+	"wordPrompt": "none",
+	"sifA": 0.0001
 }
