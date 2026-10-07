@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
 		"out/**",
 		"build/**",
 		"next-env.d.ts",
+		// Environnement Python de la distillation (hors projet JS).
+		"scripts/distill/.venv/**",
 	]),
 	{
 		rules: {
