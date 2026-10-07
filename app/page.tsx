@@ -78,12 +78,12 @@ export default function Home() {
 			</div>
 
 			<div className="mt-20 flex flex-col items-center text-center space-y-6 px-4">
-				<h2 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
+				<h1 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
 					De la Data à la{" "}
 					<span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-brand-warm">
 						Décision.
 					</span>
-				</h2>
+				</h1>
 				<p className="max-w-2xl text-lg text-muted-foreground">
 					Je conçois des architectures full-stack propulsées par
 					l&apos;intelligence artificielle.
