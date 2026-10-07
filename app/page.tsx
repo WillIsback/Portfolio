@@ -70,7 +70,7 @@ export default function Home() {
 
 	return (
 		<main className="relative min-h-screen flex flex-col">
-			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
+			<div className="sticky top-0 z-50 w-full">
 				<Header
 					highlightContact={highlightContact}
 					contactBtnRef={contactBtnRef}

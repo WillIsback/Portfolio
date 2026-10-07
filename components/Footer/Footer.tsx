@@ -1,34 +1,24 @@
-import Image from "next/image";
 import Link from "next/link";
-import avatarSrc from "@/app/assets/coin_profile_pic.png";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Footer() {
 	return (
-		<footer className="flex flex-wrap justify-between items-center gap-4 w-full bg-card border border-border/60 px-4 py-4 sm:px-13 mt-10">
-			<div className="flex gap-4 items-center">
-				<Avatar className="size-12 ring-2 ring-background/70 shadow-lg shadow-primary/25">
-					<AvatarImage src={avatarSrc.src} alt="Portrait de William Derue" />
-					<AvatarFallback>WD</AvatarFallback>
-				</Avatar>
-				<p className="text-2xl font-bold text-foreground">Portfolio</p>
-			</div>
-			<div className="flex gap-2 items-center">
-				<p className="text-sm text-muted-foreground">
-					© {new Date().getFullYear()} William Derue
-				</p>
-				<Link
-					href="https://github.com/WillIsback/"
-					aria-label="Profil GitHub de William Derue"
+		<footer className="mt-16 w-full border-t border-border/70">
+			<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 font-mono text-xs text-ink-soft sm:px-6">
+				<p>Carnet tenu par William Derue · © {new Date().getFullYear()}</p>
+				<nav
+					aria-label="Liens du pied de page"
+					className="flex items-center gap-4"
 				>
-					<Image
-						src={"/icon/Github.svg"}
-						alt=""
-						width={24}
-						height={24}
-						className="dark:invert"
-					/>
-				</Link>
+					<Link href="/articles" className="hover:text-primary">
+						Articles
+					</Link>
+					<Link
+						href="https://github.com/WillIsback/"
+						className="hover:text-primary"
+					>
+						GitHub
+					</Link>
+				</nav>
 			</div>
 		</footer>
 	);

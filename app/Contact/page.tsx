@@ -65,7 +65,7 @@ export default function Contact() {
 
 	return (
 		<main className="relative min-h-screen flex flex-col">
-			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
+			<div className="sticky top-0 z-50 w-full">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
 			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 sm:w-auto">
