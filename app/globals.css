@@ -90,11 +90,11 @@
   --paper-grid: oklch(0.13 0.03 260 / 0.06);
   --ink-soft: oklch(0.45 0.04 262);
   --note: oklch(0.45 0.09 45);
-  --cluster-1: oklch(0.41 0.13 270);
-  --cluster-2: oklch(0.4 0.1 200);
-  --cluster-3: oklch(0.41 0.12 150);
-  --cluster-4: oklch(0.43 0.13 60);
-  --cluster-5: oklch(0.46 0.14 15);
+  --cluster-1: oklch(0.5 0.13 270);
+  --cluster-2: oklch(0.52 0.1 200);
+  --cluster-3: oklch(0.55 0.12 150);
+  --cluster-4: oklch(0.55 0.13 60);
+  --cluster-5: oklch(0.52 0.14 15);
 
   /* Texte éditorial (titres / paragraphes / secondaires) */
   --text-strong: var(--foreground);
@@ -241,6 +241,8 @@
     transform: scale(1.35);
   }
   .carnet-query {
+    transform-box: fill-box;
+    transform-origin: center;
     animation: carnet-pop 0.25s ease-out backwards;
   }
   @keyframes carnet-draw {
