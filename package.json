@@ -13,7 +13,8 @@
 		"db:generate": "prisma generate",
 		"db:migrate": "prisma migrate dev",
 		"db:seed": "tsx prisma/seed.ts",
-		"db:reset": "prisma migrate reset --force"
+		"db:reset": "prisma migrate reset --force",
+		"carnet:corpus": "tsx --env-file=.env.local scripts/carnet/export-corpus.ts"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
