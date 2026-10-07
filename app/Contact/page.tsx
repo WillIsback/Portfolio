@@ -64,7 +64,7 @@ export default function Contact() {
 	}, [state, resetForm]);
 
 	return (
-		<main className="relative min-h-screen flex flex-col bg-background">
+		<main className="relative min-h-screen flex flex-col">
 			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>

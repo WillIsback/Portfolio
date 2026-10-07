@@ -7,7 +7,7 @@ export default function ArticlesLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<main className="relative flex min-h-screen flex-col bg-background">
+		<main className="relative flex min-h-screen flex-col">
 			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
 				<Header highlightContact={false} />
 			</div>
