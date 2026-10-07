@@ -20,7 +20,7 @@ def build_vocabulary(corpus_texts, common_fr, common_en) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--corpus", default="corpus.json")
-    parser.add_argument("--common", type=int, default=20000)
+    parser.add_argument("--common", type=int, default=10000)
     parser.add_argument("--out", default="vocab.txt")
     args = parser.parse_args()
     corpus = json.loads(Path(args.corpus).read_text())

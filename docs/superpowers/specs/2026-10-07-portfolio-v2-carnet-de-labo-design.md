@@ -222,7 +222,7 @@ Chaque livraison = une branche, une PR, une prévisualisation Vercel, un merge p
 | Risque | Parade |
 | --- | --- |
 | Qualité insuffisante du modèle statique sur des phrases longues | Requêtes courtes encouragées par le texte d'aide ; décision chiffrée en L0 ; repli par mots-clés toujours disponible |
-| Mots absents du vocabulaire (jargon, fautes de frappe) | Vocabulaire du corpus + 20 000 mots courants FR et EN ; repli par mots-clés quand aucun mot n'est connu |
+| Mots absents du vocabulaire (jargon, fautes de frappe) | Vocabulaire du corpus + 10 000 mots courants FR et EN (réduit de 20 000 à 10 000 pour tenir le seuil des 3 s en 4G) ; repli par mots-clés quand aucun mot n'est connu |
 | Carte qui change de forme à chaque régénération | Graine UMAP fixée ; régénération uniquement quand le contenu change |
 | `map.json` en retard sur le catalogue | Commande documentée dans le README ; test sur les articles ; projets ajoutés rarement |
 | Quatre familles de polices alourdissent le chargement | Sous-ensemble latin, graisses limitées, `display: swap` ; mesure Lighthouse en L1 |
