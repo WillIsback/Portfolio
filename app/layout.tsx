@@ -12,11 +12,13 @@ const spaceGrotesk = Space_Grotesk({
 const firaCode = Fira_Code({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-	title: "William Derue | Développeur FullStack IA",
+	title: "William Derue | Développeur IA · parcours AI Engineer",
 	description:
-		"Portfolio de William Derue - Développeur fullstack spécialisé en IA. Architectures full-stack propulsées par l'intelligence artificielle.",
+		"Portfolio de William Derue - Développeur IA en parcours AI Engineer : projets de machine learning, LLM et infrastructure, et retours d'expérience.",
 	keywords: [
 		"développeur fullstack",
+		"AI engineer",
+		"machine learning",
 		"IA",
 		"intelligence artificielle",
 		"React",
@@ -31,16 +33,16 @@ export const metadata: Metadata = {
 		type: "website",
 		locale: "fr_FR",
 		url: "https://www.willisback.fr",
-		title: "William Derue | Développeur FullStack IA",
+		title: "William Derue | Développeur IA · parcours AI Engineer",
 		description:
-			"Portfolio de William Derue - Développeur fullstack spécialisé en IA. Découvrez mes projets et compétences.",
+			"Portfolio de William Derue - Développeur IA en parcours AI Engineer. Projets, expériences et articles.",
 		siteName: "Portfolio WillisBack",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "William Derue | Développeur FullStack IA",
+		title: "William Derue | Développeur IA · parcours AI Engineer",
 		description:
-			"Développeur fullstack spécialisé en IA - De la Data à la Décision",
+			"Développeur IA en parcours AI Engineer - De la Data à la Décision",
 	},
 	robots: {
 		index: true,

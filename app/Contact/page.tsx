@@ -83,7 +83,7 @@ export default function Contact() {
 						transition={{ duration: 0.6, delay: 0.2 }}
 						className="space-y-4"
 					>
-						<h1 className="text-5xl sm:text-3xl font-display font-bold tracking-tight text-foreground">
+						<h1 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground">
 							Formulaire de contact
 						</h1>
 					</motion.div>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "À propos | William Derue - Développeur FullStack IA",
+	title: "À propos | William Derue - Développeur IA · parcours AI Engineer",
 	description:
-		"Découvrez mon parcours - De l'automaticien au développeur fullstack IA. 7 ans d'expertise en technologie et intelligence artificielle.",
+		"Découvrez mon parcours - De l'automaticien au développeur IA, aujourd'hui en parcours AI Engineer. 7 ans d'expertise en technologie et intelligence artificielle.",
 	keywords: [
 		"à propos",
 		"parcours",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	twitter: {
 		card: "summary",
 		title: "À propos | William Derue",
-		description: "Découvrez mon parcours en tant que développeur fullstack IA",
+		description: "Mon parcours, de l'automatisme industriel à l'ingénierie IA",
 	},
 };
 

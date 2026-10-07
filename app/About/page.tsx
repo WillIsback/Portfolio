@@ -42,16 +42,22 @@ const timelineItems = [
 			"Intégration au ministère de l'Éducation nationale en tant qu'administrateur système, poste que j'occupe toujours avec responsabilités croissantes.",
 	},
 	{
-		year: "2025-2026",
-		title: "Formation FullStack IA",
+		year: "Septembre 2025 – juillet 2026",
+		title: "Diplômé Développeur full stack",
 		description:
-			"Suivi une formation complète de développeur FullStack spécialisé en IA chez OpenClassrooms pour approfondir mes compétences.",
+			"Parcours Développeur FullStack IA chez OpenClassrooms, validé en juillet 2026 par le titre « Développeur full stack » (RNCP42641), niveau 6 (bac +3/4, EQF 6).",
 	},
 	{
 		year: "Janvier 2026",
 		title: "Cellule IA - DSI Régionale",
 		description:
 			"Membre actif de la cellule IA de la DSI régionale, déterminé à concrétiser des projets exploitant le potentiel de l'IA pour répondre aux besoins métier.",
+	},
+	{
+		year: "Septembre 2026 – en cours",
+		title: "Parcours AI Engineer",
+		description:
+			"Dans la continuité, parcours AI Engineer chez OpenClassrooms, qui prépare au titre « Expert en ingénierie et science des données », enregistré au RNCP, niveau 7 (bac +5, EQF 7).",
 	},
 ];
 
@@ -82,11 +88,11 @@ export default function About() {
 							transition={{ duration: 0.6, delay: 0.2 }}
 							className="space-y-4"
 						>
-							<h1 className="text-5xl sm:text-3xl font-display font-bold tracking-tight text-foreground">
+							<h1 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground">
 								William Derue
 							</h1>
 							<p className="text-xl text-primary font-medium">
-								Développeur fullstack IA
+								Développeur IA · parcours AI Engineer
 							</p>
 							<p className="text-lg text-muted-foreground">
 								{age} ans — Sud de la France
