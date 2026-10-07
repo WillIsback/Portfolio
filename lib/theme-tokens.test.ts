@@ -35,4 +35,15 @@ describe("tokens du carnet", () => {
 			/:is\(h1, h2, h3, h4\) :is\(em, i\)\s*\{\s*font-family: inherit;/,
 		);
 	});
+
+	it("définit cinq teintes de groupe en clair et en sombre", () => {
+		for (let i = 1; i <= 5; i++)
+			expect(css.match(new RegExp(`--cluster-${i}:`, "g"))?.length).toBe(2);
+	});
+
+	it("neutralise toute animation de la carte en mouvement réduit", () => {
+		expect(css).toMatch(
+			/@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*\.carnet-axis,\s*\.carnet-point,\s*\.carnet-query\s*\{\s*animation: none;/,
+		);
+	});
 });
