@@ -115,4 +115,20 @@ describe("buildMap", () => {
 	it("refuse des longueurs incohérentes", () => {
 		expect(() => buildMap(corpus, [groupA[0]], options)).toThrow(/vectors/);
 	});
+	it.each([0, 1, 3, 4])("reste valide sur un corpus de %i éléments", (n) => {
+		const vs = [groupA[0], groupB[0], groupA[1], groupB[1]].slice(0, n);
+		const map = buildMap(corpus.slice(0, n), vs, options);
+		expect(MapDataSchema.parse(map)).toEqual(map);
+		expect(map.items).toHaveLength(n);
+		const ids = map.clusters.map((c) => c.id);
+		for (const it of map.items) {
+			for (const v of [it.x, it.y]) {
+				expect(Number.isFinite(v)).toBe(true);
+				expect(v).toBeGreaterThanOrEqual(0);
+				expect(v).toBeLessThanOrEqual(1);
+			}
+			expect(ids).toContain(it.cluster);
+		}
+		if (n === 0) expect(map.clusters).toEqual([]);
+	});
 });

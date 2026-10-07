@@ -26,6 +26,7 @@ export function kmeans(
 	iterations = 50,
 ): number[] {
 	const n = vectors.length;
+	if (n === 0) return [];
 	const kk = Math.max(1, Math.min(k, n));
 	const dim = vectors[0]?.length ?? 0;
 	const centers: number[][] = [Array.from(vectors[Math.floor(random() * n)])];
