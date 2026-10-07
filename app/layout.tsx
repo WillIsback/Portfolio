@@ -1,15 +1,40 @@
 import type { Metadata } from "next";
-import { Fira_Code, Space_Grotesk } from "next/font/google";
+import {
+	Bricolage_Grotesque,
+	Caveat,
+	Fira_Code,
+	Source_Serif_4,
+} from "next/font/google";
 import ThemedToaster from "@/components/theme/ThemedToaster";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const bricolage = Bricolage_Grotesque({
 	subsets: ["latin"],
-	variable: "--font-display",
+	weight: ["600", "700"],
+	variable: "--font-bricolage",
+	display: "swap",
 });
-const firaCode = Fira_Code({ subsets: ["latin"], variable: "--font-mono" });
+const sourceSerif = Source_Serif_4({
+	subsets: ["latin"],
+	weight: ["400", "600"],
+	style: ["normal", "italic"],
+	variable: "--font-source-serif",
+	display: "swap",
+});
+const caveat = Caveat({
+	subsets: ["latin"],
+	weight: ["500"],
+	variable: "--font-caveat",
+	display: "swap",
+});
+const firaCode = Fira_Code({
+	subsets: ["latin"],
+	weight: ["400", "500"],
+	variable: "--font-fira",
+	display: "swap",
+});
 
 export const metadata: Metadata = {
 	title: "William Derue | Développeur IA · parcours AI Engineer",
@@ -65,7 +90,7 @@ export default function RootLayout({
 	return (
 		<html lang="fr" suppressHydrationWarning>
 			<body
-				className={`${spaceGrotesk.variable} ${firaCode.variable} antialiased`}
+				className={`${bricolage.variable} ${sourceSerif.variable} ${caveat.variable} ${firaCode.variable} paper antialiased`}
 			>
 				<ThemeProvider
 					attribute="class"
