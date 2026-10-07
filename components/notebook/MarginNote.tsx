@@ -2,12 +2,13 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
-import { NOTE_DELAY_SECONDS, NOTE_SECONDS } from "@/lib/motion";
+import { NOTE_DELAY_SECONDS, NOTE_SECONDS, noteAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 interface MarginNoteProps {
 	children: ReactNode;
 	side?: "left" | "right";
+	inline?: boolean;
 }
 
 /**
@@ -17,15 +18,18 @@ interface MarginNoteProps {
 export default function MarginNote({
 	children,
 	side = "right",
+	inline = false,
 }: Readonly<MarginNoteProps>) {
 	const reduced = useReducedMotion();
 	return (
 		<motion.aside
 			className={cn(
-				"font-hand text-lg leading-snug text-note my-3 xl:my-0 xl:absolute xl:top-0 xl:w-48",
-				side === "right" ? "xl:-right-56" : "xl:-left-56 xl:text-right",
+				"font-hand text-lg leading-snug text-note my-3",
+				!inline && "xl:my-0 xl:absolute xl:top-0 xl:w-48",
+				!inline &&
+					(side === "right" ? "xl:-right-56" : "xl:-left-56 xl:text-right"),
 			)}
-			whileInView={reduced === false ? { y: [4, 0] } : undefined}
+			whileInView={noteAnimation(reduced)}
 			viewport={{ once: true }}
 			transition={{ duration: NOTE_SECONDS, delay: NOTE_DELAY_SECONDS }}
 		>

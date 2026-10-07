@@ -1,13 +1,14 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { EASE_INK, INK_DRAW_SECONDS } from "@/lib/motion";
+import { EASE_INK, INK_DRAW_SECONDS, inkDrawAnimation } from "@/lib/motion";
 
 interface InkPathProps {
 	d: string;
 	className?: string;
 	strokeWidth?: number;
 	delay?: number;
+	vectorEffect?: "non-scaling-stroke";
 }
 
 /**
@@ -20,6 +21,7 @@ export default function InkPath({
 	className,
 	strokeWidth = 1.6,
 	delay = 0,
+	vectorEffect,
 }: Readonly<InkPathProps>) {
 	const reduced = useReducedMotion();
 	return (
@@ -31,7 +33,8 @@ export default function InkPath({
 			strokeWidth={strokeWidth}
 			strokeLinecap="round"
 			strokeLinejoin="round"
-			whileInView={reduced === false ? { pathLength: [0, 1] } : undefined}
+			vectorEffect={vectorEffect}
+			whileInView={inkDrawAnimation(reduced)}
 			viewport={{ once: true }}
 			transition={{ duration: INK_DRAW_SECONDS, ease: EASE_INK, delay }}
 		/>

@@ -25,7 +25,7 @@ const sourceSerif = Source_Serif_4({
 });
 const sourceSerifItalic = Source_Serif_4({
 	subsets: ["latin"],
-	weight: "400",
+	weight: ["400", "600"],
 	style: "italic",
 	variable: "--font-source-serif-italic",
 	preload: false,

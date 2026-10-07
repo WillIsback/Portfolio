@@ -32,6 +32,13 @@ describe("MarginNote", () => {
 		);
 		expect(html).not.toContain("opacity:0");
 	});
+
+	it("reste dans le flux quand inline est demandé", () => {
+		const html = renderToStaticMarkup(
+			<MarginNote inline>essaie « vision »</MarginNote>,
+		);
+		expect(html).not.toContain("xl:absolute");
+	});
 });
 
 describe("InkPath", () => {
@@ -52,5 +59,10 @@ describe("InkUnderline", () => {
 		const html = renderToStaticMarkup(<InkUnderline>expériences</InkUnderline>);
 		expect(html).toContain("expériences");
 		expect(html).toContain('aria-hidden="true"');
+	});
+
+	it("garde une épaisseur de trait constante malgré l'étirement", () => {
+		const html = renderToStaticMarkup(<InkUnderline>mot</InkUnderline>);
+		expect(html).toContain('vector-effect="non-scaling-stroke"');
 	});
 });
