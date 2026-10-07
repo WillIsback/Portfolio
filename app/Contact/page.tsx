@@ -64,11 +64,11 @@ export default function Contact() {
 	}, [state, resetForm]);
 
 	return (
-		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
+		<main className="relative min-h-screen flex flex-col">
+			<div className="sticky top-0 z-50 w-full">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
-			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 sm:w-auto">
+			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 pt-10 sm:w-auto">
 				<div className="mb-20 flex items-center gap-4 sm:gap-8">
 					<motion.div
 						initial={{ opacity: 0, scale: 0.8 }}

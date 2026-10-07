@@ -130,6 +130,7 @@
   padding: 0.25em 0 0.25em 1.1em;
   border-left: 3px solid var(--primary);
   color: var(--foreground);
+  font-family: var(--font-serif-italic);
   font-style: italic;
 }
 

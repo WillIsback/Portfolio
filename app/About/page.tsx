@@ -66,8 +66,8 @@ export default function About() {
 	const contactBtnRef = useRef<HTMLButtonElement>(null);
 
 	return (
-		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
+		<main className="relative min-h-screen flex flex-col">
+			<div className="sticky top-0 z-50 w-full">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
 

@@ -69,8 +69,8 @@ export default function Home() {
 	};
 
 	return (
-		<main className="relative min-h-screen flex flex-col bg-background">
-			<div className="sticky top-0 z-50 flex w-full justify-center p-3 sm:p-6">
+		<main className="relative min-h-screen flex flex-col">
+			<div className="sticky top-0 z-50 w-full">
 				<Header
 					highlightContact={highlightContact}
 					contactBtnRef={contactBtnRef}
@@ -78,12 +78,12 @@ export default function Home() {
 			</div>
 
 			<div className="mt-20 flex flex-col items-center text-center space-y-6 px-4">
-				<h2 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
+				<h1 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
 					De la Data à la{" "}
 					<span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-brand-warm">
 						Décision.
 					</span>
-				</h2>
+				</h1>
 				<p className="max-w-2xl text-lg text-muted-foreground">
 					Je conçois des architectures full-stack propulsées par
 					l&apos;intelligence artificielle.
@@ -137,10 +137,10 @@ export default function Home() {
 			</AnimatePresence>
 			<hr />
 			<div className="flex flex-col py-10">
-				<h3 className="m-auto text-center text-2xl font-bold">
+				<h2 className="m-auto text-center text-2xl font-bold">
 					{" "}
 					Mes skills à travers les stacks
-				</h3>
+				</h2>
 				<SkillsStack />
 			</div>
 			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
