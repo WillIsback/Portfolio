@@ -10,7 +10,11 @@ interface InkPathProps {
 	delay?: number;
 }
 
-/** Trait d'encre qui se dessine une seule fois à sa première apparition. */
+/**
+ * Trait d'encre qui se dessine une seule fois à sa première apparition.
+ * Le rendu serveur et le mouvement réduit sont l'état final ; l'animation ne part
+ * que côté client quand `useReducedMotion()` vaut strictement `false`.
+ */
 export default function InkPath({
 	d,
 	className,
@@ -27,9 +31,8 @@ export default function InkPath({
 			strokeWidth={strokeWidth}
 			strokeLinecap="round"
 			strokeLinejoin="round"
-			initial={reduced ? false : { pathLength: 0 }}
-			whileInView={{ pathLength: 1 }}
-			viewport={{ once: true, margin: "-10% 0px" }}
+			whileInView={reduced === false ? { pathLength: [0, 1] } : undefined}
+			viewport={{ once: true }}
 			transition={{ duration: INK_DRAW_SECONDS, ease: EASE_INK, delay }}
 		/>
 	);

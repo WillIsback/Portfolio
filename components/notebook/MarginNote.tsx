@@ -25,8 +25,7 @@ export default function MarginNote({
 				"font-hand text-lg leading-snug text-note my-3 xl:my-0 xl:absolute xl:top-0 xl:w-48",
 				side === "right" ? "xl:-right-56" : "xl:-left-56 xl:text-right",
 			)}
-			initial={reduced ? false : { y: 4 }}
-			whileInView={{ y: 0 }}
+			whileInView={reduced === false ? { y: [4, 0] } : undefined}
 			viewport={{ once: true }}
 			transition={{ duration: NOTE_SECONDS, delay: NOTE_DELAY_SECONDS }}
 		>

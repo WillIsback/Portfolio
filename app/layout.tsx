@@ -19,8 +19,16 @@ const bricolage = Bricolage_Grotesque({
 const sourceSerif = Source_Serif_4({
 	subsets: ["latin"],
 	weight: ["400", "600"],
-	style: ["normal", "italic"],
+	style: "normal",
 	variable: "--font-source-serif",
+	display: "swap",
+});
+const sourceSerifItalic = Source_Serif_4({
+	subsets: ["latin"],
+	weight: "400",
+	style: "italic",
+	variable: "--font-source-serif-italic",
+	preload: false,
 	display: "swap",
 });
 const caveat = Caveat({
@@ -93,7 +101,7 @@ export default function RootLayout({
 		<html
 			lang="fr"
 			suppressHydrationWarning
-			className={`${bricolage.variable} ${sourceSerif.variable} ${caveat.variable} ${firaCode.variable}`}
+			className={`${bricolage.variable} ${sourceSerif.variable} ${sourceSerifItalic.variable} ${caveat.variable} ${firaCode.variable}`}
 		>
 			<body className="paper antialiased">
 				<ThemeProvider

@@ -9,12 +9,12 @@ export default function Footer() {
 					aria-label="Liens du pied de page"
 					className="flex items-center gap-4"
 				>
-					<Link href="/articles" className="hover:text-primary">
+					<Link href="/articles" className="rounded-sm hover:text-primary focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
 						Articles
 					</Link>
 					<Link
 						href="https://github.com/WillIsback/"
-						className="hover:text-primary"
+						className="rounded-sm hover:text-primary focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 					>
 						GitHub
 					</Link>

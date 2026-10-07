@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-serif: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --font-serif-italic: var(--font-source-serif-italic), Georgia, "Times New Roman", serif;
   --font-hand: var(--font-caveat), "Segoe Print", cursive;
   --font-mono: var(--font-fira), ui-monospace, SFMono-Regular, monospace;
   --font-sans: var(--font-bricolage), system-ui, sans-serif;
@@ -171,6 +172,11 @@
     color: var(--text-body);
   }
   h1, h2, h3, h4 { font-family: var(--font-display); color: var(--text-strong); }
+  em,
+  i {
+    font-family: var(--font-serif-italic);
+    font-style: italic;
+  }
   code,
   pre {
     font-family: var(--font-mono);
