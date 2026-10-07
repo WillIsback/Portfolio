@@ -68,7 +68,7 @@ export default function Contact() {
 			<div className="sticky top-0 z-50 w-full">
 				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
 			</div>
-			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 sm:w-auto">
+			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 pt-10 sm:w-auto">
 				<div className="mb-20 flex items-center gap-4 sm:gap-8">
 					<motion.div
 						initial={{ opacity: 0, scale: 0.8 }}
