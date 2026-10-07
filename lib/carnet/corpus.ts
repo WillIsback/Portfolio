@@ -1,3 +1,4 @@
+import { extractTerms } from "./terms";
 import { foldText } from "./tokenize";
 
 export interface CorpusItem {
@@ -7,6 +8,7 @@ export interface CorpusItem {
 	text: string;
 	href: string;
 	keywords: string[];
+	terms: string[];
 }
 
 export interface ProjectForCorpus {
@@ -50,6 +52,7 @@ export function articleToCorpusItem(article: {
 		]),
 		href: `/articles/${article.slug}`,
 		keywords: article.tags.map(normalizeKeyword),
+		terms: extractTerms(article.title, article.description),
 	};
 }
 
@@ -71,5 +74,6 @@ export function projectToCorpusItem(
 		text: joinSentences([project.title, project.description, tech.join(", ")]),
 		href: project.github,
 		keywords: tech.map(normalizeKeyword),
+		terms: extractTerms(project.title, project.description),
 	};
 }

@@ -17,6 +17,7 @@ function item(i: number, keywords: string[]): CorpusItem {
 		text: `P${i}`,
 		href: `https://x/${i}`,
 		keywords,
+		terms: [],
 	};
 }
 

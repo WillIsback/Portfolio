@@ -57,6 +57,7 @@ describe("articleToCorpusItem", () => {
 			text: "Neuf agents, neuf jours. Retour d'expérience sur une flotte d'agents. Agents autonomes, SRE",
 			href: "/articles/neuf-agents-neuf-jours",
 			keywords: ["agents autonomes", "sre"],
+			terms: ["neuf", "agents", "jours", "retour", "experience", "flotte"],
 		});
 	});
 });
@@ -71,6 +72,15 @@ describe("projectToCorpusItem", () => {
 			text: "P13-Fashion-Insta. OpenClassroom ML/AI project on Vision task. Python, FastAPI, Docker",
 			href: "https://github.com/WillIsback/P13-Fashion-Insta",
 			keywords: ["python", "fastapi", "docker"],
+			terms: [
+				"p13",
+				"fashion",
+				"insta",
+				"openclassroom",
+				"project",
+				"vision",
+				"task",
+			],
 		});
 	});
 
@@ -86,5 +96,29 @@ describe("projectToCorpusItem", () => {
 		expect(projectToCorpusItem({ ...baseProject, description: "" })?.text).toBe(
 			"P13-Fashion-Insta. Python, FastAPI, Docker",
 		);
+	});
+});
+
+describe("termes de recherche", () => {
+	it("dérive les termes d'un article de son titre et de sa description", () => {
+		const item = articleToCorpusItem({
+			slug: "x",
+			title: "Neuf agents, neuf jours",
+			description: "Une flotte SRE",
+			tags: ["LLM local"],
+		});
+		expect(item.terms).toEqual(["neuf", "agents", "jours", "flotte", "sre"]);
+	});
+
+	it("dérive les termes d'un projet de son titre et de sa description", () => {
+		expect(projectToCorpusItem(baseProject)?.terms).toEqual([
+			"p13",
+			"fashion",
+			"insta",
+			"openclassroom",
+			"project",
+			"vision",
+			"task",
+		]);
 	});
 });
