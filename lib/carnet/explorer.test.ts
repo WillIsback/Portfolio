@@ -35,23 +35,47 @@ describe("explorerReducer", () => {
 		expect(explorerReducer(ready, { type: "activate" }).status).toBe("ready");
 	});
 
-	it("numérote chaque saisie et oublie le résultat précédent", () => {
-		const s1 = typed(initialExplorerState, "agents");
-		const s2 = explorerReducer(s1, { type: "result", seq: s1.seq, ranked: [] });
-		const s3 = typed(s2, "vision");
+	it("numérote chaque saisie et garde le dernier résultat sémantique", () => {
+		const ready = explorerReducer(initialExplorerState, { type: "ready" });
+		const s1 = typed(ready, "agents");
+		const ranked = [{ id: "a", score: 0.9 }];
+		const s2 = explorerReducer(s1, { type: "result", seq: s1.seq, ranked });
+		const s3 = typed(s2, "agents autonomes");
 		expect(s3.seq).toBe(s1.seq + 1);
-		expect(s3.semantic).toBeNull();
+		expect(s3.semantic).toEqual({ seq: s1.seq, ranked });
+		const view = computeView(s3, items, positions);
+		expect(view.mode).toBe("semantic");
+		expect(view.results).toEqual([{ id: "a", score: 0.9 }]);
+		const s4 = explorerReducer(s3, {
+			type: "result",
+			seq: s3.seq,
+			ranked: [{ id: "b", score: 0.4 }],
+		});
+		expect(computeView(s4, items, positions).results).toEqual([
+			{ id: "b", score: 0.4 },
+		]);
 	});
 
 	it("ignore une réponse périmée (frappe rapide)", () => {
 		const s1 = typed(initialExplorerState, "age");
 		const s2 = typed(s1, "agents");
-		const late = explorerReducer(s2, {
+		const current = explorerReducer(s2, {
+			type: "result",
+			seq: s2.seq,
+			ranked: [{ id: "a", score: 1 }],
+		});
+		const late = explorerReducer(current, {
 			type: "result",
 			seq: s1.seq,
 			ranked: [{ id: "c", score: 1 }],
 		});
-		expect(late.semantic).toBeNull();
+		expect(late.semantic).toEqual({
+			seq: s2.seq,
+			ranked: [{ id: "a", score: 1 }],
+		});
+		expect(
+			explorerReducer(s2, { type: "result", seq: s1.seq, ranked: [] }).semantic,
+		).toBeNull();
 	});
 });
 

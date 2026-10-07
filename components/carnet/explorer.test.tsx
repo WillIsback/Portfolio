@@ -49,6 +49,7 @@ describe("CarnetExplorer (rendu serveur)", () => {
 	it("prépare une région annoncée, vide au repos, sans mention sémantique", () => {
 		expect(html).toContain('aria-live="polite"');
 		expect(html).not.toContain("recherche sémantique active");
+		expect(html).not.toContain('class="carnet-query"');
 		expect(html).toMatch(/aria-live="polite"[^>]*><\/div>/);
 	});
 });

@@ -41,12 +41,8 @@ export function explorerReducer(
 		case "failed":
 			return { ...state, status: "failed" };
 		case "input":
-			return {
-				...state,
-				query: action.query,
-				seq: state.seq + 1,
-				semantic: null,
-			};
+			// Le dernier résultat sémantique est gardé : pas de bascule mots-clés à chaque frappe.
+			return { ...state, query: action.query, seq: state.seq + 1 };
 		case "result":
 			return action.seq === state.seq
 				? { ...state, semantic: { seq: action.seq, ranked: action.ranked } }
