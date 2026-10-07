@@ -27,12 +27,14 @@ const caveat = Caveat({
 	subsets: ["latin"],
 	weight: ["500"],
 	variable: "--font-caveat",
+	preload: false,
 	display: "swap",
 });
 const firaCode = Fira_Code({
 	subsets: ["latin"],
 	weight: ["400", "500"],
 	variable: "--font-fira",
+	preload: false,
 	display: "swap",
 });
 
