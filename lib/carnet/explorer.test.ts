@@ -164,6 +164,16 @@ describe("computeView", () => {
 		expect(computeView(done, items, positions).mode).toBe("keyword");
 	});
 
+	it("reste en attente si ni le modèle ni les données de recherche n'ont pu être chargés", () => {
+		const failed = explorerReducer(
+			explorerReducer(initialExplorerState, { type: "activate" }),
+			{ type: "failed" },
+		);
+		const view = computeView(typed(failed, "vision"), null, positions);
+		expect(view.pending).toBe(true);
+		expect(view.results).toEqual([]);
+	});
+
 	it("reste en mots-clés si le modèle n'a pas pu être chargé", () => {
 		const failed = explorerReducer(
 			explorerReducer(initialExplorerState, { type: "activate" }),
