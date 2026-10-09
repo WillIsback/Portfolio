@@ -1,8 +1,9 @@
+import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import MarginNote from "@/components/notebook/MarginNote";
-import ProjectGrid from "@/components/ProjectGrid/ProjectGrid";
+import ProjectRegister from "@/components/register/ProjectRegister";
 import SkillsStack from "@/components/Skills/SkillsStack";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
@@ -60,7 +61,9 @@ export default function Home() {
 				<SkillsStack />
 			</div>
 			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
-				<ProjectGrid />
+				<Suspense>
+					<ProjectRegister points={view.points} neighbors={{}} entries={{}} />
+				</Suspense>
 			</section>
 			<Footer />
 		</main>
