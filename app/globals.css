@@ -90,6 +90,11 @@
   --paper-grid: oklch(0.13 0.03 260 / 0.06);
   --ink-soft: oklch(0.45 0.04 262);
   --note: oklch(0.45 0.09 45);
+  --cluster-1: oklch(0.5 0.13 270);
+  --cluster-2: oklch(0.52 0.1 200);
+  --cluster-3: oklch(0.55 0.12 150);
+  --cluster-4: oklch(0.55 0.13 60);
+  --cluster-5: oklch(0.52 0.14 15);
 
   /* Texte éditorial (titres / paragraphes / secondaires) */
   --text-strong: var(--foreground);
@@ -160,6 +165,11 @@
   --paper-grid: oklch(0.98 0.01 260 / 0.08);
   --ink-soft: oklch(0.76 0.03 262);
   --note: oklch(0.82 0.08 70);
+  --cluster-1: oklch(0.75 0.13 270);
+  --cluster-2: oklch(0.78 0.1 200);
+  --cluster-3: oklch(0.8 0.12 150);
+  --cluster-4: oklch(0.8 0.12 70);
+  --cluster-5: oklch(0.76 0.13 20);
 }
 
 @layer base {
@@ -176,6 +186,9 @@
   i {
     font-family: var(--font-serif-italic);
     font-style: italic;
+  }
+  :is(h1, h2, h3, h4) :is(em, i) {
+    font-family: inherit;
   }
   code,
   pre {
@@ -206,5 +219,58 @@
     background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
     mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 90%);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 90%);
+  }
+
+  /* Fig. 1 (spec §5.3) : les axes se tracent, puis les points arrivent groupe par groupe (~1,2 s),
+     puis respirent. Animation CSS minutée, sans observateur ; rien en mouvement réduit. */
+  /* Note de marge : glisse de 4 px (transform seul, jamais d'opacité) ; durées = lib/motion.ts. */
+  .note-in {
+    animation: note-in 0.4s ease-out 0.25s backwards;
+  }
+  @keyframes note-in {
+    from { transform: translateY(4px); }
+  }
+  .carnet-axis {
+    stroke-dasharray: 1;
+    animation: carnet-draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  .carnet-point {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: fill 0.2s, transform 0.2s;
+    animation:
+      carnet-pop 0.3s ease-out backwards calc(0.6s + var(--i, 0) * 0.08s),
+      carnet-breathe 6s ease-in-out calc(1.2s + var(--i, 0) * 0.5s) infinite;
+  }
+  .carnet-point[data-hit="true"],
+  .carnet-point[data-active="true"] {
+    fill: var(--primary) !important;
+    transform: scale(1.35);
+  }
+  .carnet-query {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: carnet-pop 0.25s ease-out backwards;
+  }
+  @keyframes carnet-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes carnet-pop {
+    from { opacity: 0; transform: scale(0.4); }
+  }
+  @keyframes carnet-breathe {
+    50% { opacity: 0.92; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carnet-axis,
+    .carnet-point,
+    .carnet-query {
+      animation: none;
+      transition: none;
+    }
+    .note-in {
+      animation: none;
+    }
   }
 }

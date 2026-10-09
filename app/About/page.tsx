@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { BookOpenText } from "lucide-react";
-import { useRef } from "react";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 
@@ -63,12 +62,11 @@ const timelineItems = [
 
 export default function About() {
 	const age = getAge();
-	const contactBtnRef = useRef<HTMLButtonElement>(null);
 
 	return (
 		<main className="relative min-h-screen flex flex-col">
 			<div className="sticky top-0 z-50 w-full">
-				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
+				<Header />
 			</div>
 
 			<div className="flex-1 px-4 py-12 sm:px-6 lg:px-8">

@@ -1,0 +1,68 @@
+import { tokenize } from "./tokenize";
+
+/** Mots vides (déjà pliés par `tokenize`) écartés des termes de recherche. */
+const STOPWORDS = new Set([
+	"les",
+	"des",
+	"une",
+	"est",
+	"pour",
+	"par",
+	"sur",
+	"dans",
+	"avec",
+	"sans",
+	"qui",
+	"que",
+	"aux",
+	"ses",
+	"son",
+	"leur",
+	"leurs",
+	"cette",
+	"ces",
+	"mais",
+	"plus",
+	"tout",
+	"tous",
+	"comme",
+	"entre",
+	"vers",
+	"chez",
+	"elle",
+	"ils",
+	"nous",
+	"vous",
+	"donc",
+	"car",
+	"ete",
+	"etre",
+	"fait",
+	"the",
+	"and",
+	"for",
+	"with",
+	"from",
+	"that",
+	"this",
+	"into",
+	"are",
+	"was",
+	"its",
+	"your",
+	"our",
+	"not",
+	"all",
+	"via",
+	"using",
+	"based",
+]);
+
+/** Termes de recherche d'un élément : mots d'au moins 3 lettres, pliés, sans mots vides, dédupliqués dans l'ordre. */
+export function extractTerms(...texts: string[]): string[] {
+	const seen = new Set<string>();
+	for (const text of texts)
+		for (const word of tokenize(text))
+			if (word.length >= 3 && !STOPWORDS.has(word)) seen.add(word);
+	return [...seen];
+}

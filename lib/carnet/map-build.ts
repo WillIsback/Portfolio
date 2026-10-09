@@ -146,6 +146,7 @@ export function buildMap(
 		y: Number(coords[i][1].toFixed(4)),
 		cluster: clusterOf(i),
 		keywords: it.keywords,
+		terms: it.terms,
 		vector: Array.from(vectors[i], (x) => Number(x.toFixed(4))),
 	}));
 	const suggested = suggestClusterLabels(items);

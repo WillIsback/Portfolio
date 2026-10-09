@@ -1,26 +1,26 @@
 {
  "model": "carnet-static@f63393960f37",
- "generatedAt": "2026-10-07T01:14:55.042Z",
+ "generatedAt": "2026-10-07T06:29:01.706Z",
  "clusters": [
   {
    "id": "c1",
-   "label": "agents autonomes"
+   "label": "Agents et SRE"
   },
   {
    "id": "c2",
-   "label": "githubactions"
+   "label": "Outillage et CI"
   },
   {
    "id": "c3",
-   "label": "typescript"
+   "label": "Web TypeScript"
   },
   {
    "id": "c4",
-   "label": "python"
+   "label": "Data science"
   },
   {
    "id": "c5",
-   "label": "python"
+   "label": "LLM et NLP"
   }
  ],
  "items": [
@@ -38,6 +38,25 @@
     "llm local",
     "observabilite",
     "securite"
+   ],
+   "terms": [
+    "neuf",
+    "agents",
+    "jours",
+    "retour",
+    "experience",
+    "chiffre",
+    "flotte",
+    "sre",
+    "autonomes",
+    "conditions",
+    "reelles",
+    "tenu",
+    "casse",
+    "analyse",
+    "traces",
+    "appris",
+    "garde"
    ],
    "vector": [
     -0.2212,
@@ -183,6 +202,27 @@
     "nextjs",
     "react",
     "githubactions"
+   ],
+   "terms": [
+    "abricot",
+    "plateforme",
+    "saas",
+    "gestion",
+    "projet",
+    "collaboratif",
+    "augmentee",
+    "permet",
+    "freelances",
+    "equipes",
+    "gerer",
+    "projets",
+    "generation",
+    "automatique",
+    "taches",
+    "rag",
+    "retrieval",
+    "augmented",
+    "mistral"
    ],
    "vector": [
     -0.0195,
@@ -330,6 +370,34 @@
     "docker",
     "githubactions"
    ],
+   "terms": [
+    "clea",
+    "document",
+    "search",
+    "platform",
+    "framework",
+    "recherche",
+    "documentaire",
+    "hybride",
+    "postgresql",
+    "pgvector",
+    "charge",
+    "documents",
+    "multi",
+    "formats",
+    "segmente",
+    "vectorise",
+    "fournit",
+    "vectorielle",
+    "filtres",
+    "sql",
+    "inclut",
+    "module",
+    "rag",
+    "llms",
+    "legers",
+    "qwen3"
+   ],
    "vector": [
     0.2002,
     0.1747,
@@ -474,6 +542,30 @@
     "svelte",
     "sveltekit",
     "docker"
+   ],
+   "terms": [
+    "clea",
+    "webui",
+    "interface",
+    "web",
+    "corpus",
+    "linker",
+    "exploratory",
+    "assistant",
+    "plateforme",
+    "recherche",
+    "exploration",
+    "documentaire",
+    "intelligente",
+    "basee",
+    "technologies",
+    "rag",
+    "semantique",
+    "gestion",
+    "documents",
+    "tableaux",
+    "bord",
+    "statistiques"
    ],
    "vector": [
     0.1473,
@@ -620,6 +712,33 @@
     "python",
     "githubactions"
    ],
+   "terms": [
+    "lazy",
+    "locker",
+    "gestionnaire",
+    "secrets",
+    "securise",
+    "interface",
+    "tui",
+    "support",
+    "sdk",
+    "remplace",
+    "fichiers",
+    "env",
+    "clair",
+    "stockage",
+    "chiffre",
+    "local",
+    "aes",
+    "256",
+    "gcm",
+    "argon2id",
+    "integration",
+    "seamless",
+    "python",
+    "javascript",
+    "typescript"
+   ],
    "vector": [
     0.1324,
     0.033,
@@ -763,6 +882,32 @@
     "typescript",
     "sqlite"
    ],
+   "terms": [
+    "typescript",
+    "rest",
+    "api",
+    "vanilla",
+    "complete",
+    "construite",
+    "framework",
+    "node",
+    "sqlite",
+    "projet",
+    "pedagogique",
+    "suivant",
+    "principes",
+    "solid",
+    "validation",
+    "zod",
+    "documentation",
+    "swagger",
+    "auto",
+    "generee",
+    "prepared",
+    "statements",
+    "securite",
+    "sql"
+   ],
    "vector": [
     0.1751,
     -0.0501,
@@ -904,6 +1049,21 @@
    "cluster": "c4",
    "keywords": [
     "python"
+   ],
+   "terms": [
+    "p10",
+    "technova",
+    "livrable",
+    "version",
+    "projet",
+    "openclassrooms",
+    "documentation",
+    "complete",
+    "notebooks",
+    "finaux",
+    "presentation",
+    "machine",
+    "learning"
    ],
    "vector": [
     0.0243,
@@ -1048,6 +1208,18 @@
     "typescript",
     "react"
    ],
+   "terms": [
+    "fisheye",
+    "projet",
+    "openclassrooms",
+    "application",
+    "photographie",
+    "accessibilite",
+    "optimisee",
+    "navigation",
+    "clavier",
+    "complete"
+   ],
    "vector": [
     0.0002,
     0.0229,
@@ -1190,6 +1362,18 @@
    "keywords": [
     "python"
    ],
+   "terms": [
+    "bottleneck",
+    "projet",
+    "openclassrooms",
+    "analyse",
+    "donnees",
+    "detection",
+    "goulots",
+    "etranglement",
+    "notebooks",
+    "jupyter"
+   ],
    "vector": [
     0.0735,
     0.1687,
@@ -1331,6 +1515,16 @@
    "cluster": "c4",
    "keywords": [
     "python"
+   ],
+   "terms": [
+    "dataimmo",
+    "projet",
+    "openclassrooms",
+    "analyse",
+    "donnees",
+    "immobilieres",
+    "prediction",
+    "prix"
    ],
    "vector": [
     -0.0145,
@@ -1475,6 +1669,19 @@
     "javascript",
     "react"
    ],
+   "terms": [
+    "sportsee",
+    "application",
+    "coaching",
+    "sportif",
+    "tableau",
+    "bord",
+    "analytique",
+    "visualisation",
+    "performances",
+    "statistiques",
+    "entrainement"
+   ],
    "vector": [
     0.0591,
     0.2234,
@@ -1616,6 +1823,19 @@
    "cluster": "c2",
    "keywords": [
     "javascript"
+   ],
+   "terms": [
+    "petits",
+    "plats",
+    "application",
+    "recherche",
+    "recettes",
+    "cuisine",
+    "algorithmes",
+    "optimises",
+    "interface",
+    "utilisateur",
+    "responsive"
    ],
    "vector": [
     -0.0646,
@@ -1759,6 +1979,26 @@
    "keywords": [
     "python"
    ],
+   "terms": [
+    "fashion",
+    "trend",
+    "intelligence",
+    "projet",
+    "segmentation",
+    "images",
+    "mode",
+    "utilisant",
+    "api",
+    "hugging",
+    "face",
+    "structure",
+    "faciliter",
+    "maintenance",
+    "extensibilite",
+    "modeles",
+    "deep",
+    "learning"
+   ],
    "vector": [
     -0.0517,
     0.2499,
@@ -1901,6 +2141,31 @@
    "keywords": [
     "python"
    ],
+   "terms": [
+    "report",
+    "maker",
+    "outil",
+    "puissant",
+    "automatiser",
+    "transcription",
+    "synthese",
+    "reunions",
+    "utilise",
+    "whisper",
+    "large",
+    "asr",
+    "pyannote",
+    "diarisation",
+    "locuteurs",
+    "differents",
+    "llms",
+    "gpt",
+    "gemma",
+    "mistral",
+    "bart",
+    "generation",
+    "rapports"
+   ],
    "vector": [
     0.0087,
     0.0512,
@@ -2042,6 +2307,28 @@
    "cluster": "c5",
    "keywords": [
     "python"
+   ],
+   "terms": [
+    "llm",
+    "summarizer",
+    "trainer",
+    "entrainement",
+    "large",
+    "language",
+    "models",
+    "tache",
+    "resume",
+    "utilisant",
+    "qlora",
+    "methode",
+    "fine",
+    "tuning",
+    "package",
+    "unsloth",
+    "projet",
+    "apprentissage",
+    "modeles",
+    "langage"
    ],
    "vector": [
     0.0121,
@@ -2188,6 +2475,17 @@
     "react",
     "githubactions"
    ],
+   "terms": [
+    "p12",
+    "phase2",
+    "zenassist",
+    "priorisation",
+    "version",
+    "llm",
+    "lancement",
+    "phase",
+    "pilote"
+   ],
    "vector": [
     -0.0355,
     -0.0194,
@@ -2330,6 +2628,16 @@
    "keywords": [
     "python"
    ],
+   "terms": [
+    "p12",
+    "phase1",
+    "zenassist",
+    "comparez",
+    "algorithmes",
+    "machine",
+    "learning",
+    "llm"
+   ],
    "vector": [
     -0.0745,
     -0.0114,
@@ -2471,6 +2779,26 @@
    "cluster": "c5",
    "keywords": [
     "python"
+   ],
+   "terms": [
+    "p12",
+    "zenassist",
+    "training",
+    "modernbert",
+    "cls",
+    "fine",
+    "tuned",
+    "large",
+    "395m",
+    "params",
+    "multi",
+    "class",
+    "classification",
+    "consumer",
+    "finance",
+    "complaints",
+    "consolidated",
+    "categories"
    ],
    "vector": [
     -0.1886,
@@ -2619,6 +2947,14 @@
     "docker",
     "githubactions"
    ],
+   "terms": [
+    "p14",
+    "newsfoundry",
+    "outil",
+    "revue",
+    "presse",
+    "automatique"
+   ],
    "vector": [
     0.1454,
     0.0183,
@@ -2760,6 +3096,14 @@
    "cluster": "c3",
    "keywords": [
     "typescript"
+   ],
+   "terms": [
+    "syntheo",
+    "simple",
+    "visio",
+    "meeting",
+    "report",
+    "maker"
    ],
    "vector": [
     0.0741,
@@ -2905,6 +3249,21 @@
     "docker",
     "githubactions"
    ],
+   "terms": [
+    "whisperx",
+    "gb10",
+    "asr",
+    "diarization",
+    "rest",
+    "api",
+    "purpose",
+    "built",
+    "nvidia",
+    "dgx",
+    "spark",
+    "aarch64",
+    "121"
+   ],
    "vector": [
     0.0794,
     -0.129,
@@ -3049,6 +3408,15 @@
     "docker",
     "githubactions"
    ],
+   "terms": [
+    "corrector",
+    "correcteur",
+    "reformateur",
+    "redaction",
+    "francais",
+    "alimente",
+    "llm"
+   ],
    "vector": [
     0.029,
     0.0815,
@@ -3191,6 +3559,15 @@
    "keywords": [
     "rust",
     "githubactions"
+   ],
+   "terms": [
+    "caviarder",
+    "redact",
+    "secrets",
+    "text",
+    "gitleaks",
+    "detection",
+    "rules"
    ],
    "vector": [
     0.0146,
@@ -3335,6 +3712,16 @@
     "rust",
     "githubactions"
    ],
+   "terms": [
+    "code",
+    "review",
+    "centralized",
+    "github",
+    "composite",
+    "actions",
+    "willisback",
+    "projects"
+   ],
    "vector": [
     0.016,
     0.1786,
@@ -3478,6 +3865,15 @@
     "rust",
     "githubactions"
    ],
+   "terms": [
+    "docgen",
+    "generate",
+    "docstrings",
+    "local",
+    "vllm",
+    "configurable",
+    "toml"
+   ],
    "vector": [
     0.0654,
     -0.1059,
@@ -3619,6 +4015,15 @@
    "cluster": "c4",
    "keywords": [
     "python"
+   ],
+   "terms": [
+    "p13",
+    "fashion",
+    "insta",
+    "openclassroom",
+    "project",
+    "vision",
+    "task"
    ],
    "vector": [
     0.1362,

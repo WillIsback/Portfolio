@@ -9,6 +9,7 @@ export const MapItemSchema = z.object({
 	y: z.number().min(0).max(1),
 	cluster: z.string(),
 	keywords: z.array(z.string()),
+	terms: z.array(z.string()),
 	vector: z.array(z.number()),
 });
 

@@ -5,11 +5,6 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface NavMenuProps {
-	highlightContact: boolean;
-	contactBtnRef?: React.RefObject<HTMLButtonElement | null>;
-}
-
 const LINKS = [
 	{ href: "/", label: "Carnet", isActive: (p: string) => p === "/" },
 	{
@@ -29,21 +24,16 @@ const LINKS = [
 	},
 ];
 
-export default function NavMenu({
-	highlightContact,
-	contactBtnRef,
-}: Readonly<NavMenuProps>) {
+export default function NavMenu() {
 	const pathname = usePathname() ?? "/";
 	return (
 		<nav aria-label="Navigation principale">
 			<ul className="flex flex-wrap items-center gap-0.5 sm:gap-1">
 				{LINKS.map((link) => {
 					const active = link.isActive(pathname);
-					const isContact = link.href === "/Contact";
 					return (
 						<li key={link.href}>
 							<Button
-								ref={isContact ? contactBtnRef : undefined}
 								asChild
 								variant="ghost"
 								size="sm"
@@ -52,9 +42,6 @@ export default function NavMenu({
 									active
 										? "border-primary text-foreground"
 										: "text-ink-soft hover:border-paper-grid hover:text-foreground",
-									isContact &&
-										highlightContact &&
-										"border-primary text-primary",
 								)}
 							>
 								<Link

@@ -19,7 +19,6 @@ const formSchema = z.object({
 const initialFormValues = { email: "", sujet: "", message: "" };
 
 export default function Contact() {
-	const contactBtnRef = useRef<HTMLButtonElement>(null);
 	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
 
@@ -66,7 +65,7 @@ export default function Contact() {
 	return (
 		<main className="relative min-h-screen flex flex-col">
 			<div className="sticky top-0 z-50 w-full">
-				<Header highlightContact={false} contactBtnRef={contactBtnRef} />
+				<Header />
 			</div>
 			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 pt-10 sm:w-auto">
 				<div className="mb-20 flex items-center gap-4 sm:gap-8">
