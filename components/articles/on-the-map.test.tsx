@@ -65,3 +65,28 @@ describe("OnTheMap", () => {
 		).toBe("");
 	});
 });
+
+describe("OnTheMap liens internes", () => {
+	it("les voisins externes s'ouvrent dans un nouvel onglet, les internes restent des liens Next", () => {
+		const html = renderToStaticMarkup(
+			<OnTheMap
+				articleId="article:a"
+				points={points}
+				figureNumber={1}
+				neighbors={[
+					{ id: "a2", title: "Interne", href: "/articles/b", kind: "article" },
+					{
+						id: "project:1",
+						title: "P1",
+						href: "https://github.com/x/p1",
+						kind: "project",
+					},
+				]}
+			/>,
+		);
+		expect(html).toMatch(/<a (?![^>]*target)[^>]*href="\/articles\/b"/);
+		expect(html).toMatch(
+			/<a href="https:\/\/github.com\/x\/p1" target="_blank"/,
+		);
+	});
+});

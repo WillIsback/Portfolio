@@ -1,6 +1,10 @@
+import Link from "next/link";
 import FigureCaption from "@/components/notebook/FigureCaption";
 import MiniMap from "@/components/register/MiniMap";
 import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
+
+const NEIGHBOR_LINK =
+	"rounded-sm font-display font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 interface Neighbor {
 	id: string;
@@ -46,15 +50,20 @@ export default function OnTheMap({
 				<ol className="space-y-3">
 					{neighbors.map((n) => (
 						<li key={n.id}>
-							<a
-								href={n.href}
-								{...(isExternalHref(n.href)
-									? { target: "_blank", rel: "noopener noreferrer" }
-									: {})}
-								className="rounded-sm font-display font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-							>
-								{n.title}
-							</a>
+							{isExternalHref(n.href) ? (
+								<a
+									href={n.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									className={NEIGHBOR_LINK}
+								>
+									{n.title}
+								</a>
+							) : (
+								<Link href={n.href} className={NEIGHBOR_LINK}>
+									{n.title}
+								</Link>
+							)}
 							<span className="ml-2 font-mono text-[11px] text-ink-soft">
 								{n.kind === "article" ? "article" : "projet"}
 							</span>
