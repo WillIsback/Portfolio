@@ -31,7 +31,7 @@ export default function IndexRow({
 				)}
 			</span>
 			<span className="order-3 col-span-2 self-start text-sm text-ink-soft sm:order-none sm:col-span-1">
-				<span className="line-clamp-1 block">{project.description}</span>
+				<span className="line-clamp-1">{project.description}</span>
 				{tech || project.domains.length > 0 ? (
 					<span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
 						<DomainChips domains={project.domains} />

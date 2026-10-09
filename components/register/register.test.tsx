@@ -200,6 +200,23 @@ describe("IndexRow", () => {
 		expect(html).toContain("Python");
 	});
 
+	it("tronque la description avec line-clamp-1, sans la classe block qui l'écraserait", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow
+					project={p({ description: "Description longue à tronquer" })}
+				/>
+			</ul>,
+		);
+		const cls =
+			html.match(
+				/<span class="([^"]*)">Description longue à tronquer<\/span>/,
+			)?.[1] ?? "";
+		const classes = cls.split(/\s+/);
+		expect(classes).toContain("line-clamp-1");
+		expect(classes).not.toContain("block");
+	});
+
 	it("n'ouvre pas dans un nouvel onglet un lien non externe", () => {
 		const html = renderToStaticMarkup(
 			<ul>
