@@ -18,6 +18,7 @@ const baseProject: ProjectForCorpus = {
 	backends: [{ backend: "FastAPI" }],
 	frontends: [],
 	devops: [{ devops: "Docker" }],
+	domains: [],
 };
 
 describe("tokenize", () => {
@@ -74,6 +75,22 @@ describe("projectToCorpusItem", () => {
 			keywords: ["python", "fastapi", "docker"],
 			terms: ["p13", "fashion", "insta", "openclassroom", "vision", "task"],
 		});
+	});
+
+	it("ajoute les libellés de domaines aux mots-clés sans changer le texte", () => {
+		const item = projectToCorpusItem({
+			...baseProject,
+			domains: [{ domain: "Vision" }, { domain: "Classifier" }],
+		});
+		expect(item?.keywords).toEqual([
+			"python",
+			"fastapi",
+			"docker",
+			"ml",
+			"classification",
+			"vision",
+		]);
+		expect(item?.text).toBe(projectToCorpusItem(baseProject)?.text);
 	});
 
 	it("exclut un projet privé", () => {
