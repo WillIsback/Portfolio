@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- capture distante, hôte non configuré pour next/image */
 // app/(admin)/projects/[id]/ProjectEditForm.tsx
 "use client";
 
@@ -7,7 +8,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateProject } from "@/app/actions/admin.action";
 import { IconPickerModal } from "@/components/admin/IconPickerModal";
-import { PITCH_MAX } from "@/lib/admin/project-form";
+import { buildSavePayload, PITCH_MAX } from "@/lib/admin/project-form";
 import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
 import { LUCIDE_ICONS } from "@/lib/icon-bank";
 import { PROJECT_STATUSES, STATUS_LABELS } from "@/lib/status";
@@ -51,6 +52,8 @@ export function ProjectEditForm({
 	const [form, setForm] = useState<AdminProject>(initial);
 	const [isPending, startTransition] = useTransition();
 	const [modalOpen, setModalOpen] = useState(false);
+	const [featured, setFeatured] = useState(initial.featuredRank !== undefined);
+	const [rankText, setRankText] = useState(String(initial.featuredRank ?? 1));
 
 	function setField<K extends keyof AdminProject>(
 		key: K,
@@ -73,9 +76,15 @@ export function ProjectEditForm({
 	}
 
 	function handleSave() {
+		const built = buildSavePayload(form, featured, rankText);
+		if (!built.ok) {
+			toast.error(built.error);
+			return;
+		}
+		const payload = built.data;
 		startTransition(async () => {
 			try {
-				await updateProject(id, form);
+				await updateProject(id, payload);
 				toast.success("Project updated");
 				router.push("/admin/projects");
 			} catch {
@@ -101,6 +110,12 @@ export function ProjectEditForm({
 				<div className="w-10 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-600 text-xs">
 					?
 				</div>
+			);
+		}
+		if (/^https?:\/\//.test(path)) {
+			return (
+				// biome-ignore lint/performance/noImgElement: capture distante, hôte non configuré pour next/image
+				<img src={path} alt="" className="object-cover w-10 h-10 rounded" />
 			);
 		}
 		const src = path.startsWith("/") ? path : `/${path}`;
@@ -316,10 +331,14 @@ export function ProjectEditForm({
 				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
 					<input
 						type="checkbox"
-						checked={form.featuredRank !== undefined}
-						onChange={(e) =>
-							setField("featuredRank", e.target.checked ? 1 : undefined)
-						}
+						checked={featured}
+						onChange={(e) => {
+							setFeatured(e.target.checked);
+							if (e.target.checked) {
+								setRankText("1");
+								setField("featuredRank", 1);
+							} else setField("featuredRank", undefined);
+						}}
 						className="accent-zinc-400"
 					/>
 					Mettre en avant
@@ -335,7 +354,7 @@ export function ProjectEditForm({
 				</label>
 			</div>
 
-			{form.featuredRank !== undefined ? (
+			{featured ? (
 				<div>
 					<label htmlFor="rank" className="text-xs text-zinc-500 block mb-1">
 						Rang du projet phare
@@ -346,10 +365,11 @@ export function ProjectEditForm({
 						min={1}
 						step={1}
 						className={`${FIELD} w-28`}
-						value={form.featuredRank}
+						value={rankText}
 						onChange={(e) => {
-							const n = Math.floor(Number(e.target.value));
-							setField("featuredRank", Number.isFinite(n) && n >= 1 ? n : 1);
+							setRankText(e.target.value);
+							const n = Number(e.target.value);
+							if (Number.isInteger(n) && n >= 1) setField("featuredRank", n);
 						}}
 					/>
 				</div>

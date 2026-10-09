@@ -55,3 +55,29 @@ export function needsCompletion(p: {
 }): boolean {
 	return !p.pitch?.trim() || p.domainCount === 0;
 }
+
+/** Charge utile d'enregistrement : textes rognés (vide -> absent), rang validé (entier >= 1). */
+export function buildSavePayload(
+	form: AdminProject,
+	featured: boolean,
+	rankText: string,
+): { ok: true; data: AdminProject } | { ok: false; error: string } {
+	const rank = Number(rankText.trim());
+	if (
+		featured &&
+		!(rankText.trim() !== "" && Number.isInteger(rank) && rank >= 1)
+	)
+		return {
+			ok: false,
+			error: "Le rang doit être un entier supérieur ou égal à 1",
+		};
+	return {
+		ok: true,
+		data: {
+			...form,
+			pitch: form.pitch?.trim() || undefined,
+			period: form.period?.trim() || undefined,
+			featuredRank: featured ? rank : undefined,
+		},
+	};
+}

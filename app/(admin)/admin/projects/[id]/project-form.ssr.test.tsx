@@ -64,6 +64,23 @@ describe("ProjectEditForm (rendu serveur)", () => {
 	});
 });
 
+describe("capture distante", () => {
+	it("n'utilise pas de chemin relatif pour une URL https", () => {
+		const html = render({
+			imagePath: "https://raw.githubusercontent.com/me/a/main/x.png",
+		});
+		expect(html).not.toContain("/https://");
+		expect(html).toContain(
+			'src="https://raw.githubusercontent.com/me/a/main/x.png"',
+		);
+		expect(html).toContain("Retirer");
+	});
+	it("Retirer disponible pour tout imagePath non vide, même privé", () => {
+		const html = render({ imagePath: "lucide:Bot", isPrivate: true });
+		expect(html).toContain("Retirer");
+	});
+});
+
 describe("ImagePicker", () => {
 	it("propose « Retirer » pour une capture du dépôt", () => {
 		const html = renderToStaticMarkup(

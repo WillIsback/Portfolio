@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { AdminProject } from "@/schemas";
 import {
 	buildPreviewProject,
+	buildSavePayload,
 	needsCompletion,
 	rawImageUrl,
 } from "./project-form";
@@ -54,5 +55,25 @@ describe("needsCompletion", () => {
 		expect(needsCompletion({ pitch: "  ", domainCount: 1 })).toBe(true);
 		expect(needsCompletion({ pitch: "x", domainCount: 0 })).toBe(true);
 		expect(needsCompletion({ pitch: "x", domainCount: 2 })).toBe(false);
+	});
+});
+
+describe("buildSavePayload", () => {
+	it("rogne accroche et période (blanc -> absent)", () => {
+		const r = buildSavePayload(
+			{ ...form, pitch: "  ", period: " 2026 " },
+			false,
+			"1",
+		);
+		expect(r.ok && r.data.pitch).toBeUndefined();
+		expect(r.ok && r.data.period).toBe("2026");
+		expect(r.ok && r.data.featuredRank).toBeUndefined();
+	});
+	it("valide le rang quand mis en avant", () => {
+		expect(buildSavePayload(form, true, "").ok).toBe(false);
+		expect(buildSavePayload(form, true, "0").ok).toBe(false);
+		expect(buildSavePayload(form, true, "1.5").ok).toBe(false);
+		const r = buildSavePayload(form, true, "3");
+		expect(r.ok && r.data.featuredRank).toBe(3);
 	});
 });

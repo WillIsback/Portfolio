@@ -41,12 +41,12 @@ export function ImagePicker({
 	return (
 		<div>
 			<p className="text-xs text-zinc-500 mb-1">Capture</p>
-			{isPrivate ? (
-				<p className="text-xs text-zinc-500">
-					Capture impossible pour un dépôt privé
-				</p>
-			) : (
-				<div className="flex flex-wrap items-center gap-3">
+			<div className="flex flex-wrap items-center gap-3">
+				{isPrivate ? (
+					<p className="text-xs text-zinc-500">
+						Capture impossible pour un dépôt privé
+					</p>
+				) : (
 					<button
 						type="button"
 						onClick={load}
@@ -55,13 +55,13 @@ export function ImagePicker({
 					>
 						{isPending ? "Chargement…" : "Choisir dans le dépôt"}
 					</button>
-					{isRepoImage ? (
-						<button type="button" onClick={() => onChange("")} className={BTN}>
-							Retirer
-						</button>
-					) : null}
-				</div>
-			)}
+				)}
+				{value ? (
+					<button type="button" onClick={() => onChange("")} className={BTN}>
+						Retirer
+					</button>
+				) : null}
+			</div>
 			{isRepoImage ? (
 				<p className="mt-1 break-all text-[11px] text-zinc-600">{value}</p>
 			) : null}
