@@ -1,17 +1,29 @@
+import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import Instruments from "@/components/home/Instruments";
+import LatestEntries from "@/components/home/LatestEntries";
 import MarginNote from "@/components/notebook/MarginNote";
-import ProjectGrid from "@/components/ProjectGrid/ProjectGrid";
-import SkillsStack from "@/components/Skills/SkillsStack";
+import ProjectRegister from "@/components/register/ProjectRegister";
+import RegisterView from "@/components/register/RegisterView";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
+import {
+	getAllArticles,
+	latestArticles,
+	projectEntries,
+} from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
-import { toMapView, toSearchItems } from "@/lib/carnet/map-view";
+import { toMapView } from "@/lib/carnet/map-view";
+import { mapNeighbors } from "@/lib/register";
 
 const map = MapDataSchema.parse(mapJson);
 const view = toMapView(map, clusterLabels);
-const searchItems = toSearchItems(map);
+const entries = latestArticles(3);
+const byProject = projectEntries(getAllArticles());
+const neighbors = mapNeighbors(map);
 
 export default function Home() {
 	return (
@@ -27,7 +39,6 @@ export default function Home() {
 				<CarnetExplorer
 					points={view.points}
 					clusters={view.clusters}
-					searchItems={searchItems}
 					intro={
 						<>
 							<h1
@@ -52,16 +63,78 @@ export default function Home() {
 				/>
 			</section>
 
-			<hr />
-			<div className="flex flex-col py-10">
-				<h2 className="m-auto text-center text-2xl font-bold">
-					Mes skills à travers les stacks
-				</h2>
-				<SkillsStack />
+			<div className="mx-auto w-full max-w-6xl space-y-20 px-4 pb-20 sm:px-6">
+				{entries.length > 0 ? (
+					<section aria-labelledby="entries-title">
+						<h2 id="entries-title" className="font-display text-2xl font-bold">
+							Dernières entrées
+						</h2>
+						<div className="mt-6">
+							<LatestEntries articles={entries} />
+						</div>
+					</section>
+				) : null}
+				<section id="realisations" aria-labelledby="register-title">
+					<h2 id="register-title" className="font-display text-2xl font-bold">
+						Registre des projets
+					</h2>
+					<div className="mt-6">
+						<noscript>
+							<p className="text-sm text-ink-soft">
+								Le registre se charge avec JavaScript ; mes dépôts sont aussi
+								sur{" "}
+								<a
+									href="https://github.com/WillIsback"
+									className="text-primary underline underline-offset-4"
+								>
+									GitHub
+								</a>
+								.
+							</p>
+						</noscript>
+						<Suspense
+							fallback={
+								<RegisterView
+									featuredStatus="loading"
+									indexStatus="loading"
+									featured={[]}
+									index={[]}
+									filtersActive={false}
+									filterBar={null}
+									points={[]}
+									neighbors={{}}
+									entries={{}}
+								/>
+							}
+						>
+							<ErrorBoundary
+								fallback={
+									<p role="alert" className="text-sm text-destructive">
+										Le registre des projets est momentanément indisponible.
+									</p>
+								}
+							>
+								<ProjectRegister
+									points={view.points}
+									neighbors={neighbors}
+									entries={byProject}
+								/>
+							</ErrorBoundary>
+						</Suspense>
+					</div>
+				</section>
+				<section aria-labelledby="instruments-title">
+					<h2
+						id="instruments-title"
+						className="font-display text-2xl font-bold"
+					>
+						Instruments
+					</h2>
+					<div className="mt-6">
+						<Instruments />
+					</div>
+				</section>
 			</div>
-			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
-				<ProjectGrid />
-			</section>
 			<Footer />
 		</main>
 	);

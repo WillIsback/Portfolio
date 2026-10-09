@@ -5,7 +5,6 @@ import {
 	Fira_Code,
 	Source_Serif_4,
 } from "next/font/google";
-import ThemedToaster from "@/components/theme/ThemedToaster";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 
 import "./globals.css";
@@ -111,7 +110,6 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					{children}
-					<ThemedToaster />
 				</ThemeProvider>
 			</body>
 		</html>

@@ -10,20 +10,30 @@ import {
 const items: SearchItem[] = [
 	{
 		id: "a",
-		title: "Neuf agents",
 		keywords: ["agents autonomes", "llm local"],
 		terms: ["neuf", "agents", "flotte"],
 	},
 	{
 		id: "b",
-		title: "Fashion",
 		keywords: ["python", "docker"],
 		terms: ["fashion", "vision", "segmentation"],
 	},
-	{ id: "c", title: "Go tool", keywords: ["go"], terms: ["outil", "google"] },
+	{ id: "c", keywords: ["go"], terms: ["outil", "google"] },
 ];
 
 describe("keywordMatches", () => {
+	it("reconnaît un mot-clé ponctué comme expression entière", () => {
+		const punctuated: SearchItem[] = [
+			{ id: "n", keywords: ["next.js", "text-to-sql"], terms: [] },
+		];
+		expect(keywordMatches("text to sql", punctuated)).toEqual([
+			{ id: "n", score: 2 },
+		]);
+		expect(keywordMatches("Next.js", punctuated)).toEqual([
+			{ id: "n", score: 2 },
+		]);
+	});
+
 	it("trouve un mot-clé complet en ignorant accents et casse", () => {
 		expect(keywordMatches("LLM Local", items).map((m) => m.id)).toEqual(["a"]);
 	});

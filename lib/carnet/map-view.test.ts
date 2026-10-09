@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { MapData } from "./map-types";
-import { toMapView, toPercent, toSearchItems } from "./map-view";
+import {
+	isExternalHref,
+	toMapView,
+	toPercent,
+	toSearchItems,
+} from "./map-view";
 
 const map: MapData = {
 	model: "carnet-static@x",
@@ -61,10 +66,9 @@ describe("toMapView", () => {
 });
 
 describe("toSearchItems", () => {
-	it("garde id, titre, mots-clés et termes", () => {
+	it("garde id, mots-clés et termes, sans titre ni vecteur", () => {
 		expect(toSearchItems(map)[1]).toEqual({
 			id: "project:1",
-			title: "P",
 			keywords: ["python"],
 			terms: ["pi"],
 		});
@@ -75,5 +79,26 @@ describe("toPercent", () => {
 	it("laisse une marge de 6 % autour de la carte", () => {
 		expect(toPercent(0)).toBe(6);
 		expect(toPercent(1)).toBe(94);
+	});
+});
+
+describe("isExternalHref", () => {
+	it("distingue un dépôt GitHub d'une page du site", () => {
+		expect(isExternalHref("https://github.com/x/y")).toBe(true);
+		expect(isExternalHref("/articles/a")).toBe(false);
+	});
+});
+
+describe("toMapView (groupes au-delà de 5)", () => {
+	it("reboucle l'indice de teinte sur 1…5", () => {
+		const many: MapData = {
+			...map,
+			clusters: Array.from({ length: 7 }, (_, i) => ({
+				id: `c${i + 1}`,
+				label: `g${i + 1}`,
+			})),
+			items: [{ ...map.items[0], cluster: "c7" }],
+		};
+		expect(toMapView(many, {}).points[0].cluster).toBe(2);
 	});
 });

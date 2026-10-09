@@ -1,9 +1,8 @@
 import { cosine } from "./static-model";
-import { foldText, tokenize } from "./tokenize";
+import { tokenize } from "./tokenize";
 
 export interface SearchItem {
 	id: string;
-	title: string;
 	keywords: string[];
 	terms: string[];
 }
@@ -30,7 +29,7 @@ export function keywordMatches(query: string, items: SearchItem[]): Scored[] {
 	for (const item of items) {
 		let score = 0;
 		for (const keyword of item.keywords) {
-			const kw = foldText(keyword).trim();
+			const kw = tokenize(keyword).join(" ");
 			if (kw.length < 2) continue;
 			if (
 				padded.includes(` ${kw} `) ||

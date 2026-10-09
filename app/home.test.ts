@@ -31,4 +31,21 @@ describe("accueil L2", () => {
 			);
 		}
 	});
+
+	it("assemble l'accueil dans l'ordre du carnet et retire les compétences", () => {
+		const page = read("app/page.tsx");
+		const order = [
+			"CarnetExplorer",
+			"LatestEntries",
+			"ProjectRegister",
+			"Instruments",
+			"Footer",
+		].map((s) => page.indexOf(`<${s}`));
+		expect(order.every((i) => i >= 0)).toBe(true);
+		expect([...order].sort((a, b) => a - b)).toEqual(order);
+		expect(page).not.toMatch(/SkillsStack|ProjectGrid/);
+		expect(existsSync(path.join(process.cwd(), "components/Skills"))).toBe(
+			false,
+		);
+	});
 });

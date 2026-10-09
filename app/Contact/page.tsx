@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import ThemedToaster from "@/components/theme/ThemedToaster";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { sendEmail } from "../actions/contact.action";
 
@@ -209,6 +210,7 @@ export default function Contact() {
 				</form>
 			</div>
 			<Footer />
+			<ThemedToaster />
 		</main>
 	);
 }

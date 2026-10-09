@@ -72,15 +72,7 @@ describe("projectToCorpusItem", () => {
 			text: "P13-Fashion-Insta. OpenClassroom ML/AI project on Vision task. Python, FastAPI, Docker",
 			href: "https://github.com/WillIsback/P13-Fashion-Insta",
 			keywords: ["python", "fastapi", "docker"],
-			terms: [
-				"p13",
-				"fashion",
-				"insta",
-				"openclassroom",
-				"project",
-				"vision",
-				"task",
-			],
+			terms: ["p13", "fashion", "insta", "openclassroom", "vision", "task"],
 		});
 	});
 
@@ -116,7 +108,6 @@ describe("termes de recherche", () => {
 			"fashion",
 			"insta",
 			"openclassroom",
-			"project",
 			"vision",
 			"task",
 		]);

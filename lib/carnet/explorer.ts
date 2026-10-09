@@ -55,15 +55,23 @@ export interface ExplorerView {
 	hits: Set<string>;
 	results: { id: string; score: number | null }[];
 	queryPoint: { x: number; y: number } | null;
+	/** Saisie sans résultat possible : les données de recherche ne sont pas encore chargées. */
+	pending: boolean;
 }
 
 export function computeView(
 	state: ExplorerState,
-	items: SearchItem[],
+	items: SearchItem[] | null,
 	positions: ReadonlyMap<string, { x: number; y: number }>,
 ): ExplorerView {
 	if (tokenize(state.query).length === 0)
-		return { mode: "rest", hits: new Set(), results: [], queryPoint: null };
+		return {
+			mode: "rest",
+			hits: new Set(),
+			results: [],
+			queryPoint: null,
+			pending: false,
+		};
 	const ranked = state.semantic?.ranked;
 	if (state.status === "ready" && ranked && ranked.length > 0) {
 		const top = ranked.slice(0, 3);
@@ -72,14 +80,24 @@ export function computeView(
 			hits: new Set(top.map((r) => r.id)),
 			results: top.map((r) => ({ id: r.id, score: r.score })),
 			queryPoint: placeQuery(ranked, positions),
+			pending: false,
 		};
 	}
+	if (items === null)
+		return {
+			mode: "keyword",
+			hits: new Set(),
+			results: [],
+			queryPoint: null,
+			pending: true,
+		};
 	const matches = keywordMatches(state.query, items);
 	return {
 		mode: "keyword",
 		hits: new Set(matches.map((m) => m.id)),
 		results: matches.slice(0, 3).map((m) => ({ id: m.id, score: null })),
 		queryPoint: null,
+		pending: false,
 	};
 }
 

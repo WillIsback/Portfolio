@@ -8,6 +8,18 @@ import type { ProjectFilters } from "@/schemas";
 // Cache global pour les projets (évite les re-fetch inutiles)
 const projectsCache = new Map<string, ProjectWithRelations[]>();
 
+// Requêtes en vol par clé : deux hooks montés avec les mêmes filtres partagent un seul appel.
+const inflight = new Map<string, Promise<ProjectWithRelations[]>>();
+
+function fetchProjects(key: string, filters: ProjectFilters) {
+	let promise = inflight.get(key);
+	if (!promise) {
+		promise = getProjects(filters).finally(() => inflight.delete(key));
+		inflight.set(key, promise);
+	}
+	return promise;
+}
+
 // Custom hook pour fetcher les projets
 export function useProjects(filters: ProjectFilters) {
 	const [projects, setProjects] = useState<ProjectWithRelations[]>([]);
@@ -48,7 +60,7 @@ export function useProjects(filters: ProjectFilters) {
 		setError(null);
 
 		startTransition(() => {
-			getProjects(filters)
+			fetchProjects(cacheKey, filters)
 				.then((data) => {
 					// Vérifier si la requête n'a pas été annulée
 					if (!abortControllerRef.current?.signal.aborted) {
@@ -59,7 +71,8 @@ export function useProjects(filters: ProjectFilters) {
 				})
 				.catch((err) => {
 					if (!abortControllerRef.current?.signal.aborted) {
-						setError(err.message);
+						console.error("Échec du chargement des projets", err);
+						setError(err instanceof Error ? err.message : "error");
 						setIsLoading(false);
 					}
 				});

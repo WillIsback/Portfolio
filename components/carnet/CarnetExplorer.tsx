@@ -16,6 +16,7 @@ import {
 	initialExplorerState,
 } from "@/lib/carnet/explorer";
 import {
+	isExternalHref,
 	type MapCluster,
 	type MapPoint,
 	toPercent,
@@ -33,25 +34,22 @@ import MapSvg from "./MapSvg";
 interface CarnetExplorerProps {
 	points: MapPoint[];
 	clusters: MapCluster[];
-	searchItems: SearchItem[];
 	intro: ReactNode;
 	note: ReactNode;
 }
 
 const ANNOUNCE_DELAY_MS = 300;
 
-const isExternal = (href: string) => href.startsWith("http");
-
 /** Fig. 1 (spec §6.2, §7.4) : saisie, carte, résultats. Seul îlot client de l'accueil. */
 export default function CarnetExplorer({
 	points,
 	clusters,
-	searchItems,
 	intro,
 	note,
 }: Readonly<CarnetExplorerProps>) {
 	const [state, dispatch] = useReducer(explorerReducer, initialExplorerState);
 	const [hoverId, setHoverId] = useState<string | null>(null);
+	const [searchItems, setSearchItems] = useState<SearchItem[] | null>(null);
 	const workerRef = useRef<Worker | null>(null);
 
 	const positions = useMemo(
@@ -64,6 +62,10 @@ export default function CarnetExplorer({
 	const activate = () => {
 		if (workerRef.current || state.status !== "idle") return;
 		dispatch({ type: "activate" });
+		// Données de recherche par mots-clés : chunk séparé, hors du HTML de l'accueil.
+		import("@/content/search-items.json")
+			.then((module) => setSearchItems(module.default))
+			.catch(() => setSearchItems([]));
 		try {
 			const worker = new Worker(
 				new URL("../../lib/carnet/carnet.worker.ts", import.meta.url),
@@ -143,7 +145,7 @@ export default function CarnetExplorer({
 			<div className="relative">
 				<figure className="relative m-0">
 					<div
-						className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[min(560px,calc(100svh-20rem))]"
+						className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[clamp(16rem,calc(100svh-20rem),560px)]"
 						onPointerDown={activate}
 					>
 						<MapSvg
@@ -178,7 +180,9 @@ export default function CarnetExplorer({
 					{announced}
 				</div>
 				<div className="mt-4 min-h-[5.5rem]">
-					{view.mode !== "rest" && view.results.length === 0 ? (
+					{view.mode !== "rest" &&
+					!view.pending &&
+					view.results.length === 0 ? (
 						<p className="text-sm text-ink-soft">
 							Aucun élément ne correspond. Essaie un autre mot.
 						</p>
@@ -204,9 +208,11 @@ export default function CarnetExplorer({
 										</span>
 										<a
 											href={p.href}
-											target={isExternal(p.href) ? "_blank" : undefined}
+											target={isExternalHref(p.href) ? "_blank" : undefined}
 											rel={
-												isExternal(p.href) ? "noopener noreferrer" : undefined
+												isExternalHref(p.href)
+													? "noopener noreferrer"
+													: undefined
 											}
 											className="min-w-0 truncate rounded-sm font-display font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 										>

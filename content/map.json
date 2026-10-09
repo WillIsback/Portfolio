@@ -1,6 +1,6 @@
 {
  "model": "carnet-static@f63393960f37",
- "generatedAt": "2026-10-07T06:29:01.706Z",
+ "generatedAt": "2026-10-09T10:21:32.411Z",
  "clusters": [
   {
    "id": "c1",
@@ -208,14 +208,11 @@
     "plateforme",
     "saas",
     "gestion",
-    "projet",
     "collaboratif",
     "augmentee",
-    "permet",
     "freelances",
     "equipes",
     "gerer",
-    "projets",
     "generation",
     "automatique",
     "taches",
@@ -887,12 +884,10 @@
     "rest",
     "api",
     "vanilla",
-    "complete",
     "construite",
     "framework",
     "node",
     "sqlite",
-    "projet",
     "pedagogique",
     "suivant",
     "principes",
@@ -1055,10 +1050,8 @@
     "technova",
     "livrable",
     "version",
-    "projet",
     "openclassrooms",
     "documentation",
-    "complete",
     "notebooks",
     "finaux",
     "presentation",
@@ -1210,15 +1203,12 @@
    ],
    "terms": [
     "fisheye",
-    "projet",
     "openclassrooms",
-    "application",
     "photographie",
     "accessibilite",
     "optimisee",
     "navigation",
-    "clavier",
-    "complete"
+    "clavier"
    ],
    "vector": [
     0.0002,
@@ -1364,7 +1354,6 @@
    ],
    "terms": [
     "bottleneck",
-    "projet",
     "openclassrooms",
     "analyse",
     "donnees",
@@ -1518,7 +1507,6 @@
    ],
    "terms": [
     "dataimmo",
-    "projet",
     "openclassrooms",
     "analyse",
     "donnees",
@@ -1671,7 +1659,6 @@
    ],
    "terms": [
     "sportsee",
-    "application",
     "coaching",
     "sportif",
     "tableau",
@@ -1827,7 +1814,6 @@
    "terms": [
     "petits",
     "plats",
-    "application",
     "recherche",
     "recettes",
     "cuisine",
@@ -1983,11 +1969,9 @@
     "fashion",
     "trend",
     "intelligence",
-    "projet",
     "segmentation",
     "images",
     "mode",
-    "utilisant",
     "api",
     "hugging",
     "face",
@@ -2144,13 +2128,11 @@
    "terms": [
     "report",
     "maker",
-    "outil",
     "puissant",
     "automatiser",
     "transcription",
     "synthese",
     "reunions",
-    "utilise",
     "whisper",
     "large",
     "asr",
@@ -2318,14 +2300,12 @@
     "models",
     "tache",
     "resume",
-    "utilisant",
     "qlora",
     "methode",
     "fine",
     "tuning",
     "package",
     "unsloth",
-    "projet",
     "apprentissage",
     "modeles",
     "langage"
@@ -2950,7 +2930,6 @@
    "terms": [
     "p14",
     "newsfoundry",
-    "outil",
     "revue",
     "presse",
     "automatique"
@@ -3099,7 +3078,6 @@
    ],
    "terms": [
     "syntheo",
-    "simple",
     "visio",
     "meeting",
     "report",
@@ -3256,7 +3234,6 @@
     "diarization",
     "rest",
     "api",
-    "purpose",
     "built",
     "nvidia",
     "dgx",
@@ -3719,8 +3696,7 @@
     "github",
     "composite",
     "actions",
-    "willisback",
-    "projects"
+    "willisback"
    ],
    "vector": [
     0.016,
@@ -4021,7 +3997,6 @@
     "fashion",
     "insta",
     "openclassroom",
-    "project",
     "vision",
     "task"
    ],

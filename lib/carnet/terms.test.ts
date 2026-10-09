@@ -23,4 +23,13 @@ describe("extractTerms", () => {
 	it("renvoie une liste vide pour un texte vide", () => {
 		expect(extractTerms("", "")).toEqual([]);
 	});
+
+	it("écarte les mots trop génériques pour départager des projets", () => {
+		expect(
+			extractTerms(
+				"Outil de projet",
+				"Une application simple qui permet, en utilisant un modèle complet, de faire aussi des cartes",
+			),
+		).toEqual(["modele", "faire", "cartes"]);
+	});
 });

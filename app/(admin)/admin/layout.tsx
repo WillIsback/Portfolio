@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
+import ThemedToaster from "@/components/theme/ThemedToaster";
 
 export default async function AdminLayout({
 	children,
@@ -56,6 +57,7 @@ export default async function AdminLayout({
 				</div>
 			</aside>
 			<main className="flex-1 p-8 overflow-auto">{children}</main>
+			<ThemedToaster />
 		</div>
 	);
 }
