@@ -20,7 +20,15 @@ export function FaultBuckets({
 	total,
 	traces,
 	items,
-}: Readonly<{ total: number; traces: number; items: FaultBucket[] }>) {
+	caption,
+	figureNumber,
+}: Readonly<{
+	total: number;
+	traces: number;
+	items: FaultBucket[];
+	caption?: string;
+	figureNumber?: number;
+}>) {
 	const segments = shares(items, total).map((s, i) => ({
 		...s,
 		color: BUCKET_COLORS[Math.min(i, BUCKET_COLORS.length - 1)],
@@ -81,6 +89,12 @@ export function FaultBuckets({
 					</li>
 				))}
 			</ul>
+			{caption || figureNumber ? (
+				<figcaption>
+					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{caption ?? "Répartition des échecs d'outils"}
+				</figcaption>
+			) : null}
 		</figure>
 	);
 }

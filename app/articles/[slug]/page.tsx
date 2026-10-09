@@ -6,6 +6,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
 import { mdxComponents } from "@/components/articles/mdx";
+import { numberFigures } from "@/lib/articles/figures";
 import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
 import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";
 
@@ -57,8 +58,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const article = getArticleBySlug(slug);
 	if (!article) notFound();
 
+	const { source } = numberFigures(article.content);
+
 	const { content } = await compileMDX({
-		source: article.content,
+		source,
 		components: mdxComponents,
 		options: {
 			// Component props are JS expressions (arrays/objects): keep them,

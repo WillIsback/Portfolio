@@ -76,7 +76,12 @@ function TokensSvg({
 export function TokensChart({
 	profiles,
 	caption,
-}: Readonly<{ profiles: TokenProfile[]; caption?: string }>) {
+	figureNumber,
+}: Readonly<{
+	profiles: TokenProfile[];
+	caption?: string;
+	figureNumber?: number;
+}>) {
 	const full = horizontalBarLayout(profiles);
 	const compact = horizontalBarLayout(profiles, {
 		width: 340,
@@ -108,7 +113,12 @@ export function TokensChart({
 				<TokensSvg layout={full} ariaLabel={ariaLabel} variant="full" />
 				<TokensSvg layout={compact} ariaLabel={ariaLabel} variant="compact" />
 			</div>
-			{caption ? <figcaption>{caption}</figcaption> : null}
+			{caption || figureNumber ? (
+				<figcaption>
+					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{caption}
+				</figcaption>
+			) : null}
 		</figure>
 	);
 }
