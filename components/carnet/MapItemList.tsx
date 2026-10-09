@@ -1,11 +1,9 @@
-import type { MapPoint } from "@/lib/carnet/map-view";
+import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
 
 interface MapItemListProps {
 	points: MapPoint[];
 	onFocusItem?: (id: string | null) => void;
 }
-
-const isExternal = (href: string) => href.startsWith("http");
 
 /** Équivalent textuel et clavier de la carte (spec §7.5). */
 export default function MapItemList({
@@ -25,8 +23,8 @@ export default function MapItemList({
 					<li key={p.id}>
 						<a
 							href={p.href}
-							target={isExternal(p.href) ? "_blank" : undefined}
-							rel={isExternal(p.href) ? "noopener noreferrer" : undefined}
+							target={isExternalHref(p.href) ? "_blank" : undefined}
+							rel={isExternalHref(p.href) ? "noopener noreferrer" : undefined}
 							className="rounded-sm hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 							onFocus={onFocusItem ? () => onFocusItem(p.id) : undefined}
 							onBlur={onFocusItem ? () => onFocusItem(null) : undefined}

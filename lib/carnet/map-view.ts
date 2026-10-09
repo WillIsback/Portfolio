@@ -18,6 +18,10 @@ export interface MapCluster {
 	count: number;
 }
 
+export function isExternalHref(href: string): boolean {
+	return href.startsWith("http");
+}
+
 /** Coordonnée [0, 1] → viewBox 0–100 avec 6 % de marge (aussi utilisée en % pour l'info-bulle). */
 export function toPercent(v: number): number {
 	return 6 + v * 88;
@@ -35,12 +39,12 @@ export function toMapView(
 		href: item.href,
 		x: item.x,
 		y: item.y,
-		cluster: index.get(item.cluster) ?? 1,
+		cluster: (((index.get(item.cluster) ?? 1) - 1) % 5) + 1,
 	}));
 	const clusters = map.clusters.map((c, i) => ({
 		id: c.id,
 		label: labels[c.id] ?? c.label,
-		index: i + 1,
+		index: (i % 5) + 1,
 		count: map.items.filter((item) => item.cluster === c.id).length,
 	}));
 	return { points, clusters };

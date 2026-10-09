@@ -16,6 +16,7 @@ import {
 	initialExplorerState,
 } from "@/lib/carnet/explorer";
 import {
+	isExternalHref,
 	type MapCluster,
 	type MapPoint,
 	toPercent,
@@ -39,8 +40,6 @@ interface CarnetExplorerProps {
 }
 
 const ANNOUNCE_DELAY_MS = 300;
-
-const isExternal = (href: string) => href.startsWith("http");
 
 /** Fig. 1 (spec §6.2, §7.4) : saisie, carte, résultats. Seul îlot client de l'accueil. */
 export default function CarnetExplorer({
@@ -143,7 +142,7 @@ export default function CarnetExplorer({
 			<div className="relative">
 				<figure className="relative m-0">
 					<div
-						className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[min(560px,calc(100svh-20rem))]"
+						className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[clamp(16rem,calc(100svh-20rem),560px)]"
 						onPointerDown={activate}
 					>
 						<MapSvg
@@ -204,9 +203,11 @@ export default function CarnetExplorer({
 										</span>
 										<a
 											href={p.href}
-											target={isExternal(p.href) ? "_blank" : undefined}
+											target={isExternalHref(p.href) ? "_blank" : undefined}
 											rel={
-												isExternal(p.href) ? "noopener noreferrer" : undefined
+												isExternalHref(p.href)
+													? "noopener noreferrer"
+													: undefined
 											}
 											className="min-w-0 truncate rounded-sm font-display font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 										>

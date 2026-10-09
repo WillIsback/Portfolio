@@ -1,5 +1,9 @@
 import type { CSSProperties } from "react";
-import { type MapPoint, toPercent } from "@/lib/carnet/map-view";
+import {
+	isExternalHref,
+	type MapPoint,
+	toPercent,
+} from "@/lib/carnet/map-view";
 
 interface MapSvgProps {
 	points: MapPoint[];
@@ -8,8 +12,6 @@ interface MapSvgProps {
 	activeId?: string | null;
 	onHover?: (id: string | null) => void;
 }
-
-const isExternal = (href: string) => href.startsWith("http");
 
 /** Fig. 1 : carte des projets (ronds) et articles (carrés). Rendue côté serveur. */
 export default function MapSvg({
@@ -66,8 +68,8 @@ export default function MapSvg({
 						key={p.id}
 						href={p.href}
 						tabIndex={-1}
-						target={isExternal(p.href) ? "_blank" : undefined}
-						rel={isExternal(p.href) ? "noopener noreferrer" : undefined}
+						target={isExternalHref(p.href) ? "_blank" : undefined}
+						rel={isExternalHref(p.href) ? "noopener noreferrer" : undefined}
 						onPointerEnter={onHover ? () => onHover(p.id) : undefined}
 						onPointerLeave={onHover ? () => onHover(null) : undefined}
 					>
