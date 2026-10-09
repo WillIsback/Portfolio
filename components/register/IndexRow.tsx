@@ -1,6 +1,7 @@
 import { isExternalHref } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { projectYear, techNames } from "@/lib/register";
+import DomainChips from "./DomainChips";
 
 export default function IndexRow({
 	project,
@@ -31,8 +32,11 @@ export default function IndexRow({
 			</span>
 			<span className="order-3 col-span-2 self-start text-sm text-ink-soft sm:order-none sm:col-span-1">
 				<span className="line-clamp-1 block">{project.description}</span>
-				{tech ? (
-					<span className="block font-mono text-[11px]">{tech}</span>
+				{tech || project.domains.length > 0 ? (
+					<span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
+						<DomainChips domains={project.domains} />
+						{tech ? <span>{tech}</span> : null}
+					</span>
 				) : null}
 			</span>
 			<span className="font-mono text-xs text-ink-soft">

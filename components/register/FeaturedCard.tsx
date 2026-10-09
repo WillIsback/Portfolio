@@ -4,6 +4,7 @@ import FigureCaption from "@/components/notebook/FigureCaption";
 import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { isCapture, techComposition, techNames } from "@/lib/register";
+import DomainChips from "./DomainChips";
 import MiniMap from "./MiniMap";
 import TechBar from "./TechBar";
 
@@ -68,6 +69,7 @@ export default function FeaturedCard({
 			<h3 className="mt-4 font-display text-xl font-semibold">
 				{project.title}
 			</h3>
+			<DomainChips domains={project.domains} className="mt-2" />
 			<p className="mt-2 text-base leading-relaxed">
 				{firstSentence(project.description)}
 			</p>

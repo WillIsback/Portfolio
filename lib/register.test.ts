@@ -37,9 +37,9 @@ const project = (
 });
 
 describe("selectFeatured", () => {
-	it("prend les projets ML/IAG publics, du plus récent au plus ancien, 6 au plus", () => {
+	it("prend les projets publics à domaines, du plus récent au plus ancien, 6 au plus", () => {
 		const ps = [1, 2, 3, 4, 5, 6, 7, 8].map((id) =>
-			project(id, { isML: true }),
+			project(id, { domains: [{ domain: "ML" }] }),
 		);
 		const out = selectFeatured(ps, []);
 		expect(out.map((p) => p.id)).toEqual([8, 7, 6, 5, 4, 3]);
@@ -47,13 +47,24 @@ describe("selectFeatured", () => {
 
 	it("complète jusqu'au minimum avec les projets publics les plus récents", () => {
 		const ps = [
-			project(1, { isIAG: true }),
+			project(1, { domains: [{ domain: "LLM" }] }),
 			project(2),
 			project(3),
 			project(4),
 			project(5),
 		];
 		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([1, 5, 4, 3]);
+	});
+
+	it("ignore isML/isIAG : seuls les domaines étiquettent", () => {
+		const ps = [
+			project(1, { isML: true, isIAG: true }),
+			project(2, { domains: [{ domain: "Vision" }], lastUpdate: new Date(0) }),
+			project(3),
+			project(4),
+			project(5),
+		];
+		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([2, 5, 4, 3]);
 	});
 
 	it("dédoublonne les identifiants explicites", () => {
@@ -63,7 +74,7 @@ describe("selectFeatured", () => {
 
 	it("n'inclut jamais un projet privé", () => {
 		const ps = [
-			project(1, { isML: true, isPrivate: true }),
+			project(1, { domains: [{ domain: "ML" }], isPrivate: true }),
 			project(2),
 			project(3),
 			project(4),

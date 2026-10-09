@@ -10,7 +10,7 @@ import type { ProjectFilters } from "@/schemas";
 import FilterBar from "./FilterBar";
 import RegisterView from "./RegisterView";
 
-function parseFilters(params: URLSearchParams): ProjectFilters {
+export function parseFilters(params: URLSearchParams): ProjectFilters {
 	const list = (key: string) =>
 		(params.get(key) ?? "").split(",").filter(Boolean);
 	return {
@@ -20,6 +20,7 @@ function parseFilters(params: URLSearchParams): ProjectFilters {
 		backend: list("backend") as ProjectFilters["backend"],
 		frontend: list("frontend") as ProjectFilters["frontend"],
 		devops: list("devops") as ProjectFilters["devops"],
+		domain: list("domain") as ProjectFilters["domain"],
 	};
 }
 
@@ -30,6 +31,7 @@ const NO_FILTERS: ProjectFilters = {
 	backend: [],
 	frontend: [],
 	devops: [],
+	domain: [],
 };
 
 export default function ProjectRegister({
@@ -51,6 +53,7 @@ export default function ProjectRegister({
 			filters.backend,
 			filters.frontend,
 			filters.devops,
+			filters.domain,
 		].some((l) => (l?.length ?? 0) > 0);
 	const all = useProjects(NO_FILTERS);
 	const filtered = useProjects(filtersActive ? filters : NO_FILTERS);

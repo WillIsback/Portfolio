@@ -12,7 +12,7 @@ const time = (d: Date | string | null) => (d ? new Date(d).getTime() : 0);
 const byRecent = (a: NormalizedProject, b: NormalizedProject) =>
 	time(b.lastUpdate) - time(a.lastUpdate) || a.id - b.id;
 
-/** Spec §6.4 : ML/IAG publics du plus récent au plus ancien ; liste explicite prioritaire. */
+/** Spec §6.4 : projets publics à domaines IA/Data du plus récent au plus ancien ; liste explicite prioritaire. */
 export function selectFeatured(
 	projects: NormalizedProject[],
 	explicitIds: number[],
@@ -26,8 +26,8 @@ export function selectFeatured(
 			.slice(0, FEATURED_MAX);
 	}
 	const sorted = [...visible].sort(byRecent);
-	const flagged = sorted.filter((p) => p.isML || p.isIAG);
-	const fill = sorted.filter((p) => !(p.isML || p.isIAG));
+	const flagged = sorted.filter((p) => p.domains.length > 0);
+	const fill = sorted.filter((p) => p.domains.length === 0);
 	const picked = [
 		...flagged,
 		...fill.slice(0, Math.max(0, FEATURED_MIN - flagged.length)),
