@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- vignettes distantes, hôte non configuré pour next/image */
 "use client";
 
 import { useState, useTransition } from "react";
@@ -83,7 +84,7 @@ export function ImagePicker({
 									url === value ? "border-zinc-200" : "border-zinc-800"
 								}`}
 							>
-								{/* eslint-disable-next-line @next/next/no-img-element */}
+								{/* biome-ignore lint/performance/noImgElement: vignettes distantes, hôte non configuré pour next/image */}
 								<img
 									src={url}
 									alt=""
