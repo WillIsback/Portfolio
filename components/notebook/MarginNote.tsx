@@ -33,7 +33,8 @@ export default function MarginNote({
 		return () => clearTimeout(timer);
 	}, []);
 	return (
-		<aside
+		<div
+			role="note"
 			className={cn(
 				"note-in text-lg leading-snug text-note my-3",
 				handwritten && "font-hand",
@@ -43,6 +44,6 @@ export default function MarginNote({
 			)}
 		>
 			{children}
-		</aside>
+		</div>
 	);
 }
