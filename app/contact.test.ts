@@ -29,4 +29,9 @@ describe("Contact (fiche du carnet)", () => {
 		expect(page).toContain("Fiche");
 		expect(page).toContain("font-mono");
 	});
+
+	it("garde des bordures de champ contrastées (WCAG 1.4.11)", () => {
+		expect(page).not.toContain("border-ink-soft/50");
+		expect(page).not.toContain("ring-ring/50");
+	});
 });

@@ -19,16 +19,14 @@ const formSchema = z.object({
 
 const noopSubscribe = () => () => {};
 
-/** Date du jour (locale du visiteur) ; vide au rendu serveur et à l'hydratation, sans écart. */
+/** Date du jour ISO (locale du visiteur) ; vide au rendu serveur et à l'hydratation, sans écart. */
 function useToday(): string {
 	return useSyncExternalStore(
 		noopSubscribe,
 		() => {
 			const d = new Date();
 			const pad = (n: number) => String(n).padStart(2, "0");
-			return formatDateFr(
-				`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
-			);
+			return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 		},
 		() => "",
 	);
@@ -105,7 +103,9 @@ export default function Contact() {
 				>
 					<div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 font-mono text-xs text-ink-soft">
 						<span>Fiche n° — à remplir</span>
-						<time suppressHydrationWarning>{today}</time>
+						<time dateTime={today || undefined} suppressHydrationWarning>
+							{today ? formatDateFr(today) : ""}
+						</time>
 					</div>
 					<div className="mb-6">
 						<label
@@ -121,7 +121,7 @@ export default function Contact() {
 							value={formData.email}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("email")
 									? "border-destructive focus:border-destructive"
 									: ""
@@ -158,7 +158,7 @@ export default function Contact() {
 							value={formData.sujet}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("sujet")
 									? "border-destructive focus:border-destructive"
 									: ""
@@ -195,7 +195,7 @@ export default function Contact() {
 							value={formData.message}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("message")
 									? "border-destructive focus:border-destructive"
 									: ""
