@@ -47,6 +47,21 @@ export const DevOps = {
 export type DevOps = (typeof DevOps)[keyof typeof DevOps]
 
 
+export const AiDomain = {
+  DataAnalysis: 'DataAnalysis',
+  ML: 'ML',
+  Classifier: 'Classifier',
+  Regressor: 'Regressor',
+  LLM: 'LLM',
+  Vision: 'Vision',
+  NLP: 'NLP',
+  Agents: 'Agents',
+  Speech: 'Speech'
+} as const
+
+export type AiDomain = (typeof AiDomain)[keyof typeof AiDomain]
+
+
 export const Language = {
   Python: 'Python',
   TypeScript: 'TypeScript',

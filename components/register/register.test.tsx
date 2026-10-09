@@ -25,6 +25,7 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	backends: [{ backend: "FastAPI" }],
 	frontends: [],
 	devops: [{ devops: "Docker" }],
+	domains: [],
 	...over,
 });
 const points: MapPoint[] = [

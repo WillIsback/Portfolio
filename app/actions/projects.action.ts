@@ -98,6 +98,14 @@ async function getProjectsFromDb(
 		};
 	}
 
+	if (filters?.domain?.length) {
+		where.domains = {
+			some: {
+				domain: { in: filters.domain },
+			},
+		};
+	}
+
 	const dbProjects = await prisma.project.findMany({
 		where,
 		select: {
@@ -118,6 +126,7 @@ async function getProjectsFromDb(
 			backends: true,
 			frontends: true,
 			devops: true,
+			domains: true,
 		},
 		orderBy: { lastUpdate: "desc" },
 	});
@@ -130,6 +139,7 @@ async function getProjectsFromDb(
 		backends: p.backends.map((b) => ({ backend: b.backend })),
 		frontends: p.frontends.map((f) => ({ frontend: f.frontend })),
 		devops: p.devops.map((d) => ({ devops: d.devops })),
+		domains: p.domains.map((d) => ({ domain: d.domain })),
 	}));
 }
 
@@ -204,6 +214,7 @@ export async function getProjectById(id: number) {
 					backends: true,
 					frontends: true,
 					devops: true,
+					domains: true,
 				},
 			}),
 		["project", String(id)],

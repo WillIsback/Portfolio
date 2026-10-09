@@ -21,6 +21,7 @@ const p = (id: number): NormalizedProject => ({
 	backends: [],
 	frontends: [],
 	devops: [],
+	domains: [],
 });
 const base = {
 	featuredStatus: "ready" as const,

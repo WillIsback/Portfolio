@@ -38,6 +38,7 @@ export interface NormalizedProject {
 	backends: { backend: string }[];
 	frontends: { frontend: string }[];
 	devops: { devops: string }[];
+	domains: { domain: string }[];
 }
 
 // Transformer un projet JSON en format normalisé
@@ -70,6 +71,7 @@ function normalizeProject(
 			frontend: fe,
 		})),
 		devops: (project.techStack?.devOps || []).map((dop) => ({ devops: dop })),
+		domains: [],
 	};
 }
 

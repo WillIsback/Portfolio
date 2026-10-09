@@ -75,6 +75,7 @@ export function GitHubReposBrowser({
 						backends: [],
 						frontends: [],
 						devops: detected.devops,
+						domains: [],
 					};
 				}),
 			);

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AI_DOMAINS } from "@/lib/domains";
 
 // Enums correspondant au schéma Prisma
 export const DatabaseEnum = z.enum([
@@ -46,6 +47,8 @@ export const ProjectSchema = z.object({
 });
 
 // Schéma pour les filtres de recherche
+export const AiDomainEnum = z.enum(AI_DOMAINS);
+
 export const ProjectFiltersSchema = z.object({
 	search: z.string().optional(),
 	language: z.array(LanguageEnum).optional(),
@@ -53,6 +56,7 @@ export const ProjectFiltersSchema = z.object({
 	backend: z.array(BackendApiEnum).optional(),
 	frontend: z.array(FrontendEnum).optional(),
 	devops: z.array(DevOpsEnum).optional(),
+	domain: z.array(AiDomainEnum).optional(),
 });
 
 // Types inférés
@@ -81,6 +85,7 @@ export const AdminProjectSchema = z.object({
 	backends: z.array(BackendApiEnum).default([]),
 	frontends: z.array(FrontendEnum).default([]),
 	devops: z.array(DevOpsEnum).default([]),
+	domains: z.array(AiDomainEnum).default([]),
 });
 
 export type AdminProject = z.infer<typeof AdminProjectSchema>;

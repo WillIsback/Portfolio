@@ -32,6 +32,7 @@ const project = (
 	backends: [],
 	frontends: [],
 	devops: [],
+	domains: [],
 	...over,
 });
 

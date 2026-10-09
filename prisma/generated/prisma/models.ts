@@ -10,6 +10,7 @@
  */
 export type * from './models/Project'
 export type * from './models/ProjectLanguage'
+export type * from './models/ProjectDomain'
 export type * from './models/ProjectDatabase'
 export type * from './models/ProjectBackend'
 export type * from './models/ProjectFrontend'

@@ -192,6 +192,23 @@ export type EnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLanguageFilter<$PrismaModel>
 }
 
+export type EnumAiDomainFilter<$PrismaModel = never> = {
+  equals?: $Enums.AiDomain | Prisma.EnumAiDomainFieldRefInput<$PrismaModel>
+  in?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAiDomainFilter<$PrismaModel> | $Enums.AiDomain
+}
+
+export type EnumAiDomainWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AiDomain | Prisma.EnumAiDomainFieldRefInput<$PrismaModel>
+  in?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAiDomainWithAggregatesFilter<$PrismaModel> | $Enums.AiDomain
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAiDomainFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAiDomainFilter<$PrismaModel>
+}
+
 export type EnumDatabaseFilter<$PrismaModel = never> = {
   equals?: $Enums.Database | Prisma.EnumDatabaseFieldRefInput<$PrismaModel>
   in?: $Enums.Database[] | Prisma.ListEnumDatabaseFieldRefInput<$PrismaModel>
@@ -449,6 +466,23 @@ export type NestedEnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLanguageFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLanguageFilter<$PrismaModel>
+}
+
+export type NestedEnumAiDomainFilter<$PrismaModel = never> = {
+  equals?: $Enums.AiDomain | Prisma.EnumAiDomainFieldRefInput<$PrismaModel>
+  in?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAiDomainFilter<$PrismaModel> | $Enums.AiDomain
+}
+
+export type NestedEnumAiDomainWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AiDomain | Prisma.EnumAiDomainFieldRefInput<$PrismaModel>
+  in?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AiDomain[] | Prisma.ListEnumAiDomainFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAiDomainWithAggregatesFilter<$PrismaModel> | $Enums.AiDomain
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAiDomainFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAiDomainFilter<$PrismaModel>
 }
 
 export type NestedEnumDatabaseFilter<$PrismaModel = never> = {

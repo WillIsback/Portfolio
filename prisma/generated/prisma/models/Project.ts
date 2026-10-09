@@ -277,6 +277,7 @@ export type ProjectWhereInput = {
   backends?: Prisma.ProjectBackendListRelationFilter
   frontends?: Prisma.ProjectFrontendListRelationFilter
   devops?: Prisma.ProjectDevOpsListRelationFilter
+  domains?: Prisma.ProjectDomainListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -297,6 +298,7 @@ export type ProjectOrderByWithRelationInput = {
   backends?: Prisma.ProjectBackendOrderByRelationAggregateInput
   frontends?: Prisma.ProjectFrontendOrderByRelationAggregateInput
   devops?: Prisma.ProjectDevOpsOrderByRelationAggregateInput
+  domains?: Prisma.ProjectDomainOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -320,6 +322,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   backends?: Prisma.ProjectBackendListRelationFilter
   frontends?: Prisma.ProjectFrontendListRelationFilter
   devops?: Prisma.ProjectDevOpsListRelationFilter
+  domains?: Prisma.ProjectDomainListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -377,6 +380,7 @@ export type ProjectCreateInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -397,6 +401,7 @@ export type ProjectUncheckedCreateInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -416,6 +421,7 @@ export type ProjectUpdateInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -436,6 +442,7 @@ export type ProjectUncheckedUpdateInput = {
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -582,6 +589,20 @@ export type ProjectUpdateOneRequiredWithoutLanguagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutLanguagesInput, Prisma.ProjectUpdateWithoutLanguagesInput>, Prisma.ProjectUncheckedUpdateWithoutLanguagesInput>
 }
 
+export type ProjectCreateNestedOneWithoutDomainsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDomainsInput, Prisma.ProjectUncheckedCreateWithoutDomainsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDomainsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutDomainsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDomainsInput, Prisma.ProjectUncheckedCreateWithoutDomainsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDomainsInput
+  upsert?: Prisma.ProjectUpsertWithoutDomainsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDomainsInput, Prisma.ProjectUpdateWithoutDomainsInput>, Prisma.ProjectUncheckedUpdateWithoutDomainsInput>
+}
+
 export type ProjectCreateNestedOneWithoutDatabasesInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutDatabasesInput, Prisma.ProjectUncheckedCreateWithoutDatabasesInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDatabasesInput
@@ -654,6 +675,7 @@ export type ProjectCreateWithoutLanguagesInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLanguagesInput = {
@@ -673,6 +695,7 @@ export type ProjectUncheckedCreateWithoutLanguagesInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLanguagesInput = {
@@ -707,6 +730,7 @@ export type ProjectUpdateWithoutLanguagesInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLanguagesInput = {
@@ -722,6 +746,101 @@ export type ProjectUncheckedUpdateWithoutLanguagesInput = {
   isIAG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
+  backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
+  frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
+  devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutDomainsInput = {
+  title: string
+  description: string
+  imagePath?: string | null
+  github?: string | null
+  lastUpdate?: Date | string | null
+  isPrivate?: boolean
+  isAiGenerated?: boolean
+  isML?: boolean
+  isIAG?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
+  databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
+  backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
+  frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
+  devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutDomainsInput = {
+  id?: number
+  title: string
+  description: string
+  imagePath?: string | null
+  github?: string | null
+  lastUpdate?: Date | string | null
+  isPrivate?: boolean
+  isAiGenerated?: boolean
+  isML?: boolean
+  isIAG?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
+  databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
+  backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
+  frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
+  devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutDomainsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDomainsInput, Prisma.ProjectUncheckedCreateWithoutDomainsInput>
+}
+
+export type ProjectUpsertWithoutDomainsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutDomainsInput, Prisma.ProjectUncheckedUpdateWithoutDomainsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDomainsInput, Prisma.ProjectUncheckedCreateWithoutDomainsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutDomainsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutDomainsInput, Prisma.ProjectUncheckedUpdateWithoutDomainsInput>
+}
+
+export type ProjectUpdateWithoutDomainsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isML?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isIAG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
+  databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
+  backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
+  frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
+  devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutDomainsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isML?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isIAG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
   databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
@@ -744,6 +863,7 @@ export type ProjectCreateWithoutDatabasesInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDatabasesInput = {
@@ -763,6 +883,7 @@ export type ProjectUncheckedCreateWithoutDatabasesInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDatabasesInput = {
@@ -797,6 +918,7 @@ export type ProjectUpdateWithoutDatabasesInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDatabasesInput = {
@@ -816,6 +938,7 @@ export type ProjectUncheckedUpdateWithoutDatabasesInput = {
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutBackendsInput = {
@@ -834,6 +957,7 @@ export type ProjectCreateWithoutBackendsInput = {
   databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutBackendsInput = {
@@ -853,6 +977,7 @@ export type ProjectUncheckedCreateWithoutBackendsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutBackendsInput = {
@@ -887,6 +1012,7 @@ export type ProjectUpdateWithoutBackendsInput = {
   databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBackendsInput = {
@@ -906,6 +1032,7 @@ export type ProjectUncheckedUpdateWithoutBackendsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutFrontendsInput = {
@@ -924,6 +1051,7 @@ export type ProjectCreateWithoutFrontendsInput = {
   databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFrontendsInput = {
@@ -943,6 +1071,7 @@ export type ProjectUncheckedCreateWithoutFrontendsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFrontendsInput = {
@@ -977,6 +1106,7 @@ export type ProjectUpdateWithoutFrontendsInput = {
   databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFrontendsInput = {
@@ -996,6 +1126,7 @@ export type ProjectUncheckedUpdateWithoutFrontendsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDevopsInput = {
@@ -1014,6 +1145,7 @@ export type ProjectCreateWithoutDevopsInput = {
   databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDevopsInput = {
@@ -1033,6 +1165,7 @@ export type ProjectUncheckedCreateWithoutDevopsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDevopsInput = {
@@ -1067,6 +1200,7 @@ export type ProjectUpdateWithoutDevopsInput = {
   databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDevopsInput = {
@@ -1086,6 +1220,7 @@ export type ProjectUncheckedUpdateWithoutDevopsInput = {
   databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 
@@ -1099,6 +1234,7 @@ export type ProjectCountOutputType = {
   backends: number
   frontends: number
   devops: number
+  domains: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1107,6 +1243,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   backends?: boolean | ProjectCountOutputTypeCountBackendsArgs
   frontends?: boolean | ProjectCountOutputTypeCountFrontendsArgs
   devops?: boolean | ProjectCountOutputTypeCountDevopsArgs
+  domains?: boolean | ProjectCountOutputTypeCountDomainsArgs
 }
 
 /**
@@ -1154,6 +1291,13 @@ export type ProjectCountOutputTypeCountDevopsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.ProjectDevOpsWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountDomainsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectDomainWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1173,6 +1317,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   backends?: boolean | Prisma.Project$backendsArgs<ExtArgs>
   frontends?: boolean | Prisma.Project$frontendsArgs<ExtArgs>
   devops?: boolean | Prisma.Project$devopsArgs<ExtArgs>
+  domains?: boolean | Prisma.Project$domainsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1228,6 +1373,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   backends?: boolean | Prisma.Project$backendsArgs<ExtArgs>
   frontends?: boolean | Prisma.Project$frontendsArgs<ExtArgs>
   devops?: boolean | Prisma.Project$devopsArgs<ExtArgs>
+  domains?: boolean | Prisma.Project$domainsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1241,6 +1387,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     backends: Prisma.$ProjectBackendPayload<ExtArgs>[]
     frontends: Prisma.$ProjectFrontendPayload<ExtArgs>[]
     devops: Prisma.$ProjectDevOpsPayload<ExtArgs>[]
+    domains: Prisma.$ProjectDomainPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1654,6 +1801,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   backends<T extends Prisma.Project$backendsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$backendsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectBackendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   frontends<T extends Prisma.Project$frontendsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$frontendsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFrontendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   devops<T extends Prisma.Project$devopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$devopsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDevOpsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  domains<T extends Prisma.Project$domainsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$domainsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDomainPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2200,6 +2348,30 @@ export type Project$devopsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ProjectDevOpsScalarFieldEnum | Prisma.ProjectDevOpsScalarFieldEnum[]
+}
+
+/**
+ * Project.domains
+ */
+export type Project$domainsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectDomain
+   */
+  select?: Prisma.ProjectDomainSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectDomain
+   */
+  omit?: Prisma.ProjectDomainOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectDomainInclude<ExtArgs> | null
+  where?: Prisma.ProjectDomainWhereInput
+  orderBy?: Prisma.ProjectDomainOrderByWithRelationInput | Prisma.ProjectDomainOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectDomainWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectDomainScalarFieldEnum | Prisma.ProjectDomainScalarFieldEnum[]
 }
 
 /**

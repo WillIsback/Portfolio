@@ -42,6 +42,18 @@ enum DevOps {
 }
 
 // Enum pour les langages
+enum AiDomain {
+  DataAnalysis
+  ML
+  Classifier
+  Regressor
+  LLM
+  Vision
+  NLP
+  Agents
+  Speech
+}
+
 enum Language {
   Python
   TypeScript
@@ -70,6 +82,7 @@ model Project {
   backends    ProjectBackend[]
   frontends   ProjectFrontend[]
   devops      ProjectDevOps[]
+  domains     ProjectDomain[]
 }
 
 // Tables de jonction pour les relations many-to-many
@@ -80,6 +93,15 @@ model ProjectLanguage {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, language])
+}
+
+model ProjectDomain {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  domain    AiDomain
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, domain])
 }
 
 model ProjectDatabase {

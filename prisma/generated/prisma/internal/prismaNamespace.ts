@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Project: 'Project',
   ProjectLanguage: 'ProjectLanguage',
+  ProjectDomain: 'ProjectDomain',
   ProjectDatabase: 'ProjectDatabase',
   ProjectBackend: 'ProjectBackend',
   ProjectFrontend: 'ProjectFrontend',
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "projectLanguage" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
+    modelProps: "project" | "projectLanguage" | "projectDomain" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -554,6 +555,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProjectLanguageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProjectLanguageCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProjectDomain: {
+      payload: Prisma.$ProjectDomainPayload<ExtArgs>
+      fields: Prisma.ProjectDomainFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectDomainFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectDomainFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectDomainFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectDomainFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectDomainFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectDomainCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectDomainCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectDomainCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectDomainDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        update: {
+          args: Prisma.ProjectDomainUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectDomainDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectDomainUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectDomainUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectDomainUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectDomainPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectDomainAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectDomain>
+        }
+        groupBy: {
+          args: Prisma.ProjectDomainGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectDomainGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectDomainCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectDomainCountAggregateOutputType> | number
         }
       }
     }
@@ -919,6 +994,15 @@ export const ProjectLanguageScalarFieldEnum = {
 export type ProjectLanguageScalarFieldEnum = (typeof ProjectLanguageScalarFieldEnum)[keyof typeof ProjectLanguageScalarFieldEnum]
 
 
+export const ProjectDomainScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  domain: 'domain'
+} as const
+
+export type ProjectDomainScalarFieldEnum = (typeof ProjectDomainScalarFieldEnum)[keyof typeof ProjectDomainScalarFieldEnum]
+
+
 export const ProjectDatabaseScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -1045,6 +1129,20 @@ export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Language[]'
  */
 export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AiDomain'
+ */
+export type EnumAiDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiDomain'>
+    
+
+
+/**
+ * Reference to a field of type 'AiDomain[]'
+ */
+export type ListEnumAiDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiDomain[]'>
     
 
 
@@ -1214,6 +1312,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   projectLanguage?: Prisma.ProjectLanguageOmit
+  projectDomain?: Prisma.ProjectDomainOmit
   projectDatabase?: Prisma.ProjectDatabaseOmit
   projectBackend?: Prisma.ProjectBackendOmit
   projectFrontend?: Prisma.ProjectFrontendOmit
