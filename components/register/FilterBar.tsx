@@ -14,6 +14,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { debounce } from "@/lib/debounce";
+import { nextSearchField } from "@/lib/search-field-sync";
 import {
 	BACKEND_LABELS,
 	DATABASE_LABELS,
@@ -39,13 +40,22 @@ export default function FilterBar() {
 	const search = searchParams.get("search") ?? "";
 	const [searchText, setSearchText] = useState(search);
 	const searchInputRef = useRef<HTMLInputElement>(null);
-	// Resynchronise le champ quand l'URL change de l'extérieur (Réinitialiser, navigation).
-	// Une valeur de l'URL qu'on vient de pousser nous-mêmes n'écrase pas la saisie en cours.
+	// Resynchronise le champ quand l'URL change de l'extérieur (Réinitialiser, retour/avance).
+	// L'écho d'une valeur qu'on a poussée nous-mêmes n'écrase pas la saisie en cours.
 	const [prevSearch, setPrevSearch] = useState(search);
-	const [pushedSearch, setPushedSearch] = useState(search);
+	const [pushedSearches, setPushedSearches] = useState<string[]>([]);
+	const [cancelToken, setCancelToken] = useState(0);
 	if (search !== prevSearch) {
+		const next = nextSearchField({
+			urlSearch: search,
+			prevUrlSearch: prevSearch,
+			pushed: pushedSearches,
+			field: searchText,
+		});
 		setPrevSearch(search);
-		if (search !== pushedSearch) setSearchText(search);
+		setPushedSearches(next.pushed);
+		setSearchText(next.field);
+		if (next.cancelPending) setCancelToken((n) => n + 1);
 	}
 	const language =
 		searchParams.get("language")?.split(",").filter(Boolean) ?? [];
@@ -84,26 +94,34 @@ export default function FilterBar() {
 
 	// Saisie : l'URL (donc la requête serveur) n'est mise à jour qu'après 300 ms de pause.
 	const latestUpdate = useRef(updateSearchParams);
+	const latestSearch = useRef(search);
 	useEffect(() => {
 		latestUpdate.current = updateSearchParams;
+		latestSearch.current = search;
 	});
 	const pushSearchRef = useRef<ReturnType<typeof debounce<[string]>> | null>(
 		null,
 	);
 	useEffect(() => {
 		const pushSearch = debounce((value: string) => {
-			setPushedSearch(value);
+			if (value !== latestSearch.current)
+				setPushedSearches((list) => [...list, value]);
 			latestUpdate.current("search", value);
 		}, 300);
 		pushSearchRef.current = pushSearch;
 		return () => pushSearch.cancel();
 	}, []);
+	// Navigation externe : la saisie différée en attente est périmée.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: cancelToken ne sert que de déclencheur
+	useEffect(() => {
+		pushSearchRef.current?.cancel();
+	}, [cancelToken]);
 
 	// Réinitialiser tous les filtres
 	const resetFilters = useCallback(() => {
 		pushSearchRef.current?.cancel();
 		setSearchText("");
-		setPushedSearch("");
+		setPushedSearches([]);
 		startTransition(() => {
 			router.push(pathname, { scroll: false });
 		});
