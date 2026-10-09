@@ -30,6 +30,12 @@ describe("Contact (fiche du carnet)", () => {
 		expect(page).toContain("font-mono");
 	});
 
+	it("met la couleur de bordure dans le ternaire (invalide = destructive, sinon ink-soft)", () => {
+		expect(page).toContain('"border-destructive focus:border-destructive"');
+		expect(page).toContain('"border-ink-soft focus:border-primary"');
+		expect(page).not.toMatch(/rounded-none[^`$]*border-ink-soft/);
+	});
+
 	it("garde des bordures de champ contrastées (WCAG 1.4.11)", () => {
 		expect(page).not.toContain("border-ink-soft/50");
 		expect(page).not.toContain("ring-ring/50");

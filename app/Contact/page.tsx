@@ -121,10 +121,10 @@ export default function Contact() {
 							value={formData.email}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+							className={`block w-full border-0 border-b rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("email")
 									? "border-destructive focus:border-destructive"
-									: ""
+									: "border-ink-soft focus:border-primary"
 							}`}
 							aria-invalid={isFieldInvalid("email")}
 							aria-describedby={
@@ -158,10 +158,10 @@ export default function Contact() {
 							value={formData.sujet}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+							className={`block w-full border-0 border-b rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("sujet")
 									? "border-destructive focus:border-destructive"
-									: ""
+									: "border-ink-soft focus:border-primary"
 							}`}
 							aria-invalid={isFieldInvalid("sujet")}
 							aria-describedby={
@@ -195,10 +195,10 @@ export default function Contact() {
 							value={formData.message}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`block w-full border-0 border-b border-ink-soft rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+							className={`block w-full border-0 border-b rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
 								isFieldInvalid("message")
 									? "border-destructive focus:border-destructive"
-									: ""
+									: "border-ink-soft focus:border-primary"
 							}`}
 							aria-invalid={isFieldInvalid("message")}
 							aria-describedby={
