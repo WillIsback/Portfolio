@@ -1,13 +1,13 @@
 "use client";
-import { motion } from "framer-motion";
-import { Loader2, Send, UserRoundPen } from "lucide-react";
-import { useActionState, useEffect, useRef } from "react";
+import { Loader2, Send } from "lucide-react";
+import { useActionState, useEffect, useRef, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import ThemedToaster from "@/components/theme/ThemedToaster";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { formatDateFr } from "@/lib/articles/format";
 import { sendEmail } from "../actions/contact.action";
 
 // Schéma de validation
@@ -17,9 +17,27 @@ const formSchema = z.object({
 	message: z.string().min(10, "Le message doit faire au moins 10 caractères"),
 });
 
+const noopSubscribe = () => () => {};
+
+/** Date du jour (locale du visiteur) ; vide au rendu serveur et à l'hydratation, sans écart. */
+function useToday(): string {
+	return useSyncExternalStore(
+		noopSubscribe,
+		() => {
+			const d = new Date();
+			const pad = (n: number) => String(n).padStart(2, "0");
+			return formatDateFr(
+				`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+			);
+		},
+		() => "",
+	);
+}
+
 const initialFormValues = { email: "", sujet: "", message: "" };
 
 export default function Contact() {
+	const today = useToday();
 	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
 
@@ -69,33 +87,30 @@ export default function Contact() {
 				<Header />
 			</div>
 			<div className="mx-auto w-full min-w-3/5 max-w-6xl px-4 pt-10 sm:w-auto">
-				<div className="mb-20 flex items-center gap-4 sm:gap-8">
-					<motion.div
-						initial={{ opacity: 0, scale: 0.8 }}
-						animate={{ opacity: 1, scale: 1 }}
-						transition={{ duration: 0.6 }}
-						className="shrink-0"
-					></motion.div>
-					<UserRoundPen size={75} />
-					<motion.div
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-						className="space-y-4"
-					>
-						<h1 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground">
-							Formulaire de contact
-						</h1>
-					</motion.div>
-				</div>
+				<header className="mb-10 space-y-3">
+					<p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
+						Carnet · fiche contact
+					</p>
+					<h1 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground">
+						Formulaire de contact
+					</h1>
+					<p className="text-muted-foreground">
+						Une question sur un projet, une expérience ou un article ? Je
+						réponds sous quelques jours.
+					</p>
+				</header>
 				<form
 					action={formAction}
-					className="flex flex-col gap-6 border border-border bg-card rounded-xl px-6 py-8 sm:px-13 sm:py-13 w-full"
+					className="flex flex-col gap-6 border border-border bg-background/80 rounded-sm px-6 py-8 sm:px-10 sm:py-10 w-full"
 				>
+					<div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 font-mono text-xs text-ink-soft">
+						<span>Fiche n° — à remplir</span>
+						<time suppressHydrationWarning>{today}</time>
+					</div>
 					<div className="mb-6">
 						<label
 							htmlFor="email"
-							className="block mb-2.5 text-sm font-medium text-foreground"
+							className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 						>
 							Adresse mail
 						</label>
@@ -106,29 +121,33 @@ export default function Contact() {
 							value={formData.email}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full px-3 py-2.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
+							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
 								isFieldInvalid("email")
-									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
-									: "border-input"
+									? "border-destructive focus:border-destructive"
+									: ""
 							}`}
+							aria-invalid={isFieldInvalid("email")}
+							aria-describedby={
+								getFieldError("email") ? "email-error" : undefined
+							}
 							placeholder="john.doe@company.com"
 							required
 						/>
 						{getFieldError("email") && (
-							<motion.p
-								initial={{ opacity: 0, y: -5 }}
-								animate={{ opacity: 1, y: 0 }}
+							<p
+								id="email-error"
+								role="alert"
 								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("email")}
-							</motion.p>
+							</p>
 						)}
 					</div>
 
 					<div className="mb-6">
 						<label
 							htmlFor="sujet"
-							className="block mb-2.5 text-sm font-medium text-foreground"
+							className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 						>
 							Sujet
 						</label>
@@ -139,29 +158,33 @@ export default function Contact() {
 							value={formData.sujet}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full px-3 py-2.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
+							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
 								isFieldInvalid("sujet")
-									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
-									: "border-input"
+									? "border-destructive focus:border-destructive"
+									: ""
 							}`}
+							aria-invalid={isFieldInvalid("sujet")}
+							aria-describedby={
+								getFieldError("sujet") ? "sujet-error" : undefined
+							}
 							placeholder="Sujet du mail..."
 							required
 						/>
 						{getFieldError("sujet") && (
-							<motion.p
-								initial={{ opacity: 0, y: -5 }}
-								animate={{ opacity: 1, y: 0 }}
+							<p
+								id="sujet-error"
+								role="alert"
 								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("sujet")}
-							</motion.p>
+							</p>
 						)}
 					</div>
 
 					<div className="mb-6">
 						<label
 							htmlFor="message"
-							className="block mb-2.5 text-sm font-medium text-foreground"
+							className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 						>
 							Message
 						</label>
@@ -172,28 +195,32 @@ export default function Contact() {
 							value={formData.message}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							className={`bg-background border text-foreground text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-ring block w-full p-3.5 shadow-xs placeholder:text-muted-foreground transition-colors ${
+							className={`block w-full border-0 border-b border-ink-soft/50 rounded-none bg-transparent px-1 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
 								isFieldInvalid("message")
-									? "border-destructive focus:ring-destructive/40 focus:border-destructive"
-									: "border-input"
+									? "border-destructive focus:border-destructive"
+									: ""
 							}`}
+							aria-invalid={isFieldInvalid("message")}
+							aria-describedby={
+								getFieldError("message") ? "message-error" : undefined
+							}
 							placeholder="Votre message..."
 						/>
 						{getFieldError("message") && (
-							<motion.p
-								initial={{ opacity: 0, y: -5 }}
-								animate={{ opacity: 1, y: 0 }}
+							<p
+								id="message-error"
+								role="alert"
 								className="mt-1.5 text-xs text-destructive"
 							>
 								{getFieldError("message")}
-							</motion.p>
+							</p>
 						)}
 					</div>
 
 					<button
 						type="submit"
 						disabled={isPending || !isValid}
-						className="group flex items-center gap-2 border rounded-xl px-4 py-2 bg-secondary text-secondary-foreground cursor-pointer w-fit hover:bg-primary hover:text-primary-foreground transition-colors duration-300 ease-in-out hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-secondary disabled:hover:text-secondary-foreground"
+						className="group flex w-fit cursor-pointer items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{isPending ? (
 							<>
