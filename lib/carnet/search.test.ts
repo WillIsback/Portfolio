@@ -24,6 +24,18 @@ const items: SearchItem[] = [
 ];
 
 describe("keywordMatches", () => {
+	it("reconnaît un mot-clé ponctué comme expression entière", () => {
+		const punctuated: SearchItem[] = [
+			{ id: "n", title: "N", keywords: ["next.js", "text-to-sql"], terms: [] },
+		];
+		expect(keywordMatches("text to sql", punctuated)).toEqual([
+			{ id: "n", score: 2 },
+		]);
+		expect(keywordMatches("Next.js", punctuated)).toEqual([
+			{ id: "n", score: 2 },
+		]);
+	});
+
 	it("trouve un mot-clé complet en ignorant accents et casse", () => {
 		expect(keywordMatches("LLM Local", items).map((m) => m.id)).toEqual(["a"]);
 	});
