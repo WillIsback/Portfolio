@@ -31,6 +31,20 @@ describe("Chronology", () => {
 		);
 	});
 
+	it("la ligne d'encre se complète au défilement maximal (animation-range finit à entry-crossing)", () => {
+		const css = readFileSync(
+			path.join(process.cwd(), "app/globals.css"),
+			"utf8",
+		);
+		expect(css).toMatch(/animation-range:[^;]*\bentry-crossing\b[^;]*;/);
+		expect(css).not.toMatch(/animation-range:[^;]*cover 60%/);
+	});
+
+	it("ne met pas de span directement dans l'ol", () => {
+		expect(html).not.toMatch(/<ol[^>]*><span/);
+		expect(html).toMatch(/<div class="relative[^"]*"><span[^>]*chrono-ink/);
+	});
+
 	it("la page À propos n'utilise plus framer-motion", () => {
 		const page = readFileSync(
 			path.join(process.cwd(), "app/About/page.tsx"),
