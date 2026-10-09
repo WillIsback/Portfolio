@@ -4,6 +4,7 @@
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/auth";
+import { rawImageUrl } from "@/lib/admin/project-form";
 import prisma from "@/lib/db";
 import { buildDomainRows } from "@/lib/domains";
 import { ACCEPTABLE_FIELDS, planWrite } from "@/lib/github/apply";
@@ -357,5 +358,54 @@ export async function applySync(
 		return { ok: true };
 	} catch (e) {
 		return { ok: false, error: safeMessage(e) };
+	}
+}
+
+export type RepoImagesResult =
+	| { ok: true; images: string[] }
+	| { ok: false; images: []; reason: string };
+
+/**
+ * URL raw des images du dépôt d'un projet. Le dépôt vient de la base (jamais du client) ;
+ * un dépôt privé n'a pas de galerie (ses images ne sont pas publiques).
+ */
+export async function listRepoImages(
+	projectId: number,
+): Promise<RepoImagesResult> {
+	await requireAdmin();
+	const id = z.number().int().positive().safeParse(projectId);
+	if (!id.success)
+		return { ok: false, images: [], reason: "Projet introuvable." };
+	const project = await prisma.project.findUnique({
+		where: { id: id.data },
+		select: { github: true, isPrivate: true },
+	});
+	if (!project) return { ok: false, images: [], reason: "Projet introuvable." };
+	if (project.isPrivate)
+		return {
+			ok: false,
+			images: [],
+			reason: "Capture impossible pour un dépôt privé.",
+		};
+	const name = fullNameOf(project.github);
+	if (!name)
+		return { ok: false, images: [], reason: "Aucun dépôt GitHub associé." };
+	try {
+		const { token } = await getAdminGithubToken();
+		const bundle = await getRepoBundle(name, token);
+		if (bundle.meta.private)
+			return {
+				ok: false,
+				images: [],
+				reason: "Capture impossible pour un dépôt privé.",
+			};
+		return {
+			ok: true,
+			images: bundle.images.map((p) =>
+				rawImageUrl(bundle.meta.full_name, bundle.meta.default_branch, p),
+			),
+		};
+	} catch (e) {
+		return { ok: false, images: [], reason: safeMessage(e) };
 	}
 }
