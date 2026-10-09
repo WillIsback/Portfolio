@@ -16,12 +16,11 @@ import {
 	projectEntries,
 } from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
-import { toMapView, toSearchItems } from "@/lib/carnet/map-view";
+import { toMapView } from "@/lib/carnet/map-view";
 import { mapNeighbors } from "@/lib/register";
 
 const map = MapDataSchema.parse(mapJson);
 const view = toMapView(map, clusterLabels);
-const searchItems = toSearchItems(map);
 const entries = latestArticles(3);
 const byProject = projectEntries(getAllArticles());
 const neighbors = mapNeighbors(map);
@@ -40,7 +39,6 @@ export default function Home() {
 				<CarnetExplorer
 					points={view.points}
 					clusters={view.clusters}
-					searchItems={searchItems}
 					intro={
 						<>
 							<h1

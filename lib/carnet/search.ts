@@ -3,7 +3,6 @@ import { tokenize } from "./tokenize";
 
 export interface SearchItem {
 	id: string;
-	title: string;
 	keywords: string[];
 	terms: string[];
 }

@@ -11,13 +11,12 @@ import type { SearchItem } from "./search";
 const items: SearchItem[] = [
 	{
 		id: "a",
-		title: "Agents",
 		keywords: ["agents autonomes"],
 		terms: ["agents", "flotte"],
 	},
-	{ id: "b", title: "Vision", keywords: ["python"], terms: ["vision"] },
-	{ id: "c", title: "Web", keywords: ["typescript"], terms: ["site"] },
-	{ id: "d", title: "Data", keywords: ["python"], terms: ["donnees"] },
+	{ id: "b", keywords: ["python"], terms: ["vision"] },
+	{ id: "c", keywords: ["typescript"], terms: ["site"] },
+	{ id: "d", keywords: ["python"], terms: ["donnees"] },
 ];
 const positions = new Map([
 	["a", { x: 0, y: 0 }],
@@ -94,6 +93,7 @@ describe("computeView", () => {
 				hits: new Set(),
 				results: [],
 				queryPoint: null,
+				pending: false,
 			});
 		}
 	});
@@ -108,6 +108,27 @@ describe("computeView", () => {
 		expect([...view.hits].sort()).toEqual(["b", "d"]);
 		expect(view.results.every((r) => r.score === null)).toBe(true);
 		expect(view.queryPoint).toBeNull();
+	});
+
+	it("sans données de recherche : aucun résultat, signalé en attente", () => {
+		const view = computeView(
+			typed(initialExplorerState, "python"),
+			null,
+			positions,
+		);
+		expect(view.mode).toBe("keyword");
+		expect(view.pending).toBe(true);
+		expect(view.results).toEqual([]);
+		expect(view.hits.size).toBe(0);
+	});
+
+	it("n'est plus en attente une fois les données chargées", () => {
+		const view = computeView(
+			typed(initialExplorerState, "python"),
+			items,
+			positions,
+		);
+		expect(view.pending).toBe(false);
 	});
 
 	it("passe en sémantique quand le modèle répond : 3 résultats, scores, point posé", () => {

@@ -66,10 +66,9 @@ describe("toMapView", () => {
 });
 
 describe("toSearchItems", () => {
-	it("garde id, titre, mots-clés et termes", () => {
+	it("garde id, mots-clés et termes, sans titre ni vecteur", () => {
 		expect(toSearchItems(map)[1]).toEqual({
 			id: "project:1",
-			title: "P",
 			keywords: ["python"],
 			terms: ["pi"],
 		});

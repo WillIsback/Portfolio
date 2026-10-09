@@ -50,10 +50,10 @@ export function toMapView(
 	return { points, clusters };
 }
 
+/** Données de recherche par mots-clés (content/search-items.json) : ni titre ni vecteur. */
 export function toSearchItems(map: MapData): SearchItem[] {
 	return map.items.map((item) => ({
 		id: item.id,
-		title: item.title,
 		keywords: item.keywords,
 		terms: item.terms,
 	}));

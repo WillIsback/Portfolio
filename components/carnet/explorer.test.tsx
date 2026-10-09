@@ -23,14 +23,6 @@ describe("CarnetExplorer (rendu serveur)", () => {
 		<CarnetExplorer
 			points={points}
 			clusters={clusters}
-			searchItems={[
-				{
-					id: "article:a",
-					title: "Neuf agents",
-					keywords: [],
-					terms: ["agents"],
-				},
-			]}
 			intro={<h1>Carnet de labo</h1>}
 			note={<p>essaie</p>}
 		/>,

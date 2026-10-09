@@ -34,7 +34,6 @@ import MapSvg from "./MapSvg";
 interface CarnetExplorerProps {
 	points: MapPoint[];
 	clusters: MapCluster[];
-	searchItems: SearchItem[];
 	intro: ReactNode;
 	note: ReactNode;
 }
@@ -45,12 +44,12 @@ const ANNOUNCE_DELAY_MS = 300;
 export default function CarnetExplorer({
 	points,
 	clusters,
-	searchItems,
 	intro,
 	note,
 }: Readonly<CarnetExplorerProps>) {
 	const [state, dispatch] = useReducer(explorerReducer, initialExplorerState);
 	const [hoverId, setHoverId] = useState<string | null>(null);
+	const [searchItems, setSearchItems] = useState<SearchItem[] | null>(null);
 	const workerRef = useRef<Worker | null>(null);
 
 	const positions = useMemo(
@@ -63,6 +62,10 @@ export default function CarnetExplorer({
 	const activate = () => {
 		if (workerRef.current || state.status !== "idle") return;
 		dispatch({ type: "activate" });
+		// Données de recherche par mots-clés : chunk séparé, hors du HTML de l'accueil.
+		import("@/content/search-items.json")
+			.then((module) => setSearchItems(module.default))
+			.catch(() => setSearchItems([]));
 		try {
 			const worker = new Worker(
 				new URL("../../lib/carnet/carnet.worker.ts", import.meta.url),
@@ -177,7 +180,9 @@ export default function CarnetExplorer({
 					{announced}
 				</div>
 				<div className="mt-4 min-h-[5.5rem]">
-					{view.mode !== "rest" && view.results.length === 0 ? (
+					{view.mode !== "rest" &&
+					!view.pending &&
+					view.results.length === 0 ? (
 						<p className="text-sm text-ink-soft">
 							Aucun élément ne correspond. Essaie un autre mot.
 						</p>

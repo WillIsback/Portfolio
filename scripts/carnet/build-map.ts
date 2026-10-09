@@ -3,6 +3,7 @@ import path from "node:path";
 import { clusterLabels } from "../../content/map-clusters";
 import { buildMap } from "../../lib/carnet/map-build";
 import { MapDataSchema } from "../../lib/carnet/map-types";
+import { toSearchItems } from "../../lib/carnet/map-view";
 import { embedText } from "../../lib/carnet/static-model";
 import {
 	CARNET_MODEL_DIR,
@@ -11,6 +12,7 @@ import {
 import { loadCorpus } from "./load-corpus";
 
 const OUT = path.join(process.cwd(), "content", "map.json");
+const OUT_SEARCH = path.join(process.cwd(), "content", "search-items.json");
 
 (async () => {
 	const model = loadStaticModelFromDir(CARNET_MODEL_DIR);
@@ -36,6 +38,7 @@ const OUT = path.join(process.cwd(), "content", "map.json");
 		),
 	);
 	writeFileSync(OUT, `${JSON.stringify(map, null, 1)}\n`);
+	writeFileSync(OUT_SEARCH, `${JSON.stringify(toSearchItems(map), null, 1)}\n`);
 	console.log(
 		`content/map.json : ${map.items.length} éléments, groupes :`,
 		map.clusters,
