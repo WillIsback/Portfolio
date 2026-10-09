@@ -6,8 +6,10 @@ import {
 	getAllArticles,
 	getArticleBySlug,
 	getArticleSlugs,
+	latestArticles,
 	parseArticle,
 	parseFrontmatter,
+	projectEntries,
 	readingTime,
 } from "./loader";
 
@@ -168,5 +170,62 @@ describe("loader", () => {
 
 	it("parseArticle reports the file on invalid frontmatter", () => {
 		expect(() => parseArticle("x", mdx({ title: '"T"' }))).toThrow(/x\.mdx/);
+	});
+});
+
+describe("frontmatter projects", () => {
+	const base = { title: "T", description: "D", date: "2026-10-01", tags: [] };
+
+	it("accepte une liste d'identifiants de projets", () => {
+		expect(
+			parseFrontmatter({ ...base, projects: [3, 12] }, "a.mdx").projects,
+		).toEqual([3, 12]);
+	});
+
+	it("reste absent quand il n'est pas renseigné", () => {
+		expect(parseFrontmatter(base, "a.mdx").projects).toBeUndefined();
+	});
+
+	it("refuse un identifiant qui n'est pas un entier positif", () => {
+		expect(() => parseFrontmatter({ ...base, projects: [0] }, "a.mdx")).toThrow(
+			"projects",
+		);
+		expect(() =>
+			parseFrontmatter({ ...base, projects: ["x"] }, "a.mdx"),
+		).toThrow("projects");
+	});
+});
+
+describe("projectEntries", () => {
+	it("associe chaque projet à l'article le plus récent qui le cite", () => {
+		const meta = (slug: string, date: string, projects?: number[]) => ({
+			slug,
+			title: slug.toUpperCase(),
+			description: "",
+			date,
+			tags: [],
+			readingTimeMinutes: 1,
+			projects,
+		});
+		expect(
+			projectEntries([
+				meta("old", "2026-01-01", [3]),
+				meta("new", "2026-06-01", [3, 7]),
+				meta("none", "2026-07-01"),
+			]),
+		).toEqual({
+			3: { slug: "new", title: "NEW" },
+			7: { slug: "new", title: "NEW" },
+		});
+	});
+});
+
+describe("latestArticles", () => {
+	it("renvoie au plus n articles, du plus récent au plus ancien", () => {
+		const all = latestArticles(10);
+		expect(all.length).toBeGreaterThan(0);
+		const dates = all.map((a) => a.date);
+		expect([...dates].sort().reverse()).toEqual(dates);
+		expect(latestArticles(0)).toEqual([]);
 	});
 });

@@ -12,6 +12,7 @@ export interface ArticleFrontmatter {
 	period?: string;
 	tags: string[];
 	status?: string;
+	projects?: number[];
 }
 
 export interface ArticleMeta extends ArticleFrontmatter {
@@ -53,6 +54,22 @@ function optionalString(value: unknown): string | undefined {
 	return typeof value === "string" && value.trim() !== "" ? value : undefined;
 }
 
+function optionalProjectIds(
+	value: unknown,
+	file: string,
+): number[] | undefined {
+	if (value === undefined) return undefined;
+	if (
+		!Array.isArray(value) ||
+		!value.every((v) => Number.isInteger(v) && (v as number) > 0)
+	) {
+		throw new Error(
+			`${file}: "projects" doit être une liste d'entiers positifs`,
+		);
+	}
+	return value as number[];
+}
+
 export function parseFrontmatter(
 	data: Record<string, unknown>,
 	file = "article",
@@ -68,6 +85,7 @@ export function parseFrontmatter(
 		period: optionalString(data.period),
 		tags: tags as string[],
 		status: optionalString(data.status),
+		projects: optionalProjectIds(data.projects, file),
 	};
 }
 
@@ -124,4 +142,21 @@ export function getAllArticles(dir = ARTICLES_DIR): ArticleMeta[] {
 		.sort(
 			(a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title),
 		);
+}
+
+export function latestArticles(n: number, dir = ARTICLES_DIR): ArticleMeta[] {
+	return [...getAllArticles(dir)]
+		.sort((a, b) => b.date.localeCompare(a.date))
+		.slice(0, Math.max(0, n));
+}
+
+export function projectEntries(
+	articles: ArticleMeta[],
+): Record<number, { slug: string; title: string }> {
+	const out: Record<number, { slug: string; title: string }> = {};
+	const byDate = [...articles].sort((a, b) => b.date.localeCompare(a.date));
+	for (const article of byDate)
+		for (const id of article.projects ?? [])
+			out[id] ??= { slug: article.slug, title: article.title };
+	return out;
 }
