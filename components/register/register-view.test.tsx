@@ -23,6 +23,8 @@ const p = (id: number): NormalizedProject => ({
 	devops: [],
 });
 const base = {
+	featuredStatus: "ready" as const,
+	indexStatus: "ready" as const,
 	featured: [],
 	index: [],
 	filtersActive: false,
@@ -80,12 +82,7 @@ describe("RegisterView", () => {
 
 	it("numérote les figures des projets phares à partir de 2 et liste l'index", () => {
 		const html = renderToStaticMarkup(
-			<RegisterView
-				{...base}
-				status="ready"
-				featured={[p(1), p(2)]}
-				index={[p(3)]}
-			/>,
+			<RegisterView {...base} featured={[p(1), p(2)]} index={[p(3)]} />,
 		);
 		expect(html).toContain("Projets phares");
 		expect(html).toContain("Fig. 2 · ");
