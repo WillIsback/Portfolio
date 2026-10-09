@@ -17,6 +17,7 @@
 		"carnet:corpus": "tsx --env-file=.env.local scripts/carnet/export-corpus.ts",
 		"carnet:bench": "tsx scripts/carnet/bench.ts",
 		"carnet:search-items": "tsx scripts/carnet/build-search-items.ts",
+		"catalogue:domains": "tsx --env-file=.env.local scripts/catalogue/apply-domains.ts",
 		"embeddings": "tsx --env-file=.env.local scripts/carnet/build-map.ts"
 	},
 	"prisma": {

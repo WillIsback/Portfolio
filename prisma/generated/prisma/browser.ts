@@ -28,6 +28,11 @@ export type Project = Prisma.ProjectModel
  */
 export type ProjectLanguage = Prisma.ProjectLanguageModel
 /**
+ * Model ProjectDomain
+ * 
+ */
+export type ProjectDomain = Prisma.ProjectDomainModel
+/**
  * Model ProjectDatabase
  * 
  */

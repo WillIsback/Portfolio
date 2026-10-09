@@ -12,8 +12,6 @@ const p = (id: number): NormalizedProject => ({
 	lastUpdate: new Date("2026-01-01T00:00:00Z"),
 	isPrivate: false,
 	isAiGenerated: false,
-	isML: false,
-	isIAG: false,
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
 	languages: [{ language: "Python" }],
@@ -21,6 +19,7 @@ const p = (id: number): NormalizedProject => ({
 	backends: [],
 	frontends: [],
 	devops: [],
+	domains: [],
 });
 const base = {
 	featuredStatus: "ready" as const,

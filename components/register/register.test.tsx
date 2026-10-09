@@ -2,9 +2,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
+import DomainChips from "./DomainChips";
 import FeaturedCard from "./FeaturedCard";
 import IndexRow from "./IndexRow";
 import MiniMap from "./MiniMap";
+import { parseFilters } from "./ProjectRegister";
 import TechBar from "./TechBar";
 
 const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
@@ -16,8 +18,6 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	lastUpdate: new Date("2025-06-01T00:00:00Z"),
 	isPrivate: false,
 	isAiGenerated: false,
-	isML: false,
-	isIAG: false,
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
 	languages: [{ language: "Python" }],
@@ -25,6 +25,7 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	backends: [{ backend: "FastAPI" }],
 	frontends: [],
 	devops: [{ devops: "Docker" }],
+	domains: [],
 	...over,
 });
 const points: MapPoint[] = [
@@ -199,6 +200,23 @@ describe("IndexRow", () => {
 		expect(html).toContain("Python");
 	});
 
+	it("tronque la description avec line-clamp-1, sans la classe block qui l'écraserait", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow
+					project={p({ description: "Description longue à tronquer" })}
+				/>
+			</ul>,
+		);
+		const cls =
+			html.match(
+				/<span class="([^"]*)">Description longue à tronquer<\/span>/,
+			)?.[1] ?? "";
+		const classes = cls.split(/\s+/);
+		expect(classes).toContain("line-clamp-1");
+		expect(classes).not.toContain("block");
+	});
+
 	it("n'ouvre pas dans un nouvel onglet un lien non externe", () => {
 		const html = renderToStaticMarkup(
 			<ul>
@@ -216,5 +234,64 @@ describe("IndexRow", () => {
 		);
 		expect(html).not.toContain("<a ");
 		expect(html).toContain("privé");
+	});
+});
+
+describe("DomainChips", () => {
+	it("ne rend rien sans domaine", () => {
+		expect(renderToStaticMarkup(<DomainChips domains={[]} />)).toBe("");
+	});
+
+	it("rend les libellés dans l'ordre canonique, ML ajouté pour Classification", () => {
+		const html = renderToStaticMarkup(
+			<DomainChips domains={[{ domain: "LLM" }, { domain: "Classifier" }]} />,
+		);
+		expect(html).toContain('aria-label="Domaines"');
+		const labels = [...html.matchAll(/<li[^>]*>(.*?)<\/li>/g)].map((m) => m[1]);
+		expect(labels).toEqual(["ML", "Classification", "LLM"]);
+	});
+});
+
+describe("puces de domaine dans le registre", () => {
+	const withDomains = p({ domains: [{ domain: "Vision" }] });
+
+	it("FeaturedCard les montre sous le titre", () => {
+		const html = renderToStaticMarkup(
+			<FeaturedCard
+				project={withDomains}
+				figureNumber={1}
+				points={points}
+				neighborIds={[]}
+			/>,
+		);
+		expect(html).toContain('aria-label="Domaines"');
+		expect(html.indexOf("</h3>")).toBeLessThan(html.indexOf("Domaines"));
+	});
+
+	it("IndexRow les montre avant les technologies", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={withDomains} />
+			</ul>,
+		);
+		expect(html.indexOf("Vision")).toBeGreaterThan(-1);
+		expect(html.indexOf("Vision")).toBeLessThan(html.indexOf("Python"));
+	});
+
+	it("sans domaine, aucune liste de puces", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={p()} />
+			</ul>,
+		);
+		expect(html).not.toContain("Domaines");
+	});
+});
+
+describe("parseFilters", () => {
+	it("lit le paramètre domain", () => {
+		const f = parseFilters(new URLSearchParams("domain=Vision,LLM"));
+		expect(f.domain).toEqual(["Vision", "LLM"]);
+		expect(parseFilters(new URLSearchParams("")).domain).toEqual([]);
 	});
 });

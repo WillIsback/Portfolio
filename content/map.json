@@ -1,6 +1,6 @@
 {
  "model": "carnet-static@f63393960f37",
- "generatedAt": "2026-10-09T10:21:32.411Z",
+ "generatedAt": "2026-10-09T20:54:25.813Z",
  "clusters": [
   {
    "id": "c1",
@@ -201,7 +201,8 @@
     "typescript",
     "nextjs",
     "react",
-    "githubactions"
+    "githubactions",
+    "llm"
    ],
    "terms": [
     "abricot",
@@ -365,7 +366,9 @@
     "postgresql",
     "fastapi",
     "docker",
-    "githubactions"
+    "githubactions",
+    "llm",
+    "nlp"
    ],
    "terms": [
     "clea",
@@ -1043,7 +1046,10 @@
    "y": 0.8583,
    "cluster": "c4",
    "keywords": [
-    "python"
+    "python",
+    "data analyse",
+    "ml",
+    "classification"
    ],
    "terms": [
     "p10",
@@ -1350,7 +1356,8 @@
    "y": 0.7007,
    "cluster": "c4",
    "keywords": [
-    "python"
+    "python",
+    "data analyse"
    ],
    "terms": [
     "bottleneck",
@@ -1503,7 +1510,10 @@
    "y": 0.7201,
    "cluster": "c4",
    "keywords": [
-    "python"
+    "python",
+    "data analyse",
+    "ml",
+    "regression"
    ],
    "terms": [
     "dataimmo",
@@ -1963,7 +1973,8 @@
    "y": 0.5391,
    "cluster": "c5",
    "keywords": [
-    "python"
+    "python",
+    "vision"
    ],
    "terms": [
     "fashion",
@@ -2123,7 +2134,10 @@
    "y": 0.2758,
    "cluster": "c5",
    "keywords": [
-    "python"
+    "python",
+    "llm",
+    "nlp",
+    "parole"
    ],
    "terms": [
     "report",
@@ -2288,7 +2302,10 @@
    "y": 0.4277,
    "cluster": "c5",
    "keywords": [
-    "python"
+    "python",
+    "ml",
+    "llm",
+    "nlp"
    ],
    "terms": [
     "llm",
@@ -2453,7 +2470,11 @@
     "typescript",
     "nextjs",
     "react",
-    "githubactions"
+    "githubactions",
+    "ml",
+    "classification",
+    "llm",
+    "nlp"
    ],
    "terms": [
     "p12",
@@ -2606,7 +2627,11 @@
    "y": 0.2341,
    "cluster": "c4",
    "keywords": [
-    "python"
+    "python",
+    "ml",
+    "classification",
+    "llm",
+    "nlp"
    ],
    "terms": [
     "p12",
@@ -2758,7 +2783,10 @@
    "y": 0.3549,
    "cluster": "c5",
    "keywords": [
-    "python"
+    "python",
+    "ml",
+    "classification",
+    "nlp"
    ],
    "terms": [
     "p12",
@@ -2925,7 +2953,8 @@
     "fastapi",
     "nextjs",
     "docker",
-    "githubactions"
+    "githubactions",
+    "llm"
    ],
    "terms": [
     "p14",
@@ -3074,7 +3103,9 @@
    "y": 0.523,
    "cluster": "c3",
    "keywords": [
-    "typescript"
+    "typescript",
+    "llm",
+    "parole"
    ],
    "terms": [
     "syntheo",
@@ -3225,7 +3256,8 @@
    "keywords": [
     "python",
     "docker",
-    "githubactions"
+    "githubactions",
+    "parole"
    ],
    "terms": [
     "whisperx",
@@ -3383,7 +3415,9 @@
    "keywords": [
     "typescript",
     "docker",
-    "githubactions"
+    "githubactions",
+    "llm",
+    "nlp"
    ],
    "terms": [
     "corrector",
@@ -3687,7 +3721,9 @@
    "cluster": "c2",
    "keywords": [
     "rust",
-    "githubactions"
+    "githubactions",
+    "llm",
+    "agents"
    ],
    "terms": [
     "code",
@@ -3839,7 +3875,8 @@
    "cluster": "c2",
    "keywords": [
     "rust",
-    "githubactions"
+    "githubactions",
+    "llm"
    ],
    "terms": [
     "docgen",
@@ -3990,7 +4027,9 @@
    "y": 0.4318,
    "cluster": "c4",
    "keywords": [
-    "python"
+    "python",
+    "ml",
+    "vision"
    ],
    "terms": [
     "p13",

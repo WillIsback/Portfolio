@@ -1,3 +1,4 @@
+import { domainLabels } from "../domains";
 import { extractTerms } from "./terms";
 import { foldText } from "./tokenize";
 
@@ -22,6 +23,7 @@ export interface ProjectForCorpus {
 	backends: { backend: string }[];
 	frontends: { frontend: string }[];
 	devops: { devops: string }[];
+	domains: { domain: string }[];
 }
 
 export function normalizeKeyword(value: string): string {
@@ -73,7 +75,7 @@ export function projectToCorpusItem(
 		title: project.title,
 		text: joinSentences([project.title, project.description, tech.join(", ")]),
 		href: project.github,
-		keywords: tech.map(normalizeKeyword),
+		keywords: [...tech, ...domainLabels(project.domains)].map(normalizeKeyword),
 		terms: extractTerms(project.title, project.description),
 	};
 }

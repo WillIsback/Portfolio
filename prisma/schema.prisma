@@ -41,6 +41,19 @@ enum DevOps {
   GithubActions
 }
 
+// Enum pour les domaines IA/Data
+enum AiDomain {
+  DataAnalysis
+  ML
+  Classifier
+  Regressor
+  LLM
+  Vision
+  NLP
+  Agents
+  Speech
+}
+
 // Enum pour les langages
 enum Language {
   Python
@@ -59,8 +72,6 @@ model Project {
   lastUpdate    DateTime?
   isPrivate     Boolean  @default(false)
   isAiGenerated Boolean  @default(false)
-  isML          Boolean  @default(false)
-  isIAG         Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -70,6 +81,7 @@ model Project {
   backends    ProjectBackend[]
   frontends   ProjectFrontend[]
   devops      ProjectDevOps[]
+  domains     ProjectDomain[]
 }
 
 // Tables de jonction pour les relations many-to-many
@@ -80,6 +92,15 @@ model ProjectLanguage {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, language])
+}
+
+model ProjectDomain {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  domain    AiDomain
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, domain])
 }
 
 model ProjectDatabase {

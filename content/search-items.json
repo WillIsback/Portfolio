@@ -1,480 +1,612 @@
 [
-	{
-		"id": "article:neuf-agents-neuf-jours",
-		"keywords": [
-			"agents autonomes",
-			"sre",
-			"llm local",
-			"observabilite",
-			"securite"
-		],
-		"terms": [
-			"neuf",
-			"agents",
-			"jours",
-			"retour",
-			"experience",
-			"chiffre",
-			"flotte",
-			"sre",
-			"autonomes",
-			"conditions",
-			"reelles",
-			"tenu",
-			"casse",
-			"analyse",
-			"traces",
-			"appris",
-			"garde"
-		]
-	},
-	{
-		"id": "project:1",
-		"keywords": ["typescript", "nextjs", "react", "githubactions"],
-		"terms": [
-			"abricot",
-			"plateforme",
-			"saas",
-			"gestion",
-			"collaboratif",
-			"augmentee",
-			"freelances",
-			"equipes",
-			"gerer",
-			"generation",
-			"automatique",
-			"taches",
-			"rag",
-			"retrieval",
-			"augmented",
-			"mistral"
-		]
-	},
-	{
-		"id": "project:2",
-		"keywords": ["python", "postgresql", "fastapi", "docker", "githubactions"],
-		"terms": [
-			"clea",
-			"document",
-			"search",
-			"platform",
-			"framework",
-			"recherche",
-			"documentaire",
-			"hybride",
-			"postgresql",
-			"pgvector",
-			"charge",
-			"documents",
-			"multi",
-			"formats",
-			"segmente",
-			"vectorise",
-			"fournit",
-			"vectorielle",
-			"filtres",
-			"sql",
-			"inclut",
-			"module",
-			"rag",
-			"llms",
-			"legers",
-			"qwen3"
-		]
-	},
-	{
-		"id": "project:3",
-		"keywords": ["typescript", "svelte", "sveltekit", "docker"],
-		"terms": [
-			"clea",
-			"webui",
-			"interface",
-			"web",
-			"corpus",
-			"linker",
-			"exploratory",
-			"assistant",
-			"plateforme",
-			"recherche",
-			"exploration",
-			"documentaire",
-			"intelligente",
-			"basee",
-			"technologies",
-			"rag",
-			"semantique",
-			"gestion",
-			"documents",
-			"tableaux",
-			"bord",
-			"statistiques"
-		]
-	},
-	{
-		"id": "project:4",
-		"keywords": ["rust", "typescript", "python", "githubactions"],
-		"terms": [
-			"lazy",
-			"locker",
-			"gestionnaire",
-			"secrets",
-			"securise",
-			"interface",
-			"tui",
-			"support",
-			"sdk",
-			"remplace",
-			"fichiers",
-			"env",
-			"clair",
-			"stockage",
-			"chiffre",
-			"local",
-			"aes",
-			"256",
-			"gcm",
-			"argon2id",
-			"integration",
-			"seamless",
-			"python",
-			"javascript",
-			"typescript"
-		]
-	},
-	{
-		"id": "project:5",
-		"keywords": ["typescript", "sqlite"],
-		"terms": [
-			"typescript",
-			"rest",
-			"api",
-			"vanilla",
-			"construite",
-			"framework",
-			"node",
-			"sqlite",
-			"pedagogique",
-			"suivant",
-			"principes",
-			"solid",
-			"validation",
-			"zod",
-			"documentation",
-			"swagger",
-			"auto",
-			"generee",
-			"prepared",
-			"statements",
-			"securite",
-			"sql"
-		]
-	},
-	{
-		"id": "project:6",
-		"keywords": ["python"],
-		"terms": [
-			"p10",
-			"technova",
-			"livrable",
-			"version",
-			"openclassrooms",
-			"documentation",
-			"notebooks",
-			"finaux",
-			"presentation",
-			"machine",
-			"learning"
-		]
-	},
-	{
-		"id": "project:7",
-		"keywords": ["typescript", "react"],
-		"terms": [
-			"fisheye",
-			"openclassrooms",
-			"photographie",
-			"accessibilite",
-			"optimisee",
-			"navigation",
-			"clavier"
-		]
-	},
-	{
-		"id": "project:8",
-		"keywords": ["python"],
-		"terms": [
-			"bottleneck",
-			"openclassrooms",
-			"analyse",
-			"donnees",
-			"detection",
-			"goulots",
-			"etranglement",
-			"notebooks",
-			"jupyter"
-		]
-	},
-	{
-		"id": "project:9",
-		"keywords": ["python"],
-		"terms": [
-			"dataimmo",
-			"openclassrooms",
-			"analyse",
-			"donnees",
-			"immobilieres",
-			"prediction",
-			"prix"
-		]
-	},
-	{
-		"id": "project:10",
-		"keywords": ["javascript", "react"],
-		"terms": [
-			"sportsee",
-			"coaching",
-			"sportif",
-			"tableau",
-			"bord",
-			"analytique",
-			"visualisation",
-			"performances",
-			"statistiques",
-			"entrainement"
-		]
-	},
-	{
-		"id": "project:11",
-		"keywords": ["javascript"],
-		"terms": [
-			"petits",
-			"plats",
-			"recherche",
-			"recettes",
-			"cuisine",
-			"algorithmes",
-			"optimises",
-			"interface",
-			"utilisateur",
-			"responsive"
-		]
-	},
-	{
-		"id": "project:12",
-		"keywords": ["python"],
-		"terms": [
-			"fashion",
-			"trend",
-			"intelligence",
-			"segmentation",
-			"images",
-			"mode",
-			"api",
-			"hugging",
-			"face",
-			"structure",
-			"faciliter",
-			"maintenance",
-			"extensibilite",
-			"modeles",
-			"deep",
-			"learning"
-		]
-	},
-	{
-		"id": "project:13",
-		"keywords": ["python"],
-		"terms": [
-			"report",
-			"maker",
-			"puissant",
-			"automatiser",
-			"transcription",
-			"synthese",
-			"reunions",
-			"whisper",
-			"large",
-			"asr",
-			"pyannote",
-			"diarisation",
-			"locuteurs",
-			"differents",
-			"llms",
-			"gpt",
-			"gemma",
-			"mistral",
-			"bart",
-			"generation",
-			"rapports"
-		]
-	},
-	{
-		"id": "project:14",
-		"keywords": ["python"],
-		"terms": [
-			"llm",
-			"summarizer",
-			"trainer",
-			"entrainement",
-			"large",
-			"language",
-			"models",
-			"tache",
-			"resume",
-			"qlora",
-			"methode",
-			"fine",
-			"tuning",
-			"package",
-			"unsloth",
-			"apprentissage",
-			"modeles",
-			"langage"
-		]
-	},
-	{
-		"id": "project:16",
-		"keywords": ["typescript", "nextjs", "react", "githubactions"],
-		"terms": [
-			"p12",
-			"phase2",
-			"zenassist",
-			"priorisation",
-			"version",
-			"llm",
-			"lancement",
-			"phase",
-			"pilote"
-		]
-	},
-	{
-		"id": "project:17",
-		"keywords": ["python"],
-		"terms": [
-			"p12",
-			"phase1",
-			"zenassist",
-			"comparez",
-			"algorithmes",
-			"machine",
-			"learning",
-			"llm"
-		]
-	},
-	{
-		"id": "project:18",
-		"keywords": ["python"],
-		"terms": [
-			"p12",
-			"zenassist",
-			"training",
-			"modernbert",
-			"cls",
-			"fine",
-			"tuned",
-			"large",
-			"395m",
-			"params",
-			"multi",
-			"class",
-			"classification",
-			"consumer",
-			"finance",
-			"complaints",
-			"consolidated",
-			"categories"
-		]
-	},
-	{
-		"id": "project:19",
-		"keywords": [
-			"typescript",
-			"postgresql",
-			"fastapi",
-			"nextjs",
-			"docker",
-			"githubactions"
-		],
-		"terms": ["p14", "newsfoundry", "revue", "presse", "automatique"]
-	},
-	{
-		"id": "project:20",
-		"keywords": ["typescript"],
-		"terms": ["syntheo", "visio", "meeting", "report", "maker"]
-	},
-	{
-		"id": "project:21",
-		"keywords": ["python", "docker", "githubactions"],
-		"terms": [
-			"whisperx",
-			"gb10",
-			"asr",
-			"diarization",
-			"rest",
-			"api",
-			"built",
-			"nvidia",
-			"dgx",
-			"spark",
-			"aarch64",
-			"121"
-		]
-	},
-	{
-		"id": "project:22",
-		"keywords": ["typescript", "docker", "githubactions"],
-		"terms": [
-			"corrector",
-			"correcteur",
-			"reformateur",
-			"redaction",
-			"francais",
-			"alimente",
-			"llm"
-		]
-	},
-	{
-		"id": "project:23",
-		"keywords": ["rust", "githubactions"],
-		"terms": [
-			"caviarder",
-			"redact",
-			"secrets",
-			"text",
-			"gitleaks",
-			"detection",
-			"rules"
-		]
-	},
-	{
-		"id": "project:24",
-		"keywords": ["rust", "githubactions"],
-		"terms": [
-			"code",
-			"review",
-			"centralized",
-			"github",
-			"composite",
-			"actions",
-			"willisback"
-		]
-	},
-	{
-		"id": "project:25",
-		"keywords": ["rust", "githubactions"],
-		"terms": [
-			"docgen",
-			"generate",
-			"docstrings",
-			"local",
-			"vllm",
-			"configurable",
-			"toml"
-		]
-	},
-	{
-		"id": "project:26",
-		"keywords": ["python"],
-		"terms": ["p13", "fashion", "insta", "openclassroom", "vision", "task"]
-	}
+ {
+  "id": "article:neuf-agents-neuf-jours",
+  "keywords": [
+   "agents autonomes",
+   "sre",
+   "llm local",
+   "observabilite",
+   "securite"
+  ],
+  "terms": [
+   "neuf",
+   "agents",
+   "jours",
+   "retour",
+   "experience",
+   "chiffre",
+   "flotte",
+   "sre",
+   "autonomes",
+   "conditions",
+   "reelles",
+   "tenu",
+   "casse",
+   "analyse",
+   "traces",
+   "appris",
+   "garde"
+  ]
+ },
+ {
+  "id": "project:1",
+  "keywords": [
+   "typescript",
+   "nextjs",
+   "react",
+   "githubactions",
+   "llm"
+  ],
+  "terms": [
+   "abricot",
+   "plateforme",
+   "saas",
+   "gestion",
+   "collaboratif",
+   "augmentee",
+   "freelances",
+   "equipes",
+   "gerer",
+   "generation",
+   "automatique",
+   "taches",
+   "rag",
+   "retrieval",
+   "augmented",
+   "mistral"
+  ]
+ },
+ {
+  "id": "project:2",
+  "keywords": [
+   "python",
+   "postgresql",
+   "fastapi",
+   "docker",
+   "githubactions",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "clea",
+   "document",
+   "search",
+   "platform",
+   "framework",
+   "recherche",
+   "documentaire",
+   "hybride",
+   "postgresql",
+   "pgvector",
+   "charge",
+   "documents",
+   "multi",
+   "formats",
+   "segmente",
+   "vectorise",
+   "fournit",
+   "vectorielle",
+   "filtres",
+   "sql",
+   "inclut",
+   "module",
+   "rag",
+   "llms",
+   "legers",
+   "qwen3"
+  ]
+ },
+ {
+  "id": "project:3",
+  "keywords": [
+   "typescript",
+   "svelte",
+   "sveltekit",
+   "docker"
+  ],
+  "terms": [
+   "clea",
+   "webui",
+   "interface",
+   "web",
+   "corpus",
+   "linker",
+   "exploratory",
+   "assistant",
+   "plateforme",
+   "recherche",
+   "exploration",
+   "documentaire",
+   "intelligente",
+   "basee",
+   "technologies",
+   "rag",
+   "semantique",
+   "gestion",
+   "documents",
+   "tableaux",
+   "bord",
+   "statistiques"
+  ]
+ },
+ {
+  "id": "project:4",
+  "keywords": [
+   "rust",
+   "typescript",
+   "python",
+   "githubactions"
+  ],
+  "terms": [
+   "lazy",
+   "locker",
+   "gestionnaire",
+   "secrets",
+   "securise",
+   "interface",
+   "tui",
+   "support",
+   "sdk",
+   "remplace",
+   "fichiers",
+   "env",
+   "clair",
+   "stockage",
+   "chiffre",
+   "local",
+   "aes",
+   "256",
+   "gcm",
+   "argon2id",
+   "integration",
+   "seamless",
+   "python",
+   "javascript",
+   "typescript"
+  ]
+ },
+ {
+  "id": "project:5",
+  "keywords": [
+   "typescript",
+   "sqlite"
+  ],
+  "terms": [
+   "typescript",
+   "rest",
+   "api",
+   "vanilla",
+   "construite",
+   "framework",
+   "node",
+   "sqlite",
+   "pedagogique",
+   "suivant",
+   "principes",
+   "solid",
+   "validation",
+   "zod",
+   "documentation",
+   "swagger",
+   "auto",
+   "generee",
+   "prepared",
+   "statements",
+   "securite",
+   "sql"
+  ]
+ },
+ {
+  "id": "project:6",
+  "keywords": [
+   "python",
+   "data analyse",
+   "ml",
+   "classification"
+  ],
+  "terms": [
+   "p10",
+   "technova",
+   "livrable",
+   "version",
+   "openclassrooms",
+   "documentation",
+   "notebooks",
+   "finaux",
+   "presentation",
+   "machine",
+   "learning"
+  ]
+ },
+ {
+  "id": "project:7",
+  "keywords": [
+   "typescript",
+   "react"
+  ],
+  "terms": [
+   "fisheye",
+   "openclassrooms",
+   "photographie",
+   "accessibilite",
+   "optimisee",
+   "navigation",
+   "clavier"
+  ]
+ },
+ {
+  "id": "project:8",
+  "keywords": [
+   "python",
+   "data analyse"
+  ],
+  "terms": [
+   "bottleneck",
+   "openclassrooms",
+   "analyse",
+   "donnees",
+   "detection",
+   "goulots",
+   "etranglement",
+   "notebooks",
+   "jupyter"
+  ]
+ },
+ {
+  "id": "project:9",
+  "keywords": [
+   "python",
+   "data analyse",
+   "ml",
+   "regression"
+  ],
+  "terms": [
+   "dataimmo",
+   "openclassrooms",
+   "analyse",
+   "donnees",
+   "immobilieres",
+   "prediction",
+   "prix"
+  ]
+ },
+ {
+  "id": "project:10",
+  "keywords": [
+   "javascript",
+   "react"
+  ],
+  "terms": [
+   "sportsee",
+   "coaching",
+   "sportif",
+   "tableau",
+   "bord",
+   "analytique",
+   "visualisation",
+   "performances",
+   "statistiques",
+   "entrainement"
+  ]
+ },
+ {
+  "id": "project:11",
+  "keywords": [
+   "javascript"
+  ],
+  "terms": [
+   "petits",
+   "plats",
+   "recherche",
+   "recettes",
+   "cuisine",
+   "algorithmes",
+   "optimises",
+   "interface",
+   "utilisateur",
+   "responsive"
+  ]
+ },
+ {
+  "id": "project:12",
+  "keywords": [
+   "python",
+   "vision"
+  ],
+  "terms": [
+   "fashion",
+   "trend",
+   "intelligence",
+   "segmentation",
+   "images",
+   "mode",
+   "api",
+   "hugging",
+   "face",
+   "structure",
+   "faciliter",
+   "maintenance",
+   "extensibilite",
+   "modeles",
+   "deep",
+   "learning"
+  ]
+ },
+ {
+  "id": "project:13",
+  "keywords": [
+   "python",
+   "llm",
+   "nlp",
+   "parole"
+  ],
+  "terms": [
+   "report",
+   "maker",
+   "puissant",
+   "automatiser",
+   "transcription",
+   "synthese",
+   "reunions",
+   "whisper",
+   "large",
+   "asr",
+   "pyannote",
+   "diarisation",
+   "locuteurs",
+   "differents",
+   "llms",
+   "gpt",
+   "gemma",
+   "mistral",
+   "bart",
+   "generation",
+   "rapports"
+  ]
+ },
+ {
+  "id": "project:14",
+  "keywords": [
+   "python",
+   "ml",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "llm",
+   "summarizer",
+   "trainer",
+   "entrainement",
+   "large",
+   "language",
+   "models",
+   "tache",
+   "resume",
+   "qlora",
+   "methode",
+   "fine",
+   "tuning",
+   "package",
+   "unsloth",
+   "apprentissage",
+   "modeles",
+   "langage"
+  ]
+ },
+ {
+  "id": "project:16",
+  "keywords": [
+   "typescript",
+   "nextjs",
+   "react",
+   "githubactions",
+   "ml",
+   "classification",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "p12",
+   "phase2",
+   "zenassist",
+   "priorisation",
+   "version",
+   "llm",
+   "lancement",
+   "phase",
+   "pilote"
+  ]
+ },
+ {
+  "id": "project:17",
+  "keywords": [
+   "python",
+   "ml",
+   "classification",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "p12",
+   "phase1",
+   "zenassist",
+   "comparez",
+   "algorithmes",
+   "machine",
+   "learning",
+   "llm"
+  ]
+ },
+ {
+  "id": "project:18",
+  "keywords": [
+   "python",
+   "ml",
+   "classification",
+   "nlp"
+  ],
+  "terms": [
+   "p12",
+   "zenassist",
+   "training",
+   "modernbert",
+   "cls",
+   "fine",
+   "tuned",
+   "large",
+   "395m",
+   "params",
+   "multi",
+   "class",
+   "classification",
+   "consumer",
+   "finance",
+   "complaints",
+   "consolidated",
+   "categories"
+  ]
+ },
+ {
+  "id": "project:19",
+  "keywords": [
+   "typescript",
+   "postgresql",
+   "fastapi",
+   "nextjs",
+   "docker",
+   "githubactions",
+   "llm"
+  ],
+  "terms": [
+   "p14",
+   "newsfoundry",
+   "revue",
+   "presse",
+   "automatique"
+  ]
+ },
+ {
+  "id": "project:20",
+  "keywords": [
+   "typescript",
+   "llm",
+   "parole"
+  ],
+  "terms": [
+   "syntheo",
+   "visio",
+   "meeting",
+   "report",
+   "maker"
+  ]
+ },
+ {
+  "id": "project:21",
+  "keywords": [
+   "python",
+   "docker",
+   "githubactions",
+   "parole"
+  ],
+  "terms": [
+   "whisperx",
+   "gb10",
+   "asr",
+   "diarization",
+   "rest",
+   "api",
+   "built",
+   "nvidia",
+   "dgx",
+   "spark",
+   "aarch64",
+   "121"
+  ]
+ },
+ {
+  "id": "project:22",
+  "keywords": [
+   "typescript",
+   "docker",
+   "githubactions",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "corrector",
+   "correcteur",
+   "reformateur",
+   "redaction",
+   "francais",
+   "alimente",
+   "llm"
+  ]
+ },
+ {
+  "id": "project:23",
+  "keywords": [
+   "rust",
+   "githubactions"
+  ],
+  "terms": [
+   "caviarder",
+   "redact",
+   "secrets",
+   "text",
+   "gitleaks",
+   "detection",
+   "rules"
+  ]
+ },
+ {
+  "id": "project:24",
+  "keywords": [
+   "rust",
+   "githubactions",
+   "llm",
+   "agents"
+  ],
+  "terms": [
+   "code",
+   "review",
+   "centralized",
+   "github",
+   "composite",
+   "actions",
+   "willisback"
+  ]
+ },
+ {
+  "id": "project:25",
+  "keywords": [
+   "rust",
+   "githubactions",
+   "llm"
+  ],
+  "terms": [
+   "docgen",
+   "generate",
+   "docstrings",
+   "local",
+   "vllm",
+   "configurable",
+   "toml"
+  ]
+ },
+ {
+  "id": "project:26",
+  "keywords": [
+   "python",
+   "ml",
+   "vision"
+  ],
+  "terms": [
+   "p13",
+   "fashion",
+   "insta",
+   "openclassroom",
+   "vision",
+   "task"
+  ]
+ }
 ]

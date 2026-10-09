@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Project: 'Project',
   ProjectLanguage: 'ProjectLanguage',
+  ProjectDomain: 'ProjectDomain',
   ProjectDatabase: 'ProjectDatabase',
   ProjectBackend: 'ProjectBackend',
   ProjectFrontend: 'ProjectFrontend',
@@ -84,8 +85,6 @@ export const ProjectScalarFieldEnum = {
   lastUpdate: 'lastUpdate',
   isPrivate: 'isPrivate',
   isAiGenerated: 'isAiGenerated',
-  isML: 'isML',
-  isIAG: 'isIAG',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -100,6 +99,15 @@ export const ProjectLanguageScalarFieldEnum = {
 } as const
 
 export type ProjectLanguageScalarFieldEnum = (typeof ProjectLanguageScalarFieldEnum)[keyof typeof ProjectLanguageScalarFieldEnum]
+
+
+export const ProjectDomainScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  domain: 'domain'
+} as const
+
+export type ProjectDomainScalarFieldEnum = (typeof ProjectDomainScalarFieldEnum)[keyof typeof ProjectDomainScalarFieldEnum]
 
 
 export const ProjectDatabaseScalarFieldEnum = {

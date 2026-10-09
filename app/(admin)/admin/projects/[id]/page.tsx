@@ -20,6 +20,7 @@ export default async function EditProjectPage({
 			backends: true,
 			frontends: true,
 			devops: true,
+			domains: true,
 		},
 	});
 
@@ -33,13 +34,12 @@ export default async function EditProjectPage({
 		lastUpdate: project.lastUpdate?.toISOString() ?? "",
 		isPrivate: project.isPrivate,
 		isAiGenerated: project.isAiGenerated,
-		isML: project.isML,
-		isIAG: project.isIAG,
 		languages: project.languages.map((l) => l.language),
 		databases: project.databases.map((d) => d.database),
 		backends: project.backends.map((b) => b.backend),
 		frontends: project.frontends.map((f) => f.frontend),
 		devops: project.devops.map((d) => d.devops),
+		domains: project.domains.map((d) => d.domain),
 	};
 
 	return (

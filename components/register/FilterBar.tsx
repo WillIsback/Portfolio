@@ -14,6 +14,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { debounce } from "@/lib/debounce";
+import { DOMAIN_LABELS } from "@/lib/domains";
 import { nextSearchField } from "@/lib/search-field-sync";
 import {
 	BACKEND_LABELS,
@@ -29,6 +30,7 @@ const BACKEND_OPTIONS: Option[] = toOptions(BACKEND_LABELS);
 const FRONTEND_OPTIONS: Option[] = toOptions(FRONTEND_LABELS);
 const DEVOPS_OPTIONS: Option[] = toOptions(DEVOPS_LABELS);
 const LANGUAGE_OPTIONS: Option[] = toOptions(LANGUAGE_LABELS);
+const DOMAIN_OPTIONS: Option[] = toOptions(DOMAIN_LABELS);
 
 export default function FilterBar() {
 	const searchParams = useSearchParams();
@@ -59,6 +61,7 @@ export default function FilterBar() {
 	}
 	const language =
 		searchParams.get("language")?.split(",").filter(Boolean) ?? [];
+	const domain = searchParams.get("domain")?.split(",").filter(Boolean) ?? [];
 	const database =
 		searchParams.get("database")?.split(",").filter(Boolean) ?? [];
 	const backend = searchParams.get("backend")?.split(",").filter(Boolean) ?? [];
@@ -133,6 +136,7 @@ export default function FilterBar() {
 		searchText ||
 		search ||
 		language.length ||
+		domain.length ||
 		database.length ||
 		backend.length ||
 		frontend.length ||
@@ -171,6 +175,26 @@ export default function FilterBar() {
 					<SelectContent>
 						<SelectItem value="all">Tous les langages</SelectItem>
 						{LANGUAGE_OPTIONS.map((opt) => (
+							<SelectItem key={opt.value} value={opt.value}>
+								{opt.label}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+
+				{/* Domaine IA/Data (dropdown simple) */}
+				<Select
+					value={domain[0] ?? "all"}
+					onValueChange={(value) =>
+						updateSearchParams("domain", value === "all" ? [] : [value])
+					}
+				>
+					<SelectTrigger className="w-[160px]" aria-label="Domaine">
+						<SelectValue placeholder="Domaine" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">Tous les domaines</SelectItem>
+						{DOMAIN_OPTIONS.map((opt) => (
 							<SelectItem key={opt.value} value={opt.value}>
 								{opt.label}
 							</SelectItem>

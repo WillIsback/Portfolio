@@ -29,8 +29,6 @@ export interface NormalizedProject {
 	lastUpdate: Date | null;
 	isPrivate: boolean;
 	isAiGenerated: boolean;
-	isML: boolean;
-	isIAG: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	languages: { language: string }[];
@@ -38,6 +36,7 @@ export interface NormalizedProject {
 	backends: { backend: string }[];
 	frontends: { frontend: string }[];
 	devops: { devops: string }[];
+	domains: { domain: string }[];
 }
 
 // Transformer un projet JSON en format normalisé
@@ -55,8 +54,6 @@ function normalizeProject(
 		lastUpdate,
 		isPrivate: project.isPrivate,
 		isAiGenerated: project.isAiGenerated,
-		isML: false,
-		isIAG: false,
 		createdAt: lastUpdate,
 		updatedAt: lastUpdate,
 		languages: project.languages.map((lang) => ({ language: lang })),
@@ -70,6 +67,7 @@ function normalizeProject(
 			frontend: fe,
 		})),
 		devops: (project.techStack?.devOps || []).map((dop) => ({ devops: dop })),
+		domains: [],
 	};
 }
 

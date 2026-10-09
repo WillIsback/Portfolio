@@ -67,14 +67,13 @@ export function GitHubReposBrowser({
 						lastUpdate: repo.pushed_at,
 						isPrivate: false,
 						isAiGenerated: false,
-						isML: false,
-						isIAG: false,
 						imagePath: "",
 						languages: detected.languages,
 						databases: [],
 						backends: [],
 						frontends: [],
 						devops: detected.devops,
+						domains: [],
 					};
 				}),
 			);
