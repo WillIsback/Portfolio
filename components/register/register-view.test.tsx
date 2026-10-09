@@ -33,20 +33,49 @@ const base = {
 };
 
 describe("RegisterView", () => {
-	it("montre un squelette pendant le chargement", () => {
+	it("montre un squelette de l'index sans démonter les filtres", () => {
 		const html = renderToStaticMarkup(
-			<RegisterView {...base} status="loading" />,
+			<RegisterView {...base} indexStatus="loading" featured={[p(1)]} />,
 		);
 		expect(html).toContain('aria-busy="true"');
 		expect(html).toContain("Chargement du registre");
+		expect(html).toContain("filtres");
+		expect(html).toContain("<details");
+		expect(html).toContain("Projet 1");
 	});
 
-	it("affiche une erreur lisible sans casser la page", () => {
+	it("montre un squelette des phares tout en gardant les filtres", () => {
 		const html = renderToStaticMarkup(
-			<RegisterView {...base} status="error" error="Trop de requêtes." />,
+			<RegisterView {...base} featuredStatus="loading" index={[p(3)]} />,
 		);
-		expect(html).toContain('role="alert"');
-		expect(html).toContain("Trop de requêtes.");
+		expect(html).toContain('aria-busy="true"');
+		expect(html).toContain("Projet 3");
+		expect(html).toContain("filtres");
+	});
+
+	it("affiche une erreur par bloc sans casser la page", () => {
+		const idx = renderToStaticMarkup(
+			<RegisterView
+				{...base}
+				indexStatus="error"
+				indexError="Trop de requêtes."
+				featured={[p(1)]}
+			/>,
+		);
+		expect(idx).toContain('role="alert"');
+		expect(idx).toContain("Trop de requêtes.");
+		expect(idx).toContain("Projet 1");
+		expect(idx).toContain("filtres");
+		const feat = renderToStaticMarkup(
+			<RegisterView
+				{...base}
+				featuredStatus="error"
+				featuredError="Panne."
+				index={[p(3)]}
+			/>,
+		);
+		expect(feat).toContain("Panne.");
+		expect(feat).toContain("Projet 3");
 	});
 
 	it("numérote les figures des projets phares à partir de 2 et liste l'index", () => {
@@ -66,20 +95,16 @@ describe("RegisterView", () => {
 	});
 
 	it("replie les filtres par défaut et les ouvre quand un filtre est actif", () => {
+		expect(renderToStaticMarkup(<RegisterView {...base} />)).toMatch(
+			/<details(?![^>]*open)/,
+		);
 		expect(
-			renderToStaticMarkup(<RegisterView {...base} status="ready" />),
-		).toMatch(/<details(?![^>]*open)/);
-		expect(
-			renderToStaticMarkup(
-				<RegisterView {...base} status="ready" filtersActive />,
-			),
+			renderToStaticMarkup(<RegisterView {...base} filtersActive />),
 		).toMatch(/<details[^>]*open/);
 	});
 
 	it("dit quand l'index filtré est vide", () => {
-		const html = renderToStaticMarkup(
-			<RegisterView {...base} status="ready" filtersActive />,
-		);
+		const html = renderToStaticMarkup(<RegisterView {...base} filtersActive />);
 		expect(html).toContain("Aucun projet ne correspond à ces filtres.");
 	});
 });

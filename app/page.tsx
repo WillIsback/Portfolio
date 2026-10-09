@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import MarginNote from "@/components/notebook/MarginNote";
@@ -62,7 +63,15 @@ export default function Home() {
 			</div>
 			<section id="realisations" className="h-fit px-4 sm:px-8 lg:px-30">
 				<Suspense>
-					<ProjectRegister points={view.points} neighbors={{}} entries={{}} />
+					<ErrorBoundary
+						fallback={
+							<p role="alert" className="text-sm text-destructive">
+								Le registre des projets est momentanément indisponible.
+							</p>
+						}
+					>
+						<ProjectRegister points={view.points} neighbors={{}} entries={{}} />
+					</ErrorBoundary>
 				</Suspense>
 			</section>
 			<Footer />

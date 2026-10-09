@@ -64,16 +64,16 @@ export default function ProjectRegister({
 		featured,
 		filtersActive,
 	);
-	const status =
-		all.error || filtered.error
-			? "error"
-			: all.isLoading || filtered.isLoading
-				? "loading"
-				: "ready";
+	const blockStatus = (h: { error: string | null; isLoading: boolean }) =>
+		h.error ? "error" : h.isLoading ? "loading" : "ready";
+	// Sans filtre actif, l'index dérive de `all` : un seul état, une seule requête.
+	const indexState = filtersActive ? filtered : all;
 	return (
 		<RegisterView
-			status={status}
-			error={all.error ?? filtered.error ?? undefined}
+			featuredStatus={blockStatus(all)}
+			featuredError={all.error ?? undefined}
+			indexStatus={blockStatus(indexState)}
+			indexError={indexState.error ?? undefined}
 			featured={featured}
 			index={index}
 			filtersActive={filtersActive}

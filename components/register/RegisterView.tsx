@@ -4,9 +4,13 @@ import type { NormalizedProject } from "@/lib/projects-data";
 import FeaturedCard from "./FeaturedCard";
 import IndexRow from "./IndexRow";
 
+type BlockStatus = "loading" | "error" | "ready";
+
 interface RegisterViewProps {
-	status: "loading" | "error" | "ready";
-	error?: string;
+	featuredStatus: BlockStatus;
+	featuredError?: string;
+	indexStatus: BlockStatus;
+	indexError?: string;
 	featured: NormalizedProject[];
 	index: NormalizedProject[];
 	filtersActive: boolean;
@@ -16,10 +20,37 @@ interface RegisterViewProps {
 	entries: Record<number, { slug: string; title: string }>;
 }
 
+function Skeleton({ count }: Readonly<{ count: number }>) {
+	return (
+		<div aria-busy="true" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<p className="sr-only">Chargement du registre des projets…</p>
+			{Array.from({ length: count }, (_, i) => `sk-${i}`).map((key) => (
+				<div
+					key={key}
+					className="h-72 rounded-md border border-border bg-paper-grid motion-safe:animate-pulse"
+				/>
+			))}
+		</div>
+	);
+}
+
+function BlockError({ message }: Readonly<{ message?: string }>) {
+	return (
+		<p
+			role="alert"
+			className="mt-4 rounded-md border border-destructive/40 p-4 text-sm text-destructive"
+		>
+			{message ?? "Le registre des projets n'a pas pu être chargé."}
+		</p>
+	);
+}
+
 export default function RegisterView(props: Readonly<RegisterViewProps>) {
 	const {
-		status,
-		error,
+		featuredStatus,
+		featuredError,
+		indexStatus,
+		indexError,
 		featured,
 		index,
 		filtersActive,
@@ -28,48 +59,33 @@ export default function RegisterView(props: Readonly<RegisterViewProps>) {
 		neighbors,
 		entries,
 	} = props;
-	if (status === "loading")
-		return (
-			<div
-				aria-busy="true"
-				className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-			>
-				<p className="sr-only">Chargement du registre des projets…</p>
-				{[0, 1, 2].map((i) => (
-					<div
-						key={i}
-						className="h-72 rounded-md border border-border bg-paper-grid motion-safe:animate-pulse"
-					/>
-				))}
-			</div>
-		);
-	if (status === "error")
-		return (
-			<p
-				role="alert"
-				className="rounded-md border border-destructive/40 p-4 text-sm text-destructive"
-			>
-				{error ?? "Le registre des projets n'a pas pu être chargé."}
-			</p>
-		);
+	const showFeatured = featuredStatus !== "ready" || featured.length > 0;
 	return (
 		<div className="space-y-12">
-			{featured.length > 0 ? (
+			{showFeatured ? (
 				<div>
 					<h3 className="font-display text-lg font-semibold">Projets phares</h3>
-					<ul className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-						{featured.map((project, i) => (
-							<li key={project.id}>
-								<FeaturedCard
-									project={project}
-									figureNumber={i + 2}
-									points={points}
-									neighborIds={neighbors[`project:${project.id}`] ?? []}
-									entry={entries[project.id]}
-								/>
-							</li>
-						))}
-					</ul>
+					{featuredStatus === "loading" ? (
+						<div className="mt-4">
+							<Skeleton count={3} />
+						</div>
+					) : featuredStatus === "error" ? (
+						<BlockError message={featuredError} />
+					) : (
+						<ul className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+							{featured.map((project, i) => (
+								<li key={project.id}>
+									<FeaturedCard
+										project={project}
+										figureNumber={i + 2}
+										points={points}
+										neighborIds={neighbors[`project:${project.id}`] ?? []}
+										entry={entries[project.id]}
+									/>
+								</li>
+							))}
+						</ul>
+					)}
 				</div>
 			) : null}
 			<div>
@@ -80,7 +96,13 @@ export default function RegisterView(props: Readonly<RegisterViewProps>) {
 					</summary>
 					<div className="mt-3">{filterBar}</div>
 				</details>
-				{index.length > 0 ? (
+				{indexStatus === "loading" ? (
+					<div className="mt-4">
+						<Skeleton count={2} />
+					</div>
+				) : indexStatus === "error" ? (
+					<BlockError message={indexError} />
+				) : index.length > 0 ? (
 					<ul className="mt-4">
 						{index.map((project) => (
 							<IndexRow key={project.id} project={project} />
