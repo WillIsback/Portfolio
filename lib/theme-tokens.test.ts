@@ -18,11 +18,21 @@ function block(selector: string): string {
 describe("tokens du carnet", () => {
 	it.each([
 		"--paper-grid",
+		"--paper-dot",
 		"--ink-soft",
 		"--note",
 	])("%s est défini en clair et en sombre", (token) => {
 		expect(block(":root")).toContain(`${token}:`);
 		expect(block("\\.dark")).toContain(`${token}:`);
+	});
+
+	it("le fond est une trame de points de 24 px, plus un quadrillage scolaire", () => {
+		const paper =
+			css.match(/\.paper::before\s*\{([\s\S]*?)\n {2}\}/)?.[1] ?? "";
+		expect(paper).toContain("radial-gradient(circle, var(--paper-dot)");
+		expect(paper).toContain("background-size: 24px 24px");
+		expect(paper).not.toMatch(/background-image:[^;]*linear-gradient/);
+		expect(paper).toContain("mask-image");
 	});
 
 	it("l'accent reste indigo en clair et violet en sombre", () => {

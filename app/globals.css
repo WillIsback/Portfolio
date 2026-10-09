@@ -88,6 +88,7 @@
 
   /* Carnet de labo */
   --paper-grid: oklch(0.13 0.03 260 / 0.06);
+  --paper-dot: oklch(0.13 0.03 260 / 0.18);
   --ink-soft: oklch(0.45 0.04 262);
   --note: oklch(0.45 0.09 45);
   --cluster-1: oklch(0.5 0.13 270);
@@ -163,6 +164,7 @@
 
   /* Carnet de nuit */
   --paper-grid: oklch(0.98 0.01 260 / 0.08);
+  --paper-dot: oklch(0.98 0.01 260 / 0.2);
   --ink-soft: oklch(0.76 0.03 262);
   --note: oklch(0.82 0.08 70);
   --cluster-1: oklch(0.75 0.13 270);
@@ -200,7 +202,7 @@
 }
 
 @layer components {
-  /* Papier millimétré : grille fine tous les 6 px, trait plus marqué tous les 30 px, estompée vers le bas. */
+  /* Trame de points du carnet : un point tous les 24 px, estompée vers le bas. */
   .paper {
     position: relative;
     isolation: isolate;
@@ -211,12 +213,9 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-image:
-      linear-gradient(to right, var(--paper-grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--paper-grid) 1px, transparent 1px),
-      linear-gradient(to right, var(--paper-grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--paper-grid) 1px, transparent 1px);
-    background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
+    background-image: radial-gradient(circle, var(--paper-dot) 1px, transparent 1.5px);
+    background-size: 24px 24px;
+    background-position: 12px 12px;
     mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 90%);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 90%);
   }
