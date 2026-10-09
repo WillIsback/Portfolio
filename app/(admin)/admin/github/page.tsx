@@ -1,7 +1,7 @@
 // app/(admin)/github/page.tsx
 
 import prisma from "@/lib/db";
-import { fetchUserRepos } from "@/lib/github";
+import { fetchUserRepos } from "@/lib/github/legacy";
 import { GitHubReposBrowser } from "./GitHubReposBrowser";
 
 export default async function AdminGitHubPage() {

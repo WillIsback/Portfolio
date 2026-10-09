@@ -1,22 +1,19 @@
 // auth.ts
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+import { jwtCallback, sessionCallback } from "@/lib/auth-callbacks";
 
 type SessionUser = {
 	githubId: string;
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-	providers: [GitHub],
+	providers: [
+		GitHub({ authorization: { params: { scope: "read:user repo" } } }),
+	],
 	callbacks: {
-		jwt({ token, profile }) {
-			if (profile?.id) token.githubId = String(profile.id);
-			return token;
-		},
-		session({ session, token }) {
-			(session.user as SessionUser).githubId = (token.githubId as string) ?? "";
-			return session;
-		},
+		jwt: jwtCallback,
+		session: sessionCallback,
 		authorized({ auth: session, request: { nextUrl } }) {
 			const isLoginPage = nextUrl.pathname === "/admin/login";
 			if (isLoginPage) return true;

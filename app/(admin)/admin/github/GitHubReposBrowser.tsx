@@ -7,7 +7,7 @@ import {
 	fetchRepoFilePathsAction,
 	importFromGitHub,
 } from "@/app/actions/admin.action";
-import { detectTechStack, type GitHubRepo } from "@/lib/github";
+import { detectTechStack, type GitHubRepo } from "@/lib/github/legacy";
 import type { AdminProject } from "@/schemas";
 import {
 	BackendApiEnum,

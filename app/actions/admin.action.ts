@@ -170,6 +170,6 @@ export async function fetchRepoFilePathsAction(
 	repo: string,
 ): Promise<string[]> {
 	await requireAdmin();
-	const { fetchRepoFilePaths } = await import("@/lib/github");
+	const { fetchRepoFilePaths } = await import("@/lib/github/legacy");
 	return fetchRepoFilePaths(owner, repo);
 }

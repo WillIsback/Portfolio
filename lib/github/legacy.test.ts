@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectTechStack } from "./github";
+import { detectTechStack } from "./legacy";
 
 describe("detectTechStack", () => {
 	it("maps TypeScript primary language to enum", () => {
