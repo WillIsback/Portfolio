@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
-import { NOTE_DELAY_SECONDS, NOTE_SECONDS, noteAnimation } from "@/lib/motion";
+import { type ReactNode, useEffect, useState } from "react";
+import { NOTE_DELAY_SECONDS } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 interface MarginNoteProps {
@@ -14,26 +13,36 @@ interface MarginNoteProps {
 /**
  * Annotation manuscrite. Dans le flux du texte sur mobile ; dans la marge à partir de `xl`
  * (le parent doit être `relative`).
+ *
+ * La police manuscrite n'est appliquée qu'après le montage et ~250 ms : sa requête part ainsi
+ * après le premier rendu (sinon Caveat est demandée en priorité maximale avant le LCP). Avant,
+ * la note s'affiche en police du corps, texte et couleur identiques. Le mouvement (`note-in`,
+ * CSS pur, transform seul) est coupé par `prefers-reduced-motion`.
  */
 export default function MarginNote({
 	children,
 	side = "right",
 	inline = false,
 }: Readonly<MarginNoteProps>) {
-	const reduced = useReducedMotion();
+	const [handwritten, setHandwritten] = useState(false);
+	useEffect(() => {
+		const timer = setTimeout(
+			() => setHandwritten(true),
+			NOTE_DELAY_SECONDS * 1000,
+		);
+		return () => clearTimeout(timer);
+	}, []);
 	return (
-		<motion.aside
+		<aside
 			className={cn(
-				"font-hand text-lg leading-snug text-note my-3",
+				"note-in text-lg leading-snug text-note my-3",
+				handwritten && "font-hand",
 				!inline && "xl:my-0 xl:absolute xl:top-0 xl:w-48",
 				!inline &&
 					(side === "right" ? "xl:-right-56" : "xl:-left-56 xl:text-right"),
 			)}
-			whileInView={noteAnimation(reduced)}
-			viewport={{ once: true }}
-			transition={{ duration: NOTE_SECONDS, delay: NOTE_DELAY_SECONDS }}
 		>
 			{children}
-		</motion.aside>
+		</aside>
 	);
 }

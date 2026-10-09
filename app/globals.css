@@ -223,6 +223,13 @@
 
   /* Fig. 1 (spec §5.3) : les axes se tracent, puis les points arrivent groupe par groupe (~1,2 s),
      puis respirent. Animation CSS minutée, sans observateur ; rien en mouvement réduit. */
+  /* Note de marge : glisse de 4 px (transform seul, jamais d'opacité) ; durées = lib/motion.ts. */
+  .note-in {
+    animation: note-in 0.4s ease-out 0.25s backwards;
+  }
+  @keyframes note-in {
+    from { transform: translateY(4px); }
+  }
   .carnet-axis {
     stroke-dasharray: 1;
     animation: carnet-draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) both;
@@ -261,6 +268,9 @@
     .carnet-query {
       animation: none;
       transition: none;
+    }
+    .note-in {
+      animation: none;
     }
   }
 }

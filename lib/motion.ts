@@ -8,7 +8,3 @@ export const EASE_INK = [0.65, 0, 0.35, 1] as const;
 export function inkDrawAnimation(reduced: boolean | null) {
 	return reduced === false ? { pathLength: [0, 1] } : undefined;
 }
-
-export function noteAnimation(reduced: boolean | null) {
-	return reduced === false ? { y: [4, 0] } : undefined;
-}
