@@ -33,7 +33,8 @@ export const Frontend = {
   NextJs: 'NextJs',
   Tanstack: 'Tanstack',
   Svelte: 'Svelte',
-  SvelteKit: 'SvelteKit'
+  SvelteKit: 'SvelteKit',
+  TailwindCSS: 'TailwindCSS'
 } as const
 
 export type Frontend = (typeof Frontend)[keyof typeof Frontend]
@@ -60,6 +61,30 @@ export const AiDomain = {
 } as const
 
 export type AiDomain = (typeof AiDomain)[keyof typeof AiDomain]
+
+
+export const MlStack = {
+  PyTorch: 'PyTorch',
+  Transformers: 'Transformers',
+  ScikitLearn: 'ScikitLearn',
+  Pandas: 'Pandas',
+  XGBoost: 'XGBoost',
+  HuggingFace: 'HuggingFace',
+  VLLM: 'VLLM',
+  WandB: 'WandB',
+  LlmSdk: 'LlmSdk'
+} as const
+
+export type MlStack = (typeof MlStack)[keyof typeof MlStack]
+
+
+export const ProjectStatus = {
+  InProgress: 'InProgress',
+  Done: 'Done',
+  Archived: 'Archived'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
 
 export const Language = {

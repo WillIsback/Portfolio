@@ -26,6 +26,12 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	frontends: [],
 	devops: [{ devops: "Docker" }],
 	domains: [],
+	mlStack: [],
+	pitch: null,
+	status: null,
+	period: null,
+	featuredRank: null,
+	githubRepoId: null,
 	...over,
 });
 const points: MapPoint[] = [

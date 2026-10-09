@@ -15,6 +15,7 @@ export const FrontendEnum = z.enum([
 	"Tanstack",
 	"Svelte",
 	"SvelteKit",
+	"TailwindCSS",
 ]);
 export const DevOpsEnum = z.enum(["Docker", "GithubActions"]);
 export const LanguageEnum = z.enum([
@@ -23,6 +24,19 @@ export const LanguageEnum = z.enum([
 	"JavaScript",
 	"Rust",
 ]);
+
+export const MlStackEnum = z.enum([
+	"PyTorch",
+	"Transformers",
+	"ScikitLearn",
+	"Pandas",
+	"XGBoost",
+	"HuggingFace",
+	"VLLM",
+	"WandB",
+	"LlmSdk",
+]);
+export const ProjectStatusEnum = z.enum(["InProgress", "Done", "Archived"]);
 
 // Schéma TechStack
 export const TechStackSchema = z.object({
@@ -64,6 +78,8 @@ export type Database = z.infer<typeof DatabaseEnum>;
 export type BackendApi = z.infer<typeof BackendApiEnum>;
 export type Frontend = z.infer<typeof FrontendEnum>;
 export type DevOps = z.infer<typeof DevOpsEnum>;
+export type MlStack = z.infer<typeof MlStackEnum>;
+export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 export type Language = z.infer<typeof LanguageEnum>;
 export type TechStack = z.infer<typeof TechStackSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
@@ -84,6 +100,12 @@ export const AdminProjectSchema = z.object({
 	frontends: z.array(FrontendEnum).default([]),
 	devops: z.array(DevOpsEnum).default([]),
 	domains: z.array(AiDomainEnum).default([]),
+	mlStack: z.array(MlStackEnum).default([]),
+	pitch: z.string().max(140).optional(),
+	status: ProjectStatusEnum.optional(),
+	period: z.string().optional(),
+	githubRepoId: z.number().int().optional(),
+	featuredRank: z.number().int().min(1).optional(),
 });
 
 export type AdminProject = z.infer<typeof AdminProjectSchema>;

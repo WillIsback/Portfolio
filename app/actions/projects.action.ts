@@ -125,6 +125,12 @@ async function getProjectsFromDb(
 			frontends: true,
 			devops: true,
 			domains: true,
+			mlStack: true,
+			pitch: true,
+			status: true,
+			period: true,
+			featuredRank: true,
+			githubRepoId: true,
 		},
 		orderBy: { lastUpdate: "desc" },
 	});
@@ -138,6 +144,7 @@ async function getProjectsFromDb(
 		frontends: p.frontends.map((f) => ({ frontend: f.frontend })),
 		devops: p.devops.map((d) => ({ devops: d.devops })),
 		domains: p.domains.map((d) => ({ domain: d.domain })),
+		mlStack: p.mlStack.map((m) => ({ ml: m.ml })),
 	}));
 }
 
@@ -211,6 +218,12 @@ export async function getProjectById(id: number) {
 					frontends: true,
 					devops: true,
 					domains: true,
+					mlStack: true,
+					pitch: true,
+					status: true,
+					period: true,
+					featuredRank: true,
+					githubRepoId: true,
 				},
 			}),
 		["project", String(id)],

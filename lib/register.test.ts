@@ -31,6 +31,12 @@ const project = (
 	frontends: [],
 	devops: [],
 	domains: [],
+	mlStack: [],
+	pitch: null,
+	status: null,
+	period: null,
+	featuredRank: null,
+	githubRepoId: null,
 	...over,
 });
 
@@ -39,7 +45,7 @@ describe("selectFeatured", () => {
 		const ps = [1, 2, 3, 4, 5, 6, 7, 8].map((id) =>
 			project(id, { domains: [{ domain: "ML" }] }),
 		);
-		const out = selectFeatured(ps, []);
+		const out = selectFeatured(ps);
 		expect(out.map((p) => p.id)).toEqual([8, 7, 6, 5, 4, 3]);
 	});
 
@@ -51,7 +57,7 @@ describe("selectFeatured", () => {
 			project(4),
 			project(5),
 		];
-		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([1, 5, 4, 3]);
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([1, 5, 4, 3]);
 	});
 
 	it("seuls les domaines étiquettent", () => {
@@ -62,12 +68,7 @@ describe("selectFeatured", () => {
 			project(4),
 			project(5),
 		];
-		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([2, 5, 4, 3]);
-	});
-
-	it("dédoublonne les identifiants explicites", () => {
-		const ps = [project(1), project(2)];
-		expect(selectFeatured(ps, [2, 2, 1]).map((p) => p.id)).toEqual([2, 1]);
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([2, 5, 4, 3]);
 	});
 
 	it("n'inclut jamais un projet privé", () => {
@@ -78,12 +79,36 @@ describe("selectFeatured", () => {
 			project(4),
 			project(5),
 		];
-		expect(selectFeatured(ps, []).map((p) => p.id)).not.toContain(1);
+		expect(selectFeatured(ps).map((p) => p.id)).not.toContain(1);
 	});
 
-	it("suit la liste explicite quand elle est renseignée, dans son ordre", () => {
+	it("suit le classement quand il existe, par rang croissant, 6 au plus", () => {
+		const ps = [1, 2, 3, 4, 5, 6, 7, 8].map((id) =>
+			project(id, { featuredRank: id === 8 ? 1 : id === 2 ? 2 : id + 2 }),
+		);
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([8, 2, 1, 3, 4, 5]);
+	});
+
+	it("sans classement, applique la règle automatique", () => {
 		const ps = [1, 2, 3, 4, 5].map((id) => project(id));
-		expect(selectFeatured(ps, [3, 99, 1]).map((p) => p.id)).toEqual([3, 1]);
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([5, 4, 3, 2]);
+	});
+
+	it("exclut un projet privé classé", () => {
+		const ps = [
+			project(1, { featuredRank: 1, isPrivate: true }),
+			project(2, { featuredRank: 2 }),
+		];
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([2]);
+	});
+
+	it("départage les rangs égaux par identifiant", () => {
+		const ps = [
+			project(3, { featuredRank: 1 }),
+			project(1, { featuredRank: 1 }),
+			project(2, { featuredRank: 1 }),
+		];
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([1, 2, 3]);
 	});
 
 	it("accepte une date sérialisée en chaîne (frontière de l'action serveur)", () => {
@@ -94,7 +119,7 @@ describe("selectFeatured", () => {
 			project(4, { lastUpdate: new Date("2026-04-01T00:00:00Z") }),
 			project(5, { lastUpdate: new Date("2026-05-01T00:00:00Z") }),
 		];
-		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([1, 5, 4, 3]);
+		expect(selectFeatured(ps).map((p) => p.id)).toEqual([1, 5, 4, 3]);
 	});
 });
 

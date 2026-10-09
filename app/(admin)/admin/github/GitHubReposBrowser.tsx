@@ -74,6 +74,7 @@ export function GitHubReposBrowser({
 						frontends: [],
 						devops: detected.devops,
 						domains: [],
+						mlStack: [],
 					};
 				}),
 			);

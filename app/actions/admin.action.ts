@@ -25,6 +25,7 @@ async function upsertProjectRelations(
 	await tx.projectFrontend.deleteMany({ where: { projectId } });
 	await tx.projectDevOps.deleteMany({ where: { projectId } });
 	await tx.projectDomain.deleteMany({ where: { projectId } });
+	await tx.projectMlStack.deleteMany({ where: { projectId } });
 
 	if (data.languages.length > 0) {
 		await tx.projectLanguage.createMany({
@@ -55,6 +56,11 @@ async function upsertProjectRelations(
 	if (domainRows.length > 0) {
 		await tx.projectDomain.createMany({ data: domainRows });
 	}
+	if (data.mlStack.length > 0) {
+		await tx.projectMlStack.createMany({
+			data: data.mlStack.map((ml) => ({ projectId, ml })),
+		});
+	}
 }
 
 export async function createProject(raw: AdminProject): Promise<void> {
@@ -71,6 +77,11 @@ export async function createProject(raw: AdminProject): Promise<void> {
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
+				pitch: data.pitch ?? null,
+				status: data.status ?? null,
+				period: data.period ?? null,
+				githubRepoId: data.githubRepoId ?? null,
+				featuredRank: data.featuredRank ?? null,
 			},
 		});
 		await upsertProjectRelations(tx, project.id, data);
@@ -97,6 +108,11 @@ export async function updateProject(
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
+				pitch: data.pitch ?? null,
+				status: data.status ?? null,
+				period: data.period ?? null,
+				githubRepoId: data.githubRepoId ?? null,
+				featuredRank: data.featuredRank ?? null,
 			},
 		});
 		await upsertProjectRelations(tx, id, data);
@@ -121,13 +137,23 @@ export async function importFromGitHub(
 		const existing = data.github
 			? await prisma.project.findFirst({
 					where: { github: data.github },
-					include: { domains: { select: { domain: true } } },
+					include: {
+						domains: { select: { domain: true } },
+						mlStack: { select: { ml: true } },
+					},
 				})
 			: null;
 
 		if (existing) {
 			await updateProject(existing.id, {
 				...data,
+				// champs éditoriaux et stack ML : l'import ne les écrase jamais
+				pitch: existing.pitch ?? undefined,
+				status: existing.status ?? undefined,
+				period: existing.period ?? undefined,
+				githubRepoId: existing.githubRepoId ?? undefined,
+				featuredRank: existing.featuredRank ?? undefined,
+				mlStack: existing.mlStack.map((m) => m.ml),
 				domains: resolveImportDomains(
 					existing.domains.map((d) => d.domain),
 					data.domains,

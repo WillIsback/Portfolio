@@ -33,6 +33,7 @@ enum Frontend {
   Tanstack
   Svelte
   SvelteKit
+  TailwindCSS
 }
 
 // Enum pour les outils DevOps
@@ -54,6 +55,26 @@ enum AiDomain {
   Speech
 }
 
+// Enum pour la stack ML
+enum MlStack {
+  PyTorch
+  Transformers
+  ScikitLearn
+  Pandas
+  XGBoost
+  HuggingFace
+  VLLM
+  WandB
+  LlmSdk
+}
+
+// Enum pour le statut d'un projet
+enum ProjectStatus {
+  InProgress
+  Done
+  Archived
+}
+
 // Enum pour les langages
 enum Language {
   Python
@@ -72,6 +93,12 @@ model Project {
   lastUpdate    DateTime?
   isPrivate     Boolean  @default(false)
   isAiGenerated Boolean  @default(false)
+  pitch         String?
+  status        ProjectStatus?
+  period        String?
+  githubRepoId  Int?     @unique
+  featuredRank  Int?
+  syncedAt      DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -82,6 +109,7 @@ model Project {
   frontends   ProjectFrontend[]
   devops      ProjectDevOps[]
   domains     ProjectDomain[]
+  mlStack     ProjectMlStack[]
 }
 
 // Tables de jonction pour les relations many-to-many
@@ -92,6 +120,15 @@ model ProjectLanguage {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, language])
+}
+
+model ProjectMlStack {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  ml        MlStack
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, ml])
 }
 
 model ProjectDomain {

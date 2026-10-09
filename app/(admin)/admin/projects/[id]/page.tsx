@@ -21,6 +21,7 @@ export default async function EditProjectPage({
 			frontends: true,
 			devops: true,
 			domains: true,
+			mlStack: true,
 		},
 	});
 
@@ -40,6 +41,12 @@ export default async function EditProjectPage({
 		frontends: project.frontends.map((f) => f.frontend),
 		devops: project.devops.map((d) => d.devops),
 		domains: project.domains.map((d) => d.domain),
+		mlStack: project.mlStack.map((m) => m.ml),
+		pitch: project.pitch ?? undefined,
+		status: project.status ?? undefined,
+		period: project.period ?? undefined,
+		githubRepoId: project.githubRepoId ?? undefined,
+		featuredRank: project.featuredRank ?? undefined,
 	};
 
 	return (

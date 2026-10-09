@@ -20,6 +20,12 @@ const p = (id: number): NormalizedProject => ({
 	frontends: [],
 	devops: [],
 	domains: [],
+	mlStack: [],
+	pitch: null,
+	status: null,
+	period: null,
+	featuredRank: null,
+	githubRepoId: null,
 });
 const base = {
 	featuredStatus: "ready" as const,

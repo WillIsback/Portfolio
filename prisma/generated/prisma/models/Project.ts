@@ -28,10 +28,14 @@ export type AggregateProject = {
 
 export type ProjectAvgAggregateOutputType = {
   id: number | null
+  githubRepoId: number | null
+  featuredRank: number | null
 }
 
 export type ProjectSumAggregateOutputType = {
   id: number | null
+  githubRepoId: number | null
+  featuredRank: number | null
 }
 
 export type ProjectMinAggregateOutputType = {
@@ -43,6 +47,12 @@ export type ProjectMinAggregateOutputType = {
   lastUpdate: Date | null
   isPrivate: boolean | null
   isAiGenerated: boolean | null
+  pitch: string | null
+  status: $Enums.ProjectStatus | null
+  period: string | null
+  githubRepoId: number | null
+  featuredRank: number | null
+  syncedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +66,12 @@ export type ProjectMaxAggregateOutputType = {
   lastUpdate: Date | null
   isPrivate: boolean | null
   isAiGenerated: boolean | null
+  pitch: string | null
+  status: $Enums.ProjectStatus | null
+  period: string | null
+  githubRepoId: number | null
+  featuredRank: number | null
+  syncedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,6 +85,12 @@ export type ProjectCountAggregateOutputType = {
   lastUpdate: number
   isPrivate: number
   isAiGenerated: number
+  pitch: number
+  status: number
+  period: number
+  githubRepoId: number
+  featuredRank: number
+  syncedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -77,10 +99,14 @@ export type ProjectCountAggregateOutputType = {
 
 export type ProjectAvgAggregateInputType = {
   id?: true
+  githubRepoId?: true
+  featuredRank?: true
 }
 
 export type ProjectSumAggregateInputType = {
   id?: true
+  githubRepoId?: true
+  featuredRank?: true
 }
 
 export type ProjectMinAggregateInputType = {
@@ -92,6 +118,12 @@ export type ProjectMinAggregateInputType = {
   lastUpdate?: true
   isPrivate?: true
   isAiGenerated?: true
+  pitch?: true
+  status?: true
+  period?: true
+  githubRepoId?: true
+  featuredRank?: true
+  syncedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -105,6 +137,12 @@ export type ProjectMaxAggregateInputType = {
   lastUpdate?: true
   isPrivate?: true
   isAiGenerated?: true
+  pitch?: true
+  status?: true
+  period?: true
+  githubRepoId?: true
+  featuredRank?: true
+  syncedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +156,12 @@ export type ProjectCountAggregateInputType = {
   lastUpdate?: true
   isPrivate?: true
   isAiGenerated?: true
+  pitch?: true
+  status?: true
+  period?: true
+  githubRepoId?: true
+  featuredRank?: true
+  syncedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -218,6 +262,12 @@ export type ProjectGroupByOutputType = {
   lastUpdate: Date | null
   isPrivate: boolean
   isAiGenerated: boolean
+  pitch: string | null
+  status: $Enums.ProjectStatus | null
+  period: string | null
+  githubRepoId: number | null
+  featuredRank: number | null
+  syncedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -254,6 +304,12 @@ export type ProjectWhereInput = {
   lastUpdate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   isPrivate?: Prisma.BoolFilter<"Project"> | boolean
   isAiGenerated?: Prisma.BoolFilter<"Project"> | boolean
+  pitch?: Prisma.StringNullableFilter<"Project"> | string | null
+  status?: Prisma.EnumProjectStatusNullableFilter<"Project"> | $Enums.ProjectStatus | null
+  period?: Prisma.StringNullableFilter<"Project"> | string | null
+  githubRepoId?: Prisma.IntNullableFilter<"Project"> | number | null
+  featuredRank?: Prisma.IntNullableFilter<"Project"> | number | null
+  syncedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   languages?: Prisma.ProjectLanguageListRelationFilter
@@ -262,6 +318,7 @@ export type ProjectWhereInput = {
   frontends?: Prisma.ProjectFrontendListRelationFilter
   devops?: Prisma.ProjectDevOpsListRelationFilter
   domains?: Prisma.ProjectDomainListRelationFilter
+  mlStack?: Prisma.ProjectMlStackListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -273,6 +330,12 @@ export type ProjectOrderByWithRelationInput = {
   lastUpdate?: Prisma.SortOrderInput | Prisma.SortOrder
   isPrivate?: Prisma.SortOrder
   isAiGenerated?: Prisma.SortOrder
+  pitch?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  period?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  featuredRank?: Prisma.SortOrderInput | Prisma.SortOrder
+  syncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   languages?: Prisma.ProjectLanguageOrderByRelationAggregateInput
@@ -281,10 +344,12 @@ export type ProjectOrderByWithRelationInput = {
   frontends?: Prisma.ProjectFrontendOrderByRelationAggregateInput
   devops?: Prisma.ProjectDevOpsOrderByRelationAggregateInput
   domains?: Prisma.ProjectDomainOrderByRelationAggregateInput
+  mlStack?: Prisma.ProjectMlStackOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  githubRepoId?: number
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
@@ -295,6 +360,11 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   lastUpdate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   isPrivate?: Prisma.BoolFilter<"Project"> | boolean
   isAiGenerated?: Prisma.BoolFilter<"Project"> | boolean
+  pitch?: Prisma.StringNullableFilter<"Project"> | string | null
+  status?: Prisma.EnumProjectStatusNullableFilter<"Project"> | $Enums.ProjectStatus | null
+  period?: Prisma.StringNullableFilter<"Project"> | string | null
+  featuredRank?: Prisma.IntNullableFilter<"Project"> | number | null
+  syncedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   languages?: Prisma.ProjectLanguageListRelationFilter
@@ -303,7 +373,8 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   frontends?: Prisma.ProjectFrontendListRelationFilter
   devops?: Prisma.ProjectDevOpsListRelationFilter
   domains?: Prisma.ProjectDomainListRelationFilter
-}, "id">
+  mlStack?: Prisma.ProjectMlStackListRelationFilter
+}, "id" | "githubRepoId">
 
 export type ProjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -314,6 +385,12 @@ export type ProjectOrderByWithAggregationInput = {
   lastUpdate?: Prisma.SortOrderInput | Prisma.SortOrder
   isPrivate?: Prisma.SortOrder
   isAiGenerated?: Prisma.SortOrder
+  pitch?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  period?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  featuredRank?: Prisma.SortOrderInput | Prisma.SortOrder
+  syncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -335,6 +412,12 @@ export type ProjectScalarWhereWithAggregatesInput = {
   lastUpdate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   isPrivate?: Prisma.BoolWithAggregatesFilter<"Project"> | boolean
   isAiGenerated?: Prisma.BoolWithAggregatesFilter<"Project"> | boolean
+  pitch?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  status?: Prisma.EnumProjectStatusNullableWithAggregatesFilter<"Project"> | $Enums.ProjectStatus | null
+  period?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  githubRepoId?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
+  featuredRank?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
+  syncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -347,6 +430,12 @@ export type ProjectCreateInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -355,6 +444,7 @@ export type ProjectCreateInput = {
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -366,6 +456,12 @@ export type ProjectUncheckedCreateInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -374,6 +470,7 @@ export type ProjectUncheckedCreateInput = {
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -384,6 +481,12 @@ export type ProjectUpdateInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -392,6 +495,7 @@ export type ProjectUpdateInput = {
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -403,6 +507,12 @@ export type ProjectUncheckedUpdateInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -411,6 +521,7 @@ export type ProjectUncheckedUpdateInput = {
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -422,6 +533,12 @@ export type ProjectCreateManyInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -434,6 +551,12 @@ export type ProjectUpdateManyMutationInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -447,6 +570,12 @@ export type ProjectUncheckedUpdateManyInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -460,12 +589,20 @@ export type ProjectCountOrderByAggregateInput = {
   lastUpdate?: Prisma.SortOrder
   isPrivate?: Prisma.SortOrder
   isAiGenerated?: Prisma.SortOrder
+  pitch?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  period?: Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrder
+  featuredRank?: Prisma.SortOrder
+  syncedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProjectAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrder
+  featuredRank?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
@@ -477,6 +614,12 @@ export type ProjectMaxOrderByAggregateInput = {
   lastUpdate?: Prisma.SortOrder
   isPrivate?: Prisma.SortOrder
   isAiGenerated?: Prisma.SortOrder
+  pitch?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  period?: Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrder
+  featuredRank?: Prisma.SortOrder
+  syncedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -490,12 +633,20 @@ export type ProjectMinOrderByAggregateInput = {
   lastUpdate?: Prisma.SortOrder
   isPrivate?: Prisma.SortOrder
   isAiGenerated?: Prisma.SortOrder
+  pitch?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  period?: Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrder
+  featuredRank?: Prisma.SortOrder
+  syncedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProjectSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  githubRepoId?: Prisma.SortOrder
+  featuredRank?: Prisma.SortOrder
 }
 
 export type ProjectScalarRelationFilter = {
@@ -517,6 +668,18 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableEnumProjectStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ProjectStatus | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -543,6 +706,20 @@ export type ProjectUpdateOneRequiredWithoutLanguagesNestedInput = {
   upsert?: Prisma.ProjectUpsertWithoutLanguagesInput
   connect?: Prisma.ProjectWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutLanguagesInput, Prisma.ProjectUpdateWithoutLanguagesInput>, Prisma.ProjectUncheckedUpdateWithoutLanguagesInput>
+}
+
+export type ProjectCreateNestedOneWithoutMlStackInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMlStackInput, Prisma.ProjectUncheckedCreateWithoutMlStackInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMlStackInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutMlStackNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMlStackInput, Prisma.ProjectUncheckedCreateWithoutMlStackInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMlStackInput
+  upsert?: Prisma.ProjectUpsertWithoutMlStackInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutMlStackInput, Prisma.ProjectUpdateWithoutMlStackInput>, Prisma.ProjectUncheckedUpdateWithoutMlStackInput>
 }
 
 export type ProjectCreateNestedOneWithoutDomainsInput = {
@@ -623,6 +800,12 @@ export type ProjectCreateWithoutLanguagesInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
@@ -630,6 +813,7 @@ export type ProjectCreateWithoutLanguagesInput = {
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLanguagesInput = {
@@ -641,6 +825,12 @@ export type ProjectUncheckedCreateWithoutLanguagesInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
@@ -648,6 +838,7 @@ export type ProjectUncheckedCreateWithoutLanguagesInput = {
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLanguagesInput = {
@@ -674,6 +865,12 @@ export type ProjectUpdateWithoutLanguagesInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
@@ -681,6 +878,7 @@ export type ProjectUpdateWithoutLanguagesInput = {
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLanguagesInput = {
@@ -692,8 +890,129 @@ export type ProjectUncheckedUpdateWithoutLanguagesInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
+  backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
+  frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
+  devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutMlStackInput = {
+  title: string
+  description: string
+  imagePath?: string | null
+  github?: string | null
+  lastUpdate?: Date | string | null
+  isPrivate?: boolean
+  isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
+  databases?: Prisma.ProjectDatabaseCreateNestedManyWithoutProjectInput
+  backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
+  frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
+  devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutMlStackInput = {
+  id?: number
+  title: string
+  description: string
+  imagePath?: string | null
+  github?: string | null
+  lastUpdate?: Date | string | null
+  isPrivate?: boolean
+  isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
+  databases?: Prisma.ProjectDatabaseUncheckedCreateNestedManyWithoutProjectInput
+  backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
+  frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
+  devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutMlStackInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMlStackInput, Prisma.ProjectUncheckedCreateWithoutMlStackInput>
+}
+
+export type ProjectUpsertWithoutMlStackInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutMlStackInput, Prisma.ProjectUncheckedUpdateWithoutMlStackInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMlStackInput, Prisma.ProjectUncheckedCreateWithoutMlStackInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutMlStackInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutMlStackInput, Prisma.ProjectUncheckedUpdateWithoutMlStackInput>
+}
+
+export type ProjectUpdateWithoutMlStackInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
+  databases?: Prisma.ProjectDatabaseUpdateManyWithoutProjectNestedInput
+  backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
+  frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
+  devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutMlStackInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
   databases?: Prisma.ProjectDatabaseUncheckedUpdateManyWithoutProjectNestedInput
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
@@ -709,6 +1028,12 @@ export type ProjectCreateWithoutDomainsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -716,6 +1041,7 @@ export type ProjectCreateWithoutDomainsInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDomainsInput = {
@@ -727,6 +1053,12 @@ export type ProjectUncheckedCreateWithoutDomainsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -734,6 +1066,7 @@ export type ProjectUncheckedCreateWithoutDomainsInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDomainsInput = {
@@ -760,6 +1093,12 @@ export type ProjectUpdateWithoutDomainsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -767,6 +1106,7 @@ export type ProjectUpdateWithoutDomainsInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDomainsInput = {
@@ -778,6 +1118,12 @@ export type ProjectUncheckedUpdateWithoutDomainsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -785,6 +1131,7 @@ export type ProjectUncheckedUpdateWithoutDomainsInput = {
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDatabasesInput = {
@@ -795,6 +1142,12 @@ export type ProjectCreateWithoutDatabasesInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -802,6 +1155,7 @@ export type ProjectCreateWithoutDatabasesInput = {
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDatabasesInput = {
@@ -813,6 +1167,12 @@ export type ProjectUncheckedCreateWithoutDatabasesInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -820,6 +1180,7 @@ export type ProjectUncheckedCreateWithoutDatabasesInput = {
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDatabasesInput = {
@@ -846,6 +1207,12 @@ export type ProjectUpdateWithoutDatabasesInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -853,6 +1220,7 @@ export type ProjectUpdateWithoutDatabasesInput = {
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDatabasesInput = {
@@ -864,6 +1232,12 @@ export type ProjectUncheckedUpdateWithoutDatabasesInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -871,6 +1245,7 @@ export type ProjectUncheckedUpdateWithoutDatabasesInput = {
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutBackendsInput = {
@@ -881,6 +1256,12 @@ export type ProjectCreateWithoutBackendsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -888,6 +1269,7 @@ export type ProjectCreateWithoutBackendsInput = {
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutBackendsInput = {
@@ -899,6 +1281,12 @@ export type ProjectUncheckedCreateWithoutBackendsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -906,6 +1294,7 @@ export type ProjectUncheckedCreateWithoutBackendsInput = {
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutBackendsInput = {
@@ -932,6 +1321,12 @@ export type ProjectUpdateWithoutBackendsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -939,6 +1334,7 @@ export type ProjectUpdateWithoutBackendsInput = {
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBackendsInput = {
@@ -950,6 +1346,12 @@ export type ProjectUncheckedUpdateWithoutBackendsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -957,6 +1359,7 @@ export type ProjectUncheckedUpdateWithoutBackendsInput = {
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutFrontendsInput = {
@@ -967,6 +1370,12 @@ export type ProjectCreateWithoutFrontendsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -974,6 +1383,7 @@ export type ProjectCreateWithoutFrontendsInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFrontendsInput = {
@@ -985,6 +1395,12 @@ export type ProjectUncheckedCreateWithoutFrontendsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -992,6 +1408,7 @@ export type ProjectUncheckedCreateWithoutFrontendsInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   devops?: Prisma.ProjectDevOpsUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFrontendsInput = {
@@ -1018,6 +1435,12 @@ export type ProjectUpdateWithoutFrontendsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -1025,6 +1448,7 @@ export type ProjectUpdateWithoutFrontendsInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFrontendsInput = {
@@ -1036,6 +1460,12 @@ export type ProjectUncheckedUpdateWithoutFrontendsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -1043,6 +1473,7 @@ export type ProjectUncheckedUpdateWithoutFrontendsInput = {
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   devops?: Prisma.ProjectDevOpsUncheckedUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDevopsInput = {
@@ -1053,6 +1484,12 @@ export type ProjectCreateWithoutDevopsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageCreateNestedManyWithoutProjectInput
@@ -1060,6 +1497,7 @@ export type ProjectCreateWithoutDevopsInput = {
   backends?: Prisma.ProjectBackendCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDevopsInput = {
@@ -1071,6 +1509,12 @@ export type ProjectUncheckedCreateWithoutDevopsInput = {
   lastUpdate?: Date | string | null
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: string | null
+  status?: $Enums.ProjectStatus | null
+  period?: string | null
+  githubRepoId?: number | null
+  featuredRank?: number | null
+  syncedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   languages?: Prisma.ProjectLanguageUncheckedCreateNestedManyWithoutProjectInput
@@ -1078,6 +1522,7 @@ export type ProjectUncheckedCreateWithoutDevopsInput = {
   backends?: Prisma.ProjectBackendUncheckedCreateNestedManyWithoutProjectInput
   frontends?: Prisma.ProjectFrontendUncheckedCreateNestedManyWithoutProjectInput
   domains?: Prisma.ProjectDomainUncheckedCreateNestedManyWithoutProjectInput
+  mlStack?: Prisma.ProjectMlStackUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDevopsInput = {
@@ -1104,6 +1549,12 @@ export type ProjectUpdateWithoutDevopsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUpdateManyWithoutProjectNestedInput
@@ -1111,6 +1562,7 @@ export type ProjectUpdateWithoutDevopsInput = {
   backends?: Prisma.ProjectBackendUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDevopsInput = {
@@ -1122,6 +1574,12 @@ export type ProjectUncheckedUpdateWithoutDevopsInput = {
   lastUpdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPrivate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAiGenerated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pitch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+  period?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubRepoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  featuredRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  syncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   languages?: Prisma.ProjectLanguageUncheckedUpdateManyWithoutProjectNestedInput
@@ -1129,6 +1587,7 @@ export type ProjectUncheckedUpdateWithoutDevopsInput = {
   backends?: Prisma.ProjectBackendUncheckedUpdateManyWithoutProjectNestedInput
   frontends?: Prisma.ProjectFrontendUncheckedUpdateManyWithoutProjectNestedInput
   domains?: Prisma.ProjectDomainUncheckedUpdateManyWithoutProjectNestedInput
+  mlStack?: Prisma.ProjectMlStackUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 
@@ -1143,6 +1602,7 @@ export type ProjectCountOutputType = {
   frontends: number
   devops: number
   domains: number
+  mlStack: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1152,6 +1612,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   frontends?: boolean | ProjectCountOutputTypeCountFrontendsArgs
   devops?: boolean | ProjectCountOutputTypeCountDevopsArgs
   domains?: boolean | ProjectCountOutputTypeCountDomainsArgs
+  mlStack?: boolean | ProjectCountOutputTypeCountMlStackArgs
 }
 
 /**
@@ -1206,6 +1667,13 @@ export type ProjectCountOutputTypeCountDomainsArgs<ExtArgs extends runtime.Types
   where?: Prisma.ProjectDomainWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountMlStackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectMlStackWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1216,6 +1684,12 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   lastUpdate?: boolean
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: boolean
+  status?: boolean
+  period?: boolean
+  githubRepoId?: boolean
+  featuredRank?: boolean
+  syncedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   languages?: boolean | Prisma.Project$languagesArgs<ExtArgs>
@@ -1224,6 +1698,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   frontends?: boolean | Prisma.Project$frontendsArgs<ExtArgs>
   devops?: boolean | Prisma.Project$devopsArgs<ExtArgs>
   domains?: boolean | Prisma.Project$domainsArgs<ExtArgs>
+  mlStack?: boolean | Prisma.Project$mlStackArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1236,6 +1711,12 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastUpdate?: boolean
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: boolean
+  status?: boolean
+  period?: boolean
+  githubRepoId?: boolean
+  featuredRank?: boolean
+  syncedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -1249,6 +1730,12 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastUpdate?: boolean
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: boolean
+  status?: boolean
+  period?: boolean
+  githubRepoId?: boolean
+  featuredRank?: boolean
+  syncedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -1262,11 +1749,17 @@ export type ProjectSelectScalar = {
   lastUpdate?: boolean
   isPrivate?: boolean
   isAiGenerated?: boolean
+  pitch?: boolean
+  status?: boolean
+  period?: boolean
+  githubRepoId?: boolean
+  featuredRank?: boolean
+  syncedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imagePath" | "github" | "lastUpdate" | "isPrivate" | "isAiGenerated" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imagePath" | "github" | "lastUpdate" | "isPrivate" | "isAiGenerated" | "pitch" | "status" | "period" | "githubRepoId" | "featuredRank" | "syncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   languages?: boolean | Prisma.Project$languagesArgs<ExtArgs>
   databases?: boolean | Prisma.Project$databasesArgs<ExtArgs>
@@ -1274,6 +1767,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   frontends?: boolean | Prisma.Project$frontendsArgs<ExtArgs>
   devops?: boolean | Prisma.Project$devopsArgs<ExtArgs>
   domains?: boolean | Prisma.Project$domainsArgs<ExtArgs>
+  mlStack?: boolean | Prisma.Project$mlStackArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1288,6 +1782,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     frontends: Prisma.$ProjectFrontendPayload<ExtArgs>[]
     devops: Prisma.$ProjectDevOpsPayload<ExtArgs>[]
     domains: Prisma.$ProjectDomainPayload<ExtArgs>[]
+    mlStack: Prisma.$ProjectMlStackPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1298,6 +1793,12 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     lastUpdate: Date | null
     isPrivate: boolean
     isAiGenerated: boolean
+    pitch: string | null
+    status: $Enums.ProjectStatus | null
+    period: string | null
+    githubRepoId: number | null
+    featuredRank: number | null
+    syncedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -1700,6 +2201,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   frontends<T extends Prisma.Project$frontendsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$frontendsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFrontendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   devops<T extends Prisma.Project$devopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$devopsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDevOpsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   domains<T extends Prisma.Project$domainsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$domainsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDomainPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mlStack<T extends Prisma.Project$mlStackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$mlStackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMlStackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1737,6 +2239,12 @@ export interface ProjectFieldRefs {
   readonly lastUpdate: Prisma.FieldRef<"Project", 'DateTime'>
   readonly isPrivate: Prisma.FieldRef<"Project", 'Boolean'>
   readonly isAiGenerated: Prisma.FieldRef<"Project", 'Boolean'>
+  readonly pitch: Prisma.FieldRef<"Project", 'String'>
+  readonly status: Prisma.FieldRef<"Project", 'ProjectStatus'>
+  readonly period: Prisma.FieldRef<"Project", 'String'>
+  readonly githubRepoId: Prisma.FieldRef<"Project", 'Int'>
+  readonly featuredRank: Prisma.FieldRef<"Project", 'Int'>
+  readonly syncedAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }
@@ -2268,6 +2776,30 @@ export type Project$domainsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ProjectDomainScalarFieldEnum | Prisma.ProjectDomainScalarFieldEnum[]
+}
+
+/**
+ * Project.mlStack
+ */
+export type Project$mlStackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectMlStack
+   */
+  select?: Prisma.ProjectMlStackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectMlStack
+   */
+  omit?: Prisma.ProjectMlStackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectMlStackInclude<ExtArgs> | null
+  where?: Prisma.ProjectMlStackWhereInput
+  orderBy?: Prisma.ProjectMlStackOrderByWithRelationInput | Prisma.ProjectMlStackOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectMlStackWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectMlStackScalarFieldEnum | Prisma.ProjectMlStackScalarFieldEnum[]
 }
 
 /**

@@ -12,19 +12,17 @@ const time = (d: Date | string | null) => (d ? new Date(d).getTime() : 0);
 const byRecent = (a: NormalizedProject, b: NormalizedProject) =>
 	time(b.lastUpdate) - time(a.lastUpdate) || a.id - b.id;
 
-/** Spec §6.4 : projets publics à domaines IA/Data du plus récent au plus ancien ; liste explicite prioritaire. */
+/** Projets publics classés (`featuredRank`, ordre croissant, 6 au plus) ; sinon règle automatique (domaines IA/Data, récence). */
 export function selectFeatured(
 	projects: NormalizedProject[],
-	explicitIds: number[],
 ): NormalizedProject[] {
 	const visible = projects.filter((p) => !p.isPrivate);
-	if (explicitIds.length > 0) {
-		const byId = new Map(visible.map((p) => [p.id, p]));
-		return [...new Set(explicitIds)]
-			.map((id) => byId.get(id))
-			.filter((p): p is NormalizedProject => p !== undefined)
-			.slice(0, FEATURED_MAX);
-	}
+	const ranked = visible
+		.filter((p) => p.featuredRank !== null)
+		.sort(
+			(a, b) => (a.featuredRank ?? 0) - (b.featuredRank ?? 0) || a.id - b.id,
+		);
+	if (ranked.length > 0) return ranked.slice(0, FEATURED_MAX);
 	const sorted = [...visible].sort(byRecent);
 	const flagged = sorted.filter((p) => p.domains.length > 0);
 	const fill = sorted.filter((p) => p.domains.length === 0);
