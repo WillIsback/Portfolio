@@ -30,6 +30,7 @@
 /* ---------- Prose ---------- */
 
 .article-prose {
+  font-family: var(--font-serif);
   color: var(--article-body);
   font-size: 1.0625rem;
   line-height: 1.75;
@@ -53,6 +54,7 @@
 }
 
 .article-prose > h2 {
+  font-family: var(--font-display);
   margin-top: 2.6em;
   margin-bottom: 0.8em;
   font-size: 1.55rem;
@@ -70,10 +72,11 @@
   height: 3px;
   margin-bottom: 0.7em;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--primary), oklch(0.9 0.08 60));
+  background: var(--primary);
 }
 
 .article-prose > h3 {
+  font-family: var(--font-display);
   margin-top: 2em;
   margin-bottom: 0.6em;
   font-size: 1.2rem;
@@ -128,7 +131,7 @@
 .article-prose > blockquote {
   margin-block: 1.75em;
   padding: 0.25em 0 0.25em 1.1em;
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--ink-soft);
   color: var(--foreground);
   font-family: var(--font-serif-italic);
   font-style: italic;
@@ -238,9 +241,10 @@
 
 .article-figure figcaption {
   margin-top: 0.75rem;
-  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   line-height: 1.55;
-  color: var(--muted-foreground);
+  color: var(--ink-soft);
 }
 
 .chart-scroll {
@@ -256,23 +260,23 @@
 }
 
 .chart-grid {
-  stroke: var(--border);
+  stroke: var(--paper-grid);
   stroke-width: 1;
 }
 
 .chart-axis {
-  stroke: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  stroke: var(--ink-soft);
   stroke-width: 1;
 }
 
 .chart-tick {
-  fill: var(--muted-foreground);
+  fill: var(--ink-soft);
   font-size: 13px;
   font-family: var(--font-mono);
 }
 
 .chart-label {
-  fill: var(--foreground);
+  fill: var(--ink-soft);
   font-size: 14px;
   font-family: var(--font-mono);
 }

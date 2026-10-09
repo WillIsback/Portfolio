@@ -51,6 +51,8 @@ export default function CarnetExplorer({
 	const [hoverId, setHoverId] = useState<string | null>(null);
 	const [searchItems, setSearchItems] = useState<SearchItem[] | null>(null);
 	const workerRef = useRef<Worker | null>(null);
+	// Échec de l'import des données de recherche : l'état reste « en attente », on retente au prochain focus.
+	const searchItemsFailedRef = useRef(false);
 
 	const positions = useMemo(
 		() => new Map(points.map((p) => [p.id, { x: p.x, y: p.y }])),
@@ -59,13 +61,21 @@ export default function CarnetExplorer({
 	const byId = useMemo(() => new Map(points.map((p) => [p.id, p])), [points]);
 	const view = computeView(state, searchItems, positions);
 
-	const activate = () => {
-		if (workerRef.current || state.status !== "idle") return;
-		dispatch({ type: "activate" });
+	const loadSearchItems = () => {
+		searchItemsFailedRef.current = false;
 		// Données de recherche par mots-clés : chunk séparé, hors du HTML de l'accueil.
 		import("@/content/search-items.json")
 			.then((module) => setSearchItems(module.default))
-			.catch(() => setSearchItems([]));
+			.catch(() => {
+				searchItemsFailedRef.current = true;
+			});
+	};
+
+	const activate = () => {
+		if (searchItemsFailedRef.current) loadSearchItems();
+		if (workerRef.current || state.status !== "idle") return;
+		dispatch({ type: "activate" });
+		loadSearchItems();
 		try {
 			const worker = new Worker(
 				new URL("../../lib/carnet/carnet.worker.ts", import.meta.url),

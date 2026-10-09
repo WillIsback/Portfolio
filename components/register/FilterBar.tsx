@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MultiSelect, type Option } from "@/components/ui/multi-select";
@@ -13,6 +13,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { debounce } from "@/lib/debounce";
+import { nextSearchField } from "@/lib/search-field-sync";
 import {
 	BACKEND_LABELS,
 	DATABASE_LABELS,
@@ -36,6 +38,25 @@ export default function FilterBar() {
 
 	// Récupérer les valeurs actuelles des filtres depuis l'URL
 	const search = searchParams.get("search") ?? "";
+	const [searchText, setSearchText] = useState(search);
+	const searchInputRef = useRef<HTMLInputElement>(null);
+	// Resynchronise le champ quand l'URL change de l'extérieur (Réinitialiser, retour/avance).
+	// L'écho d'une valeur qu'on a poussée nous-mêmes n'écrase pas la saisie en cours.
+	const [prevSearch, setPrevSearch] = useState(search);
+	const [pushedSearches, setPushedSearches] = useState<string[]>([]);
+	const [cancelToken, setCancelToken] = useState(0);
+	if (search !== prevSearch) {
+		const next = nextSearchField({
+			urlSearch: search,
+			prevUrlSearch: prevSearch,
+			pushed: pushedSearches,
+			field: searchText,
+		});
+		setPrevSearch(search);
+		setPushedSearches(next.pushed);
+		setSearchText(next.field);
+		if (next.cancelPending) setCancelToken((n) => n + 1);
+	}
 	const language =
 		searchParams.get("language")?.split(",").filter(Boolean) ?? [];
 	const database =
@@ -71,14 +92,45 @@ export default function FilterBar() {
 		[searchParams, router, pathname],
 	);
 
+	// Saisie : l'URL (donc la requête serveur) n'est mise à jour qu'après 300 ms de pause.
+	const latestUpdate = useRef(updateSearchParams);
+	const latestSearch = useRef(search);
+	useEffect(() => {
+		latestUpdate.current = updateSearchParams;
+		latestSearch.current = search;
+	});
+	const pushSearchRef = useRef<ReturnType<typeof debounce<[string]>> | null>(
+		null,
+	);
+	useEffect(() => {
+		const pushSearch = debounce((value: string) => {
+			if (value !== latestSearch.current)
+				setPushedSearches((list) => [...list, value]);
+			latestUpdate.current("search", value);
+		}, 300);
+		pushSearchRef.current = pushSearch;
+		return () => pushSearch.cancel();
+	}, []);
+	// Navigation externe : la saisie différée en attente est périmée.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: cancelToken ne sert que de déclencheur
+	useEffect(() => {
+		pushSearchRef.current?.cancel();
+	}, [cancelToken]);
+
 	// Réinitialiser tous les filtres
 	const resetFilters = useCallback(() => {
+		pushSearchRef.current?.cancel();
+		setSearchText("");
+		setPushedSearches([]);
 		startTransition(() => {
 			router.push(pathname, { scroll: false });
 		});
+		// Le bouton disparaît une fois les filtres vides : le focus revient au champ.
+		searchInputRef.current?.focus();
 	}, [router, pathname]);
 
 	const hasFilters =
+		searchText ||
 		search ||
 		language.length ||
 		database.length ||
@@ -94,8 +146,12 @@ export default function FilterBar() {
 				<Input
 					type="search"
 					placeholder="Rechercher un projet..."
-					value={search}
-					onChange={(e) => updateSearchParams("search", e.target.value)}
+					ref={searchInputRef}
+					value={searchText}
+					onChange={(e) => {
+						setSearchText(e.target.value);
+						pushSearchRef.current?.(e.target.value);
+					}}
 					className="pl-10"
 				/>
 			</div>

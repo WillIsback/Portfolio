@@ -5,8 +5,15 @@ import type { ArticleMeta } from "@/lib/articles/loader";
 /** Dernières entrées du carnet (spec §6.3). */
 export default function LatestEntries({
 	articles,
-}: Readonly<{ articles: ArticleMeta[] }>) {
+	showAllLink = true,
+	headingLevel = 3,
+}: Readonly<{
+	articles: ArticleMeta[];
+	showAllLink?: boolean;
+	headingLevel?: 2 | 3;
+}>) {
 	if (articles.length === 0) return null;
+	const Heading = headingLevel === 2 ? "h2" : "h3";
 	return (
 		<div>
 			<ol className="divide-y divide-border/70 border-y border-border/70">
@@ -22,14 +29,14 @@ export default function LatestEntries({
 							{formatDateFr(article.date)}
 						</time>
 						<div>
-							<h3 className="font-display text-lg font-semibold">
+							<Heading className="font-display text-lg font-semibold">
 								<Link
 									href={`/articles/${article.slug}`}
 									className="rounded-sm hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 								>
 									{article.title}
 								</Link>
-							</h3>
+							</Heading>
 							<p className="mt-1 line-clamp-2 text-base leading-relaxed">
 								{article.description}
 							</p>
@@ -43,12 +50,14 @@ export default function LatestEntries({
 					</li>
 				))}
 			</ol>
-			<Link
-				href="/articles"
-				className="mt-4 inline-block rounded-sm font-mono text-xs text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-			>
-				Toutes les entrées →
-			</Link>
+			{showAllLink ? (
+				<Link
+					href="/articles"
+					className="mt-4 inline-block rounded-sm font-mono text-xs text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+				>
+					Toutes les entrées →
+				</Link>
+			) : null}
 		</div>
 	);
 }

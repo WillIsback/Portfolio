@@ -262,6 +262,23 @@
   @keyframes carnet-breathe {
     50% { opacity: 0.92; }
   }
+  /* Chronologie (spec §8.3) : ligne entière par défaut ; tracée au défilement si le navigateur sait faire. */
+  @supports (animation-timeline: view()) {
+    .chrono-ink {
+      animation: chrono-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry-crossing calc(100% + 8rem);
+    }
+  }
+  @keyframes chrono-draw {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chrono-ink {
+      animation: none;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .carnet-axis,
     .carnet-point,

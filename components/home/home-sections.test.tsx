@@ -26,6 +26,19 @@ describe("LatestEntries", () => {
 		expect(html).toContain('href="/articles"');
 	});
 
+	it("peut servir de liste complète : sans lien « Toutes les entrées », titres en h2", () => {
+		const html = renderToStaticMarkup(
+			<LatestEntries
+				articles={[article("a", "2026-10-07")]}
+				showAllLink={false}
+				headingLevel={2}
+			/>,
+		);
+		expect(html).not.toContain('href="/articles"');
+		expect(html).toContain("<h2");
+		expect(html).not.toContain("<h3");
+	});
+
 	it("ne rend rien sans article", () => {
 		expect(renderToStaticMarkup(<LatestEntries articles={[]} />)).toBe("");
 	});

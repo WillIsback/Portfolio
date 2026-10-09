@@ -22,7 +22,8 @@ describe("MarginNote", () => {
 		const html = renderToStaticMarkup(
 			<MarginNote>essaie « vision »</MarginNote>,
 		);
-		expect(html).toContain("<aside");
+		expect(html).not.toContain("<aside");
+		expect(html).toContain('role="note"');
 		expect(html).toContain("essaie « vision »");
 	});
 

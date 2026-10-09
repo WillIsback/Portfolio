@@ -92,8 +92,13 @@ function TasksSvg({
 
 export function TasksChart({
 	days,
-	caption,
-}: Readonly<{ days: TaskDay[]; caption?: string }>) {
+	caption = "Tâches Kanban créées par jour",
+	figureNumber,
+}: Readonly<{
+	days: TaskDay[];
+	caption?: string;
+	figureNumber?: number;
+}>) {
 	const full = stackedBarLayout(days);
 	const compact = stackedBarLayout(days, {
 		width: 340,
@@ -125,7 +130,12 @@ export function TasksChart({
 				<TasksSvg layout={full} ariaLabel={ariaLabel} variant="full" />
 				<TasksSvg layout={compact} ariaLabel={ariaLabel} variant="compact" />
 			</div>
-			{caption ? <figcaption>{caption}</figcaption> : null}
+			{caption || figureNumber ? (
+				<figcaption>
+					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{caption}
+				</figcaption>
+			) : null}
 		</figure>
 	);
 }

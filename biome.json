@@ -17,6 +17,7 @@
 			"!public/models",
 			"!lib/carnet/__fixtures__",
 			"!content/map.json",
+			"!content/search-items.json",
 			"!.claude"
 		]
 	},

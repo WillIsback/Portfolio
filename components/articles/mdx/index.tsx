@@ -3,6 +3,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { FaultBuckets } from "./FaultBuckets";
 import { KeyFigures } from "./KeyFigures";
 import { Lesson } from "./Lesson";
+import Note from "./Note";
 import { Sources } from "./Sources";
 import { TasksChart } from "./TasksChart";
 import { Timeline } from "./Timeline";
@@ -86,4 +87,5 @@ export const mdxComponents = {
 	Verdicts,
 	Lesson,
 	Sources,
+	Note,
 };
