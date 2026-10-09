@@ -41,3 +41,11 @@ export function domainLabels(domains: { domain: string }[]): string[] {
 		(d) => DOMAIN_LABELS[d],
 	);
 }
+
+/** Lignes ProjectDomain à insérer (normalisées) pour un projet. */
+export function buildDomainRows(
+	projectId: number,
+	domains: readonly string[],
+): { projectId: number; domain: AiDomain }[] {
+	return normalizeDomains(domains).map((domain) => ({ projectId, domain }));
+}

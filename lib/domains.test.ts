@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { domainLabels, normalizeDomains } from "./domains";
+import { buildDomainRows, domainLabels, normalizeDomains } from "./domains";
 
 describe("normalizeDomains", () => {
 	it("ajoute ML pour Classifier", () => {
@@ -34,5 +34,17 @@ describe("domainLabels", () => {
 	});
 	it("tableau vide", () => {
 		expect(domainLabels([])).toEqual([]);
+	});
+});
+
+describe("buildDomainRows", () => {
+	it("normalise et associe le projet", () => {
+		expect(buildDomainRows(7, ["Regressor", "Regressor", "Nope"])).toEqual([
+			{ projectId: 7, domain: "ML" },
+			{ projectId: 7, domain: "Regressor" },
+		]);
+	});
+	it("renvoie un tableau vide sans domaine", () => {
+		expect(buildDomainRows(7, [])).toEqual([]);
 	});
 });

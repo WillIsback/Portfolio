@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateProject } from "@/app/actions/admin.action";
 import { IconPickerModal } from "@/components/admin/IconPickerModal";
+import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
 import { LUCIDE_ICONS } from "@/lib/icon-bank";
 import {
 	type AdminProject,
@@ -183,6 +184,32 @@ export function ProjectEditForm({
 				onChange={(v) => toggleArrayValue("devops", v)}
 			/>
 
+			<fieldset>
+				<legend className="text-xs text-zinc-500 mb-1.5">
+					Domaines IA/Data
+				</legend>
+				<div className="flex flex-wrap gap-2">
+					{AI_DOMAINS.map((domain) => (
+						<label
+							key={domain}
+							className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-zinc-400 ${
+								form.domains.includes(domain)
+									? "border-zinc-400 text-zinc-200 bg-zinc-800"
+									: "border-zinc-700 text-zinc-400"
+							}`}
+						>
+							<input
+								type="checkbox"
+								className="sr-only"
+								checked={form.domains.includes(domain)}
+								onChange={() => toggleArrayValue("domains", domain)}
+							/>
+							{DOMAIN_LABELS[domain]}
+						</label>
+					))}
+				</div>
+			</fieldset>
+
 			<div className="flex gap-4 flex-wrap">
 				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
 					<input
@@ -201,24 +228,6 @@ export function ProjectEditForm({
 						className="accent-zinc-400"
 					/>
 					AI Generated
-				</label>
-				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
-					<input
-						type="checkbox"
-						checked={form.isML}
-						onChange={(e) => setField("isML", e.target.checked)}
-						className="accent-blue-400"
-					/>
-					Machine Learning
-				</label>
-				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
-					<input
-						type="checkbox"
-						checked={form.isIAG}
-						onChange={(e) => setField("isIAG", e.target.checked)}
-						className="accent-violet-400"
-					/>
-					IAG
 				</label>
 			</div>
 

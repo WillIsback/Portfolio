@@ -4,6 +4,7 @@
 import { revalidateTag } from "next/cache";
 import { auth } from "@/auth";
 import prisma from "@/lib/db";
+import { buildDomainRows } from "@/lib/domains";
 import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<void> {
@@ -23,6 +24,7 @@ async function upsertProjectRelations(
 	await tx.projectBackend.deleteMany({ where: { projectId } });
 	await tx.projectFrontend.deleteMany({ where: { projectId } });
 	await tx.projectDevOps.deleteMany({ where: { projectId } });
+	await tx.projectDomain.deleteMany({ where: { projectId } });
 
 	if (data.languages.length > 0) {
 		await tx.projectLanguage.createMany({
@@ -48,6 +50,10 @@ async function upsertProjectRelations(
 		await tx.projectDevOps.createMany({
 			data: data.devops.map((devops) => ({ projectId, devops })),
 		});
+	}
+	const domainRows = buildDomainRows(projectId, data.domains);
+	if (domainRows.length > 0) {
+		await tx.projectDomain.createMany({ data: domainRows });
 	}
 }
 
