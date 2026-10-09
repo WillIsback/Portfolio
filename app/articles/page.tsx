@@ -1,10 +1,5 @@
-import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
-import {
-	ArticleMetaLine,
-	ArticleTags,
-} from "@/components/articles/ArticleMeta";
+import LatestEntries from "@/components/home/LatestEntries";
 import { getAllArticles } from "@/lib/articles/loader";
 
 const title =
@@ -33,8 +28,8 @@ export default function ArticlesPage() {
 	return (
 		<div className="mx-auto w-full max-w-3xl">
 			<header className="mb-10 space-y-3">
-				<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-					Journal de bord
+				<p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
+					Carnet · entrées
 				</p>
 				<h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
 					Articles
@@ -45,38 +40,11 @@ export default function ArticlesPage() {
 			{articles.length === 0 ? (
 				<p className="text-muted-foreground">Aucun article pour le moment.</p>
 			) : (
-				<ol className="space-y-5">
-					{articles.map((article) => (
-						<li key={article.slug}>
-							<article className="group relative rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-primary/40 hover:shadow-[0_12px_60px_-25px_rgba(59,130,246,0.45)] sm:p-7">
-								<div className="space-y-3">
-									<ArticleMetaLine article={article} />
-									<h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
-										<Link
-											href={`/articles/${article.slug}`}
-											className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none group-focus-within:text-primary group-hover:text-primary"
-										>
-											{article.title}
-										</Link>
-									</h2>
-									<p className="leading-relaxed text-muted-foreground">
-										{article.description}
-									</p>
-									<div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-										<ArticleTags tags={article.tags} />
-										<span
-											aria-hidden="true"
-											className="flex items-center gap-1 text-sm font-medium text-primary"
-										>
-											Lire
-											<ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-										</span>
-									</div>
-								</div>
-							</article>
-						</li>
-					))}
-				</ol>
+				<LatestEntries
+					articles={articles}
+					showAllLink={false}
+					headingLevel={2}
+				/>
 			)}
 		</div>
 	);

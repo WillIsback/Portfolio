@@ -4,11 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
-import {
-	ArticleMetaLine,
-	ArticleTags,
-} from "@/components/articles/ArticleMeta";
+import { ArticleTags } from "@/components/articles/ArticleMeta";
 import { mdxComponents } from "@/components/articles/mdx";
+import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
 import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";
 
 const SITE_URL = "https://www.willisback.fr";
@@ -104,7 +102,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 			<header className="mb-10 space-y-5 border-b border-border pb-8">
 				{article.status ? (
-					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+					<p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
 						{article.status}
 					</p>
 				) : null}
@@ -114,7 +112,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 				<p className="text-lg leading-relaxed text-muted-foreground sm:text-xl">
 					{article.description}
 				</p>
-				<ArticleMetaLine article={article} />
+				<p className="font-mono text-xs text-ink-soft">
+					<time dateTime={article.date}>{formatDateFr(article.date)}</time>
+					{article.period ? (
+						<>
+							{" · "}
+							<span className="sr-only">Période : </span>
+							{article.period}
+						</>
+					) : null}
+					{` · ${formatReadingTime(article.readingTimeMinutes)}`}
+				</p>
 				<ArticleTags tags={article.tags} />
 			</header>
 
