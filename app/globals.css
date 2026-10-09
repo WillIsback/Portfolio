@@ -260,7 +260,7 @@
     from { opacity: 0; transform: scale(0.4); }
   }
   @keyframes carnet-breathe {
-    50% { opacity: 0.8; }
+    50% { opacity: 0.92; }
   }
   @media (prefers-reduced-motion: reduce) {
     .carnet-axis,

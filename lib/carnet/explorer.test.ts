@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	announcement,
 	computeView,
 	type ExplorerState,
 	explorerReducer,
@@ -150,5 +151,14 @@ describe("computeView", () => {
 		expect(computeView(typed(failed, "vision"), items, positions).mode).toBe(
 			"keyword",
 		);
+	});
+});
+
+describe("announcement", () => {
+	it("résume les résultats pour la région annoncée", () => {
+		expect(announcement([], false)).toBe("");
+		expect(announcement([], true)).toBe("Aucun résultat");
+		expect(announcement(["A"], true)).toBe("1 résultat : A");
+		expect(announcement(["A", "B", "C"], true)).toBe("3 résultats : A, B, C");
 	});
 });

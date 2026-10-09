@@ -48,8 +48,15 @@ describe("CarnetExplorer (rendu serveur)", () => {
 
 	it("prépare une région annoncée, vide au repos, sans mention sémantique", () => {
 		expect(html).toContain('aria-live="polite"');
-		expect(html).not.toContain("recherche sémantique active");
+		expect(html).toContain("recherche sémantique active");
+		expect(html).toMatch(/invisible[^>]*>recherche sémantique active/);
 		expect(html).not.toContain('class="carnet-query"');
 		expect(html).toMatch(/aria-live="polite"[^>]*><\/div>/);
+	});
+
+	it("place la légende de figure en dernier enfant de <figure>", () => {
+		const figure = html.match(/<figure[\s\S]*?<\/figure>/)?.[0] ?? "";
+		expect(figure).toMatch(/<\/figcaption><\/figure>$/);
+		expect(figure).not.toContain("<ul");
 	});
 });

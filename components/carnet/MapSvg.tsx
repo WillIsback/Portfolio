@@ -23,7 +23,8 @@ export default function MapSvg({
 		<svg
 			viewBox="0 0 100 100"
 			role="img"
-			aria-labelledby="carnet-map-title carnet-map-desc"
+			aria-labelledby="carnet-map-title"
+			aria-describedby="carnet-map-desc"
 			className="h-full w-full overflow-visible text-ink-soft"
 		>
 			<title id="carnet-map-title">Carte de mes projets et articles</title>

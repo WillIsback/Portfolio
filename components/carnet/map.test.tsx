@@ -43,6 +43,8 @@ describe("MapSvg", () => {
 	it("est une image décrite : carrés pour les articles, ronds pour les projets", () => {
 		const html = renderToStaticMarkup(<MapSvg points={points} />);
 		expect(html).toContain('role="img"');
+		expect(html).toContain('aria-labelledby="carnet-map-title"');
+		expect(html).toContain('aria-describedby="carnet-map-desc"');
 		expect(html).toContain("<title");
 		expect(html).toContain("<desc");
 		expect(html.match(/<rect[^>]*carnet-point/g)?.length).toBe(1);

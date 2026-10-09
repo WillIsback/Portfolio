@@ -10,6 +10,7 @@ import {
 } from "react";
 import FigureCaption from "@/components/notebook/FigureCaption";
 import {
+	announcement,
 	computeView,
 	explorerReducer,
 	initialExplorerState,
@@ -24,6 +25,7 @@ import type {
 	WorkerRequest,
 	WorkerResponse,
 } from "@/lib/carnet/worker-protocol";
+import { cn } from "@/lib/utils";
 import MapItemList from "./MapItemList";
 import MapLegend from "./MapLegend";
 import MapSvg from "./MapSvg";
@@ -35,6 +37,8 @@ interface CarnetExplorerProps {
 	intro: ReactNode;
 	note: ReactNode;
 }
+
+const ANNOUNCE_DELAY_MS = 300;
 
 const isExternal = (href: string) => href.startsWith("http");
 
@@ -96,6 +100,17 @@ export default function CarnetExplorer({
 
 	useEffect(() => () => workerRef.current?.terminate(), []);
 
+	const summary = announcement(
+		view.results.flatMap((r) => byId.get(r.id)?.title ?? []),
+		view.mode !== "rest",
+	);
+	const [announced, setAnnounced] = useState("");
+	// N'annonce qu'une fois la saisie stable : pas de relecture à chaque frappe.
+	useEffect(() => {
+		const timer = setTimeout(() => setAnnounced(summary), ANNOUNCE_DELAY_MS);
+		return () => clearTimeout(timer);
+	}, [summary]);
+
 	const tooltip = hoverId ? byId.get(hoverId) : undefined;
 
 	return (
@@ -125,39 +140,44 @@ export default function CarnetExplorer({
 				{note}
 			</div>
 
-			<figure className="relative m-0">
-				<div
-					className="relative mx-auto aspect-square w-full max-w-[560px]"
-					onPointerDown={activate}
-				>
-					<MapSvg
-						points={points}
-						highlighted={view.hits}
-						queryPoint={view.queryPoint}
-						activeId={hoverId}
-						onHover={setHoverId}
-					/>
-					{tooltip ? (
-						<div
-							className="pointer-events-none absolute z-10 max-w-[14rem] -translate-x-1/2 -translate-y-[calc(100%+10px)] rounded-sm border border-border bg-background px-2 py-1 font-mono text-[11px] leading-tight shadow-sm"
-							style={{
-								left: `${toPercent(tooltip.x)}%`,
-								top: `${toPercent(tooltip.y)}%`,
-							}}
-						>
-							<span className="block text-foreground">{tooltip.title}</span>
-							<span className="text-ink-soft">
-								{tooltip.kind === "article" ? "article" : "projet"}
-							</span>
-						</div>
-					) : null}
-				</div>
-				<FigureCaption number={1}>
-					Carte de mes projets et articles
-				</FigureCaption>
+			<div className="relative">
+				<figure className="relative m-0">
+					<div
+						className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[min(560px,calc(100svh-20rem))]"
+						onPointerDown={activate}
+					>
+						<MapSvg
+							points={points}
+							highlighted={view.hits}
+							queryPoint={view.queryPoint}
+							activeId={hoverId}
+							onHover={setHoverId}
+						/>
+						{tooltip ? (
+							<div
+								className="pointer-events-none absolute z-10 max-w-[14rem] -translate-x-1/2 -translate-y-[calc(100%+10px)] rounded-sm border border-border bg-background px-2 py-1 font-mono text-[11px] leading-tight shadow-sm"
+								style={{
+									left: `${toPercent(tooltip.x)}%`,
+									top: `${toPercent(tooltip.y)}%`,
+								}}
+							>
+								<span className="block text-foreground">{tooltip.title}</span>
+								<span className="text-ink-soft">
+									{tooltip.kind === "article" ? "article" : "projet"}
+								</span>
+							</div>
+						) : null}
+					</div>
+					<FigureCaption number={1}>
+						Carte de mes projets et articles
+					</FigureCaption>
+				</figure>
 				<MapLegend clusters={clusters} />
 
-				<div aria-live="polite" className="mt-4 min-h-[5.5rem]">
+				<div aria-live="polite" className="sr-only">
+					{announced}
+				</div>
+				<div className="mt-4 min-h-[5.5rem]">
 					{view.mode !== "rest" && view.results.length === 0 ? (
 						<p className="text-sm text-ink-soft">
 							Aucun élément ne correspond. Essaie un autre mot.
@@ -171,7 +191,16 @@ export default function CarnetExplorer({
 								return (
 									<li key={r.id} className="flex items-baseline gap-3">
 										<span className="w-10 shrink-0 font-mono text-xs text-primary">
-											{r.score === null ? "mot" : formatScore(r.score)}
+											{r.score === null ? (
+												<>
+													<span aria-hidden="true">≈</span>
+													<span className="sr-only">
+														correspondance par mot-clé
+													</span>
+												</>
+											) : (
+												formatScore(r.score)
+											)}
 										</span>
 										<a
 											href={p.href}
@@ -192,13 +221,16 @@ export default function CarnetExplorer({
 						</ol>
 					) : null}
 				</div>
-				{state.status === "ready" ? (
-					<p className="mt-2 font-mono text-[11px] text-ink-soft">
-						recherche sémantique active
-					</p>
-				) : null}
+				<p
+					className={cn(
+						"mt-2 font-mono text-[11px] text-ink-soft",
+						state.status !== "ready" && "invisible",
+					)}
+				>
+					recherche sémantique active
+				</p>
 				<MapItemList points={points} onFocusItem={setHoverId} />
-			</figure>
+			</div>
 		</div>
 	);
 }

@@ -82,3 +82,11 @@ export function computeView(
 		queryPoint: null,
 	};
 }
+
+/** Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie). */
+export function announcement(titles: string[], searched: boolean): string {
+	if (!searched) return "";
+	if (titles.length === 0) return "Aucun résultat";
+	const count = `${titles.length} ${titles.length > 1 ? "résultats" : "résultat"}`;
+	return `${count} : ${titles.join(", ")}`;
+}
