@@ -55,6 +55,11 @@ describe("selectFeatured", () => {
 		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([1, 5, 4, 3]);
 	});
 
+	it("dédoublonne les identifiants explicites", () => {
+		const ps = [project(1), project(2)];
+		expect(selectFeatured(ps, [2, 2, 1]).map((p) => p.id)).toEqual([2, 1]);
+	});
+
 	it("n'inclut jamais un projet privé", () => {
 		const ps = [
 			project(1, { isML: true, isPrivate: true }),
@@ -126,6 +131,23 @@ describe("techNames", () => {
 			languages: [{ language: "Rust" }],
 		});
 		expect(techNames(p)).toEqual(["Rust", "Docker"]);
+	});
+});
+
+describe("techNames libellés", () => {
+	it("humanise les valeurs de la base, brut à défaut", () => {
+		const p = project(1, {
+			databases: [{ database: "Postgresql" }],
+			frontends: [{ frontend: "NextJs" }],
+			devops: [{ devops: "GithubActions" }],
+			languages: [{ language: "Rust" as never }],
+		});
+		expect(techNames(p)).toEqual([
+			"Rust",
+			"PostgreSQL",
+			"Next.js",
+			"GitHub Actions",
+		]);
 	});
 });
 

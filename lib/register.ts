@@ -1,6 +1,7 @@
 import type { MapData } from "@/lib/carnet/map-types";
 import { cosine } from "@/lib/carnet/static-model";
 import type { NormalizedProject } from "@/lib/projects-data";
+import { techLabel } from "@/lib/tech-labels";
 
 export const FEATURED_MIN = 4;
 export const FEATURED_MAX = 6;
@@ -19,7 +20,7 @@ export function selectFeatured(
 	const visible = projects.filter((p) => !p.isPrivate);
 	if (explicitIds.length > 0) {
 		const byId = new Map(visible.map((p) => [p.id, p]));
-		return explicitIds
+		return [...new Set(explicitIds)]
 			.map((id) => byId.get(id))
 			.filter((p): p is NormalizedProject => p !== undefined)
 			.slice(0, FEATURED_MAX);
@@ -98,7 +99,7 @@ export function techComposition(p: NormalizedProject): TechShare[] {
 }
 
 export function techNames(p: NormalizedProject): string[] {
-	return CATEGORIES.flatMap((c) => c.names(p));
+	return CATEGORIES.flatMap((c) => c.names(p)).map(techLabel);
 }
 
 /** Une vraie capture d'écran : image matricielle hors images GitHub par défaut (spec §8.1). */

@@ -81,6 +81,19 @@ export default function Home() {
 						Registre des projets
 					</h2>
 					<div className="mt-6">
+						<noscript>
+							<p className="text-sm text-ink-soft">
+								Le registre se charge avec JavaScript ; mes dépôts sont aussi
+								sur{" "}
+								<a
+									href="https://github.com/WillIsback"
+									className="text-primary underline underline-offset-4"
+								>
+									GitHub
+								</a>
+								.
+							</p>
+						</noscript>
 						<Suspense
 							fallback={
 								<RegisterView

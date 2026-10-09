@@ -13,38 +13,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	BACKEND_LABELS,
+	DATABASE_LABELS,
+	DEVOPS_LABELS,
+	FRONTEND_LABELS,
+	LANGUAGE_LABELS,
+	toOptions,
+} from "@/lib/tech-labels";
 
-// Options pour les filtres
-const DATABASE_OPTIONS: Option[] = [
-	{ value: "Postgresql", label: "PostgreSQL" },
-	{ value: "MongoDB", label: "MongoDB" },
-	{ value: "Informix", label: "Informix" },
-];
-
-const BACKEND_OPTIONS: Option[] = [
-	{ value: "FastAPI", label: "FastAPI" },
-	{ value: "Fastify", label: "Fastify" },
-	{ value: "ExpressJs", label: "Express.js" },
-];
-
-const FRONTEND_OPTIONS: Option[] = [
-	{ value: "React", label: "React" },
-	{ value: "NextJs", label: "Next.js" },
-	{ value: "Tanstack", label: "Tanstack" },
-	{ value: "Svelte", label: "Svelte" },
-	{ value: "SvelteKit", label: "SvelteKit" },
-];
-
-const DEVOPS_OPTIONS: Option[] = [
-	{ value: "Docker", label: "Docker" },
-	{ value: "GithubActions", label: "GitHub Actions" },
-];
-
-const LANGUAGE_OPTIONS: Option[] = [
-	{ value: "Python", label: "Python" },
-	{ value: "TypeScript", label: "TypeScript" },
-	{ value: "JavaScript", label: "JavaScript" },
-];
+const DATABASE_OPTIONS: Option[] = toOptions(DATABASE_LABELS);
+const BACKEND_OPTIONS: Option[] = toOptions(BACKEND_LABELS);
+const FRONTEND_OPTIONS: Option[] = toOptions(FRONTEND_LABELS);
+const DEVOPS_OPTIONS: Option[] = toOptions(DEVOPS_LABELS);
+const LANGUAGE_OPTIONS: Option[] = toOptions(LANGUAGE_LABELS);
 
 export default function FilterBar() {
 	const searchParams = useSearchParams();
