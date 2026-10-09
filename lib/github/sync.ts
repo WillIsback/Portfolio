@@ -77,7 +77,7 @@ export type FieldDiff =
 export const GITHUB_URL_PREFIX = "https://github.com/";
 
 /** `owner/repo` d'une URL GitHub en base, ou null. */
-function fullNameOf(url: string | null): string | null {
+export function fullNameOf(url: string | null): string | null {
 	if (!url) return null;
 	const match = /github\.com\/([^/\s]+\/[^/\s#?]+?)(?:\.git)?\/?$/i.exec(url);
 	return match ? match[1] : null;

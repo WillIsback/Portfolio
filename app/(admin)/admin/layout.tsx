@@ -29,7 +29,7 @@ export default async function AdminLayout({
 					href="/admin/github"
 					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
 				>
-					Import from GitHub
+					Synchronisation GitHub
 				</Link>
 				<Link
 					href="/admin/projects"

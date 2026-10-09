@@ -2,9 +2,21 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
+import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/db";
-import { buildDomainRows, resolveImportDomains } from "@/lib/domains";
+import { buildDomainRows } from "@/lib/domains";
+import { ACCEPTABLE_FIELDS, planWrite } from "@/lib/github/apply";
+import {
+	type AnalyzeResult,
+	detectFromBundle,
+	remoteFromBundle,
+	SYNC_SELECT,
+	toBoardProject,
+} from "@/lib/github/board";
+import { GithubError, getRepoBundle } from "@/lib/github/client";
+import { applyAccepted, computeDiff, fullNameOf } from "@/lib/github/sync";
+import { getAdminGithubToken } from "@/lib/github/token";
 import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<void> {
@@ -127,49 +139,223 @@ export async function deleteProject(id: number): Promise<void> {
 	revalidateTag("projects", "max");
 }
 
-export async function importFromGitHub(
-	projects: AdminProject[],
-): Promise<void> {
+/** Message affichable : jamais de jeton ni de détail interne. */
+function safeMessage(e: unknown): string {
+	if (e instanceof GithubError) return e.message;
+	if (e instanceof Error && e.message === "Nom de dépôt invalide.")
+		return e.message;
+	return "Opération impossible.";
+}
+
+async function findProjectForRepo(id: number, fullName: string) {
+	const row =
+		(await prisma.project.findUnique({
+			where: { githubRepoId: id },
+			select: SYNC_SELECT,
+		})) ??
+		(await prisma.project.findFirst({
+			where: {
+				github: {
+					equals: `https://github.com/${fullName}`,
+					mode: "insensitive",
+				},
+			},
+			select: SYNC_SELECT,
+		}));
+	return row ? toBoardProject(row) : null;
+}
+
+/** Lit un dépôt, détecte sa stack et calcule l'écart avec le projet existant. Aucun secret renvoyé. */
+export async function analyzeRepo(fullName: string): Promise<AnalyzeResult> {
 	await requireAdmin();
-	const validated = projects.map((p) => AdminProjectSchema.parse(p));
-
-	for (const data of validated) {
-		const existing = data.github
-			? await prisma.project.findFirst({
-					where: { github: data.github },
-					include: {
-						domains: { select: { domain: true } },
-						mlStack: { select: { ml: true } },
-					},
-				})
-			: null;
-
-		if (existing) {
-			await updateProject(existing.id, {
-				...data,
-				// champs éditoriaux et stack ML : l'import ne les écrase jamais
-				pitch: existing.pitch ?? undefined,
-				status: existing.status ?? undefined,
-				period: existing.period ?? undefined,
-				githubRepoId: existing.githubRepoId ?? undefined,
-				featuredRank: existing.featuredRank ?? undefined,
-				mlStack: existing.mlStack.map((m) => m.ml),
-				domains: resolveImportDomains(
-					existing.domains.map((d) => d.domain),
-					data.domains,
-				),
-			});
-		} else {
-			await createProject(data);
-		}
+	const parsed = z.string().max(200).safeParse(fullName);
+	if (!parsed.success) return { ok: false, error: "Nom de dépôt invalide." };
+	try {
+		const { token } = await getAdminGithubToken();
+		const bundle = await getRepoBundle(parsed.data, token);
+		const remote = remoteFromBundle(bundle, detectFromBundle(bundle));
+		const project = await findProjectForRepo(remote.id, remote.fullName);
+		return {
+			ok: true,
+			remote,
+			projectId: project?.id ?? null,
+			diff: project ? computeDiff(project, remote) : [],
+			images: bundle.images,
+		};
+	} catch (e) {
+		return { ok: false, error: safeMessage(e) };
 	}
 }
 
-export async function fetchRepoFilePathsAction(
-	owner: string,
-	repo: string,
-): Promise<string[]> {
+// Seuls les champs synchronisables d'un nouveau projet : rien d'éditorial.
+const ImportRepoSchema = AdminProjectSchema.pick({
+	title: true,
+	description: true,
+	github: true,
+	lastUpdate: true,
+	isPrivate: true,
+	languages: true,
+	databases: true,
+	backends: true,
+	frontends: true,
+	devops: true,
+	mlStack: true,
+	domains: true,
+	githubRepoId: true,
+}).extend({
+	github: z.string().regex(/^https:\/\/github\.com\/[^/\s]+\/[^/\s]+$/),
+	githubRepoId: z.number().int().positive(),
+});
+
+export async function importRepo(
+	raw: unknown,
+): Promise<{ ok: true } | { ok: false; error: string }> {
 	await requireAdmin();
-	const { fetchRepoFilePaths } = await import("@/lib/github/legacy");
-	return fetchRepoFilePaths(owner, repo);
+	const parsed = ImportRepoSchema.safeParse(raw);
+	if (!parsed.success) return { ok: false, error: "Données invalides." };
+	const data = parsed.data;
+	const name = fullNameOf(data.github);
+	const existing = await prisma.project.findFirst({
+		where: {
+			OR: [
+				{ githubRepoId: data.githubRepoId },
+				...(name
+					? [
+							{
+								github: {
+									equals: `https://github.com/${name}`,
+									mode: "insensitive" as const,
+								},
+							},
+						]
+					: []),
+			],
+		},
+		select: { id: true },
+	});
+	if (existing) return { ok: false, error: "Ce dépôt est déjà importé." };
+	await createProject({ ...data, isAiGenerated: false });
+	return { ok: true };
+}
+
+const ApplySyncSchema = z.object({
+	projectId: z.number().int().positive(),
+	fullName: z.string().max(200),
+	accepted: z
+		.array(z.enum(ACCEPTABLE_FIELDS))
+		.min(1)
+		.max(ACCEPTABLE_FIELDS.length),
+});
+
+/**
+ * Applique les champs cochés. L'écart est recalculé ici depuis GitHub : le client ne
+ * fournit que les noms de champs, qui doivent appartenir à cet écart.
+ */
+export async function applySync(
+	projectId: number,
+	fullName: string,
+	accepted: string[],
+): Promise<{ ok: true } | { ok: false; error: string }> {
+	await requireAdmin();
+	const parsed = ApplySyncSchema.safeParse({ projectId, fullName, accepted });
+	if (!parsed.success) return { ok: false, error: "Données invalides." };
+	try {
+		const row = await prisma.project.findUnique({
+			where: { id: parsed.data.projectId },
+			select: SYNC_SELECT,
+		});
+		if (!row) return { ok: false, error: "Projet introuvable." };
+		const project = toBoardProject(row);
+
+		const { token } = await getAdminGithubToken();
+		const bundle = await getRepoBundle(parsed.data.fullName, token);
+		const remote = remoteFromBundle(bundle, detectFromBundle(bundle));
+		const sameRepo =
+			project.githubRepoId !== null
+				? project.githubRepoId === remote.id
+				: fullNameOf(project.github)?.toLowerCase() ===
+					remote.fullName.toLowerCase();
+		if (!sameRepo)
+			return { ok: false, error: "Ce dépôt ne correspond pas au projet." };
+
+		const diff = computeDiff(project, remote);
+		const fields = new Set(diff.map((d) => d.field));
+		const unique = [...new Set(parsed.data.accepted)];
+		if (unique.some((f) => !fields.has(f)))
+			return {
+				ok: false,
+				error: "Les écarts ont changé : relance l'analyse.",
+			};
+
+		const plan = planWrite(applyAccepted(project, diff, unique));
+		const id = project.id;
+		await prisma.$transaction(async (tx) => {
+			await tx.project.update({
+				where: { id },
+				data: { ...plan.scalars, syncedAt: new Date() },
+			});
+			const { lists } = plan;
+			if (lists.languages) {
+				await tx.projectLanguage.deleteMany({ where: { projectId: id } });
+				await tx.projectLanguage.createMany({
+					data: lists.languages.map((language) => ({
+						projectId: id,
+						language: language as never,
+					})),
+				});
+			}
+			if (lists.databases) {
+				await tx.projectDatabase.deleteMany({ where: { projectId: id } });
+				await tx.projectDatabase.createMany({
+					data: lists.databases.map((database) => ({
+						projectId: id,
+						database: database as never,
+					})),
+				});
+			}
+			if (lists.backends) {
+				await tx.projectBackend.deleteMany({ where: { projectId: id } });
+				await tx.projectBackend.createMany({
+					data: lists.backends.map((backend) => ({
+						projectId: id,
+						backend: backend as never,
+					})),
+				});
+			}
+			if (lists.frontends) {
+				await tx.projectFrontend.deleteMany({ where: { projectId: id } });
+				await tx.projectFrontend.createMany({
+					data: lists.frontends.map((frontend) => ({
+						projectId: id,
+						frontend: frontend as never,
+					})),
+				});
+			}
+			if (lists.devops) {
+				await tx.projectDevOps.deleteMany({ where: { projectId: id } });
+				await tx.projectDevOps.createMany({
+					data: lists.devops.map((devops) => ({
+						projectId: id,
+						devops: devops as never,
+					})),
+				});
+			}
+			if (lists.mlStack) {
+				await tx.projectMlStack.deleteMany({ where: { projectId: id } });
+				await tx.projectMlStack.createMany({
+					data: lists.mlStack.map((ml) => ({ projectId: id, ml: ml as never })),
+				});
+			}
+			if (lists.domains) {
+				await tx.projectDomain.deleteMany({ where: { projectId: id } });
+				await tx.projectDomain.createMany({
+					data: buildDomainRows(id, lists.domains),
+				});
+			}
+		});
+		revalidateTag("projects", "max");
+		return { ok: true };
+	} catch (e) {
+		return { ok: false, error: safeMessage(e) };
+	}
 }
