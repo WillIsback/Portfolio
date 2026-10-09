@@ -57,26 +57,16 @@ describe("RegisterView", () => {
 
 	it("affiche une erreur par bloc sans casser la page", () => {
 		const idx = renderToStaticMarkup(
-			<RegisterView
-				{...base}
-				indexStatus="error"
-				indexError="Trop de requêtes."
-				featured={[p(1)]}
-			/>,
+			<RegisterView {...base} indexStatus="error" featured={[p(1)]} />,
 		);
 		expect(idx).toContain('role="alert"');
-		expect(idx).toContain("Trop de requêtes.");
+		expect(idx).toContain("Réessaie dans un instant.");
 		expect(idx).toContain("Projet 1");
 		expect(idx).toContain("filtres");
 		const feat = renderToStaticMarkup(
-			<RegisterView
-				{...base}
-				featuredStatus="error"
-				featuredError="Panne."
-				index={[p(3)]}
-			/>,
+			<RegisterView {...base} featuredStatus="error" index={[p(3)]} />,
 		);
-		expect(feat).toContain("Panne.");
+		expect(feat).toContain("Réessaie dans un instant.");
 		expect(feat).toContain("Projet 3");
 	});
 
@@ -98,6 +88,19 @@ describe("RegisterView", () => {
 		expect(
 			renderToStaticMarkup(<RegisterView {...base} filtersActive />),
 		).toMatch(/<details[^>]*open/);
+	});
+
+	it("affiche 4 emplacements et une grille à 2 colonnes pour les phares", () => {
+		const loading = renderToStaticMarkup(
+			<RegisterView {...base} featuredStatus="loading" />,
+		);
+		expect(loading.match(/animate-pulse/g)?.length).toBeGreaterThanOrEqual(4);
+		expect(loading).not.toContain("lg:grid-cols-3");
+		const ready = renderToStaticMarkup(
+			<RegisterView {...base} featured={[p(1), p(2), p(3), p(4)]} />,
+		);
+		expect(ready).toContain("md:grid-cols-2");
+		expect(ready).not.toContain("lg:grid-cols-3");
 	});
 
 	it("dit quand l'index filtré est vide", () => {

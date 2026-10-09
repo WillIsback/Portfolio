@@ -27,7 +27,8 @@ export default function TechBar({ shares }: Readonly<{ shares: TechShare[] }>) {
 						key={s.key}
 						className="h-full"
 						style={{
-							width: `${Math.round(s.share * 100)}%`,
+							flexGrow: s.count,
+							flexBasis: 0,
 							background: TINT[s.key],
 						}}
 					/>

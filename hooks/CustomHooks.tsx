@@ -71,7 +71,8 @@ export function useProjects(filters: ProjectFilters) {
 				})
 				.catch((err) => {
 					if (!abortControllerRef.current?.signal.aborted) {
-						setError(err.message);
+						console.error("Échec du chargement des projets", err);
+						setError(err instanceof Error ? err.message : "error");
 						setIsLoading(false);
 					}
 				});

@@ -2,15 +2,14 @@ import type { ReactNode } from "react";
 import type { MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import FeaturedCard from "./FeaturedCard";
+import FilterDisclosure from "./FilterDisclosure";
 import IndexRow from "./IndexRow";
 
 type BlockStatus = "loading" | "error" | "ready";
 
 interface RegisterViewProps {
 	featuredStatus: BlockStatus;
-	featuredError?: string;
 	indexStatus: BlockStatus;
-	indexError?: string;
 	featured: NormalizedProject[];
 	index: NormalizedProject[];
 	filtersActive: boolean;
@@ -22,7 +21,7 @@ interface RegisterViewProps {
 
 function Skeleton({ count }: Readonly<{ count: number }>) {
 	return (
-		<div aria-busy="true" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+		<div aria-busy="true" className="grid gap-6 md:grid-cols-2">
 			<p className="sr-only">Chargement du registre des projets…</p>
 			{Array.from({ length: count }, (_, i) => `sk-${i}`).map((key) => (
 				<div
@@ -34,13 +33,16 @@ function Skeleton({ count }: Readonly<{ count: number }>) {
 	);
 }
 
-function BlockError({ message }: Readonly<{ message?: string }>) {
+const ERROR_MESSAGE =
+	"Le registre des projets n'a pas pu être chargé. Réessaie dans un instant.";
+
+function BlockError() {
 	return (
 		<p
 			role="alert"
 			className="mt-4 rounded-md border border-destructive/40 p-4 text-sm text-destructive"
 		>
-			{message ?? "Le registre des projets n'a pas pu être chargé."}
+			{ERROR_MESSAGE}
 		</p>
 	);
 }
@@ -48,9 +50,7 @@ function BlockError({ message }: Readonly<{ message?: string }>) {
 export default function RegisterView(props: Readonly<RegisterViewProps>) {
 	const {
 		featuredStatus,
-		featuredError,
 		indexStatus,
-		indexError,
 		featured,
 		index,
 		filtersActive,
@@ -67,12 +67,12 @@ export default function RegisterView(props: Readonly<RegisterViewProps>) {
 					<h3 className="font-display text-lg font-semibold">Projets phares</h3>
 					{featuredStatus === "loading" ? (
 						<div className="mt-4">
-							<Skeleton count={3} />
+							<Skeleton count={4} />
 						</div>
 					) : featuredStatus === "error" ? (
-						<BlockError message={featuredError} />
+						<BlockError />
 					) : (
-						<ul className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+						<ul className="mt-4 grid gap-6 md:grid-cols-2">
 							{featured.map((project, i) => (
 								<li key={project.id}>
 									<FeaturedCard
@@ -90,18 +90,15 @@ export default function RegisterView(props: Readonly<RegisterViewProps>) {
 			) : null}
 			<div>
 				<h3 className="font-display text-lg font-semibold">Index</h3>
-				<details open={filtersActive || undefined} className="mt-3">
-					<summary className="cursor-pointer rounded-sm font-mono text-xs text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-						Filtrer le registre
-					</summary>
-					<div className="mt-3">{filterBar}</div>
-				</details>
+				<FilterDisclosure filtersActive={filtersActive}>
+					{filterBar}
+				</FilterDisclosure>
 				{indexStatus === "loading" ? (
 					<div className="mt-4">
 						<Skeleton count={2} />
 					</div>
 				) : indexStatus === "error" ? (
-					<BlockError message={indexError} />
+					<BlockError />
 				) : index.length > 0 ? (
 					<ul className="mt-4">
 						{index.map((project) => (

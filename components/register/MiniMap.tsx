@@ -7,6 +7,12 @@ export default function MiniMap({
 	neighborIds,
 }: Readonly<{ points: MapPoint[]; focusId: string; neighborIds: string[] }>) {
 	const neighbors = new Set(neighborIds);
+	const roleOf = (id: string) =>
+		id === focusId ? "focus" : neighbors.has(id) ? "neighbor" : "other";
+	// Le projet au premier plan : dessiné en dernier, aucun point ne le recouvre.
+	const ordered = [...points].sort(
+		(a, b) => Number(a.id === focusId) - Number(b.id === focusId),
+	);
 	return (
 		<svg
 			viewBox="0 0 100 100"
@@ -19,28 +25,43 @@ export default function MiniMap({
 				strokeWidth={0.4}
 				fill="none"
 			/>
-			{points.map((pt) => {
-				const role =
-					pt.id === focusId
-						? "focus"
-						: neighbors.has(pt.id)
-							? "neighbor"
-							: "other";
+			{ordered.map((pt) => {
+				const role = roleOf(pt.id);
+				const cx = toPercent(pt.x);
+				const cy = toPercent(pt.y);
+				if (role === "focus") {
+					return (
+						<g key={pt.id} data-role="focus">
+							<circle
+								cx={cx}
+								cy={cy}
+								r={5.5}
+								fill="none"
+								stroke="var(--primary)"
+								strokeWidth={1}
+							/>
+							<circle
+								cx={cx}
+								cy={cy}
+								r={3.4}
+								fill="var(--primary)"
+								stroke="var(--background)"
+								strokeWidth={1.2}
+							/>
+						</g>
+					);
+				}
 				return (
 					<circle
 						key={pt.id}
 						data-role={role}
-						cx={toPercent(pt.x)}
-						cy={toPercent(pt.y)}
-						r={role === "focus" ? 3.2 : 2}
-						fill={
-							role === "focus"
-								? "var(--primary)"
-								: `var(--cluster-${pt.cluster})`
-						}
-						fillOpacity={role === "other" ? 0.3 : 1}
+						cx={cx}
+						cy={cy}
+						r={role === "neighbor" ? 2.6 : 1.8}
+						fill={role === "neighbor" ? "none" : `var(--cluster-${pt.cluster})`}
+						fillOpacity={role === "other" ? 0.25 : 1}
 						stroke={role === "neighbor" ? "var(--primary)" : "none"}
-						strokeWidth={role === "neighbor" ? 0.8 : 0}
+						strokeWidth={role === "neighbor" ? 1 : 0}
 					/>
 				);
 			})}

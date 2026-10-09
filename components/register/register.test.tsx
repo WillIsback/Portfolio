@@ -71,6 +71,19 @@ describe("MiniMap", () => {
 		expect(html.match(/data-role="neighbor"/g)?.length).toBe(1);
 		expect(html.match(/data-role="other"/g)?.length).toBe(1);
 	});
+
+	it("dessine le projet focalisé en dernier, avec un halo", () => {
+		const html = renderToStaticMarkup(
+			<MiniMap
+				points={[points[0], ...points.slice(1)].reverse()}
+				focusId="project:7"
+				neighborIds={[]}
+			/>,
+		);
+		const roles = [...html.matchAll(/data-role="(\w+)"/g)].map((m) => m[1]);
+		expect(roles.at(-1)).toBe("focus");
+		expect(html).toContain("var(--background)");
+	});
 });
 
 describe("TechBar", () => {
@@ -87,7 +100,8 @@ describe("TechBar", () => {
 		expect(html).toContain(
 			'aria-label="Composition technique : Langages 50\u00a0%, DevOps 50\u00a0%"',
 		);
-		expect(html).toContain("width:50%");
+		expect(html).toContain("flex-grow:1");
+		expect(html).not.toContain("width:50%");
 	});
 
 	it("ne rend rien sans technologie", () => {
@@ -168,7 +182,30 @@ describe("IndexRow", () => {
 		expect(html).toContain("P13-Fashion-Insta");
 		expect(html).toContain("2025");
 		expect(html).toContain("line-clamp-1");
+		expect(html).toContain("self-start");
 		expect(html).toContain("Python");
+	});
+
+	it("garde la liste des technologies hors de la description tronquée", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={p()} />
+			</ul>,
+		);
+		const clamped = html.match(
+			/<span class="line-clamp-1[^"]*">(.*?)<\/span>/,
+		)?.[1];
+		expect(clamped).not.toContain("Python");
+		expect(html).toContain("Python");
+	});
+
+	it("n'ouvre pas dans un nouvel onglet un lien non externe", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={p({ github: "/projets/x" })} />
+			</ul>,
+		);
+		expect(html).not.toContain("_blank");
 	});
 
 	it("affiche un projet privé sans lien, avec la mention privé", () => {

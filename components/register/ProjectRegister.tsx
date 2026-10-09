@@ -71,9 +71,7 @@ export default function ProjectRegister({
 	return (
 		<RegisterView
 			featuredStatus={blockStatus(all)}
-			featuredError={all.error ?? undefined}
 			indexStatus={blockStatus(indexState)}
-			indexError={indexState.error ?? undefined}
 			featured={featured}
 			index={index}
 			filtersActive={filtersActive}
