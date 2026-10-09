@@ -52,6 +52,7 @@ export async function githubGet(
 			method: "GET",
 			headers,
 			cache: "no-store",
+			signal: AbortSignal.timeout(10_000),
 		});
 	} catch {
 		throw new GithubError("GitHub injoignable.", 0);
@@ -182,15 +183,30 @@ async function getRaw(
 	}
 }
 
+const FULL_NAME_RE = /^[A-Za-z0-9-]{1,39}\/[A-Za-z0-9._-]{1,100}$/;
+
+/** Valide `owner/repo` et encode chaque segment : aucune injection de chemin. */
+export function safeFullName(fullName: string): string {
+	const parts = fullName.split("/");
+	if (
+		!FULL_NAME_RE.test(fullName) ||
+		parts.some((p) => p === "." || p === "..")
+	) {
+		throw new Error("Nom de dépôt invalide.");
+	}
+	return parts.map(encodeURIComponent).join("/");
+}
+
 export async function getRepoBundle(
-	fullName: string,
+	rawFullName: string,
 	token: string | undefined,
 ): Promise<RepoBundle> {
+	const fullName = safeFullName(rawFullName);
 	const meta = await getJson<RepoMeta>(`/repos/${fullName}`, token);
 	let tree: TreeResponse = {};
 	try {
 		tree = await getJson<TreeResponse>(
-			`/repos/${fullName}/git/trees/${encodeURIComponent(meta.default_branch)}?recursive=1`,
+			`/repos/${fullName}/git/trees/${meta.default_branch.split("/").map(encodeURIComponent).join("/")}?recursive=1`,
 			token,
 		);
 	} catch (e) {

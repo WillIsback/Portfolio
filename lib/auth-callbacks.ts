@@ -29,3 +29,13 @@ export function sessionCallback<S extends { user?: unknown }>({
 	(session.user as SessionUser).githubId = (token.githubId as string) ?? "";
 	return session;
 }
+
+/** Seul l'admin peut ouvrir une session : aucun autre compte n'obtient de JWT. */
+export function signInCallback({
+	profile,
+}: {
+	profile?: { id?: string | number | null } | null;
+}): boolean {
+	const admin = process.env.ADMIN_GITHUB_ID;
+	return !!admin && !!profile?.id && String(profile.id) === admin;
+}

@@ -31,7 +31,13 @@ export async function getAdminGithubToken(): Promise<GithubAuth> {
 				salt: secureCookie ? `__Secure-${COOKIE}` : COOKIE,
 			});
 			const t = jwt?.githubAccessToken;
-			if (typeof t === "string" && t) return { token: t, mode: "oauth" };
+			// Le jeton n'est utilisé que si le JWT appartient à l'admin.
+			if (
+				typeof t === "string" &&
+				t &&
+				jwt?.githubId === process.env.ADMIN_GITHUB_ID
+			)
+				return { token: t, mode: "oauth" };
 		}
 	}
 	return { token: process.env.GITHUB_TOKEN || undefined, mode: "public" };

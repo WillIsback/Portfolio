@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GithubError, getRepoBundle, githubGet, listRepos } from "./client";
@@ -159,11 +159,71 @@ describe("getRepoBundle", () => {
 	});
 });
 
+describe("sécurité du client", () => {
+	it("refuse les noms de dépôt qui altèrent le chemin", async () => {
+		const calls = mockFetch({});
+		for (const bad of [
+			"../../user",
+			"a/b?x=",
+			"a/b#",
+			"a/..",
+			"a/.",
+			"a/b/c",
+			"a",
+			"",
+			"a b/c",
+		]) {
+			await expect(getRepoBundle(bad, "t")).rejects.toThrow(/invalide/);
+		}
+		expect(calls).toHaveLength(0);
+	});
+
+	it("branche avec « / » : segments encodés séparément", async () => {
+		const calls = mockFetch({
+			"/repos/WillIsback/demo/git/trees/feature/x": () => json({ tree: [] }),
+			"/repos/WillIsback/demo/readme": () => json({}, 404),
+			"/repos/WillIsback/demo": () =>
+				json({ ...{ id: 1, default_branch: "feature/x" } }),
+		});
+		await getRepoBundle("WillIsback/demo", "t");
+		expect(calls.map((c) => c.url)).toContain(
+			"/repos/WillIsback/demo/git/trees/feature/x?recursive=1",
+		);
+	});
+
+	it("passe un signal d'expiration et traduit l'abandon", async () => {
+		const calls = mockFetch({ "/x": () => json({}) });
+		await githubGet("/x", "t");
+		expect(calls[0].init?.signal).toBeDefined();
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async () => {
+				throw new DOMException("t", "TimeoutError");
+			}),
+		);
+		await expect(githubGet("/x", "t")).rejects.toThrow(/injoignable/);
+	});
+});
+
 describe("garde serveur", () => {
-	it("token.ts n'est importé par aucun composant client", () => {
+	it("aucun composant client n'importe lib/github/token", () => {
 		const root = path.resolve(__dirname, "../..");
-		const src = readFileSync(path.join(root, "lib/github/token.ts"), "utf8");
-		expect(src).toMatch(/SERVEUR UNIQUEMENT/);
-		expect(src).not.toMatch(/^["']use client["']/m);
+		const walk = (d: string): string[] =>
+			readdirSync(d, { withFileTypes: true }).flatMap((e) =>
+				e.isDirectory()
+					? walk(path.join(d, e.name))
+					: /\.(tsx?|jsx?)$/.test(e.name)
+						? [path.join(d, e.name)]
+						: [],
+			);
+		const offenders = ["app", "components"]
+			.flatMap((d) => walk(path.join(root, d)))
+			.map((f) => [f, readFileSync(f, "utf8")] as const)
+			.filter(
+				([, src]) =>
+					/^\s*["']use client["']/m.test(src) && /lib\/github\/token/.test(src),
+			)
+			.map(([f]) => f);
+		expect(offenders).toEqual([]);
 	});
 });
