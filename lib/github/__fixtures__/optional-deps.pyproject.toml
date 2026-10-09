@@ -1,0 +1,33 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "extracteur-docs-rs"
+requires-python = ">=3.9"
+dependencies = [
+    "PyYAML>=6.0",
+    "scikit-learn>=1.8.0",
+    "pyannote.audio>=3.1",
+]
+
+[project.urls]
+Repository = "https://github.com/WillIsback/doc_loader"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "mypy>=1.0",
+]
+examples = [
+    "pandas>=1.5.0",
+    "sentence-transformers[onnx]>=2.0.0",
+    "matplotlib>=3.0",
+]
+
+[dependency-groups]
+train = ["wandb>=0.25.1", {include-group = "dev"}]
+dev = ["ipykernel>=7.2.0"]
+
+[tool.uv]
+index-strategy = "unsafe-best-match"

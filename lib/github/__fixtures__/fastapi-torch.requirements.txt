@@ -1,0 +1,16 @@
+# Extrait de clea-api
+--extra-index-url https://download.pytorch.org/whl/cu128
+accelerate==1.6.0
+fastapi==0.115.12
+fastapi-cli==0.0.7
+huggingface-hub==0.30.2
+psycopg==3.2.7
+psycopg-binary==3.2.7
+torch==2.7.0
+torchvision==0.22.0
+transformers==4.51.3
+uvicorn[standard]>=0.27.0  # serveur
+Pandas ; python_version >= "3.9"
+
+-r other.txt
+git+https://github.com/org/pkg.git

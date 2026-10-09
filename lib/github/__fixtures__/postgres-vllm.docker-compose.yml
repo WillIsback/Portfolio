@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17  # Compatible ARM64
+  vllm:
+    image: ${VLLM_IMAGE:-vllm-node-tf5:latest}
+  vllm-fallback:
+    image: nvcr.io/nvidia/vllm:25.11-py3
+  cache:
+    image: "redis:alpine"
+  api:
+    image: willisback/backend:0.1.0
+  db:
+    image: postgres:16-alpine@sha256:abc
