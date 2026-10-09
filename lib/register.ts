@@ -1,5 +1,5 @@
 import type { MapData } from "@/lib/carnet/map-types";
-import { cosine } from "@/lib/carnet/static-model";
+import { nearestTo } from "@/lib/carnet/neighbors";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { techLabel } from "@/lib/tech-labels";
 
@@ -110,20 +110,11 @@ export function isCapture(imagePath: string | null): boolean {
 }
 
 export function mapNeighbors(map: MapData, k = 3): Record<string, string[]> {
-	const out: Record<string, string[]> = {};
-	for (const item of map.items) {
-		if (item.kind !== "project") continue;
-		out[item.id] = map.items
-			.filter((other) => other.id !== item.id)
-			.map((other) => ({
-				id: other.id,
-				score: cosine(item.vector, other.vector),
-			}))
-			.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id))
-			.slice(0, k)
-			.map((s) => s.id);
-	}
-	return out;
+	return Object.fromEntries(
+		map.items
+			.filter((i) => i.kind === "project")
+			.map((i) => [i.id, nearestTo(map, i.id, k).map((n) => n.id)]),
+	);
 }
 
 export function projectYear(p: NormalizedProject): string {

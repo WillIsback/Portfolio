@@ -6,11 +6,20 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
 import { mdxComponents } from "@/components/articles/mdx";
+import OnTheMap from "@/components/articles/OnTheMap";
+import mapJson from "@/content/map.json";
+import { clusterLabels } from "@/content/map-clusters";
 import { numberFigures } from "@/lib/articles/figures";
 import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
 import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";
+import { MapDataSchema } from "@/lib/carnet/map-types";
+import { toMapView } from "@/lib/carnet/map-view";
+import { nearestTo } from "@/lib/carnet/neighbors";
 
 const SITE_URL = "https://www.willisback.fr";
+
+const map = MapDataSchema.parse(mapJson);
+const view = toMapView(map, clusterLabels);
 
 export const dynamicParams = false;
 
@@ -58,7 +67,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const article = getArticleBySlug(slug);
 	if (!article) notFound();
 
-	const { source } = numberFigures(article.content);
+	const { source, count: figureCount } = numberFigures(article.content);
 
 	const { content } = await compileMDX({
 		source,
@@ -71,6 +80,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 			mdxOptions: { remarkPlugins: [remarkGfm] },
 		},
 	});
+
+	const articleId = `article:${article.slug}`;
+	const near = nearestTo(map, articleId, 3);
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -130,6 +142,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 			</header>
 
 			<div className="article-prose">{content}</div>
+
+			<OnTheMap
+				articleId={articleId}
+				points={view.points}
+				neighbors={near.map(({ id, title, href, kind }) => ({
+					id,
+					title,
+					href,
+					kind,
+				}))}
+				figureNumber={figureCount + 1}
+			/>
 
 			<footer className="mt-14 border-t border-border pt-6">
 				<Link
