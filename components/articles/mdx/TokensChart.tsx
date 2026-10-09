@@ -75,7 +75,7 @@ function TokensSvg({
 
 export function TokensChart({
 	profiles,
-	caption,
+	caption = "Tokens d'entrée par profil",
 	figureNumber,
 }: Readonly<{
 	profiles: TokenProfile[];

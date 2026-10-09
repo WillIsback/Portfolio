@@ -51,6 +51,25 @@ const cases: [string, (n?: number) => ReactElement][] = [
 	],
 ];
 
+describe("légendes par défaut", () => {
+	it("TasksChart", () => {
+		const html = renderToStaticMarkup(
+			<TasksChart days={[["J1", 10, 4]]} figureNumber={1} />,
+		);
+		expect(html).toMatch(
+			/Fig\. 1 · Tâches Kanban créées par jour<\/figcaption>/,
+		);
+	});
+	it("TokensChart", () => {
+		const html = renderToStaticMarkup(
+			<TokensChart profiles={[["sre-dev", 3, "work"]]} figureNumber={1} />,
+		);
+		expect(html).toMatch(
+			/Fig\. 1 · Tokens d(?:'|&#x27;)entrée par profil<\/figcaption>/,
+		);
+	});
+});
+
 describe.each(cases)("%s", (_name, render) => {
 	it("préfixe la légende de « Fig. N · »", () => {
 		const html = renderToStaticMarkup(render(2));

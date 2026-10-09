@@ -92,7 +92,7 @@ function TasksSvg({
 
 export function TasksChart({
 	days,
-	caption,
+	caption = "Tâches Kanban créées par jour",
 	figureNumber,
 }: Readonly<{
 	days: TaskDay[];
