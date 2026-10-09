@@ -18,8 +18,6 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	lastUpdate: new Date("2025-06-01T00:00:00Z"),
 	isPrivate: false,
 	isAiGenerated: false,
-	isML: false,
-	isIAG: false,
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
 	languages: [{ language: "Python" }],

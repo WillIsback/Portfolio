@@ -23,8 +23,6 @@ const project = (
 	lastUpdate: new Date(`2026-0${(id % 9) + 1}-01T00:00:00Z`),
 	isPrivate: false,
 	isAiGenerated: false,
-	isML: false,
-	isIAG: false,
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
 	languages: [],
@@ -56,9 +54,9 @@ describe("selectFeatured", () => {
 		expect(selectFeatured(ps, []).map((p) => p.id)).toEqual([1, 5, 4, 3]);
 	});
 
-	it("ignore isML/isIAG : seuls les domaines étiquettent", () => {
+	it("seuls les domaines étiquettent", () => {
 		const ps = [
-			project(1, { isML: true, isIAG: true }),
+			project(1),
 			project(2, { domains: [{ domain: "Vision" }], lastUpdate: new Date(0) }),
 			project(3),
 			project(4),

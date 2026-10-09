@@ -67,8 +67,6 @@ export function GitHubReposBrowser({
 						lastUpdate: repo.pushed_at,
 						isPrivate: false,
 						isAiGenerated: false,
-						isML: false,
-						isIAG: false,
 						imagePath: "",
 						languages: detected.languages,
 						databases: [],

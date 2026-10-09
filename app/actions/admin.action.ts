@@ -4,7 +4,7 @@
 import { revalidateTag } from "next/cache";
 import { auth } from "@/auth";
 import prisma from "@/lib/db";
-import { buildDomainRows } from "@/lib/domains";
+import { buildDomainRows, resolveImportDomains } from "@/lib/domains";
 import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<void> {
@@ -71,8 +71,6 @@ export async function createProject(raw: AdminProject): Promise<void> {
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
-				isML: data.isML,
-				isIAG: data.isIAG,
 			},
 		});
 		await upsertProjectRelations(tx, project.id, data);
@@ -99,8 +97,6 @@ export async function updateProject(
 				lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
 				isPrivate: data.isPrivate,
 				isAiGenerated: data.isAiGenerated,
-				isML: data.isML,
-				isIAG: data.isIAG,
 			},
 		});
 		await upsertProjectRelations(tx, id, data);
@@ -123,11 +119,20 @@ export async function importFromGitHub(
 
 	for (const data of validated) {
 		const existing = data.github
-			? await prisma.project.findFirst({ where: { github: data.github } })
+			? await prisma.project.findFirst({
+					where: { github: data.github },
+					include: { domains: { select: { domain: true } } },
+				})
 			: null;
 
 		if (existing) {
-			await updateProject(existing.id, data);
+			await updateProject(existing.id, {
+				...data,
+				domains: resolveImportDomains(
+					existing.domains.map((d) => d.domain),
+					data.domains,
+				),
+			});
 		} else {
 			await createProject(data);
 		}

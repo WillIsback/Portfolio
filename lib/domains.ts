@@ -49,3 +49,11 @@ export function buildDomainRows(
 ): { projectId: number; domain: AiDomain }[] {
 	return normalizeDomains(domains).map((domain) => ({ projectId, domain }));
 }
+
+/** Import GitHub : un projet déjà présent garde ses domaines curés, un nouveau prend ceux fournis. */
+export function resolveImportDomains(
+	existing: readonly string[] | null,
+	incoming: readonly string[],
+): AiDomain[] {
+	return normalizeDomains(existing ?? incoming);
+}

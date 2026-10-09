@@ -41,7 +41,7 @@ enum DevOps {
   GithubActions
 }
 
-// Enum pour les langages
+// Enum pour les domaines IA/Data
 enum AiDomain {
   DataAnalysis
   ML
@@ -54,6 +54,7 @@ enum AiDomain {
   Speech
 }
 
+// Enum pour les langages
 enum Language {
   Python
   TypeScript
@@ -71,8 +72,6 @@ model Project {
   lastUpdate    DateTime?
   isPrivate     Boolean  @default(false)
   isAiGenerated Boolean  @default(false)
-  isML          Boolean  @default(false)
-  isIAG         Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
