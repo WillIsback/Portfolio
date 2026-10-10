@@ -152,7 +152,7 @@ const VENDORED = new Set([
 	".next",
 	"target",
 ]);
-const IMAGE_RE = /\.(png|jpe?g|webp|gif)$/i;
+const IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 
 export const isVendored = (path: string) =>
 	path.split("/").some((seg) => VENDORED.has(seg));

@@ -216,13 +216,27 @@ describe("techNames libellés", () => {
 describe("isCapture", () => {
 	it("ne reconnaît que des images matricielles, jamais un logo SVG ni l'image GitHub", () => {
 		expect(isCapture("/captures/syntheo.webp")).toBe(true);
-		expect(isCapture("https://example.com/shot.PNG")).toBe(true);
+		expect(isCapture("https://example.com/shot.PNG")).toBe(false);
+		expect(
+			isCapture("http://raw.githubusercontent.com/WillIsback/r/main/a.png"),
+		).toBe(false);
+		expect(isCapture("https://user-images.githubusercontent.com/1/a.png")).toBe(
+			false,
+		);
+		expect(isCapture("https://github.com/WillIsback/r/blob/main/x.png")).toBe(
+			false,
+		);
+		expect(
+			isCapture("https://raw.githubusercontent.com/Other/r/main/a.png"),
+		).toBe(false);
 		expect(isCapture("logo/ML.svg")).toBe(false);
 		expect(isCapture("https://opengraph.githubassets.com/1/x/y.png")).toBe(
 			false,
 		);
 		expect(
-			isCapture("https://raw.githubusercontent.com/o/r/main/docs/shot.png"),
+			isCapture(
+				"https://raw.githubusercontent.com/WillIsback/r/main/docs/shot.png",
+			),
 		).toBe(true);
 		expect(isCapture("https://avatars.githubusercontent.com/u/1.png")).toBe(
 			false,

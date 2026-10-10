@@ -101,6 +101,7 @@ describe("getRepoBundle", () => {
 					tree: [
 						blob("requirements.txt"),
 						blob("Dockerfile"),
+						blob("docs/anim.gif"),
 						blob("node_modules/pkg/Dockerfile"),
 						blob("node_modules/pkg/logo.png"),
 						blob(".github/workflows/ci.yml"),
@@ -120,6 +121,7 @@ describe("getRepoBundle", () => {
 		expect(b.readmeHead).toHaveLength(400);
 		expect(b.images).toHaveLength(40);
 		expect(b.images.some((p) => p.includes("node_modules"))).toBe(false);
+		expect(b.images.some((p) => p.endsWith(".gif"))).toBe(false);
 		expect(b.filePaths).toContain("Dockerfile");
 		expect(b.filePaths).toContain(".github/workflows/ci.yml");
 		expect(b.filePaths).not.toContain("node_modules/pkg/Dockerfile");

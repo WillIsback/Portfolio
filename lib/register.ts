@@ -111,14 +111,12 @@ export function techNames(p: NormalizedProject): string[] {
 	return CATEGORIES.flatMap((c) => c.names(p)).map(techLabel);
 }
 
-/** Une vraie capture d'écran : image matricielle hors images GitHub par défaut (opengraph, avatars) ; raw.githubusercontent.com accepté. */
+const RAW_CAPTURE_PREFIX = "https://raw.githubusercontent.com/WillIsback/";
+
+/** Une vraie capture d'écran : image matricielle locale ("/…") ou hébergée sur raw.githubusercontent.com/WillIsback/ (seul hôte autorisé dans next/image). */
 export function isCapture(imagePath: string | null): boolean {
 	if (!imagePath) return false;
-	if (
-		/^https?:\/\/(opengraph\.githubassets|avatars\.githubusercontent)\.com\//i.test(
-			imagePath,
-		)
-	)
+	if (!imagePath.startsWith("/") && !imagePath.startsWith(RAW_CAPTURE_PREFIX))
 		return false;
 	return /\.(png|jpe?g|webp|avif)$/i.test(imagePath);
 }

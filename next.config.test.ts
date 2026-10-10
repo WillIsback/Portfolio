@@ -15,7 +15,7 @@ describe("next.config", () => {
 		expect(nextConfig.images?.remotePatterns).toContainEqual({
 			protocol: "https",
 			hostname: "raw.githubusercontent.com",
-			pathname: "/**",
+			pathname: "/WillIsback/**",
 		});
 	});
 });
