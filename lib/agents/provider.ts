@@ -14,6 +14,11 @@ export function vllmHeaders(): Record<string, string> {
 	return headers;
 }
 
+export function vllmAuthHeaders(): Record<string, string> {
+	const key = process.env.VLLM_API_KEY;
+	return key ? { Authorization: `Bearer ${key}` } : {};
+}
+
 export function vllmBaseUrl(): string {
 	const url = process.env.VLLM_BASE_URL;
 	if (!url) throw new Error("VLLM_BASE_URL manquant.");
