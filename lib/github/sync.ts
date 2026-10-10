@@ -83,6 +83,25 @@ export function fullNameOf(url: string | null): string | null {
 	return match ? match[1] : null;
 }
 
+/** Projet sans `githubRepoId` dont l'URL (même non canonique : .git, www., http://) désigne ce dépôt. */
+export function matchByRepoName<T extends { github: string | null }>(
+	candidates: T[],
+	fullName: string,
+): T | null {
+	const wanted = fullName.toLowerCase();
+	return (
+		candidates.find((c) => fullNameOf(c.github)?.toLowerCase() === wanted) ??
+		null
+	);
+}
+
+/** Un projet apparié par nom (sans identifiant) reçoit l'identifiant du dépôt. */
+export function shouldBackfillRepoId(project: {
+	githubRepoId: number | null;
+}): boolean {
+	return project.githubRepoId === null;
+}
+
 const sameName = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
 function isRenamed(repo: RemoteRepo, project: SyncProject): boolean {

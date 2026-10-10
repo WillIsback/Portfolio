@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
 	applyAccepted,
 	computeDiff,
+	matchByRepoName,
 	type RemoteRepo,
 	type SyncProject,
+	shouldBackfillRepoId,
 	syncStatus,
 } from "./sync";
 
@@ -188,5 +190,24 @@ describe("applyAccepted", () => {
 	it("rien de coché → objet vide ; champ sans écart ignoré", () => {
 		expect(applyAccepted(project, diffs, [])).toEqual({});
 		expect(applyAccepted(project, diffs, ["isPrivate", "title"])).toEqual({});
+	});
+});
+
+describe("matchByRepoName / shouldBackfillRepoId", () => {
+	const cands = [
+		{ id: 1, github: "http://www.github.com/Me/Repo.git" },
+		{ id: 2, github: "https://github.com/me/other/" },
+		{ id: 3, github: null },
+	];
+	it("apparie une URL non canonique sans tenir compte de la casse", () => {
+		expect(matchByRepoName(cands, "me/repo")?.id).toBe(1);
+		expect(matchByRepoName(cands, "ME/OTHER")?.id).toBe(2);
+	});
+	it("ne trouve rien pour un autre dépôt", () => {
+		expect(matchByRepoName(cands, "me/none")).toBeNull();
+	});
+	it("renseigne l'identifiant seulement s'il manque", () => {
+		expect(shouldBackfillRepoId({ githubRepoId: null })).toBe(true);
+		expect(shouldBackfillRepoId({ githubRepoId: 5 })).toBe(false);
 	});
 });

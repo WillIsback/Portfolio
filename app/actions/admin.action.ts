@@ -16,7 +16,13 @@ import {
 	toBoardProject,
 } from "@/lib/github/board";
 import { GithubError, getRepoBundle } from "@/lib/github/client";
-import { applyAccepted, computeDiff, fullNameOf } from "@/lib/github/sync";
+import {
+	applyAccepted,
+	computeDiff,
+	fullNameOf,
+	matchByRepoName,
+	shouldBackfillRepoId,
+} from "@/lib/github/sync";
 import { getAdminGithubToken } from "@/lib/github/token";
 import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
@@ -148,21 +154,28 @@ function safeMessage(e: unknown): string {
 	return "Opération impossible.";
 }
 
+/** Id d'un projet sans `githubRepoId` dont l'URL, même non canonique, désigne ce dépôt. */
+async function findIdByRepoName(fullName: string): Promise<number | null> {
+	const candidates = await prisma.project.findMany({
+		where: { githubRepoId: null, github: { not: null } },
+		select: { id: true, github: true },
+	});
+	return matchByRepoName(candidates, fullName)?.id ?? null;
+}
+
 async function findProjectForRepo(id: number, fullName: string) {
-	const row =
-		(await prisma.project.findUnique({
-			where: { githubRepoId: id },
-			select: SYNC_SELECT,
-		})) ??
-		(await prisma.project.findFirst({
-			where: {
-				github: {
-					equals: `https://github.com/${fullName}`,
-					mode: "insensitive",
-				},
-			},
-			select: SYNC_SELECT,
-		}));
+	let row = await prisma.project.findUnique({
+		where: { githubRepoId: id },
+		select: SYNC_SELECT,
+	});
+	if (!row) {
+		const byName = await findIdByRepoName(fullName);
+		if (byName !== null)
+			row = await prisma.project.findUnique({
+				where: { id: byName },
+				select: SYNC_SELECT,
+			});
+	}
 	return row ? toBoardProject(row) : null;
 }
 
@@ -216,26 +229,24 @@ export async function importRepo(
 	if (!parsed.success) return { ok: false, error: "Données invalides." };
 	const data = parsed.data;
 	const name = fullNameOf(data.github);
-	const existing = await prisma.project.findFirst({
-		where: {
-			OR: [
-				{ githubRepoId: data.githubRepoId },
-				...(name
-					? [
-							{
-								github: {
-									equals: `https://github.com/${name}`,
-									mode: "insensitive" as const,
-								},
-							},
-						]
-					: []),
-			],
-		},
-		select: { id: true },
-	});
-	if (existing) return { ok: false, error: "Ce dépôt est déjà importé." };
-	await createProject({ ...data, isAiGenerated: false });
+	const existing =
+		(await prisma.project.findUnique({
+			where: { githubRepoId: data.githubRepoId },
+			select: { id: true },
+		})) ?? (name ? { id: await findIdByRepoName(name) } : { id: null });
+	if (existing.id !== null)
+		return { ok: false, error: "Ce dépôt est déjà importé." };
+	try {
+		await createProject({ ...data, isAiGenerated: false });
+	} catch (e) {
+		if (
+			typeof e === "object" &&
+			e !== null &&
+			(e as { code?: string }).code === "P2002"
+		)
+			return { ok: false, error: "Ce dépôt est déjà importé." };
+		return { ok: false, error: safeMessage(e) };
+	}
 	return { ok: true };
 }
 
@@ -293,7 +304,11 @@ export async function applySync(
 		await prisma.$transaction(async (tx) => {
 			await tx.project.update({
 				where: { id },
-				data: { ...plan.scalars, syncedAt: new Date() },
+				data: {
+					...plan.scalars,
+					syncedAt: new Date(),
+					...(shouldBackfillRepoId(project) ? { githubRepoId: remote.id } : {}),
+				},
 			});
 			const { lists } = plan;
 			if (lists.languages) {

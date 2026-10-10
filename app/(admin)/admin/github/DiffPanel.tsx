@@ -34,10 +34,15 @@ export function DiffPanel({
 	async function apply() {
 		setBusy(true);
 		setError(null);
-		const res = await applySync(projectId, fullName, [...checked]);
-		setBusy(false);
-		if (res.ok) onDone(`${checked.size} champ(s) appliqué(s).`);
-		else setError(res.error);
+		try {
+			const res = await applySync(projectId, fullName, [...checked]);
+			if (res.ok) onDone(`${checked.size} champ(s) appliqué(s).`);
+			else setError(res.error);
+		} catch {
+			setError("Opération impossible.");
+		} finally {
+			setBusy(false);
+		}
 	}
 
 	if (diff.length === 0)

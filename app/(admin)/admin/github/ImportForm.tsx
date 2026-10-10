@@ -78,18 +78,23 @@ export function ImportForm({
 		e.preventDefault();
 		setBusy(true);
 		setError(null);
-		const res = await importRepo({
-			title,
-			description,
-			github: `https://github.com/${remote.fullName}`,
-			githubRepoId: remote.id,
-			lastUpdate: remote.pushedAt?.toISOString(),
-			isPrivate,
-			...lists,
-		});
-		setBusy(false);
-		if (res.ok) onDone("Projet créé.");
-		else setError(res.error);
+		try {
+			const res = await importRepo({
+				title,
+				description,
+				github: `https://github.com/${remote.fullName}`,
+				githubRepoId: remote.id,
+				lastUpdate: remote.pushedAt?.toISOString(),
+				isPrivate,
+				...lists,
+			});
+			if (res.ok) onDone("Projet créé.");
+			else setError(res.error);
+		} catch {
+			setError("Opération impossible.");
+		} finally {
+			setBusy(false);
+		}
 	}
 
 	return (

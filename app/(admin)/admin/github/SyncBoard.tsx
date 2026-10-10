@@ -50,9 +50,15 @@ export function SyncBoard({
 
 	async function analyze(key: string, fullName: string) {
 		setLoading(key);
-		const res = await analyzeRepo(fullName);
+		let res: AnalyzeResult;
+		try {
+			res = await analyzeRepo(fullName);
+		} catch {
+			res = { ok: false, error: "Opération impossible." };
+		} finally {
+			setLoading(null);
+		}
 		setResults((prev) => ({ ...prev, [key]: res }));
-		setLoading(null);
 		return res;
 	}
 
@@ -71,19 +77,25 @@ export function SyncBoard({
 		const targets = rows.filter((r) => r.repo);
 		stop.current = false;
 		let done = 0;
-		for (const row of targets) {
-			if (stop.current) break;
-			const fullName = row.repo?.fullName ?? "";
-			setProgress({ done, total: targets.length, current: fullName });
-			setAnnounce(`Analyse ${done + 1} sur ${targets.length} : ${fullName}`);
-			await analyze(row.key, fullName);
-			done++;
+		let failed = 0;
+		try {
+			for (const row of targets) {
+				if (stop.current) break;
+				const fullName = row.repo?.fullName ?? "";
+				setProgress({ done, total: targets.length, current: fullName });
+				setAnnounce(`Analyse ${done + 1} sur ${targets.length} : ${fullName}`);
+				const res = await analyze(row.key, fullName);
+				if (!res.ok) failed++;
+				done++;
+			}
+		} finally {
+			setProgress(null);
 		}
-		setProgress(null);
+		const suffix = failed > 0 ? `, dont ${failed} en échec` : "";
 		setAnnounce(
 			stop.current
-				? `Analyse arrêtée après ${done} dépôt(s).`
-				: `Analyse terminée : ${done} dépôt(s).`,
+				? `Analyse arrêtée après ${done} dépôt(s)${suffix}.`
+				: `Analyse terminée : ${done} dépôt(s)${suffix}.`,
 		);
 	}
 
