@@ -1,3 +1,5 @@
+import type { JSONValue } from "ai";
+
 export type AgentMode = "chat" | "generation";
 
 export interface RequestOptions {
@@ -5,7 +7,7 @@ export interface RequestOptions {
 	topP: number;
 	presencePenalty: number;
 	providerOptions: {
-		vllm: Record<string, unknown>;
+		vllm: Record<string, JSONValue>;
 	};
 }
 

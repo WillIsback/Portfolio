@@ -2,7 +2,6 @@ import {
 	convertToModelMessages,
 	createUIMessageStreamResponse,
 	isStepCount,
-	type JSONValue,
 	streamText,
 	toUIMessageStream,
 	type UIMessage,
@@ -28,7 +27,7 @@ export async function POST(req: Request) {
 
 	const { messages }: { messages: UIMessage[] } = await req.json();
 	const modelId = await resolveModelId();
-	const { providerOptions, ...sampling } = requestOptions("chat");
+	const opts = requestOptions("chat");
 
 	const result = streamText({
 		model: vllmProvider()(modelId),
@@ -36,10 +35,7 @@ export async function POST(req: Request) {
 		messages: await convertToModelMessages(messages),
 		tools: projectTools,
 		stopWhen: isStepCount(6),
-		...sampling,
-		providerOptions: providerOptions as {
-			vllm: Record<string, JSONValue>;
-		},
+		...opts,
 	});
 
 	return createUIMessageStreamResponse({
