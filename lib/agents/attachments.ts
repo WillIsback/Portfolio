@@ -1,3 +1,5 @@
+import type { FileUIPart } from "ai";
+
 export const ALLOWED_IMAGE_TYPES = [
 	"image/png",
 	"image/jpeg",
@@ -43,4 +45,26 @@ export function validateAttachmentSet(
 		if (!check.ok) return check;
 	}
 	return { ok: true };
+}
+
+/** Convertit des fichiers en parties data-URL pour l'AI SDK (navigateur). */
+export function filesToDataUrls(files: File[]): Promise<FileUIPart[]> {
+	return Promise.all(
+		files.map(
+			(file) =>
+				new Promise<FileUIPart>((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () =>
+						resolve({
+							type: "file",
+							mediaType: file.type,
+							url: reader.result as string,
+							filename: file.name,
+						});
+					reader.onerror = () =>
+						reject(new Error("Lecture du fichier impossible."));
+					reader.readAsDataURL(file);
+				}),
+		),
+	);
 }

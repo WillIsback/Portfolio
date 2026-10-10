@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useState } from "react";
-import type { AttachmentMeta } from "@/lib/agents/attachments";
+import { filesToDataUrls } from "@/lib/agents/attachments";
 import { ProjectProposalSchema } from "@/lib/agents/proposals";
 import { AttachmentPicker } from "./AttachmentPicker";
 import { ProposalCard } from "./ProposalCard";
@@ -13,7 +13,7 @@ export function ChatPanel({ api }: { api: string }) {
 		transport: new DefaultChatTransport({ api }),
 	});
 	const [input, setInput] = useState("");
-	const [files, setFiles] = useState<AttachmentMeta[]>([]);
+	const [files, setFiles] = useState<File[]>([]);
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-8rem)] max-w-3xl">
@@ -54,10 +54,14 @@ export function ChatPanel({ api }: { api: string }) {
 			</div>
 			<form
 				className="border-t border-zinc-800 pt-3 flex flex-col gap-2"
-				onSubmit={(e) => {
+				onSubmit={async (e) => {
 					e.preventDefault();
 					if (!input.trim()) return;
-					sendMessage({ role: "user", parts: [{ type: "text", text: input }] });
+					const fileParts = files.length ? await filesToDataUrls(files) : [];
+					sendMessage({
+						role: "user",
+						parts: [{ type: "text", text: input }, ...fileParts],
+					});
 					setInput("");
 					setFiles([]);
 				}}

@@ -1,18 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import {
-	type AttachmentMeta,
-	MAX_IMAGES,
-	validateAttachmentSet,
-} from "@/lib/agents/attachments";
+import { MAX_IMAGES, validateAttachmentSet } from "@/lib/agents/attachments";
 
 export function AttachmentPicker({
 	files,
 	onFiles,
 }: {
-	files: AttachmentMeta[];
-	onFiles: (next: AttachmentMeta[]) => void;
+	files: File[];
+	onFiles: (next: File[]) => void;
 }) {
 	const ref = useRef<HTMLInputElement>(null);
 
@@ -25,17 +21,17 @@ export function AttachmentPicker({
 				accept="image/png,image/jpeg,image/webp,image/gif,text/*,application/json"
 				className="hidden"
 				onChange={(e) => {
-					const next = Array.from(e.target.files ?? []).map((f) => ({
+					const metas = Array.from(e.target.files ?? []).map((f) => ({
 						mediaType: f.type,
 						size: f.size,
 					}));
-					const check = validateAttachmentSet(next);
+					const check = validateAttachmentSet(metas);
 					if (!check.ok) {
 						alert(check.reason);
 						if (ref.current) ref.current.value = "";
 						return;
 					}
-					onFiles(next);
+					onFiles(Array.from(e.target.files ?? []));
 				}}
 			/>
 			<button
