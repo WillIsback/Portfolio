@@ -24,6 +24,7 @@ const project: SyncProject = {
 	devops: ["Docker"],
 	mlStack: [],
 	domains: ["ML"],
+	practices: [],
 };
 const remote: RemoteRepo = {
 	id: 42,
@@ -39,6 +40,7 @@ const remote: RemoteRepo = {
 	devops: ["Docker"],
 	mlStack: [],
 	domains: ["ML"],
+	practices: [],
 };
 
 describe("computeDiff", () => {
@@ -209,5 +211,29 @@ describe("matchByRepoName / shouldBackfillRepoId", () => {
 	it("renseigne l'identifiant seulement s'il manque", () => {
 		expect(shouldBackfillRepoId({ githubRepoId: null })).toBe(true);
 		expect(shouldBackfillRepoId({ githubRepoId: 5 })).toBe(false);
+	});
+});
+
+describe("pratiques : diff additif", () => {
+	it("propose seulement les ajouts, garde les pratiques manuelles", () => {
+		const d = computeDiff(
+			{ ...project, practices: ["Hardening", "ContinuousIntegration"] },
+			{ ...remote, practices: ["ContinuousIntegration", "DependencyUpdates"] },
+		).find((x) => x.field === "practices");
+		expect(d).toEqual({
+			field: "practices",
+			kind: "list",
+			added: ["DependencyUpdates"],
+			removed: [],
+			proposedList: ["ContinuousIntegration", "DependencyUpdates", "Hardening"],
+		});
+	});
+
+	it("aucun écart si rien de nouveau, même si la détection en voit moins", () => {
+		const diffs = computeDiff(
+			{ ...project, practices: ["Hardening", "ContinuousIntegration"] },
+			{ ...remote, practices: ["ContinuousIntegration"] },
+		);
+		expect(diffs.some((x) => x.field === "practices")).toBe(false);
 	});
 });

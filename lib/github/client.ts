@@ -160,6 +160,11 @@ export const isVendored = (path: string) =>
 const isDockerfile = (p: string) =>
 	p === "Dockerfile" || p.endsWith("/Dockerfile");
 
+/** Chemins utiles à la détection des pratiques (aucune requête de plus : l'arbre est déjà chargé). */
+const MARKER_RE =
+	/^(\.(github|forgejo)\/workflows\/|\.gitlab-ci\.yml$|\.github\/dependabot\.ya?ml$|(\.github\/)?renovate\.json5?$|\.semgrep\.ya?ml$|\.gitleaks\.toml$|\.secrets\.baseline$|dvc\.yaml$|\.dvc\/|vercel\.json$)|(^|\/)(docker-)?compose\.ya?ml$|\.dvc$|(^|\/)(tests|__tests__)\//;
+const MAX_MARKERS = 200;
+
 interface TreeResponse {
 	tree?: { path: string; type: string }[];
 	truncated?: boolean;
@@ -218,12 +223,10 @@ export async function getRepoBundle(
 		.map((n) => n.path)
 		.filter((p) => !isVendored(p));
 	const images = paths.filter((p) => IMAGE_RE.test(p)).slice(0, MAX_IMAGES);
-	const filePaths = [
-		...paths.filter(
-			(p) => isDockerfile(p) || p.startsWith(".github/workflows/"),
-		),
-		...images,
-	];
+	const markers = paths
+		.filter((p) => isDockerfile(p) || MARKER_RE.test(p))
+		.slice(0, MAX_MARKERS);
+	const filePaths = [...markers, ...images];
 
 	const root = new Set(paths.filter((p) => !p.includes("/")));
 	const fetchIf = (file: string) =>

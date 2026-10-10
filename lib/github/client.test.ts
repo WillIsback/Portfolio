@@ -105,6 +105,13 @@ describe("getRepoBundle", () => {
 						blob("node_modules/pkg/Dockerfile"),
 						blob("node_modules/pkg/logo.png"),
 						blob(".github/workflows/ci.yml"),
+						blob("renovate.json"),
+						blob(".github/dependabot.yml"),
+						blob("dvc.yaml"),
+						blob("tests/test_x.py"),
+						blob("deploy/compose.yaml"),
+						blob("vercel.json"),
+						blob("src/app.py"),
 						{ path: "docs", type: "tree" },
 						...many,
 					],
@@ -125,6 +132,17 @@ describe("getRepoBundle", () => {
 		expect(b.filePaths).toContain("Dockerfile");
 		expect(b.filePaths).toContain(".github/workflows/ci.yml");
 		expect(b.filePaths).not.toContain("node_modules/pkg/Dockerfile");
+		expect(b.filePaths).toEqual(
+			expect.arrayContaining([
+				"renovate.json",
+				".github/dependabot.yml",
+				"dvc.yaml",
+				"tests/test_x.py",
+				"deploy/compose.yaml",
+				"vercel.json",
+			]),
+		);
+		expect(b.filePaths).not.toContain("src/app.py");
 		// Manifestes absents de l'arbre : aucune requête inutile.
 		expect(calls.some((c) => c.url.includes("package.json"))).toBe(false);
 		expect(calls.every((c) => c.init?.method === "GET")).toBe(true);

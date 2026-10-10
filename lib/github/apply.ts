@@ -1,7 +1,8 @@
 /** Plan d'écriture d'une synchronisation : champs cochés → colonnes et listes à remplacer. */
 import { z } from "zod";
 import { normalizeDomains } from "@/lib/domains";
-import { AdminProjectSchema, AiDomainEnum } from "@/schemas";
+import { normalizePractices } from "@/lib/practices";
+import { AdminProjectSchema, AiDomainEnum, PracticeEnum } from "@/schemas";
 import type { ListField } from "./sync";
 
 export const SCALAR_FIELDS = [
@@ -31,6 +32,7 @@ const listSchemas = {
 	devops: AdminProjectSchema.shape.devops,
 	mlStack: AdminProjectSchema.shape.mlStack,
 	domains: z.array(AiDomainEnum),
+	practices: z.array(PracticeEnum),
 } as const;
 
 /** Valide la sortie d'`applyAccepted` ; lève si une valeur sort des énumérations. */
@@ -53,7 +55,12 @@ export function planWrite(update: Record<string, unknown>): WritePlan {
 		else if (field in listSchemas) {
 			const key = field as ListField;
 			const parsed = listSchemas[key].parse(value) as string[];
-			plan.lists[key] = key === "domains" ? normalizeDomains(parsed) : parsed;
+			plan.lists[key] =
+				key === "domains"
+					? normalizeDomains(parsed)
+					: key === "practices"
+						? normalizePractices(parsed)
+						: parsed;
 		} else throw new Error(`Champ non synchronisable : ${field}`);
 	}
 	return plan;
@@ -68,4 +75,5 @@ export const ACCEPTABLE_FIELDS = [
 	"devops",
 	"mlStack",
 	"domains",
+	"practices",
 ] as const;

@@ -1,4 +1,5 @@
 import { AI_DOMAINS, type AiDomain, normalizeDomains } from "@/lib/domains";
+import { normalizePractices, type Practice } from "@/lib/practices";
 
 export const LANGUAGES = [
 	"Python",
@@ -53,6 +54,7 @@ export interface Detection {
 	devops: (typeof DEVOPS)[number][];
 	mlStack: (typeof ML_STACK)[number][];
 	domains: AiDomain[];
+	practices: Practice[];
 }
 
 /** Casse, tirets, soulignés et points sont équivalents (PEP 503), `@scope/` conservé. */
@@ -152,6 +154,75 @@ export function detectProject(input: DetectInput): Detection {
 	if (text.includes("regress")) domains.add("Regressor");
 	if (topics.includes("agent")) domains.add("Agents");
 
+	const paths = input.filePaths;
+	const workflowNames = paths
+		.filter((p) => /^\.(github|forgejo)\/workflows\/[^/]+\.ya?ml$/.test(p))
+		.map((p) => p.slice(p.lastIndexOf("/") + 1).toLowerCase());
+	const wf = (re: RegExp) => workflowNames.some((n) => re.test(n));
+	const anyPath = (re: RegExp) => paths.some((p) => re.test(p));
+
+	const practices = new Set<Practice>();
+	if (workflowNames.length > 0 || anyPath(/^\.gitlab-ci\.yml$/))
+		practices.add("ContinuousIntegration");
+	if (devops.has("Docker") || anyPath(/(^|\/)(docker-)?compose\.ya?ml$/))
+		practices.add("Containerization");
+	// « cd » doit être un mot entier : `ci-cd.yml` oui, `abcd.yml` / `scd-report.yml` non.
+	if (wf(/(^|[-_.])(deploy|release|cd)([-_.]|$)/) || anyPath(/^vercel\.json$/))
+		practices.add("ContinuousDeployment");
+	if (
+		matches(
+			deps,
+			"vitest",
+			"jest",
+			"pytest",
+			"@playwright/test",
+			"playwright",
+		) ||
+		anyPath(/(^|\/)(tests|__tests__)\//)
+	)
+		practices.add("AutomatedTesting");
+	if (
+		matches(
+			deps,
+			/^opentelemetry-/,
+			/^@opentelemetry\//,
+			"prometheus-client",
+			"prom-client",
+		)
+	)
+		practices.add("Observability");
+	if (
+		anyPath(/^(\.github\/)?renovate\.json5?$/) ||
+		anyPath(/^\.github\/dependabot\.ya?ml$/)
+	)
+		practices.add("DependencyUpdates");
+	if (
+		wf(/codeql|semgrep|bandit/) ||
+		anyPath(/^\.semgrep\.ya?ml$/) ||
+		matches(deps, "bandit", "semgrep")
+	)
+		practices.add("StaticAnalysis");
+	if (
+		wf(/gitleaks|trufflehog/) ||
+		anyPath(/^\.gitleaks\.toml$|^\.secrets\.baseline$/)
+	)
+		practices.add("SecretsManagement");
+	if (matches(deps, "mlflow", "wandb", "comet-ml", "neptune"))
+		practices.add("ExperimentTracking");
+	if (anyPath(/^dvc\.yaml$|^\.dvc\/|\.dvc$/) || deps.has("dvc"))
+		practices.add("DataVersioning");
+	if (
+		matches(deps, "vllm", "bentoml", "torchserve", "ray") ||
+		[...images].some((i) => /(^|\/)vllm/.test(i)) ||
+		(deps.has("fastapi") &&
+			matches(deps, "torch", "transformers", "scikit-learn"))
+	)
+		practices.add("ModelServing");
+	if (
+		matches(deps, "langfuse", "ragas", "deepeval", "promptfoo", "arize-phoenix")
+	)
+		practices.add("LlmEvaluation");
+
 	return {
 		languages: ordered(LANGUAGES, languages),
 		databases: ordered(DATABASES, databases),
@@ -162,5 +233,6 @@ export function detectProject(input: DetectInput): Detection {
 		domains: normalizeDomains([...domains]).filter((d) =>
 			(AI_DOMAINS as readonly string[]).includes(d),
 		),
+		practices: normalizePractices([...practices]),
 	};
 }

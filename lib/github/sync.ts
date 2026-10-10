@@ -1,4 +1,5 @@
 /** Statut de synchronisation et écarts GitHub ↔ base. Logique pure. */
+import { normalizePractices } from "@/lib/practices";
 
 export type SyncStatus =
 	| "new"
@@ -23,6 +24,7 @@ export interface RemoteRepo {
 	devops?: string[];
 	mlStack?: string[];
 	domains?: string[];
+	practices?: string[];
 }
 
 /** Projet en base, relations aplaties en listes de valeurs d'enum. */
@@ -40,6 +42,7 @@ export interface SyncProject {
 	devops: string[];
 	mlStack: string[];
 	domains: string[];
+	practices: string[];
 }
 
 export const LIST_FIELDS = [
@@ -50,8 +53,12 @@ export const LIST_FIELDS = [
 	"devops",
 	"mlStack",
 	"domains",
+	"practices",
 ] as const;
 export type ListField = (typeof LIST_FIELDS)[number];
+
+/** Champs dont la détection ne voit pas tout (cochés à la main) : elle ajoute, ne retire jamais. */
+export const ADDITIVE_FIELDS: readonly ListField[] = ["practices"];
 export type ScalarField =
 	| "description"
 	| "lastUpdate"
@@ -154,9 +161,12 @@ export function computeDiff(
 		});
 	}
 	for (const field of LIST_FIELDS) {
-		const proposedList = remote[field];
-		if (!proposedList) continue;
+		const detected = remote[field];
+		if (!detected) continue;
 		const current = project[field];
+		const proposedList = ADDITIVE_FIELDS.includes(field)
+			? normalizePractices([...current, ...detected])
+			: detected;
 		const added = proposedList.filter((v) => !current.includes(v));
 		const removed = current.filter((v) => !proposedList.includes(v));
 		if (added.length || removed.length) {

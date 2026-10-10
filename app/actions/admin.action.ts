@@ -394,6 +394,15 @@ export async function applySync(
 					data: buildDomainRows(id, lists.domains),
 				});
 			}
+			if (lists.practices) {
+				await tx.projectPractice.deleteMany({ where: { projectId: id } });
+				await tx.projectPractice.createMany({
+					data: lists.practices.map((practice) => ({
+						projectId: id,
+						practice: practice as never,
+					})),
+				});
+			}
 		});
 		revalidateTag("projects", "max");
 		return { ok: true };

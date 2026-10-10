@@ -25,6 +25,7 @@ const project = (over: Partial<BoardProject>): BoardProject => ({
 	devops: [],
 	mlStack: [],
 	domains: [],
+	practices: [],
 	...over,
 });
 const repo = (over: Partial<RemoteRepo>): RemoteRepo => ({
@@ -101,7 +102,9 @@ describe("toBoardProject / formats", () => {
 			devops: [],
 			mlStack: [{ ml: "PyTorch" }],
 			domains: [{ domain: "ML" }],
+			practices: [{ practice: "Hardening" }],
 		});
+		expect(p.practices).toEqual(["Hardening"]);
 		expect(p.languages).toEqual(["Rust"]);
 		expect(p.mlStack).toEqual(["PyTorch"]);
 		expect(p.domains).toEqual(["ML"]);
@@ -128,6 +131,12 @@ describe("planWrite", () => {
 		expect(plan.scalars).toEqual({ description: "x", status: "Archived" });
 		expect(plan.lists.languages).toEqual(["Rust"]);
 		expect(plan.lists.domains).toEqual(["ML", "Classifier"]);
+	});
+	it("pratiques validées et normalisées", () => {
+		expect(
+			planWrite({ practices: ["LlmEvaluation", "Hardening"] }).lists.practices,
+		).toEqual(["Hardening", "LlmEvaluation"]);
+		expect(() => planWrite({ practices: ["Foo"] })).toThrow();
 	});
 	it("rejette champ éditorial et valeur hors énumération", () => {
 		expect(() => planWrite({ title: "x" })).toThrow();
