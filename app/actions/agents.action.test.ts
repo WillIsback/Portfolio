@@ -34,14 +34,13 @@ vi.mock("@/lib/admin/load-project", () => ({
 
 const start = vi.hoisted(() => vi.fn(async () => ({ runId: "run_1" })));
 const getRun = vi.hoisted(() => vi.fn());
+const articleWorkflow = vi.hoisted(() => vi.fn());
 const createArticlePr = vi.hoisted(() =>
 	vi.fn(async () => ({ ok: true, url: "https://github.com/x/pr/1" })),
 );
 vi.mock("workflow/api", () => ({ start, getRun }));
 vi.mock("@/lib/agents/github-pr", () => ({ createArticlePr }));
-vi.mock("@/app/workflows/article.workflow", () => ({
-	articleWorkflow: vi.fn(),
-}));
+vi.mock("@/app/workflows/article.workflow", () => ({ articleWorkflow }));
 
 import {
 	applyProjectProposal,
@@ -141,6 +140,9 @@ describe("agent articles", () => {
 			notes: "n",
 		});
 		expect(r).toEqual({ ok: true, runId: "run_1" });
+		expect(start).toHaveBeenCalledWith(articleWorkflow, [
+			{ slug: "a", title: "A", description: "d", tags: [], notes: "n" },
+		]);
 	});
 
 	it("startArticleWorkflow refuse un non-admin", async () => {
@@ -169,6 +171,7 @@ describe("agent articles", () => {
 	});
 
 	it("openArticlePr ouvre une PR", async () => {
+		process.env.GITHUB_TOKEN = "ghs_test";
 		const r = await openArticlePr({
 			slug: "a",
 			mdx: "x",
@@ -178,7 +181,11 @@ describe("agent articles", () => {
 		expect(r).toEqual({ ok: true, url: "https://github.com/x/pr/1" });
 		expect(createArticlePr).toHaveBeenCalledWith(
 			expect.objectContaining({ slug: "a", branch: "agent/article-a" }),
-			expect.objectContaining({ repo: "WillIsback/portfolio" }),
+			expect.objectContaining({
+				repo: "WillIsback/portfolio",
+				baseBranch: "main",
+				token: "ghs_test",
+			}),
 		);
 	});
 
@@ -201,5 +208,28 @@ describe("agent articles", () => {
 		getRun.mockReturnValueOnce({ status: Promise.resolve("failed") } as never);
 		const r = await getArticleRun("run_1");
 		expect(r).toEqual({ ok: false, error: "Génération échouée." });
+	});
+
+	it("getArticleRun refuse un non-admin", async () => {
+		auth.mockResolvedValueOnce({ user: { githubId: "999" } } as never);
+		const r = await getArticleRun("run_1");
+		expect(r).toEqual({ ok: false, error: "Non autorisé." });
+		expect(getRun).not.toHaveBeenCalled();
+	});
+
+	it("getArticleRun renvoie une erreur si le run est introuvable", async () => {
+		getRun.mockImplementationOnce(() => {
+			throw new Error("not found");
+		});
+		const r = await getArticleRun("run_x");
+		expect(r).toEqual({ ok: false, error: "Run introuvable." });
+	});
+
+	it("getArticleRun signale une annulation", async () => {
+		getRun.mockReturnValueOnce({
+			status: Promise.resolve("cancelled"),
+		} as never);
+		const r = await getArticleRun("run_1");
+		expect(r).toEqual({ ok: false, error: "Génération annulée." });
 	});
 });

@@ -107,15 +107,13 @@ export type ArticleRunResult =
 export async function getArticleRun(runId: string): Promise<ArticleRunResult> {
 	if (!(await requireAdmin())) return { ok: false, error: "Non autorisé." };
 	try {
-		const run = getRun(runId);
+		const run = getRun<ArticleDraft>(runId);
 		const status = await run.status;
 		if (status === "completed")
-			return {
-				ok: true,
-				status,
-				draft: (await run.returnValue) as ArticleDraft,
-			};
+			return { ok: true, status, draft: await run.returnValue };
 		if (status === "failed") return { ok: false, error: "Génération échouée." };
+		if (status === "cancelled")
+			return { ok: false, error: "Génération annulée." };
 		return { ok: true, status, draft: null };
 	} catch {
 		return { ok: false, error: "Run introuvable." };
