@@ -21,8 +21,9 @@ proposeProjectDraft avec une proposition structurée ; l'humain validera dans l'
 Réponds en français, de façon concise.`;
 
 export async function POST(req: Request) {
+	const adminId = process.env.ADMIN_GITHUB_ID;
 	const session = await auth();
-	if (session?.user?.githubId !== process.env.ADMIN_GITHUB_ID)
+	if (!adminId || session?.user?.githubId !== adminId)
 		return new Response("Unauthorized", { status: 401 });
 
 	const { messages }: { messages: UIMessage[] } = await req.json();
