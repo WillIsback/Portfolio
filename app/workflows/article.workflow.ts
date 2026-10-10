@@ -31,25 +31,45 @@ async function model() {
 	return vllmProvider()(await resolveModelId());
 }
 
-/** Extrait un objet JSON d'une réponse LLM (retire les clôtures Markdown). */
-function parsePlan(text: string) {
+/** Extrait un plan JSON d'une réponse LLM, même tronquée (récupère les sections complètes). */
+export function parsePlan(text: string) {
 	const cleaned = text
 		.replace(/^```(?:json)?\s*/i, "")
 		.replace(/\s*```$/, "")
 		.trim();
-	return planSchema.parse(JSON.parse(cleaned));
+	try {
+		return planSchema.parse(JSON.parse(cleaned));
+	} catch (error) {
+		const sections = [...cleaned.matchAll(/\{[^{}]*\}/g)]
+			.map((m) => {
+				try {
+					return JSON.parse(m[0]) as { heading?: unknown; brief?: unknown };
+				} catch {
+					return null;
+				}
+			})
+			.filter(
+				(o): o is { heading: string; brief: string } =>
+					!!o && typeof o.heading === "string" && typeof o.brief === "string",
+			);
+		if (sections.length > 0) return planSchema.parse({ sections });
+		throw error;
+	}
 }
 
 export async function planArticle(brief: ArticleBrief) {
 	"use step";
-	const opts = requestOptions("generation");
 	const { text } = await generateText({
 		model: await model(),
-		maxOutputTokens: 1500,
+		maxOutputTokens: 4000,
+		temperature: 0.3,
+		topP: 0.9,
+		providerOptions: {
+			vllm: { chat_template_kwargs: { enable_thinking: false }, top_k: 20 },
+		},
 		system:
-			'Tu planifies un article de blog technique en français (style carnet de labo). Réponds UNIQUEMENT en JSON: {"sections":[{"heading":"...","brief":"..."}]}.',
+			'Tu planifies un article de blog technique en français (style carnet de labo). Donne AU PLUS 6 sections ; chaque "brief" fait AU PLUS 20 mots. Réponds UNIQUEMENT en JSON valide, sans texte autour ni clôture Markdown: {"sections":[{"heading":"...","brief":"..."}]}.',
 		prompt: `Titre: ${brief.title}\nDescription: ${brief.description}\nNotes: ${brief.notes}`,
-		...opts,
 	});
 	return parsePlan(text);
 }
