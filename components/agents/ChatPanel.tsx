@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { filesToDataUrls } from "@/lib/agents/attachments";
 import { ProjectProposalSchema } from "@/lib/agents/proposals";
+import { ArticleDraftTool } from "./ArticleDraftTool";
 import { AttachmentPicker } from "./AttachmentPicker";
 import { ProposalCard } from "./ProposalCard";
 
@@ -54,6 +55,14 @@ export function ChatPanel({ api }: { api: string }) {
 								const parsed = ProjectProposalSchema.safeParse(out);
 								return parsed.success ? (
 									<ProposalCard key={i} proposal={parsed.data} />
+								) : null;
+							}
+							if (part.type === "tool-generateArticleDraft") {
+								const out =
+									part.state === "output-available" ? part.output : undefined;
+								const runId = (out as { runId?: string } | undefined)?.runId;
+								return runId ? (
+									<ArticleDraftTool key={i} runId={runId} />
 								) : null;
 							}
 							return null;
