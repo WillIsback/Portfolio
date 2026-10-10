@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { toAdminProject } from "@/lib/admin/load-project";
 import { getAllArticles } from "@/lib/articles/loader";
 import prisma from "@/lib/db";
-import type { AdminProject } from "@/schemas";
 import { ProjectEditForm } from "./ProjectEditForm";
 
 export default async function EditProjectPage({
@@ -33,29 +33,7 @@ export default async function EditProjectPage({
 		.filter((a) => a.projects?.includes(project.id))
 		.map((a) => ({ slug: a.slug, title: a.title }));
 
-	const initial: AdminProject = {
-		title: project.title,
-		description: project.description,
-		imagePath: project.imagePath ?? "",
-		github: project.github ?? "",
-		lastUpdate: project.lastUpdate?.toISOString() ?? "",
-		isPrivate: project.isPrivate,
-		isAiGenerated: project.isAiGenerated,
-		languages: project.languages.map((l) => l.language),
-		databases: project.databases.map((d) => d.database),
-		backends: project.backends.map((b) => b.backend),
-		frontends: project.frontends.map((f) => f.frontend),
-		devops: project.devops.map((d) => d.devops),
-		domains: project.domains.map((d) => d.domain),
-		mlStack: project.mlStack.map((m) => m.ml),
-		pitch: project.pitch ?? undefined,
-		status: project.status ?? undefined,
-		period: project.period ?? undefined,
-		githubRepoId: project.githubRepoId ?? undefined,
-		featuredRank: project.featuredRank ?? undefined,
-		practices: project.practices.map((p) => p.practice),
-		training: project.training ?? null,
-	};
+	const initial = toAdminProject(project);
 
 	return (
 		<div className="max-w-3xl">
