@@ -63,7 +63,7 @@ describe("detectProject sur manifestes réels", () => {
 	it("FastAPI + torch + compose postgres/vllm", () => {
 		const r = detect({
 			primaryLanguage: "Python",
-			python: parseRequirements(fixture("fastapi-torch.requirements.txt")),
+			python: parseRequirements(fixture("fastapi-torch.requirements.fixture")),
 			composeImages: parseComposeImages(
 				fixture("postgres-vllm.docker-compose.yml"),
 			),

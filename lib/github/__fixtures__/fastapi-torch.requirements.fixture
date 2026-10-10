@@ -1,4 +1,4 @@
-# Extrait de clea-api
+# Extrait de clea-api (fixture de test : extension .fixture pour que les scanners SCA ne le prennent pas pour un vrai manifeste)
 --extra-index-url https://download.pytorch.org/whl/cu128
 accelerate==1.6.0
 fastapi==0.115.12
