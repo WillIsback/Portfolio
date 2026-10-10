@@ -43,5 +43,17 @@ export function ArticleDraftTool({ runId }: { runId: string }) {
 				Génération en cours… (statut : {status})
 			</p>
 		);
-	return <ArticlePreview draft={draft} />;
+	return (
+		<>
+			<a
+				href={`/admin/agents/articles/preview/${runId}`}
+				target="_blank"
+				rel="noopener noreferrer"
+				className="mb-2 inline-block text-xs text-zinc-400 underline hover:text-zinc-200"
+			>
+				Ouvrir l&apos;aperçu rendu
+			</a>
+			<ArticlePreview draft={draft} />
+		</>
+	);
 }
