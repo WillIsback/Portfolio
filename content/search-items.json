@@ -34,6 +34,7 @@
    "typescript",
    "nextjs",
    "react",
+   "tailwindcss",
    "githubactions",
    "llm"
   ],
@@ -64,6 +65,10 @@
    "fastapi",
    "docker",
    "githubactions",
+   "pytorch",
+   "transformers",
+   "scikitlearn",
+   "huggingface",
    "llm",
    "nlp"
   ],
@@ -102,6 +107,7 @@
    "typescript",
    "svelte",
    "sveltekit",
+   "tailwindcss",
    "docker"
   ],
   "terms": [
@@ -200,6 +206,10 @@
   "id": "project:6",
   "keywords": [
    "python",
+   "jupyternotebook",
+   "scikitlearn",
+   "pandas",
+   "xgboost",
    "data analyse",
    "ml",
    "classification"
@@ -222,7 +232,9 @@
   "id": "project:7",
   "keywords": [
    "typescript",
-   "react"
+   "react",
+   "nextjs",
+   "tailwindcss"
   ],
   "terms": [
    "fisheye",
@@ -238,6 +250,7 @@
   "id": "project:8",
   "keywords": [
    "python",
+   "jupyternotebook",
    "data analyse"
   ],
   "terms": [
@@ -274,7 +287,10 @@
   "id": "project:10",
   "keywords": [
    "javascript",
-   "react"
+   "react",
+   "nextjs",
+   "tanstack",
+   "tailwindcss"
   ],
   "terms": [
    "sportsee",
@@ -292,7 +308,9 @@
  {
   "id": "project:11",
   "keywords": [
-   "javascript"
+   "javascript",
+   "react",
+   "nextjs"
   ],
   "terms": [
    "petits",
@@ -311,6 +329,10 @@
   "id": "project:12",
   "keywords": [
    "python",
+   "jupyternotebook",
+   "scikitlearn",
+   "pandas",
+   "huggingface",
    "vision"
   ],
   "terms": [
@@ -336,6 +358,10 @@
   "id": "project:13",
   "keywords": [
    "python",
+   "pytorch",
+   "transformers",
+   "huggingface",
+   "llmsdk",
    "llm",
    "nlp",
    "parole"
@@ -368,6 +394,8 @@
   "id": "project:14",
   "keywords": [
    "python",
+   "wandb",
+   "llmsdk",
    "ml",
    "llm",
    "nlp"
@@ -397,9 +425,11 @@
   "id": "project:16",
   "keywords": [
    "typescript",
+   "postgresql",
    "nextjs",
    "react",
    "githubactions",
+   "llmsdk",
    "ml",
    "classification",
    "llm",
@@ -421,6 +451,13 @@
   "id": "project:17",
   "keywords": [
    "python",
+   "jupyternotebook",
+   "githubactions",
+   "pytorch",
+   "transformers",
+   "scikitlearn",
+   "pandas",
+   "llmsdk",
    "ml",
    "classification",
    "llm",
@@ -441,6 +478,13 @@
   "id": "project:18",
   "keywords": [
    "python",
+   "jupyternotebook",
+   "pytorch",
+   "transformers",
+   "scikitlearn",
+   "pandas",
+   "huggingface",
+   "wandb",
    "ml",
    "classification",
    "nlp"
@@ -472,9 +516,13 @@
    "typescript",
    "postgresql",
    "fastapi",
+   "expressjs",
    "nextjs",
+   "react",
+   "tailwindcss",
    "docker",
    "githubactions",
+   "llmsdk",
    "llm"
   ],
   "terms": [
@@ -489,6 +537,11 @@
   "id": "project:20",
   "keywords": [
    "typescript",
+   "postgresql",
+   "react",
+   "nextjs",
+   "tailwindcss",
+   "llmsdk",
    "llm",
    "parole"
   ],
@@ -504,6 +557,7 @@
   "id": "project:21",
   "keywords": [
    "python",
+   "fastapi",
    "docker",
    "githubactions",
    "parole"
@@ -527,8 +581,13 @@
   "id": "project:22",
   "keywords": [
    "typescript",
+   "react",
+   "tailwindcss",
    "docker",
    "githubactions",
+   "pandas",
+   "huggingface",
+   "llmsdk",
    "llm",
    "nlp"
   ],
@@ -546,7 +605,9 @@
   "id": "project:23",
   "keywords": [
    "rust",
-   "githubactions"
+   "githubactions",
+   "scikitlearn",
+   "pandas"
   ],
   "terms": [
    "caviarder",
@@ -597,6 +658,9 @@
   "id": "project:26",
   "keywords": [
    "python",
+   "pytorch",
+   "transformers",
+   "scikitlearn",
    "ml",
    "vision"
   ],
@@ -607,6 +671,79 @@
    "openclassroom",
    "vision",
    "task"
+  ]
+ },
+ {
+  "id": "project:27",
+  "keywords": [
+   "python",
+   "postgresql",
+   "fastapi",
+   "docker",
+   "githubactions",
+   "scikitlearn",
+   "pandas",
+   "xgboost",
+   "data analyse",
+   "ml",
+   "regression"
+  ],
+  "terms": [
+   "deployez",
+   "modele",
+   "machine",
+   "learning",
+   "deployer",
+   "aide",
+   "modernes"
+  ]
+ },
+ {
+  "id": "project:28",
+  "keywords": [
+   "python",
+   "jupyternotebook",
+   "data analyse",
+   "ml",
+   "regression"
+  ],
+  "terms": [
+   "engineer",
+   "anticipez",
+   "besoins",
+   "consommation",
+   "batiments",
+   "ville",
+   "seattle",
+   "vise",
+   "neutralite",
+   "carbone",
+   "2050",
+   "doit",
+   "connaitre",
+   "emissions",
+   "parc",
+   "non",
+   "residentiel",
+   "releves",
+   "terrain",
+   "couteux",
+   "objectif",
+   "estimer",
+   "mesures",
+   "partir",
+   "seules",
+   "caracteristiques",
+   "structurelles",
+   "registres",
+   "municipaux",
+   "deux",
+   "cibles",
+   "siteenergyuse",
+   "kbtu",
+   "energie",
+   "totalghgemissions",
+   "co2e"
   ]
  }
 ]
