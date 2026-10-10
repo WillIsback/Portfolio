@@ -356,3 +356,50 @@ describe("IndexRow lecteurs d'écran", () => {
 		expect(html).toContain('<span class="sr-only">, </span>');
 	});
 });
+
+describe("badge formation et pratiques", () => {
+	const withOps = p({
+		training: "AIEngineer",
+		practices: [
+			{ practice: "ExperimentTracking" },
+			{ practice: "ContinuousIntegration" },
+			{ practice: "ModelServing" },
+		],
+	});
+
+	it("FeaturedCard : badge complet et une ligne par famille", () => {
+		const html = renderToStaticMarkup(
+			<FeaturedCard
+				project={withOps}
+				figureNumber={1}
+				points={points}
+				neighborIds={[]}
+			/>,
+		);
+		expect(html).toContain(
+			"Projet de formation · OpenClassrooms · AI Engineer",
+		);
+		expect(html).toContain("DevOps");
+		expect(html).toContain("Intégration continue");
+		expect(html).toContain("MLOps");
+		expect(html).toContain("Suivi d&#x27;expériences, Service de modèle");
+	});
+
+	it("IndexRow : abrégé visible, complet pour lecteur d'écran", () => {
+		const html = renderToStaticMarkup(<IndexRow project={withOps} />);
+		expect(html).toContain("Formation OC · AI Engineer");
+		expect(html).toMatch(
+			/sr-only[^>]*>Projet de formation · OpenClassrooms · AI Engineer/,
+		);
+		expect(html).toContain("DevOps · MLOps");
+		expect(html).toMatch(/sr-only[^>]*>[^<]*Intégration continue/);
+	});
+
+	it("rien sans données, valeur inconnue ignorée", () => {
+		const html = renderToStaticMarkup(
+			<IndexRow project={p({ training: "Bac" })} />,
+		);
+		expect(html).not.toContain("Formation OC");
+		expect(html).not.toContain("DevOps");
+	});
+});
