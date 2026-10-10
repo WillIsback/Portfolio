@@ -35,6 +35,7 @@ export function ChatPanel({ api }: { api: string }) {
 							if (part.type === "file") {
 								if (part.mediaType?.startsWith("image/"))
 									return (
+										/* eslint-disable @next/next/no-img-element */
 										// biome-ignore lint/performance/noImgElement: aperçu local d'une pièce jointe
 										<img
 											key={i}
@@ -108,7 +109,9 @@ export function ChatPanel({ api }: { api: string }) {
 					{error ? (
 						<p className="text-xs text-red-400">Erreur : {error.message}</p>
 					) : status !== "ready" ? (
-						<span className="text-xs text-zinc-500">L'agent réfléchit…</span>
+						<span className="text-xs text-zinc-500">
+							{"L'agent réfléchit…"}
+						</span>
 					) : null}
 				</div>
 				<textarea

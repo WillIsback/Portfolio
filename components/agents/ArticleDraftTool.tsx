@@ -12,29 +12,27 @@ export function ArticleDraftTool({ runId }: { runId: string }) {
 
 	useEffect(() => {
 		let cancelled = false;
-		let timer: ReturnType<typeof setInterval> | undefined;
-		const stop = () => {
-			if (timer) clearInterval(timer);
-		};
+		let done = false;
 		const tick = async () => {
+			if (done) return;
 			const res = await getArticleRun(runId);
 			if (cancelled) return;
 			if (!res.ok) {
 				setError(res.error);
-				stop();
+				done = true;
 				return;
 			}
 			setStatus(res.status);
 			if (res.draft) {
 				setDraft(res.draft);
-				stop();
+				done = true;
 			}
 		};
 		void tick();
-		timer = setInterval(tick, 4000);
+		const timer = setInterval(tick, 4000);
 		return () => {
 			cancelled = true;
-			stop();
+			clearInterval(timer);
 		};
 	}, [runId]);
 
