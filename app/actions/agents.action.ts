@@ -15,8 +15,9 @@ import { normalizePractices } from "@/lib/practices";
 import { AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<boolean> {
+	const adminId = process.env.ADMIN_GITHUB_ID;
 	const session = await auth();
-	return session?.user?.githubId === process.env.ADMIN_GITHUB_ID;
+	return Boolean(adminId) && session?.user?.githubId === adminId;
 }
 
 export type ApplyResult = { ok: true } | { ok: false; error: string };

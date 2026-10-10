@@ -53,6 +53,22 @@ describe("applyProjectProposal", () => {
 		expect(deleteProject).not.toHaveBeenCalled();
 	});
 
+	it("refuse si ADMIN_GITHUB_ID n'est pas configuré", async () => {
+		const prev = process.env.ADMIN_GITHUB_ID;
+		delete process.env.ADMIN_GITHUB_ID;
+		try {
+			const r = await applyProjectProposal({
+				action: "delete",
+				projectId: 1,
+				summary: "s",
+			});
+			expect(r).toEqual({ ok: false, error: "Non autorisé." });
+			expect(deleteProject).not.toHaveBeenCalled();
+		} finally {
+			process.env.ADMIN_GITHUB_ID = prev;
+		}
+	});
+
 	it("applique une suppression", async () => {
 		const r = await applyProjectProposal({
 			action: "delete",
