@@ -58,12 +58,27 @@ export function ChatPanel({ api }: { api: string }) {
 								) : null;
 							}
 							if (part.type === "tool-generateArticleDraft") {
-								const out =
-									part.state === "output-available" ? part.output : undefined;
-								const runId = (out as { runId?: string } | undefined)?.runId;
-								return runId ? (
-									<ArticleDraftTool key={i} runId={runId} />
-								) : null;
+								if (part.state !== "output-available") return null;
+								const out = part.output;
+								if (
+									out &&
+									typeof out === "object" &&
+									"runId" in out &&
+									typeof (out as { runId?: unknown }).runId === "string"
+								)
+									return (
+										<ArticleDraftTool
+											key={i}
+											runId={(out as { runId: string }).runId}
+										/>
+									);
+								if (out && typeof out === "object" && "error" in out)
+									return (
+										<p key={i} className="text-sm text-red-400">
+											{(out as { error: string }).error}
+										</p>
+									);
+								return null;
 							}
 							return null;
 						})}

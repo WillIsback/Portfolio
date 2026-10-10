@@ -11,27 +11,32 @@ export function ArticleDraftTool({ runId }: { runId: string }) {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		let stop = false;
+		let cancelled = false;
+		let timer: ReturnType<typeof setInterval> | undefined;
+		const stop = () => {
+			if (timer) clearInterval(timer);
+		};
 		const tick = async () => {
 			const res = await getArticleRun(runId);
-			if (stop) return;
+			if (cancelled) return;
 			if (!res.ok) {
 				setError(res.error);
+				stop();
 				return;
 			}
 			setStatus(res.status);
-			if (res.draft) setDraft(res.draft);
+			if (res.draft) {
+				setDraft(res.draft);
+				stop();
+			}
 		};
 		void tick();
-		const id = setInterval(() => {
-			if (draft) return;
-			void tick();
-		}, 4000);
+		timer = setInterval(tick, 4000);
 		return () => {
-			stop = true;
-			clearInterval(id);
+			cancelled = true;
+			stop();
 		};
-	}, [runId, draft]);
+	}, [runId]);
 
 	if (error) return <p className="text-sm text-red-400">{error}</p>;
 	if (!draft)
