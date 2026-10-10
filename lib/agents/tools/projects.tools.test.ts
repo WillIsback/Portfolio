@@ -44,6 +44,29 @@ describe("projectTools", () => {
 		]);
 	});
 
+	it("listProjects sans recherche appelle getProjects({})", async () => {
+		await projectTools.listProjects.execute?.({}, {} as never);
+		expect(getProjects).toHaveBeenCalledWith({});
+	});
+
+	it("listProjects plafonne à 50 résultats", async () => {
+		getProjects.mockResolvedValueOnce(
+			Array.from({ length: 60 }, (_, i) => ({
+				id: i + 1,
+				title: `P${i + 1}`,
+				pitch: null,
+				status: null,
+				domains: [],
+				languages: [],
+			})) as never,
+		);
+		const out = (await projectTools.listProjects.execute?.(
+			{},
+			{} as never,
+		)) as unknown[];
+		expect(out).toHaveLength(50);
+	});
+
 	it("getProject délègue", async () => {
 		await projectTools.getProject.execute?.({ id: 1 }, {} as never);
 		expect(getProjectById).toHaveBeenCalledWith(1);

@@ -6,7 +6,6 @@ import { getProjectById, getProjects } from "@/app/actions/projects.action";
 function summarize(p: {
 	id: number;
 	title: string;
-	description: string;
 	pitch: string | null;
 	status: string | null;
 	domains: { domain: string }[];
