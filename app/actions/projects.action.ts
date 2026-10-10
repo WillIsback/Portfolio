@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import {
 	getProjectsFromJson,
 	type NormalizedProject,
+	withProjectDefaults,
 } from "@/lib/projects-data";
 import { type ProjectFilters, ProjectFiltersSchema } from "@/schemas";
 
@@ -174,14 +175,14 @@ export async function getProjects(rawFilters?: ProjectFilters) {
 	// Fonction cachée (production seulement)
 	const getCachedProjects = unstable_cache(
 		async () => getProjectsFromDb(filters),
-		["projects", cacheKey],
+		["projects-v2", cacheKey],
 		{
 			tags: ["projects"],
 			revalidate: 300,
 		},
 	);
 
-	return getCachedProjects();
+	return (await getCachedProjects()).map(withProjectDefaults);
 }
 
 // Server Action pour récupérer un projet par ID
@@ -226,7 +227,7 @@ export async function getProjectById(id: number) {
 					githubRepoId: true,
 				},
 			}),
-		["project", String(id)],
+		["project-v2", String(id)],
 		{
 			tags: ["projects", `project-${id}`],
 			revalidate: 300,

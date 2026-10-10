@@ -141,3 +141,15 @@ export function getProjectsFromJson(
 		return dateB - dateA;
 	});
 }
+
+/** Un objet issu d'un ancien cache peut manquer des champs récents : valeurs sûres par défaut. */
+export function withProjectDefaults(p: NormalizedProject): NormalizedProject {
+	return {
+		...p,
+		mlStack: p.mlStack ?? [],
+		domains: p.domains ?? [],
+		featuredRank: p.featuredRank ?? null,
+		pitch: p.pitch ?? null,
+		status: p.status ?? null,
+	};
+}
