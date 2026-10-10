@@ -1,6 +1,6 @@
 # Pratiques Ops et badge « Projet de formation » — design
 
-Date : 2026-10-10 · Statut : à relire par Will
+Date : 2026-10-10 · Statut : validé par Will
 
 ## Intention
 
@@ -73,13 +73,13 @@ Un script idempotent `pnpm catalogue:practices` lit une table versionnée, `lib/
 comme pour les domaines. Il renseigne `training` sur les projets existants, puis il lance la détection des pratiques
 sur chaque dépôt et ajoute ce qu'elle trouve, sans rien retirer.
 
-Proposition d'affectation des parcours, **à valider par Will** :
+Affectation des parcours (validée par Will le 2026-10-10) :
 
 | Parcours | Projets (id · titre) |
 |---|---|
-| Développeur FullStack IA | 1 Abricot.co (P11) · 6 OC-P10 TechNova · 7 OC-P9 Fisheye · 8 P8 Bottleneck · 9 OC-P7 DataImmo · 16 p12-phase2-zenassist · 17 p12-phase1-zenassist · 18 p12-zenassist-training-modernbert-cls · 19 P14-NewsFoundry · 26 P13-Fashion-Insta |
+| Développeur FullStack IA | 1 Abricot.co (P11) · 10 SportSee · 11 Les Petits Plats · 12 Fashion Trend Intelligence · 6 OC-P10 TechNova · 7 OC-P9 Fisheye · 8 P8 Bottleneck · 9 OC-P7 DataImmo · 16 p12-phase2-zenassist · 17 p12-phase1-zenassist · 18 p12-zenassist-training-modernbert-cls · 19 P14-NewsFoundry · 26 P13-Fashion-Insta |
 | AI Engineer | 27 OC-P5 Déployez un modèle de ML · 28 OC-Ai-Engineer-P3 |
-| À confirmer | 10 SportSee · 11 Les Petits Plats · 12 Fashion Trend Intelligence · 5 TypeScript REST API Vanilla |
+| Aucun (projet perso pédagogique) | 5 TypeScript REST API Vanilla, ainsi que tous les autres projets |
 
 Les pratiques qu'aucun fichier ne trahit (durcissement, registre de modèles, souvent gestion des secrets) se
 cochent à la main dans la fiche éditoriale.
@@ -177,4 +177,4 @@ Le test `lib/about.test.ts` est ajusté pour vérifier qu'aucune description ne 
 ## Livraison
 
 Une seule PR. La migration additive est appliquée en prod avant le merge, comme pour la PR #14. Le script
-d'étiquetage est lancé après validation de la table des parcours par Will.
+d'étiquetage est lancé en prod juste avant le merge.
