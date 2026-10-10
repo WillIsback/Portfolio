@@ -39,41 +39,65 @@ async function gh(
 	});
 }
 
-/** Crée une branche depuis la base, y commit le MDX, puis ouvre une PR. */
+/** Crée la branche si absente, y commit le MDX, puis ouvre une PR. */
 export async function createArticlePr(
 	input: ArticlePrInput,
 	deps: GithubWriteDeps,
 ): Promise<ArticlePrResult> {
 	if (!deps.token) return { ok: false, error: "Jeton GitHub manquant." };
 	try {
-		const base = await gh(
+		const branchRef = await gh(
 			deps,
-			`/repos/${deps.repo}/git/ref/heads/${deps.baseBranch}`,
+			`/repos/${deps.repo}/git/ref/heads/${input.branch}`,
 			{ method: "GET" },
 		);
-		if (!base.ok)
+		if (branchRef.status === 404) {
+			const base = await gh(
+				deps,
+				`/repos/${deps.repo}/git/ref/heads/${deps.baseBranch}`,
+				{ method: "GET" },
+			);
+			if (!base.ok)
+				return {
+					ok: false,
+					error: `Branche de base introuvable (${base.status}).`,
+				};
+			const baseSha = ((await base.json()) as { object: { sha: string } })
+				.object.sha;
+			const created = await gh(deps, `/repos/${deps.repo}/git/refs`, {
+				method: "POST",
+				body: JSON.stringify({
+					ref: `refs/heads/${input.branch}`,
+					sha: baseSha,
+				}),
+			});
+			if (!created.ok)
+				return {
+					ok: false,
+					error: `Création de branche impossible (${created.status}).`,
+				};
+		} else if (branchRef.status !== 200) {
 			return {
 				ok: false,
-				error: `Branche de base introuvable (${base.status}).`,
+				error: `Branche introuvable (${branchRef.status}).`,
 			};
-		const baseSha = ((await base.json()) as { object: { sha: string } }).object
-			.sha;
-
-		const branch = await gh(deps, `/repos/${deps.repo}/git/refs`, {
-			method: "POST",
-			body: JSON.stringify({ ref: `refs/heads/${input.branch}`, sha: baseSha }),
-		});
-		if (!branch.ok && branch.status !== 422)
-			return {
-				ok: false,
-				error: `Création de branche impossible (${branch.status}).`,
-			};
+		}
 
 		const path = `/repos/${deps.repo}/contents/content/articles/${input.slug}.mdx`;
-		const existing = await gh(deps, path, { method: "GET" });
-		const sha = existing.ok
-			? ((await existing.json()) as { sha: string }).sha
-			: undefined;
+		const existing = await gh(
+			deps,
+			`${path}?ref=${encodeURIComponent(input.branch)}`,
+			{ method: "GET" },
+		);
+		let sha: string | undefined;
+		if (existing.status === 200) {
+			sha = ((await existing.json()) as { sha: string }).sha;
+		} else if (existing.status !== 404) {
+			return {
+				ok: false,
+				error: `Lecture du contenu impossible (${existing.status}).`,
+			};
+		}
 
 		const commit = await gh(deps, path, {
 			method: "PUT",
