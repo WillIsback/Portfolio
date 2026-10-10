@@ -52,7 +52,10 @@ describe("ArticlePreview", () => {
 				}}
 			/>,
 		);
-		expect(html).toContain("carnet-agents.mdx");
+		expect(html).toContain("content/articles/carnet-agents.mdx");
+		expect(html).toContain("Un carnet d&#x27;agents");
+		expect(html).toContain(">d</p>");
+		expect(html).toContain("## Intro");
 		expect(html).toContain("Ouvrir la PR");
 	});
 });
