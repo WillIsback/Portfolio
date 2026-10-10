@@ -29,10 +29,10 @@ describe("validateAttachment", () => {
 			ok: true,
 		});
 	});
-	it("accepte un petit fichier JSON", () => {
-		expect(
-			validateAttachment({ mediaType: "application/json", size: 10 }),
-		).toEqual({ ok: true });
+	it("refuse application/json (non supporté par le provider)", () => {
+		const r = validateAttachment({ mediaType: "application/json", size: 10 });
+		expect(r.ok).toBe(false);
+		if (!r.ok) expect(r.reason).toContain("application/json");
 	});
 	it("refuse un fichier texte trop lourd", () => {
 		const r = validateAttachment({

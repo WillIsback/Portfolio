@@ -23,10 +23,7 @@ export function validateAttachment(meta: AttachmentMeta): AttachmentCheck {
 			return { ok: false, reason: "Image trop lourde (max 2 Mo)." };
 		return { ok: true };
 	}
-	if (
-		meta.mediaType.startsWith("text/") ||
-		meta.mediaType === "application/json"
-	) {
+	if (meta.mediaType.startsWith("text/")) {
 		if (meta.size > MAX_TEXT_BYTES)
 			return { ok: false, reason: "Fichier texte trop lourd (max 100 Ko)." };
 		return { ok: true };

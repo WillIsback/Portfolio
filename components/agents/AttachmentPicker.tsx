@@ -19,7 +19,7 @@ export function AttachmentPicker({
 				ref={ref}
 				type="file"
 				multiple
-				accept="image/png,image/jpeg,image/webp,image/gif,text/*,application/json"
+				accept="image/png,image/jpeg,image/webp,image/gif,text/*"
 				className="hidden"
 				onChange={(e) => {
 					const list = Array.from(e.target.files ?? []);
