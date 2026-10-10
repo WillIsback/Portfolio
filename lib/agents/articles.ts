@@ -28,7 +28,7 @@ export function frontmatterToMdx(draft: ArticleDraft): string {
 		`title: ${yamlString(draft.title)}`,
 		`description: ${yamlString(draft.description)}`,
 		`date: ${draft.date}`,
-		`tags: [${draft.tags.join(", ")}]`,
+		`tags: [${draft.tags.map(yamlString).join(", ")}]`,
 	];
 	if (draft.status) lines.push(`status: ${yamlString(draft.status)}`);
 	if (draft.period) lines.push(`period: ${yamlString(draft.period)}`);

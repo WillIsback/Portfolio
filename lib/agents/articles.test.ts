@@ -36,4 +36,15 @@ describe("frontmatterToMdx", () => {
 		);
 		expect(mdx).toContain('title: "Carnet : agents"');
 	});
+	it("échappe les guillemets et antislash", () => {
+		const mdx = frontmatterToMdx(
+			ArticleDraftSchema.parse({
+				...draft,
+				title: 'A "B" \\ C',
+				tags: ["a, b"],
+			}),
+		);
+		expect(mdx).toContain('title: "A \\"B\\" \\\\ C"');
+		expect(mdx).toContain('tags: ["a, b"]');
+	});
 });
