@@ -19,6 +19,15 @@ describe("ProjectProposalSchema", () => {
 		});
 		expect(r.success).toBe(false);
 	});
+	it("ne renseigne que les champs fournis (aucun défaut injecté)", () => {
+		const p = ProjectProposalSchema.parse({
+			action: "update",
+			projectId: 3,
+			summary: "s",
+			data: { domains: ["Agents"] },
+		});
+		expect(summarizeProposal(p)).toEqual(["domains"]);
+	});
 });
 
 describe("summarizeProposal", () => {
