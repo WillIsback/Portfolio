@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
 import type { AdminProject } from "@/schemas";
 
-type Row = {
+export type Row = {
 	title: string;
 	description: string;
 	imagePath: string | null;
@@ -51,7 +51,7 @@ export function toAdminProject(row: Row): AdminProject {
 	};
 }
 
-const INCLUDE = {
+export const INCLUDE = {
 	languages: true,
 	databases: true,
 	backends: true,

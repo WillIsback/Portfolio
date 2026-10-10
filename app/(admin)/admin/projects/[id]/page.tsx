@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { toAdminProject } from "@/lib/admin/load-project";
+import { INCLUDE, toAdminProject } from "@/lib/admin/load-project";
 import { getAllArticles } from "@/lib/articles/loader";
 import prisma from "@/lib/db";
 import { ProjectEditForm } from "./ProjectEditForm";
@@ -15,16 +15,7 @@ export default async function EditProjectPage({
 	const { id } = await params;
 	const project = await prisma.project.findUnique({
 		where: { id: Number(id) },
-		include: {
-			languages: true,
-			databases: true,
-			backends: true,
-			frontends: true,
-			devops: true,
-			domains: true,
-			mlStack: true,
-			practices: true,
-		},
+		include: INCLUDE,
 	});
 
 	if (!project) notFound();
