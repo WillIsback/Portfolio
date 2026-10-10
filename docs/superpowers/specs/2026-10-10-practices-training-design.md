@@ -69,9 +69,11 @@ colonne nullable. Le client généré est committé. Aucune donnée existante n'
 
 ### Étiquetage initial
 
-Un script idempotent `pnpm catalogue:practices` lit une table versionnée, `lib/catalogue/initial-training.ts`,
-comme pour les domaines. Il renseigne `training` sur les projets existants, puis il lance la détection des pratiques
-sur chaque dépôt et ajoute ce qu'elle trouve, sans rien retirer.
+Un script idempotent `pnpm catalogue:training` (essai à blanc par défaut, `--apply` pour écrire) lit une table
+versionnée, `lib/catalogue/initial-training.ts`, comme pour les domaines, et renseigne `training` sur les projets
+existants. Les pratiques ne passent pas par un script : elles arrivent par « Analyser tout » sur l'écran de
+synchronisation, qui utilise le jeton OAuth admin. Un script sans jeton dépasserait le quota anonyme de l'API
+GitHub (60 requêtes/heure pour environ 8 requêtes par dépôt). Le diff des pratiques est additif (§3).
 
 Affectation des parcours (validée par Will le 2026-10-10) :
 
