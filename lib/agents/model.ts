@@ -1,4 +1,9 @@
-import { type AgentFetch, vllmBaseUrl, vllmHeaders } from "./provider";
+import {
+	type AgentFetch,
+	vllmAuthHeaders,
+	vllmBaseUrl,
+	vllmHeaders,
+} from "./provider";
 
 export const MODEL_TTL_MS = 5 * 60 * 1000;
 
@@ -36,13 +41,18 @@ export function createModelResolver({
 
 let singleton: (() => Promise<string>) | null = null;
 
+/** Réinitialise le cache du résolveur (tests). */
+export function resetModelResolverForTests(): void {
+	singleton = null;
+}
+
 /** Modèle courant : pin `VLLM_MODEL` si défini, sinon auto-discover. */
 export async function resolveModelId(): Promise<string> {
 	const pinned = process.env.VLLM_MODEL;
 	if (pinned) return pinned;
 	singleton ??= createModelResolver({
 		baseUrl: vllmBaseUrl(),
-		headers: vllmHeaders(),
+		headers: { ...vllmHeaders(), ...vllmAuthHeaders() },
 	});
 	return singleton();
 }

@@ -1,5 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
-import { createModelResolver } from "./model";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+	createModelResolver,
+	resetModelResolverForTests,
+	resolveModelId,
+} from "./model";
 
 function fakeFetch(ids: string[], status = 200) {
 	const calls = { n: 0 };
@@ -60,5 +64,52 @@ describe("createModelResolver", () => {
 			fetchImpl,
 		});
 		await expect(resolve()).rejects.toThrow(/Aucun modèle/);
+	});
+});
+
+describe("resolveModelId", () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		resetModelResolverForTests();
+		delete process.env.VLLM_MODEL;
+		delete process.env.VLLM_API_KEY;
+		delete process.env.CF_ACCESS_CLIENT_ID;
+	});
+
+	it("envoie l'API key vLLM (Authorization) sur /models", async () => {
+		process.env.VLLM_BASE_URL = "https://x/v1";
+		process.env.VLLM_API_KEY = "sk-test";
+		const seen: RequestInit[] = [];
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (_url: string, init?: RequestInit) => {
+				seen.push(init ?? {});
+				return new Response(JSON.stringify({ data: [{ id: "m" }] }), {
+					status: 200,
+				});
+			}),
+		);
+		expect(await resolveModelId()).toBe("m");
+		expect((seen[0].headers as Record<string, string>).Authorization).toBe(
+			"Bearer sk-test",
+		);
+	});
+
+	it("n'ajoute pas Authorization si la clé est absente", async () => {
+		process.env.VLLM_BASE_URL = "https://x/v1";
+		const seen: RequestInit[] = [];
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (_url: string, init?: RequestInit) => {
+				seen.push(init ?? {});
+				return new Response(JSON.stringify({ data: [{ id: "m" }] }), {
+					status: 200,
+				});
+			}),
+		);
+		await resolveModelId();
+		expect(
+			(seen[0].headers as Record<string, string>).Authorization,
+		).toBeUndefined();
 	});
 });
