@@ -35,7 +35,7 @@ export function validateAttachment(meta: AttachmentMeta): AttachmentCheck {
 export function validateAttachmentSet(
 	files: AttachmentMeta[],
 ): AttachmentCheck {
-	const images = files.filter((f) => f.mediaType.startsWith("image/"));
+	const images = files.filter((f) => ALLOWED_IMAGE_TYPES.includes(f.mediaType));
 	if (images.length > MAX_IMAGES)
 		return { ok: false, reason: `Maximum ${MAX_IMAGES} images.` };
 	for (const f of files) {
