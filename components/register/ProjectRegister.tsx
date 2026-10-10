@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { useProjects } from "@/hooks/CustomHooks";
 import type { MapPoint } from "@/lib/carnet/map-view";
-import { featuredProjectIds } from "@/lib/featured";
 import { selectFeatured, splitIndex } from "@/lib/register";
 import type { ProjectFilters } from "@/schemas";
 import FilterBar from "./FilterBar";
@@ -57,10 +56,7 @@ export default function ProjectRegister({
 		].some((l) => (l?.length ?? 0) > 0);
 	const all = useProjects(NO_FILTERS);
 	const filtered = useProjects(filtersActive ? filters : NO_FILTERS);
-	const featured = useMemo(
-		() => selectFeatured(all.projects, featuredProjectIds),
-		[all.projects],
-	);
+	const featured = useMemo(() => selectFeatured(all.projects), [all.projects]);
 	const index = splitIndex(
 		all.projects,
 		filtered.projects,

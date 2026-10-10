@@ -37,6 +37,7 @@ export async function loadCorpus(): Promise<CorpusItem[]> {
 			backends: { select: { backend: true } },
 			frontends: { select: { frontend: true } },
 			devops: { select: { devops: true } },
+			mlStack: { select: { ml: true } },
 			domains: { select: { domain: true } },
 		},
 		orderBy: { id: "asc" },

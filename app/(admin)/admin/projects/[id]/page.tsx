@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getAllArticles } from "@/lib/articles/loader";
 import prisma from "@/lib/db";
 import type { AdminProject } from "@/schemas";
 import { ProjectEditForm } from "./ProjectEditForm";
@@ -21,10 +22,15 @@ export default async function EditProjectPage({
 			frontends: true,
 			devops: true,
 			domains: true,
+			mlStack: true,
 		},
 	});
 
 	if (!project) notFound();
+
+	const articles = getAllArticles()
+		.filter((a) => a.projects?.includes(project.id))
+		.map((a) => ({ slug: a.slug, title: a.title }));
 
 	const initial: AdminProject = {
 		title: project.title,
@@ -40,10 +46,16 @@ export default async function EditProjectPage({
 		frontends: project.frontends.map((f) => f.frontend),
 		devops: project.devops.map((d) => d.devops),
 		domains: project.domains.map((d) => d.domain),
+		mlStack: project.mlStack.map((m) => m.ml),
+		pitch: project.pitch ?? undefined,
+		status: project.status ?? undefined,
+		period: project.period ?? undefined,
+		githubRepoId: project.githubRepoId ?? undefined,
+		featuredRank: project.featuredRank ?? undefined,
 	};
 
 	return (
-		<div className="max-w-2xl">
+		<div className="max-w-3xl">
 			<div className="flex items-center gap-3 mb-8">
 				<Link
 					href="/admin/projects"
@@ -54,7 +66,7 @@ export default async function EditProjectPage({
 				<span className="text-zinc-700">/</span>
 				<h1 className="text-xl font-bold font-mono">{project.title}</h1>
 			</div>
-			<ProjectEditForm id={project.id} initial={initial} />
+			<ProjectEditForm id={project.id} initial={initial} articles={articles} />
 		</div>
 	);
 }

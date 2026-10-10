@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Project: 'Project',
   ProjectLanguage: 'ProjectLanguage',
+  ProjectMlStack: 'ProjectMlStack',
   ProjectDomain: 'ProjectDomain',
   ProjectDatabase: 'ProjectDatabase',
   ProjectBackend: 'ProjectBackend',
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "projectLanguage" | "projectDomain" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
+    modelProps: "project" | "projectLanguage" | "projectMlStack" | "projectDomain" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -555,6 +556,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProjectLanguageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProjectLanguageCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProjectMlStack: {
+      payload: Prisma.$ProjectMlStackPayload<ExtArgs>
+      fields: Prisma.ProjectMlStackFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectMlStackFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectMlStackFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectMlStackFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectMlStackFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectMlStackFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectMlStackCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectMlStackCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectMlStackCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectMlStackDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        update: {
+          args: Prisma.ProjectMlStackUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectMlStackDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectMlStackUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectMlStackUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectMlStackUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMlStackPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectMlStackAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectMlStack>
+        }
+        groupBy: {
+          args: Prisma.ProjectMlStackGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectMlStackGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectMlStackCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectMlStackCountAggregateOutputType> | number
         }
       }
     }
@@ -976,6 +1051,12 @@ export const ProjectScalarFieldEnum = {
   lastUpdate: 'lastUpdate',
   isPrivate: 'isPrivate',
   isAiGenerated: 'isAiGenerated',
+  pitch: 'pitch',
+  status: 'status',
+  period: 'period',
+  githubRepoId: 'githubRepoId',
+  featuredRank: 'featuredRank',
+  syncedAt: 'syncedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -990,6 +1071,15 @@ export const ProjectLanguageScalarFieldEnum = {
 } as const
 
 export type ProjectLanguageScalarFieldEnum = (typeof ProjectLanguageScalarFieldEnum)[keyof typeof ProjectLanguageScalarFieldEnum]
+
+
+export const ProjectMlStackScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  ml: 'ml'
+} as const
+
+export type ProjectMlStackScalarFieldEnum = (typeof ProjectMlStackScalarFieldEnum)[keyof typeof ProjectMlStackScalarFieldEnum]
 
 
 export const ProjectDomainScalarFieldEnum = {
@@ -1117,6 +1207,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'ProjectStatus'
+ */
+export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectStatus[]'
+ */
+export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Language'
  */
 export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language'>
@@ -1127,6 +1231,20 @@ export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Language[]'
  */
 export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MlStack'
+ */
+export type EnumMlStackFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MlStack'>
+    
+
+
+/**
+ * Reference to a field of type 'MlStack[]'
+ */
+export type ListEnumMlStackFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MlStack[]'>
     
 
 
@@ -1310,6 +1428,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   projectLanguage?: Prisma.ProjectLanguageOmit
+  projectMlStack?: Prisma.ProjectMlStackOmit
   projectDomain?: Prisma.ProjectDomainOmit
   projectDatabase?: Prisma.ProjectDatabaseOmit
   projectBackend?: Prisma.ProjectBackendOmit

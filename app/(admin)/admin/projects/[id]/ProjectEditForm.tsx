@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- capture distante, hôte non configuré pour next/image */
 // app/(admin)/projects/[id]/ProjectEditForm.tsx
 "use client";
 
@@ -7,8 +8,18 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateProject } from "@/app/actions/admin.action";
 import { IconPickerModal } from "@/components/admin/IconPickerModal";
+import { buildSavePayload, PITCH_MAX } from "@/lib/admin/project-form";
 import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
 import { LUCIDE_ICONS } from "@/lib/icon-bank";
+import { PROJECT_STATUSES, STATUS_LABELS } from "@/lib/status";
+import {
+	BACKEND_LABELS,
+	DATABASE_LABELS,
+	DEVOPS_LABELS,
+	FRONTEND_LABELS,
+	LANGUAGE_LABELS,
+	ML_STACK_LABELS,
+} from "@/lib/tech-labels";
 import {
 	type AdminProject,
 	BackendApiEnum,
@@ -16,7 +27,13 @@ import {
 	DevOpsEnum,
 	FrontendEnum,
 	LanguageEnum,
+	MlStackEnum,
 } from "@/schemas";
+import { ImagePicker } from "./ImagePicker";
+import { ProjectPreview } from "./ProjectPreview";
+
+const FIELD =
+	"w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600";
 
 const LUCIDE_COMPONENT_MAP = Object.fromEntries(
 	LUCIDE_ICONS.map((e) => [e.id, e.component]),
@@ -25,14 +42,18 @@ const LUCIDE_COMPONENT_MAP = Object.fromEntries(
 export function ProjectEditForm({
 	id,
 	initial,
+	articles = [],
 }: {
 	id: number;
 	initial: AdminProject;
+	articles?: { slug: string; title: string }[];
 }) {
 	const router = useRouter();
 	const [form, setForm] = useState<AdminProject>(initial);
 	const [isPending, startTransition] = useTransition();
 	const [modalOpen, setModalOpen] = useState(false);
+	const [featured, setFeatured] = useState(initial.featuredRank !== undefined);
+	const [rankText, setRankText] = useState(String(initial.featuredRank ?? 1));
 
 	function setField<K extends keyof AdminProject>(
 		key: K,
@@ -55,9 +76,15 @@ export function ProjectEditForm({
 	}
 
 	function handleSave() {
+		const built = buildSavePayload(form, featured, rankText);
+		if (!built.ok) {
+			toast.error(built.error);
+			return;
+		}
+		const payload = built.data;
 		startTransition(async () => {
 			try {
-				await updateProject(id, form);
+				await updateProject(id, payload);
 				toast.success("Project updated");
 				router.push("/admin/projects");
 			} catch {
@@ -83,6 +110,12 @@ export function ProjectEditForm({
 				<div className="w-10 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-600 text-xs">
 					?
 				</div>
+			);
+		}
+		if (/^https?:\/\//.test(path)) {
+			return (
+				// biome-ignore lint/performance/noImgElement: capture distante, hôte non configuré pour next/image
+				<img src={path} alt="" className="object-cover w-10 h-10 rounded" />
 			);
 		}
 		const src = path.startsWith("/") ? path : `/${path}`;
@@ -142,6 +175,68 @@ export function ProjectEditForm({
 			</div>
 
 			<div>
+				<label htmlFor="pitch" className="text-xs text-zinc-500 block mb-1">
+					Accroche
+				</label>
+				<input
+					id="pitch"
+					className={FIELD}
+					maxLength={PITCH_MAX}
+					aria-describedby="pitch-count"
+					value={form.pitch ?? ""}
+					onChange={(e) => setField("pitch", e.target.value || undefined)}
+				/>
+				<p id="pitch-count" className="mt-1 text-xs text-zinc-500">
+					{(form.pitch ?? "").length} / {PITCH_MAX}
+				</p>
+			</div>
+
+			<div className="grid grid-cols-2 gap-4">
+				<div>
+					<label htmlFor="status" className="text-xs text-zinc-500 block mb-1">
+						Statut
+					</label>
+					<select
+						id="status"
+						className={FIELD}
+						value={form.status ?? ""}
+						onChange={(e) =>
+							setField(
+								"status",
+								(e.target.value || undefined) as AdminProject["status"],
+							)
+						}
+					>
+						<option value="">Non renseigné</option>
+						{PROJECT_STATUSES.map((s) => (
+							<option key={s} value={s}>
+								{STATUS_LABELS[s]}
+							</option>
+						))}
+					</select>
+				</div>
+				<div>
+					<label htmlFor="period" className="text-xs text-zinc-500 block mb-1">
+						Période
+					</label>
+					<input
+						id="period"
+						className={FIELD}
+						placeholder="2025 – 2026"
+						value={form.period ?? ""}
+						onChange={(e) => setField("period", e.target.value || undefined)}
+					/>
+				</div>
+			</div>
+
+			<ImagePicker
+				projectId={id}
+				isPrivate={form.isPrivate}
+				value={form.imagePath ?? ""}
+				onChange={(v) => setField("imagePath", v || undefined)}
+			/>
+
+			<div>
 				<label htmlFor="github" className="text-xs text-zinc-500 block mb-1">
 					GitHub URL
 				</label>
@@ -156,32 +251,45 @@ export function ProjectEditForm({
 			<TechStackCheckboxes
 				label="Languages"
 				options={LanguageEnum.options}
+				labels={LANGUAGE_LABELS}
 				selected={form.languages}
 				onChange={(v) => toggleArrayValue("languages", v)}
 			/>
 			<TechStackCheckboxes
 				label="Databases"
 				options={DatabaseEnum.options}
+				labels={DATABASE_LABELS}
 				selected={form.databases}
 				onChange={(v) => toggleArrayValue("databases", v)}
 			/>
 			<TechStackCheckboxes
 				label="Backend APIs"
 				options={BackendApiEnum.options}
+				labels={BACKEND_LABELS}
 				selected={form.backends}
 				onChange={(v) => toggleArrayValue("backends", v)}
 			/>
 			<TechStackCheckboxes
 				label="Frontend"
 				options={FrontendEnum.options}
+				labels={FRONTEND_LABELS}
 				selected={form.frontends}
 				onChange={(v) => toggleArrayValue("frontends", v)}
 			/>
 			<TechStackCheckboxes
 				label="DevOps"
 				options={DevOpsEnum.options}
+				labels={DEVOPS_LABELS}
 				selected={form.devops}
 				onChange={(v) => toggleArrayValue("devops", v)}
+			/>
+
+			<TechStackCheckboxes
+				label="ML & Data"
+				options={MlStackEnum.options}
+				labels={ML_STACK_LABELS}
+				selected={form.mlStack}
+				onChange={(v) => toggleArrayValue("mlStack", v)}
 			/>
 
 			<fieldset>
@@ -223,6 +331,21 @@ export function ProjectEditForm({
 				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
 					<input
 						type="checkbox"
+						checked={featured}
+						onChange={(e) => {
+							setFeatured(e.target.checked);
+							if (e.target.checked) {
+								setRankText("1");
+								setField("featuredRank", 1);
+							} else setField("featuredRank", undefined);
+						}}
+						className="accent-zinc-400"
+					/>
+					Mettre en avant
+				</label>
+				<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
+					<input
+						type="checkbox"
 						checked={form.isAiGenerated}
 						onChange={(e) => setField("isAiGenerated", e.target.checked)}
 						className="accent-zinc-400"
@@ -230,6 +353,44 @@ export function ProjectEditForm({
 					AI Generated
 				</label>
 			</div>
+
+			{featured ? (
+				<div>
+					<label htmlFor="rank" className="text-xs text-zinc-500 block mb-1">
+						Rang du projet phare
+					</label>
+					<input
+						id="rank"
+						type="number"
+						min={1}
+						step={1}
+						className={`${FIELD} w-28`}
+						value={rankText}
+						onChange={(e) => {
+							setRankText(e.target.value);
+							const n = Number(e.target.value);
+							if (Number.isInteger(n) && n >= 1) setField("featuredRank", n);
+						}}
+					/>
+				</div>
+			) : null}
+
+			<section aria-labelledby="articles-title">
+				<h2 id="articles-title" className="text-xs text-zinc-500 mb-1.5">
+					Articles qui citent ce projet
+				</h2>
+				{articles.length === 0 ? (
+					<p className="text-xs text-zinc-600">Aucun article.</p>
+				) : (
+					<ul className="list-disc pl-5 text-sm text-zinc-300">
+						{articles.map((a) => (
+							<li key={a.slug}>{a.title}</li>
+						))}
+					</ul>
+				)}
+			</section>
+
+			<ProjectPreview id={id} form={form} />
 
 			<div className="flex gap-3 pt-2">
 				<button
@@ -262,11 +423,13 @@ export function ProjectEditForm({
 function TechStackCheckboxes({
 	label,
 	options,
+	labels = {},
 	selected,
 	onChange,
 }: {
 	label: string;
 	options: readonly string[];
+	labels?: Record<string, string>;
 	selected: string[];
 	onChange: (value: string) => void;
 }) {
@@ -289,7 +452,7 @@ function TechStackCheckboxes({
 							checked={selected.includes(opt)}
 							onChange={() => onChange(opt)}
 						/>
-						{opt}
+						{labels[opt] ?? opt}
 					</label>
 				))}
 			</div>

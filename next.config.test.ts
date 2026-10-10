@@ -10,4 +10,12 @@ describe("next.config", () => {
 			value: "public, max-age=31536000, immutable",
 		});
 	});
+
+	it("autorise les captures raw.githubusercontent.com dans next/image", () => {
+		expect(nextConfig.images?.remotePatterns).toContainEqual({
+			protocol: "https",
+			hostname: "raw.githubusercontent.com",
+			pathname: "/WillIsback/**",
+		});
+	});
 });

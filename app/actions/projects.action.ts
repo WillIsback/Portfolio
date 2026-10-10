@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import {
 	getProjectsFromJson,
 	type NormalizedProject,
+	withProjectDefaults,
 } from "@/lib/projects-data";
 import { type ProjectFilters, ProjectFiltersSchema } from "@/schemas";
 
@@ -125,6 +126,12 @@ async function getProjectsFromDb(
 			frontends: true,
 			devops: true,
 			domains: true,
+			mlStack: true,
+			pitch: true,
+			status: true,
+			period: true,
+			featuredRank: true,
+			githubRepoId: true,
 		},
 		orderBy: { lastUpdate: "desc" },
 	});
@@ -138,6 +145,7 @@ async function getProjectsFromDb(
 		frontends: p.frontends.map((f) => ({ frontend: f.frontend })),
 		devops: p.devops.map((d) => ({ devops: d.devops })),
 		domains: p.domains.map((d) => ({ domain: d.domain })),
+		mlStack: p.mlStack.map((m) => ({ ml: m.ml })),
 	}));
 }
 
@@ -167,14 +175,14 @@ export async function getProjects(rawFilters?: ProjectFilters) {
 	// Fonction cachée (production seulement)
 	const getCachedProjects = unstable_cache(
 		async () => getProjectsFromDb(filters),
-		["projects", cacheKey],
+		["projects-v2", cacheKey],
 		{
 			tags: ["projects"],
 			revalidate: 300,
 		},
 	);
 
-	return getCachedProjects();
+	return (await getCachedProjects()).map(withProjectDefaults);
 }
 
 // Server Action pour récupérer un projet par ID
@@ -211,9 +219,15 @@ export async function getProjectById(id: number) {
 					frontends: true,
 					devops: true,
 					domains: true,
+					mlStack: true,
+					pitch: true,
+					status: true,
+					period: true,
+					featuredRank: true,
+					githubRepoId: true,
 				},
 			}),
-		["project", String(id)],
+		["project-v2", String(id)],
 		{
 			tags: ["projects", `project-${id}`],
 			revalidate: 300,

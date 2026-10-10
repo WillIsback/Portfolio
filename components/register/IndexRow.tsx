@@ -1,6 +1,7 @@
 import { isExternalHref } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { projectYear, techNames } from "@/lib/register";
+import { type ProjectStatusValue, STATUS_LABELS } from "@/lib/status";
 import DomainChips from "./DomainChips";
 
 export default function IndexRow({
@@ -9,6 +10,10 @@ export default function IndexRow({
 	const name = (
 		<span className="font-display font-semibold">{project.title}</span>
 	);
+	const statusLabel =
+		project.status === "InProgress" || project.status === "Archived"
+			? STATUS_LABELS[project.status as ProjectStatusValue]
+			: null;
 	const tech = techNames(project).slice(0, 4).join(" · ");
 	return (
 		<li className="grid grid-cols-[1fr_auto] items-start gap-x-4 gap-y-0.5 border-b border-border/60 py-2.5 sm:grid-cols-[minmax(10rem,14rem)_1fr_auto]">
@@ -31,7 +36,9 @@ export default function IndexRow({
 				)}
 			</span>
 			<span className="order-3 col-span-2 self-start text-sm text-ink-soft sm:order-none sm:col-span-1">
-				<span className="line-clamp-1">{project.description}</span>
+				<span className="line-clamp-1">
+					{project.pitch?.trim() || project.description}
+				</span>
 				{tech || project.domains.length > 0 ? (
 					<span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
 						<DomainChips domains={project.domains} />
@@ -41,6 +48,14 @@ export default function IndexRow({
 			</span>
 			<span className="font-mono text-xs text-ink-soft">
 				{projectYear(project)}
+				{statusLabel ? (
+					<>
+						<span className="sr-only">, </span>
+						<span className="ml-2 font-mono text-[11px] text-ink-soft">
+							{statusLabel}
+						</span>
+					</>
+				) : null}
 			</span>
 		</li>
 	);

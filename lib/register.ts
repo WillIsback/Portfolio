@@ -12,19 +12,17 @@ const time = (d: Date | string | null) => (d ? new Date(d).getTime() : 0);
 const byRecent = (a: NormalizedProject, b: NormalizedProject) =>
 	time(b.lastUpdate) - time(a.lastUpdate) || a.id - b.id;
 
-/** Spec §6.4 : projets publics à domaines IA/Data du plus récent au plus ancien ; liste explicite prioritaire. */
+/** Projets publics classés (`featuredRank`, ordre croissant, 6 au plus) ; sinon règle automatique (domaines IA/Data, récence). */
 export function selectFeatured(
 	projects: NormalizedProject[],
-	explicitIds: number[],
 ): NormalizedProject[] {
 	const visible = projects.filter((p) => !p.isPrivate);
-	if (explicitIds.length > 0) {
-		const byId = new Map(visible.map((p) => [p.id, p]));
-		return [...new Set(explicitIds)]
-			.map((id) => byId.get(id))
-			.filter((p): p is NormalizedProject => p !== undefined)
-			.slice(0, FEATURED_MAX);
-	}
+	const ranked = visible
+		.filter((p) => p.featuredRank !== null)
+		.sort(
+			(a, b) => (a.featuredRank ?? 0) - (b.featuredRank ?? 0) || a.id - b.id,
+		);
+	if (ranked.length > 0) return ranked.slice(0, FEATURED_MAX);
 	const sorted = [...visible].sort(byRecent);
 	const flagged = sorted.filter((p) => p.domains.length > 0);
 	const fill = sorted.filter((p) => p.domains.length === 0);
@@ -47,7 +45,13 @@ export function splitIndex(
 }
 
 export interface TechShare {
-	key: "languages" | "databases" | "backends" | "frontends" | "devops";
+	key:
+		| "languages"
+		| "mlStack"
+		| "databases"
+		| "backends"
+		| "frontends"
+		| "devops";
 	label: string;
 	count: number;
 	share: number;
@@ -62,6 +66,11 @@ const CATEGORIES: {
 		key: "languages",
 		label: "Langages",
 		names: (p) => p.languages.map((l) => l.language),
+	},
+	{
+		key: "mlStack",
+		label: "ML & Data",
+		names: (p) => p.mlStack.map((m) => m.ml),
 	},
 	{
 		key: "databases",
@@ -102,10 +111,13 @@ export function techNames(p: NormalizedProject): string[] {
 	return CATEGORIES.flatMap((c) => c.names(p)).map(techLabel);
 }
 
-/** Une vraie capture d'écran : image matricielle hors images GitHub par défaut (spec §8.1). */
+const RAW_CAPTURE_PREFIX = "https://raw.githubusercontent.com/WillIsback/";
+
+/** Une vraie capture d'écran : image matricielle locale ("/…") ou hébergée sur raw.githubusercontent.com/WillIsback/ (seul hôte autorisé dans next/image). */
 export function isCapture(imagePath: string | null): boolean {
 	if (!imagePath) return false;
-	if (/github/i.test(imagePath)) return false;
+	const local = imagePath.startsWith("/") && !imagePath.startsWith("//");
+	if (!local && !imagePath.startsWith(RAW_CAPTURE_PREFIX)) return false;
 	return /\.(png|jpe?g|webp|avif)$/i.test(imagePath);
 }
 

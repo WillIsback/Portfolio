@@ -11,7 +11,8 @@ export default async function AdminLayout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
-	if (!session) redirect("/admin/login");
+	if (!session?.user || session.user.githubId !== process.env.ADMIN_GITHUB_ID)
+		redirect("/admin/login");
 
 	return (
 		<div className="flex min-h-screen font-sans bg-zinc-950 text-zinc-100">
@@ -29,7 +30,7 @@ export default async function AdminLayout({
 					href="/admin/github"
 					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
 				>
-					Import from GitHub
+					Synchronisation GitHub
 				</Link>
 				<Link
 					href="/admin/projects"

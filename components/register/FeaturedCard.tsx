@@ -71,7 +71,7 @@ export default function FeaturedCard({
 			</h3>
 			<DomainChips domains={project.domains} className="mt-2" />
 			<p className="mt-2 text-base leading-relaxed">
-				{firstSentence(project.description)}
+				{project.pitch?.trim() || firstSentence(project.description)}
 			</p>
 			<p className="mt-3 font-mono text-[11px] text-ink-soft">
 				{techNames(project).join(" · ")}

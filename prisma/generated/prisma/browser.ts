@@ -28,6 +28,11 @@ export type Project = Prisma.ProjectModel
  */
 export type ProjectLanguage = Prisma.ProjectLanguageModel
 /**
+ * Model ProjectMlStack
+ * 
+ */
+export type ProjectMlStack = Prisma.ProjectMlStackModel
+/**
  * Model ProjectDomain
  * 
  */

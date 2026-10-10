@@ -26,6 +26,12 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	frontends: [],
 	devops: [{ devops: "Docker" }],
 	domains: [],
+	mlStack: [],
+	pitch: null,
+	status: null,
+	period: null,
+	featuredRank: null,
+	githubRepoId: null,
 	...over,
 });
 const points: MapPoint[] = [
@@ -237,6 +243,48 @@ describe("IndexRow", () => {
 	});
 });
 
+describe("accroche et statut", () => {
+	const card = (project: NormalizedProject) =>
+		renderToStaticMarkup(
+			<FeaturedCard
+				project={project}
+				figureNumber={1}
+				points={points}
+				neighborIds={[]}
+			/>,
+		);
+	const row = (project: NormalizedProject) =>
+		renderToStaticMarkup(
+			<ul>
+				<IndexRow project={project} />
+			</ul>,
+		);
+
+	it("l'accroche remplace la première phrase et la description", () => {
+		const project = p({ pitch: "Une accroche nette." });
+		expect(card(project)).toContain("Une accroche nette.");
+		expect(card(project)).not.toContain("Segmentation de vêtements.");
+		expect(row(project)).toContain("Une accroche nette.");
+		expect(row(project)).not.toContain("Segmentation de vêtements");
+	});
+
+	it("affiche « en cours » et « archivé », pas « terminé »", () => {
+		expect(row(p({ status: "InProgress" }))).toContain("en cours");
+		expect(row(p({ status: "Archived" }))).toContain("archivé");
+		expect(row(p({ status: "Done" }))).not.toContain("terminé");
+		expect(row(p({ status: null }))).not.toContain("en cours");
+	});
+
+	it("TechBar teinte ML & Data avec --primary", () => {
+		const html = renderToStaticMarkup(
+			<TechBar
+				shares={[{ key: "mlStack", label: "ML & Data", count: 1, share: 1 }]}
+			/>,
+		);
+		expect(html).toContain("var(--primary)");
+	});
+});
+
 describe("DomainChips", () => {
 	it("ne rend rien sans domaine", () => {
 		expect(renderToStaticMarkup(<DomainChips domains={[]} />)).toBe("");
@@ -293,5 +341,16 @@ describe("parseFilters", () => {
 		const f = parseFilters(new URLSearchParams("domain=Vision,LLM"));
 		expect(f.domain).toEqual(["Vision", "LLM"]);
 		expect(parseFilters(new URLSearchParams("")).domain).toEqual([]);
+	});
+});
+
+describe("IndexRow lecteurs d'écran", () => {
+	it("sépare l'année et le statut par une virgule masquée", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={p({ status: "Archived" })} />
+			</ul>,
+		);
+		expect(html).toContain('<span class="sr-only">, </span>');
 	});
 });
