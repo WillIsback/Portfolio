@@ -2,18 +2,19 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { filesToDataUrls } from "@/lib/agents/attachments";
 import { ProjectProposalSchema } from "@/lib/agents/proposals";
 import { AttachmentPicker } from "./AttachmentPicker";
 import { ProposalCard } from "./ProposalCard";
 
 export function ChatPanel({ api }: { api: string }) {
-	const { messages, sendMessage, status } = useChat({
-		transport: new DefaultChatTransport({ api }),
-	});
+	const transport = useMemo(() => new DefaultChatTransport({ api }), [api]);
+	const { messages, sendMessage, status, error } = useChat({ transport });
 	const [input, setInput] = useState("");
 	const [files, setFiles] = useState<File[]>([]);
+	const busy = status === "submitted" || status === "streaming";
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-8rem)] max-w-3xl">
@@ -30,18 +31,26 @@ export function ChatPanel({ api }: { api: string }) {
 										{part.text}
 									</p>
 								);
-							if (part.type === "file" && part.mediaType.startsWith("image/"))
+							if (part.type === "file") {
+								if (part.mediaType?.startsWith("image/"))
+									return (
+										// biome-ignore lint/performance/noImgElement: aperçu local d'une pièce jointe
+										<img
+											key={i}
+											src={part.url}
+											alt={part.filename ?? "pièce jointe"}
+											className="max-w-xs rounded border border-zinc-700"
+										/>
+									);
 								return (
-									// biome-ignore lint/performance/noImgElement: aperçu local d'une pièce jointe
-									<img
-										key={i}
-										src={part.url}
-										alt={part.filename ?? "pièce jointe"}
-										className="max-w-xs rounded border border-zinc-700"
-									/>
+									<span key={i} className="text-xs text-zinc-400 font-mono">
+										{part.filename ?? part.mediaType ?? "fichier"}
+									</span>
 								);
+							}
 							if (part.type === "tool-proposeProjectDraft") {
-								const out = (part as { output?: unknown }).output;
+								const out =
+									part.state === "output-available" ? part.output : undefined;
 								const parsed = ProjectProposalSchema.safeParse(out);
 								return parsed.success ? (
 									<ProposalCard key={i} proposal={parsed.data} />
@@ -56,19 +65,25 @@ export function ChatPanel({ api }: { api: string }) {
 				className="border-t border-zinc-800 pt-3 flex flex-col gap-2"
 				onSubmit={async (e) => {
 					e.preventDefault();
-					if (!input.trim()) return;
-					const fileParts = files.length ? await filesToDataUrls(files) : [];
-					sendMessage({
-						role: "user",
-						parts: [{ type: "text", text: input }, ...fileParts],
-					});
-					setInput("");
-					setFiles([]);
+					if (!input.trim() || busy) return;
+					try {
+						const fileParts = files.length ? await filesToDataUrls(files) : [];
+						sendMessage({
+							role: "user",
+							parts: [{ type: "text", text: input }, ...fileParts],
+						});
+						setInput("");
+						setFiles([]);
+					} catch {
+						toast.error("Pièce jointe illisible.");
+					}
 				}}
 			>
 				<div className="flex items-center justify-between">
 					<AttachmentPicker files={files} onFiles={setFiles} />
-					{status !== "ready" ? (
+					{error ? (
+						<p className="text-xs text-red-400">Erreur : {error.message}</p>
+					) : status !== "ready" ? (
 						<span className="text-xs text-zinc-500">L'agent réfléchit…</span>
 					) : null}
 				</div>
@@ -81,7 +96,7 @@ export function ChatPanel({ api }: { api: string }) {
 				/>
 				<button
 					type="submit"
-					disabled={status !== "ready"}
+					disabled={busy}
 					className="self-end text-sm bg-zinc-100 text-zinc-900 rounded-lg px-4 py-2 font-medium disabled:opacity-50"
 				>
 					Envoyer

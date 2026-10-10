@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { toast } from "sonner";
 import { MAX_IMAGES, validateAttachmentSet } from "@/lib/agents/attachments";
 
 export function AttachmentPicker({
@@ -21,17 +22,17 @@ export function AttachmentPicker({
 				accept="image/png,image/jpeg,image/webp,image/gif,text/*,application/json"
 				className="hidden"
 				onChange={(e) => {
-					const metas = Array.from(e.target.files ?? []).map((f) => ({
-						mediaType: f.type,
-						size: f.size,
-					}));
-					const check = validateAttachmentSet(metas);
+					const list = Array.from(e.target.files ?? []);
+					const check = validateAttachmentSet(
+						list.map((f) => ({ mediaType: f.type, size: f.size })),
+					);
 					if (!check.ok) {
-						alert(check.reason);
+						toast.error(check.reason);
 						if (ref.current) ref.current.value = "";
 						return;
 					}
-					onFiles(Array.from(e.target.files ?? []));
+					onFiles(list);
+					if (ref.current) ref.current.value = "";
 				}}
 			/>
 			<button
