@@ -1,6 +1,15 @@
 "use client";
 import { Loader2, Send } from "lucide-react";
-import { useActionState, useEffect, useRef, useSyncExternalStore } from "react";
+import {
+	type FormEvent,
+	useActionState,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useSyncExternalStore,
+} from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import Footer from "@/components/Footer/Footer";
@@ -8,6 +17,13 @@ import Header from "@/components/Header/Header";
 import ThemedToaster from "@/components/theme/ThemedToaster";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { formatDateFr } from "@/lib/articles/format";
+import {
+	CONTACT_FIELDS,
+	type ContactField,
+	errorSummary,
+	firstInvalidField,
+	firstServerErrors,
+} from "@/lib/contact-form";
 import { sendEmail } from "../actions/contact.action";
 
 // Schéma de validation
@@ -38,19 +54,50 @@ export default function Contact() {
 	const today = useToday();
 	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
+	const [submitAnnouncement, setSubmitAnnouncement] = useState("");
+	const fieldRefs = useRef<Record<ContactField, HTMLElement | null>>({
+		email: null,
+		sujet: null,
+		message: null,
+	});
+
+	// Erreurs de champ renvoyées par le serveur (soumission sans JavaScript notamment).
+	const serverErrors = useMemo(
+		() =>
+			state && "error" in state && state.error && typeof state.error === "object"
+				? firstServerErrors(
+						state.error as Partial<Record<ContactField, string[]>>,
+					)
+				: {},
+		[state],
+	);
+
+	// Résumé annoncé : celui de la tentative côté client prime, sinon celui du serveur.
+	const serverAnnouncement = useMemo(
+		() => errorSummary(Object.keys(serverErrors).length),
+		[serverErrors],
+	);
+	const announcement = submitAnnouncement || serverAnnouncement;
 
 	const {
 		formData,
+		errors,
 		isValid,
 		handleChange,
 		handleBlur,
 		resetForm,
+		showAllErrors,
 		getFieldError,
 		isFieldInvalid,
 	} = useFormValidation({
 		schema: formSchema,
 		initialValues: initialFormValues,
+		serverErrors,
 	});
+
+	const focusField = useCallback((field: ContactField | null) => {
+		if (field) fieldRefs.current[field]?.focus();
+	}, []);
 
 	// Gestion des réponses serveur
 	useEffect(() => {
@@ -58,26 +105,43 @@ export default function Contact() {
 		if (!state || state === lastHandledState.current) return;
 		lastHandledState.current = state;
 
-		if (state.success) {
+		if ("success" in state && state.success) {
 			toast.success("Message envoyé !", {
 				description:
 					"Votre message a bien été envoyé. Je vous répondrai rapidement.",
 			});
 			resetForm();
+			return;
 		}
 
-		if (state.error) {
+		if ("error" in state && state.error) {
 			if (typeof state.error === "string") {
 				toast.error("Erreur d'envoi", {
 					description: state.error,
 				});
-			} else {
-				toast.error("Erreurs de validation", {
-					description: "Veuillez vérifier les champs du formulaire.",
-				});
+				return;
 			}
+			toast.error("Erreurs de validation", {
+				description: "Veuillez vérifier les champs du formulaire.",
+			});
+			const serverFieldErrors = firstServerErrors(
+				state.error as Partial<Record<ContactField, string[]>>,
+			);
+			focusField(firstInvalidField(CONTACT_FIELDS, serverFieldErrors));
 		}
-	}, [state, resetForm]);
+	}, [state, resetForm, focusField]);
+
+	// Le bouton reste actif : au clic invalide, on montre toutes les erreurs et on guide le visiteur.
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		if (isValid) {
+			setSubmitAnnouncement("");
+			return;
+		}
+		e.preventDefault();
+		showAllErrors();
+		setSubmitAnnouncement(errorSummary(Object.keys(errors).length));
+		focusField(firstInvalidField(CONTACT_FIELDS, errors));
+	};
 
 	return (
 		<main className="relative min-h-screen flex flex-col">
@@ -99,6 +163,8 @@ export default function Contact() {
 				</header>
 				<form
 					action={formAction}
+					onSubmit={handleSubmit}
+					noValidate
 					className="flex flex-col gap-6 border border-border bg-background/80 rounded-sm px-6 py-8 sm:px-10 sm:py-10 w-full"
 				>
 					<div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 font-mono text-xs text-ink-soft">
@@ -107,6 +173,9 @@ export default function Contact() {
 							{today ? formatDateFr(today) : ""}
 						</time>
 					</div>
+					<p aria-live="polite" className="sr-only">
+						{announcement}
+					</p>
 					<div className="mb-6">
 						<label
 							htmlFor="email"
@@ -115,6 +184,9 @@ export default function Contact() {
 							Adresse mail
 						</label>
 						<input
+							ref={(el) => {
+								fieldRefs.current.email = el;
+							}}
 							type="email"
 							id="email"
 							name="email"
@@ -152,6 +224,9 @@ export default function Contact() {
 							Sujet
 						</label>
 						<input
+							ref={(el) => {
+								fieldRefs.current.sujet = el;
+							}}
 							type="text"
 							id="sujet"
 							name="sujet"
@@ -189,6 +264,9 @@ export default function Contact() {
 							Message
 						</label>
 						<textarea
+							ref={(el) => {
+								fieldRefs.current.message = el;
+							}}
 							id="message"
 							name="message"
 							rows={8}
@@ -219,7 +297,7 @@ export default function Contact() {
 
 					<button
 						type="submit"
-						disabled={isPending || !isValid}
+						disabled={isPending}
 						className="group flex w-fit cursor-pointer items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{isPending ? (
