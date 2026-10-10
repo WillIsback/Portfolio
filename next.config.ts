@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
+import { withWorkflow } from "workflow/next";
 
-const nextConfig: NextConfig = {
+export const baseConfig: NextConfig = {
 	images: {
 		// Captures d'écran choisies dans les dépôts GitHub (admin, fiche projet).
 		remotePatterns: [
@@ -27,4 +28,4 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
+export default withWorkflow(baseConfig);
