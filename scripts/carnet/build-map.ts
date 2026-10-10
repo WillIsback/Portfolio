@@ -30,7 +30,7 @@ const OUT_SEARCH = path.join(process.cwd(), "content", "search-items.json");
 			kept.map((x) => x.vector),
 			{
 				k: 5,
-				seed: 42,
+				seed: 24,
 				model: `carnet-static@${model.meta.version}`,
 				now: new Date(),
 				labels: clusterLabels,

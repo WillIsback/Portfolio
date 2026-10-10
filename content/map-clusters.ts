@@ -3,9 +3,9 @@
  * (c1…c5). Relire l'appartenance des groupes après chaque régénération.
  */
 export const clusterLabels: Record<string, string> = {
-	c1: "Agents et SRE",
-	c2: "Outillage et CI",
-	c3: "Web TypeScript",
-	c4: "Data science",
-	c5: "LLM et NLP",
+	c1: "LLM et agents",
+	c2: "Services et API",
+	c3: "Data et web",
+	c4: "Vision et classification",
+	c5: "Outillage développeur",
 };
