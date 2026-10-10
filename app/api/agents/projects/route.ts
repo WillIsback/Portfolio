@@ -6,7 +6,7 @@ import {
 	toUIMessageStream,
 	type UIMessage,
 } from "ai";
-import { auth } from "@/auth";
+import { requireAdmin } from "@/lib/agents/auth";
 import { resolveModelId } from "@/lib/agents/model";
 import { vllmProvider } from "@/lib/agents/provider";
 import { requestOptions } from "@/lib/agents/reasoning";
@@ -21,12 +21,15 @@ proposeProjectDraft avec une proposition structurée ; l'humain validera dans l'
 Réponds en français, de façon concise.`;
 
 export async function POST(req: Request) {
-	const adminId = process.env.ADMIN_GITHUB_ID;
-	const session = await auth();
-	if (!adminId || session?.user?.githubId !== adminId)
+	if (!(await requireAdmin()))
 		return new Response("Unauthorized", { status: 401 });
 
-	const { messages }: { messages: UIMessage[] } = await req.json();
+	const body = (await req.json().catch(() => null)) as {
+		messages?: unknown;
+	} | null;
+	if (!body || !Array.isArray(body.messages))
+		return new Response("Bad Request", { status: 400 });
+	const messages = body.messages as UIMessage[];
 	const modelId = await resolveModelId();
 	const opts = requestOptions("chat");
 
@@ -36,6 +39,7 @@ export async function POST(req: Request) {
 		messages: await convertToModelMessages(messages),
 		tools: projectTools,
 		stopWhen: isStepCount(6),
+		abortSignal: req.signal,
 		...opts,
 	});
 

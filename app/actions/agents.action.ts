@@ -5,20 +5,14 @@ import {
 	deleteProject,
 	updateProject,
 } from "@/app/actions/admin.action";
-import { auth } from "@/auth";
 import { loadAdminProject } from "@/lib/admin/load-project";
+import { requireAdmin } from "@/lib/agents/auth";
 import {
 	type ProjectProposal,
 	ProjectProposalSchema,
 } from "@/lib/agents/proposals";
 import { normalizePractices } from "@/lib/practices";
 import { AdminProjectSchema } from "@/schemas";
-
-async function requireAdmin(): Promise<boolean> {
-	const adminId = process.env.ADMIN_GITHUB_ID;
-	const session = await auth();
-	return Boolean(adminId) && session?.user?.githubId === adminId;
-}
 
 export type ApplyResult = { ok: true } | { ok: false; error: string };
 
