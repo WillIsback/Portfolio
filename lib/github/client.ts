@@ -162,8 +162,22 @@ const isDockerfile = (p: string) =>
 
 /** Chemins utiles à la détection des pratiques (aucune requête de plus : l'arbre est déjà chargé). */
 const MARKER_RE =
-	/^(\.(github|forgejo)\/workflows\/|\.gitlab-ci\.yml$|\.github\/dependabot\.ya?ml$|(\.github\/)?renovate\.json5?$|\.semgrep\.ya?ml$|\.gitleaks\.toml$|\.secrets\.baseline$|dvc\.yaml$|\.dvc\/|vercel\.json$)|(^|\/)(docker-)?compose\.ya?ml$|\.dvc$|(^|\/)(tests|__tests__)\//;
+	/^(\.(github|forgejo)\/workflows\/|\.gitlab-ci\.yml$|\.github\/dependabot\.ya?ml$|(\.github\/)?renovate\.json5?$|\.semgrep\.ya?ml$|\.gitleaks\.toml$|\.secrets\.baseline$|dvc\.yaml$|vercel\.json$)|(^|\/)(docker-)?compose\.ya?ml$|\.dvc$/;
+/** Dossiers dont seule la présence compte : un chemin suffit, quel que soit leur volume. */
+const PRESENCE_RES = [/(^|\/)(tests|__tests__)\//, /^\.dvc\//];
 const MAX_MARKERS = 200;
+
+/** Dockerfile et marqueurs (plafonnés), plus un seul chemin par dossier « de présence ». */
+function markerPaths(paths: string[]): string[] {
+	const markers = paths
+		.filter((p) => isDockerfile(p) || MARKER_RE.test(p))
+		.slice(0, MAX_MARKERS);
+	const presence = PRESENCE_RES.flatMap((re) => {
+		const hit = paths.find((p) => re.test(p));
+		return hit ? [hit] : [];
+	});
+	return [...markers, ...presence];
+}
 
 interface TreeResponse {
 	tree?: { path: string; type: string }[];
@@ -223,10 +237,7 @@ export async function getRepoBundle(
 		.map((n) => n.path)
 		.filter((p) => !isVendored(p));
 	const images = paths.filter((p) => IMAGE_RE.test(p)).slice(0, MAX_IMAGES);
-	const markers = paths
-		.filter((p) => isDockerfile(p) || MARKER_RE.test(p))
-		.slice(0, MAX_MARKERS);
-	const filePaths = [...markers, ...images];
+	const filePaths = [...markerPaths(paths), ...images];
 
 	const root = new Set(paths.filter((p) => !p.includes("/")));
 	const fetchIf = (file: string) =>

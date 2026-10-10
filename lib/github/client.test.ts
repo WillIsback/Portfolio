@@ -148,6 +148,31 @@ describe("getRepoBundle", () => {
 		expect(calls.every((c) => c.init?.method === "GET")).toBe(true);
 	});
 
+	it("beaucoup de fichiers de test n'évincent ni Dockerfile ni workflows ni marqueurs", async () => {
+		const tests = Array.from({ length: 250 }, (_, i) =>
+			blob(`a/tests/x${i}.py`),
+		);
+		mockFetch({
+			"/repos/WillIsback/demo/git/trees/main": () =>
+				json({
+					tree: [
+						...tests,
+						blob("z/Dockerfile"),
+						blob("z/.github/x.yml"),
+						blob(".github/workflows/ci.yml"),
+						blob("vercel.json"),
+					],
+				}),
+			"/repos/WillIsback/demo/readme": () => json({}, 404),
+			"/repos/WillIsback/demo": () => json(meta),
+		});
+		const b = await getRepoBundle("WillIsback/demo", "tok");
+		expect(b.filePaths).toContain("z/Dockerfile");
+		expect(b.filePaths).toContain(".github/workflows/ci.yml");
+		expect(b.filePaths).toContain("vercel.json");
+		expect(b.filePaths.filter((p) => p.includes("/tests/"))).toHaveLength(1);
+	});
+
 	it("manifeste annoncé mais 404 -> null ; README absent -> vide", async () => {
 		mockFetch({
 			"/repos/WillIsback/demo/git/trees/main": () =>
