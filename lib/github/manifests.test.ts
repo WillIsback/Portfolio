@@ -36,7 +36,9 @@ describe("parsePackageJson", () => {
 });
 
 describe("parseRequirements", () => {
-	const names = parseRequirements(fixture("fastapi-torch.requirements.fixture"));
+	const names = parseRequirements(
+		fixture("fastapi-torch.requirements.fixture"),
+	);
 	it("extrait les noms sans version ni extras", () => {
 		expect(names).toEqual(
 			expect.arrayContaining([
