@@ -76,4 +76,18 @@ describe("projectTools", () => {
 		await projectTools.analyzeRepo.execute?.({ fullName: "a/b" }, {} as never);
 		expect(analyzeRepo).toHaveBeenCalledWith("a/b");
 	});
+
+	it("proposeProjectDraft renvoie la proposition sans l'appliquer", async () => {
+		const proposal = {
+			action: "update",
+			projectId: 3,
+			summary: "Ajouter le domaine Agents",
+			data: { domains: ["Agents"] },
+		} as const;
+		const out = await projectTools.proposeProjectDraft.execute?.(
+			proposal as never,
+			{} as never,
+		);
+		expect(out).toEqual(proposal);
+	});
 });

@@ -19,6 +19,21 @@ describe("ProjectProposalSchema", () => {
 		});
 		expect(r.success).toBe(false);
 	});
+	it("refuse une création sans titre", () => {
+		const r = ProjectProposalSchema.safeParse({
+			action: "create",
+			summary: "x",
+			data: { description: "d" },
+		});
+		expect(r.success).toBe(false);
+	});
+	it("refuse une suppression sans projectId", () => {
+		const r = ProjectProposalSchema.safeParse({
+			action: "delete",
+			summary: "x",
+		});
+		expect(r.success).toBe(false);
+	});
 	it("ne renseigne que les champs fournis (aucun défaut injecté)", () => {
 		const p = ProjectProposalSchema.parse({
 			action: "update",
