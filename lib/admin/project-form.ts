@@ -45,6 +45,8 @@ export function buildPreviewProject(
 		period: form.period || null,
 		featuredRank: form.featuredRank ?? null,
 		githubRepoId: form.githubRepoId ?? null,
+		practices: form.practices.map((practice) => ({ practice })),
+		training: form.training ?? null,
 	};
 }
 

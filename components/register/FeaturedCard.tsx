@@ -6,7 +6,9 @@ import type { NormalizedProject } from "@/lib/projects-data";
 import { isCapture, techComposition, techNames } from "@/lib/register";
 import DomainChips from "./DomainChips";
 import MiniMap from "./MiniMap";
+import PracticeMarks from "./PracticeMarks";
 import TechBar from "./TechBar";
+import TrainingBadge from "./TrainingBadge";
 
 interface FeaturedCardProps {
 	project: NormalizedProject;
@@ -69,6 +71,7 @@ export default function FeaturedCard({
 			<h3 className="mt-4 font-display text-xl font-semibold">
 				{project.title}
 			</h3>
+			<TrainingBadge training={project.training} className="mt-2" />
 			<DomainChips domains={project.domains} className="mt-2" />
 			<p className="mt-2 text-base leading-relaxed">
 				{project.pitch?.trim() || firstSentence(project.description)}
@@ -76,6 +79,11 @@ export default function FeaturedCard({
 			<p className="mt-3 font-mono text-[11px] text-ink-soft">
 				{techNames(project).join(" · ")}
 			</p>
+			<PracticeMarks
+				practices={project.practices}
+				variant="full"
+				className="mt-2"
+			/>
 			<div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-4 text-sm">
 				{project.github && isExternalHref(project.github) ? (
 					<a

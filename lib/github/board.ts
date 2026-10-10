@@ -34,6 +34,7 @@ export const SYNC_SELECT = {
 	devops: { select: { devops: true } },
 	mlStack: { select: { ml: true } },
 	domains: { select: { domain: true } },
+	practices: { select: { practice: true } },
 } as const;
 
 export interface DbProjectRow {
@@ -52,6 +53,7 @@ export interface DbProjectRow {
 	devops: { devops: string }[];
 	mlStack: { ml: string }[];
 	domains: { domain: string }[];
+	practices: { practice: string }[];
 }
 
 export interface BoardProject extends SyncProject {
@@ -76,6 +78,7 @@ export function toBoardProject(row: DbProjectRow): BoardProject {
 		devops: row.devops.map((x) => x.devops),
 		mlStack: row.mlStack.map((x) => x.ml),
 		domains: row.domains.map((x) => x.domain),
+		practices: row.practices.map((x) => x.practice),
 	};
 }
 
@@ -129,6 +132,7 @@ export function remoteFromBundle(
 		devops: [...detected.devops],
 		mlStack: [...detected.mlStack],
 		domains: normalizeDomains(detected.domains),
+		practices: [...detected.practices],
 	};
 }
 
@@ -201,6 +205,7 @@ export const FIELD_LABELS: Record<FieldDiff["field"], string> = {
 	devops: "DevOps",
 	mlStack: "Stack ML",
 	domains: "Domaines",
+	practices: "Pratiques",
 };
 
 const dateFmt = new Intl.DateTimeFormat("fr-FR", {

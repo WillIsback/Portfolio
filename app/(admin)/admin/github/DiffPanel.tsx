@@ -4,6 +4,7 @@ import { useState } from "react";
 import { applySync } from "@/app/actions/admin.action";
 import { FIELD_LABELS, formatValue } from "@/lib/github/board";
 import type { FieldDiff } from "@/lib/github/sync";
+import { PRACTICE_LABELS, type Practice } from "@/lib/practices";
 
 const chip = "inline-block rounded px-1.5 py-0.5 text-xs font-mono";
 
@@ -63,9 +64,11 @@ export function DiffPanel({
 					const label =
 						d.field === "status"
 							? "Passer le statut à archivé"
-							: d.kind === "list"
-								? `${FIELD_LABELS[d.field]} : remplacer par la liste GitHub`
-								: FIELD_LABELS[d.field];
+							: d.field === "practices"
+								? "Pratiques : ajouter les pratiques détectées"
+								: d.kind === "list"
+									? `${FIELD_LABELS[d.field]} : remplacer par la liste GitHub`
+									: FIELD_LABELS[d.field];
 					return (
 						<li
 							key={d.field}
@@ -98,7 +101,10 @@ export function DiffPanel({
 													key={`a-${v}`}
 													className={`${chip} bg-emerald-950 text-emerald-300`}
 												>
-													<span className="sr-only">Ajout : </span>+ {v}
+													<span className="sr-only">Ajout : </span>+{" "}
+													{d.field === "practices"
+														? (PRACTICE_LABELS[v as Practice] ?? v)
+														: v}
 												</span>
 											))}
 											{d.removed.map((v) => (

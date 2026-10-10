@@ -23,6 +23,8 @@ const form: AdminProject = {
 	status: "Done",
 	period: "2026",
 	featuredRank: 2,
+	practices: [],
+	training: null,
 };
 
 describe("rawImageUrl", () => {

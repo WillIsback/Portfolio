@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { AI_DOMAINS } from "@/lib/domains";
+import { FAMILIES, PRACTICES } from "@/lib/practices";
+import { TRAININGS } from "@/lib/training";
 
 // Enums correspondant au schéma Prisma
 export const DatabaseEnum = z.enum([
@@ -37,6 +39,9 @@ export const MlStackEnum = z.enum([
 	"LlmSdk",
 ]);
 export const ProjectStatusEnum = z.enum(["InProgress", "Done", "Archived"]);
+export const PracticeEnum = z.enum(PRACTICES);
+export const PracticeFamilyEnum = z.enum(FAMILIES);
+export const TrainingEnum = z.enum(TRAININGS);
 
 // Schéma TechStack
 export const TechStackSchema = z.object({
@@ -71,6 +76,8 @@ export const ProjectFiltersSchema = z.object({
 	frontend: z.array(FrontendEnum).optional(),
 	devops: z.array(DevOpsEnum).optional(),
 	domain: z.array(AiDomainEnum).optional(),
+	practice: z.array(PracticeFamilyEnum).optional(),
+	training: z.enum(["only", "exclude"]).optional(),
 });
 
 // Types inférés
@@ -106,6 +113,12 @@ export const AdminProjectSchema = z.object({
 	period: z.string().optional(),
 	githubRepoId: z.number().int().optional(),
 	featuredRank: z.number().int().min(1).optional(),
+	practices: z
+		.array(PracticeEnum)
+		.max(PRACTICES.length)
+		.default([])
+		.transform((v) => [...new Set(v)]),
+	training: TrainingEnum.nullable().default(null),
 });
 
 export type AdminProject = z.infer<typeof AdminProjectSchema>;

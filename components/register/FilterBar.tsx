@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { debounce } from "@/lib/debounce";
 import { DOMAIN_LABELS } from "@/lib/domains";
+import { FAMILIES } from "@/lib/practices";
 import { nextSearchField } from "@/lib/search-field-sync";
 import {
 	BACKEND_LABELS,
@@ -68,6 +69,9 @@ export default function FilterBar() {
 	const frontend =
 		searchParams.get("frontend")?.split(",").filter(Boolean) ?? [];
 	const devops = searchParams.get("devops")?.split(",").filter(Boolean) ?? [];
+	const practice =
+		searchParams.get("practice")?.split(",").filter(Boolean) ?? [];
+	const training = searchParams.get("training");
 
 	// Mettre à jour l'URL avec les nouveaux paramètres
 	const updateSearchParams = useCallback(
@@ -140,7 +144,9 @@ export default function FilterBar() {
 		database.length ||
 		backend.length ||
 		frontend.length ||
-		devops.length;
+		devops.length ||
+		practice.length ||
+		training;
 
 	return (
 		<div className="flex flex-col gap-4 p-4 bg-muted/50 rounded-xl border border-border">
@@ -199,6 +205,43 @@ export default function FilterBar() {
 								{opt.label}
 							</SelectItem>
 						))}
+					</SelectContent>
+				</Select>
+
+				{/* Famille de pratiques (dropdown simple) */}
+				<Select
+					value={practice[0] ?? "all"}
+					onValueChange={(value) =>
+						updateSearchParams("practice", value === "all" ? [] : [value])
+					}
+				>
+					<SelectTrigger className="w-[160px]" aria-label="Pratiques">
+						<SelectValue placeholder="Pratiques" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">Toutes les pratiques</SelectItem>
+						{FAMILIES.map((f) => (
+							<SelectItem key={f} value={f}>
+								{f}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+
+				{/* Projets de formation (dropdown simple) */}
+				<Select
+					value={training ?? "all"}
+					onValueChange={(value) =>
+						updateSearchParams("training", value === "all" ? [] : [value])
+					}
+				>
+					<SelectTrigger className="w-[180px]" aria-label="Formation">
+						<SelectValue placeholder="Formation" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">Tous les projets</SelectItem>
+						<SelectItem value="only">Projets de formation</SelectItem>
+						<SelectItem value="exclude">Hors formation</SelectItem>
 					</SelectContent>
 				</Select>
 

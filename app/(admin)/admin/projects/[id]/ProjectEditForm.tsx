@@ -20,6 +20,7 @@ import {
 	LANGUAGE_LABELS,
 	ML_STACK_LABELS,
 } from "@/lib/tech-labels";
+import { looksLikeOpenClassrooms } from "@/lib/training";
 import {
 	type AdminProject,
 	BackendApiEnum,
@@ -29,11 +30,16 @@ import {
 	LanguageEnum,
 	MlStackEnum,
 } from "@/schemas";
+import { PracticeFields } from "../../PracticeFields";
+import { TrainingSelect } from "../../TrainingSelect";
 import { ImagePicker } from "./ImagePicker";
 import { ProjectPreview } from "./ProjectPreview";
 
 const FIELD =
 	"w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600";
+
+const repoNameOf = (url?: string) =>
+	url?.split("/").filter(Boolean).pop() ?? "";
 
 const LUCIDE_COMPONENT_MAP = Object.fromEntries(
 	LUCIDE_ICONS.map((e) => [e.id, e.component]),
@@ -191,7 +197,7 @@ export function ProjectEditForm({
 				</p>
 			</div>
 
-			<div className="grid grid-cols-2 gap-4">
+			<div className="grid grid-cols-3 gap-4">
 				<div>
 					<label htmlFor="status" className="text-xs text-zinc-500 block mb-1">
 						Statut
@@ -227,6 +233,15 @@ export function ProjectEditForm({
 						onChange={(e) => setField("period", e.target.value || undefined)}
 					/>
 				</div>
+				<TrainingSelect
+					id="training"
+					className={FIELD}
+					value={form.training ?? null}
+					onChange={(v) => setField("training", v)}
+					hint={
+						!form.training && looksLikeOpenClassrooms(repoNameOf(form.github))
+					}
+				/>
 			</div>
 
 			<ImagePicker
@@ -316,6 +331,14 @@ export function ProjectEditForm({
 						</label>
 					))}
 				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend className="text-xs text-zinc-500 mb-1.5">Pratiques</legend>
+				<PracticeFields
+					selected={form.practices}
+					onToggle={(v) => toggleArrayValue("practices", v)}
+				/>
 			</fieldset>
 
 			<div className="flex gap-4 flex-wrap">

@@ -54,6 +54,7 @@ export const ModelName = {
   Project: 'Project',
   ProjectLanguage: 'ProjectLanguage',
   ProjectMlStack: 'ProjectMlStack',
+  ProjectPractice: 'ProjectPractice',
   ProjectDomain: 'ProjectDomain',
   ProjectDatabase: 'ProjectDatabase',
   ProjectBackend: 'ProjectBackend',
@@ -92,6 +93,7 @@ export const ProjectScalarFieldEnum = {
   githubRepoId: 'githubRepoId',
   featuredRank: 'featuredRank',
   syncedAt: 'syncedAt',
+  training: 'training',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -115,6 +117,15 @@ export const ProjectMlStackScalarFieldEnum = {
 } as const
 
 export type ProjectMlStackScalarFieldEnum = (typeof ProjectMlStackScalarFieldEnum)[keyof typeof ProjectMlStackScalarFieldEnum]
+
+
+export const ProjectPracticeScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  practice: 'practice'
+} as const
+
+export type ProjectPracticeScalarFieldEnum = (typeof ProjectPracticeScalarFieldEnum)[keyof typeof ProjectPracticeScalarFieldEnum]
 
 
 export const ProjectDomainScalarFieldEnum = {

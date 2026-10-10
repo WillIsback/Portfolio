@@ -24,6 +24,7 @@ import {
 	shouldBackfillRepoId,
 } from "@/lib/github/sync";
 import { getAdminGithubToken } from "@/lib/github/token";
+import { normalizePractices } from "@/lib/practices";
 import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<void> {
@@ -45,6 +46,7 @@ async function upsertProjectRelations(
 	await tx.projectDevOps.deleteMany({ where: { projectId } });
 	await tx.projectDomain.deleteMany({ where: { projectId } });
 	await tx.projectMlStack.deleteMany({ where: { projectId } });
+	await tx.projectPractice.deleteMany({ where: { projectId } });
 
 	if (data.languages.length > 0) {
 		await tx.projectLanguage.createMany({
@@ -80,6 +82,12 @@ async function upsertProjectRelations(
 			data: data.mlStack.map((ml) => ({ projectId, ml })),
 		});
 	}
+	const practices = normalizePractices(data.practices);
+	if (practices.length > 0) {
+		await tx.projectPractice.createMany({
+			data: practices.map((practice) => ({ projectId, practice })),
+		});
+	}
 }
 
 export async function createProject(raw: AdminProject): Promise<void> {
@@ -101,6 +109,7 @@ export async function createProject(raw: AdminProject): Promise<void> {
 				period: data.period ?? null,
 				githubRepoId: data.githubRepoId ?? null,
 				featuredRank: data.featuredRank ?? null,
+				training: data.training ?? null,
 			},
 		});
 		await upsertProjectRelations(tx, project.id, data);
@@ -132,6 +141,7 @@ export async function updateProject(
 				period: data.period ?? null,
 				githubRepoId: data.githubRepoId ?? null,
 				featuredRank: data.featuredRank ?? null,
+				training: data.training ?? null,
 			},
 		});
 		await upsertProjectRelations(tx, id, data);
@@ -226,6 +236,8 @@ const ImportRepoSchema = AdminProjectSchema.pick({
 	mlStack: true,
 	domains: true,
 	githubRepoId: true,
+	practices: true,
+	training: true,
 }).extend({
 	github: z.string().regex(/^https:\/\/github\.com\/[^/\s]+\/[^/\s]+$/),
 	githubRepoId: z.number().int().positive(),
@@ -380,6 +392,15 @@ export async function applySync(
 				await tx.projectDomain.deleteMany({ where: { projectId: id } });
 				await tx.projectDomain.createMany({
 					data: buildDomainRows(id, lists.domains),
+				});
+			}
+			if (lists.practices) {
+				await tx.projectPractice.deleteMany({ where: { projectId: id } });
+				await tx.projectPractice.createMany({
+					data: lists.practices.map((practice) => ({
+						projectId: id,
+						practice: practice as never,
+					})),
 				});
 			}
 		});

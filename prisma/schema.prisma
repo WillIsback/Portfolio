@@ -75,6 +75,30 @@ enum ProjectStatus {
   Archived
 }
 
+// Enum pour les pratiques DevOps / SecOps / MLOps (familles dans lib/practices.ts)
+enum Practice {
+  ContinuousIntegration
+  Containerization
+  ContinuousDeployment
+  AutomatedTesting
+  Observability
+  DependencyUpdates
+  StaticAnalysis
+  SecretsManagement
+  Hardening
+  ExperimentTracking
+  ModelRegistry
+  DataVersioning
+  ModelServing
+  LlmEvaluation
+}
+
+// Enum pour les parcours de formation OpenClassrooms
+enum Training {
+  FullstackAI
+  AIEngineer
+}
+
 // Enum pour les langages
 enum Language {
   Python
@@ -85,31 +109,33 @@ enum Language {
 
 // Modèle principal Project
 model Project {
-  id            Int      @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   title         String
   description   String
   imagePath     String?
   github        String?
   lastUpdate    DateTime?
-  isPrivate     Boolean  @default(false)
-  isAiGenerated Boolean  @default(false)
+  isPrivate     Boolean        @default(false)
+  isAiGenerated Boolean        @default(false)
   pitch         String?
   status        ProjectStatus?
   period        String?
-  githubRepoId  Int?     @unique
+  githubRepoId  Int?           @unique
   featuredRank  Int?
   syncedAt      DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  training      Training?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   // Relations many-to-many via tables de jonction
-  languages   ProjectLanguage[]
-  databases   ProjectDatabase[]
-  backends    ProjectBackend[]
-  frontends   ProjectFrontend[]
-  devops      ProjectDevOps[]
-  domains     ProjectDomain[]
-  mlStack     ProjectMlStack[]
+  languages ProjectLanguage[]
+  databases ProjectDatabase[]
+  backends  ProjectBackend[]
+  frontends ProjectFrontend[]
+  devops    ProjectDevOps[]
+  domains   ProjectDomain[]
+  mlStack   ProjectMlStack[]
+  practices ProjectPractice[]
 }
 
 // Tables de jonction pour les relations many-to-many
@@ -123,12 +149,21 @@ model ProjectLanguage {
 }
 
 model ProjectMlStack {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   projectId Int
   ml        MlStack
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, ml])
+}
+
+model ProjectPractice {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  practice  Practice
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, practice])
 }
 
 model ProjectDomain {

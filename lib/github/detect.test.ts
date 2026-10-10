@@ -184,3 +184,88 @@ describe("domaines", () => {
 		expect(detect({ readmeHead: "an agent runner" }).domains).toEqual([]);
 	});
 });
+
+describe("detectProject — pratiques", () => {
+	const has = (over: Partial<DetectInput>, practice: string) =>
+		expect(detect(over).practices).toContain(practice);
+	const hasNot = (over: Partial<DetectInput>, practice: string) =>
+		expect(detect(over).practices).not.toContain(practice);
+
+	it("DevOps", () => {
+		has({ filePaths: [".github/workflows/ci.yml"] }, "ContinuousIntegration");
+		has(
+			{ filePaths: [".forgejo/workflows/test.yaml"] },
+			"ContinuousIntegration",
+		);
+		has({ filePaths: [".gitlab-ci.yml"] }, "ContinuousIntegration");
+		hasNot(
+			{ filePaths: [".github/workflows/README.md"] },
+			"ContinuousIntegration",
+		);
+		has({ filePaths: ["api/Dockerfile"] }, "Containerization");
+		has({ filePaths: ["deploy/compose.yaml"] }, "Containerization");
+		has(
+			{ filePaths: [".github/workflows/deploy.yml"] },
+			"ContinuousDeployment",
+		);
+		has(
+			{ filePaths: [".github/workflows/release-please.yml"] },
+			"ContinuousDeployment",
+		);
+		has({ filePaths: [".github/workflows/ci-cd.yml"] }, "ContinuousDeployment");
+		has({ filePaths: ["vercel.json"] }, "ContinuousDeployment");
+		hasNot(
+			{ filePaths: [".github/workflows/abcd.yml"] },
+			"ContinuousDeployment",
+		);
+		hasNot(
+			{ filePaths: [".github/workflows/scd-report.yml"] },
+			"ContinuousDeployment",
+		);
+		has({ npm: ["vitest"] }, "AutomatedTesting");
+		has({ python: ["pytest"] }, "AutomatedTesting");
+		has({ filePaths: ["tests/test_api.py"] }, "AutomatedTesting");
+		has({ npm: ["@opentelemetry/api"] }, "Observability");
+		has({ python: ["opentelemetry-sdk"] }, "Observability");
+		has({ python: ["prometheus_client"] }, "Observability");
+	});
+
+	it("SecOps", () => {
+		has({ filePaths: ["renovate.json"] }, "DependencyUpdates");
+		has({ filePaths: [".github/dependabot.yml"] }, "DependencyUpdates");
+		has({ filePaths: [".github/workflows/codeql.yml"] }, "StaticAnalysis");
+		has({ python: ["bandit"] }, "StaticAnalysis");
+		has({ filePaths: [".gitleaks.toml"] }, "SecretsManagement");
+		has(
+			{ filePaths: [".github/workflows/trufflehog.yml"] },
+			"SecretsManagement",
+		);
+	});
+
+	it("MLOps", () => {
+		has({ python: ["mlflow"] }, "ExperimentTracking");
+		has({ python: ["wandb"] }, "ExperimentTracking");
+		has({ filePaths: ["dvc.yaml"] }, "DataVersioning");
+		has({ filePaths: ["data/raw.csv.dvc"] }, "DataVersioning");
+		has({ python: ["vllm"] }, "ModelServing");
+		has({ composeImages: ["vllm/vllm-openai"] }, "ModelServing");
+		has({ python: ["fastapi", "scikit-learn"] }, "ModelServing");
+		hasNot({ python: ["fastapi"] }, "ModelServing");
+		has({ python: ["langfuse"] }, "LlmEvaluation");
+		has({ npm: ["promptfoo"] }, "LlmEvaluation");
+	});
+
+	it("jamais Durcissement ni Registre de modèles, ordre canonique", () => {
+		const r = detect({
+			filePaths: ["Dockerfile", ".github/workflows/ci.yml", "renovate.json"],
+			python: ["mlflow", "fastapi", "torch"],
+		});
+		expect(r.practices).toEqual([
+			"ContinuousIntegration",
+			"Containerization",
+			"DependencyUpdates",
+			"ExperimentTracking",
+			"ModelServing",
+		]);
+	});
+});

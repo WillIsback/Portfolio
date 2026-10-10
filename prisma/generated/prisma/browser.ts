@@ -33,6 +33,11 @@ export type ProjectLanguage = Prisma.ProjectLanguageModel
  */
 export type ProjectMlStack = Prisma.ProjectMlStackModel
 /**
+ * Model ProjectPractice
+ * 
+ */
+export type ProjectPractice = Prisma.ProjectPracticeModel
+/**
  * Model ProjectDomain
  * 
  */

@@ -18,6 +18,7 @@
 		"carnet:bench": "tsx scripts/carnet/bench.ts",
 		"carnet:search-items": "tsx scripts/carnet/build-search-items.ts",
 		"catalogue:domains": "tsx --env-file=.env.local scripts/catalogue/apply-domains.ts",
+		"catalogue:training": "tsx --env-file=.env.local scripts/catalogue/apply-training.ts",
 		"catalogue:init-admin": "tsx --env-file=.env.local scripts/catalogue/init-admin-fields.ts",
 		"embeddings": "tsx --env-file=.env.local scripts/carnet/build-map.ts"
 	},

@@ -87,6 +87,34 @@ export const ProjectStatus = {
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
 
+export const Practice = {
+  ContinuousIntegration: 'ContinuousIntegration',
+  Containerization: 'Containerization',
+  ContinuousDeployment: 'ContinuousDeployment',
+  AutomatedTesting: 'AutomatedTesting',
+  Observability: 'Observability',
+  DependencyUpdates: 'DependencyUpdates',
+  StaticAnalysis: 'StaticAnalysis',
+  SecretsManagement: 'SecretsManagement',
+  Hardening: 'Hardening',
+  ExperimentTracking: 'ExperimentTracking',
+  ModelRegistry: 'ModelRegistry',
+  DataVersioning: 'DataVersioning',
+  ModelServing: 'ModelServing',
+  LlmEvaluation: 'LlmEvaluation'
+} as const
+
+export type Practice = (typeof Practice)[keyof typeof Practice]
+
+
+export const Training = {
+  FullstackAI: 'FullstackAI',
+  AIEngineer: 'AIEngineer'
+} as const
+
+export type Training = (typeof Training)[keyof typeof Training]
+
+
 export const Language = {
   Python: 'Python',
   TypeScript: 'TypeScript',

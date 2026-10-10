@@ -387,6 +387,7 @@ export const ModelName = {
   Project: 'Project',
   ProjectLanguage: 'ProjectLanguage',
   ProjectMlStack: 'ProjectMlStack',
+  ProjectPractice: 'ProjectPractice',
   ProjectDomain: 'ProjectDomain',
   ProjectDatabase: 'ProjectDatabase',
   ProjectBackend: 'ProjectBackend',
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "projectLanguage" | "projectMlStack" | "projectDomain" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
+    modelProps: "project" | "projectLanguage" | "projectMlStack" | "projectPractice" | "projectDomain" | "projectDatabase" | "projectBackend" | "projectFrontend" | "projectDevOps"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -630,6 +631,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProjectMlStackCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProjectMlStackCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProjectPractice: {
+      payload: Prisma.$ProjectPracticePayload<ExtArgs>
+      fields: Prisma.ProjectPracticeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectPracticeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectPracticeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectPracticeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectPracticeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        findMany: {
+          args: Prisma.ProjectPracticeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>[]
+        }
+        create: {
+          args: Prisma.ProjectPracticeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        createMany: {
+          args: Prisma.ProjectPracticeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectPracticeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectPracticeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        update: {
+          args: Prisma.ProjectPracticeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectPracticeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectPracticeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectPracticeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectPracticeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPracticePayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectPracticeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectPractice>
+        }
+        groupBy: {
+          args: Prisma.ProjectPracticeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectPracticeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectPracticeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectPracticeCountAggregateOutputType> | number
         }
       }
     }
@@ -1057,6 +1132,7 @@ export const ProjectScalarFieldEnum = {
   githubRepoId: 'githubRepoId',
   featuredRank: 'featuredRank',
   syncedAt: 'syncedAt',
+  training: 'training',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1080,6 +1156,15 @@ export const ProjectMlStackScalarFieldEnum = {
 } as const
 
 export type ProjectMlStackScalarFieldEnum = (typeof ProjectMlStackScalarFieldEnum)[keyof typeof ProjectMlStackScalarFieldEnum]
+
+
+export const ProjectPracticeScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  practice: 'practice'
+} as const
+
+export type ProjectPracticeScalarFieldEnum = (typeof ProjectPracticeScalarFieldEnum)[keyof typeof ProjectPracticeScalarFieldEnum]
 
 
 export const ProjectDomainScalarFieldEnum = {
@@ -1221,6 +1306,20 @@ export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'Training'
+ */
+export type EnumTrainingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Training'>
+    
+
+
+/**
+ * Reference to a field of type 'Training[]'
+ */
+export type ListEnumTrainingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Training[]'>
+    
+
+
+/**
  * Reference to a field of type 'Language'
  */
 export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language'>
@@ -1245,6 +1344,20 @@ export type EnumMlStackFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
  * Reference to a field of type 'MlStack[]'
  */
 export type ListEnumMlStackFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MlStack[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Practice'
+ */
+export type EnumPracticeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Practice'>
+    
+
+
+/**
+ * Reference to a field of type 'Practice[]'
+ */
+export type ListEnumPracticeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Practice[]'>
     
 
 
@@ -1429,6 +1542,7 @@ export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   projectLanguage?: Prisma.ProjectLanguageOmit
   projectMlStack?: Prisma.ProjectMlStackOmit
+  projectPractice?: Prisma.ProjectPracticeOmit
   projectDomain?: Prisma.ProjectDomainOmit
   projectDatabase?: Prisma.ProjectDatabaseOmit
   projectBackend?: Prisma.ProjectBackendOmit

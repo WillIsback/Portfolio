@@ -11,6 +11,7 @@
 export type * from './models/Project'
 export type * from './models/ProjectLanguage'
 export type * from './models/ProjectMlStack'
+export type * from './models/ProjectPractice'
 export type * from './models/ProjectDomain'
 export type * from './models/ProjectDatabase'
 export type * from './models/ProjectBackend'

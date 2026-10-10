@@ -105,6 +105,13 @@ describe("getRepoBundle", () => {
 						blob("node_modules/pkg/Dockerfile"),
 						blob("node_modules/pkg/logo.png"),
 						blob(".github/workflows/ci.yml"),
+						blob("renovate.json"),
+						blob(".github/dependabot.yml"),
+						blob("dvc.yaml"),
+						blob("tests/test_x.py"),
+						blob("deploy/compose.yaml"),
+						blob("vercel.json"),
+						blob("src/app.py"),
 						{ path: "docs", type: "tree" },
 						...many,
 					],
@@ -125,9 +132,45 @@ describe("getRepoBundle", () => {
 		expect(b.filePaths).toContain("Dockerfile");
 		expect(b.filePaths).toContain(".github/workflows/ci.yml");
 		expect(b.filePaths).not.toContain("node_modules/pkg/Dockerfile");
+		expect(b.filePaths).toEqual(
+			expect.arrayContaining([
+				"renovate.json",
+				".github/dependabot.yml",
+				"dvc.yaml",
+				"tests/test_x.py",
+				"deploy/compose.yaml",
+				"vercel.json",
+			]),
+		);
+		expect(b.filePaths).not.toContain("src/app.py");
 		// Manifestes absents de l'arbre : aucune requête inutile.
 		expect(calls.some((c) => c.url.includes("package.json"))).toBe(false);
 		expect(calls.every((c) => c.init?.method === "GET")).toBe(true);
+	});
+
+	it("beaucoup de fichiers de test n'évincent ni Dockerfile ni workflows ni marqueurs", async () => {
+		const tests = Array.from({ length: 250 }, (_, i) =>
+			blob(`a/tests/x${i}.py`),
+		);
+		mockFetch({
+			"/repos/WillIsback/demo/git/trees/main": () =>
+				json({
+					tree: [
+						...tests,
+						blob("z/Dockerfile"),
+						blob("z/.github/x.yml"),
+						blob(".github/workflows/ci.yml"),
+						blob("vercel.json"),
+					],
+				}),
+			"/repos/WillIsback/demo/readme": () => json({}, 404),
+			"/repos/WillIsback/demo": () => json(meta),
+		});
+		const b = await getRepoBundle("WillIsback/demo", "tok");
+		expect(b.filePaths).toContain("z/Dockerfile");
+		expect(b.filePaths).toContain(".github/workflows/ci.yml");
+		expect(b.filePaths).toContain("vercel.json");
+		expect(b.filePaths.filter((p) => p.includes("/tests/"))).toHaveLength(1);
 	});
 
 	it("manifeste annoncé mais 404 -> null ; README absent -> vide", async () => {

@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { useProjects } from "@/hooks/CustomHooks";
 import type { MapPoint } from "@/lib/carnet/map-view";
+import { FAMILIES, type PracticeFamily } from "@/lib/practices";
 import { selectFeatured, splitIndex } from "@/lib/register";
 import type { ProjectFilters } from "@/schemas";
 import FilterBar from "./FilterBar";
@@ -20,6 +21,12 @@ export function parseFilters(params: URLSearchParams): ProjectFilters {
 		frontend: list("frontend") as ProjectFilters["frontend"],
 		devops: list("devops") as ProjectFilters["devops"],
 		domain: list("domain") as ProjectFilters["domain"],
+		practice: list("practice").filter((v): v is PracticeFamily =>
+			(FAMILIES as readonly string[]).includes(v),
+		),
+		training: (["only", "exclude"] as const).find(
+			(v) => v === params.get("training"),
+		),
 	};
 }
 
@@ -31,6 +38,7 @@ const NO_FILTERS: ProjectFilters = {
 	frontend: [],
 	devops: [],
 	domain: [],
+	practice: [],
 };
 
 export default function ProjectRegister({
@@ -46,6 +54,7 @@ export default function ProjectRegister({
 	const filters = parseFilters(params);
 	const filtersActive =
 		Boolean(filters.search) ||
+		Boolean(filters.training) ||
 		[
 			filters.language,
 			filters.database,
@@ -53,6 +62,7 @@ export default function ProjectRegister({
 			filters.frontend,
 			filters.devops,
 			filters.domain,
+			filters.practice,
 		].some((l) => (l?.length ?? 0) > 0);
 	const all = useProjects(NO_FILTERS);
 	const filtered = useProjects(filtersActive ? filters : NO_FILTERS);

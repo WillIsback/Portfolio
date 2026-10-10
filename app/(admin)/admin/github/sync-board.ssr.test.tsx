@@ -39,6 +39,7 @@ const project: BoardProject = {
 	devops: [],
 	mlStack: [],
 	domains: [],
+	practices: [],
 };
 
 describe("SyncBoard (rendu serveur)", () => {

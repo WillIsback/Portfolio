@@ -3,6 +3,8 @@ import type { NormalizedProject } from "@/lib/projects-data";
 import { projectYear, techNames } from "@/lib/register";
 import { type ProjectStatusValue, STATUS_LABELS } from "@/lib/status";
 import DomainChips from "./DomainChips";
+import PracticeMarks from "./PracticeMarks";
+import TrainingBadge from "./TrainingBadge";
 
 export default function IndexRow({
 	project,
@@ -39,10 +41,15 @@ export default function IndexRow({
 				<span className="line-clamp-1">
 					{project.pitch?.trim() || project.description}
 				</span>
-				{tech || project.domains.length > 0 ? (
+				{tech ||
+				project.domains.length > 0 ||
+				project.practices.length > 0 ||
+				project.training ? (
 					<span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
+						<TrainingBadge training={project.training} short />
 						<DomainChips domains={project.domains} />
 						{tech ? <span>{tech}</span> : null}
+						<PracticeMarks practices={project.practices} variant="compact" />
 					</span>
 				) : null}
 			</span>
