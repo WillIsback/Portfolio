@@ -173,6 +173,50 @@ describe("getRepoBundle", () => {
 		expect(b.filePaths.filter((p) => p.includes("/tests/"))).toHaveLength(1);
 	});
 
+	it("monorepo : manifestes du premier niveau, Dockerfile suffixé, notebook", async () => {
+		const calls = mockFetch({
+			"/repos/WillIsback/demo/git/trees/main": () =>
+				json({
+					tree: [
+						blob("backend/pyproject.toml"),
+						blob("backend/Dockerfile.prod"),
+						blob("frontend/package.json"),
+						blob("a/b/package.json"),
+						blob("deploy/docker-compose.prod.yml"),
+						blob("notebooks/eda.ipynb"),
+						blob("notebooks/model.ipynb"),
+						blob("test/x.test.js"),
+						blob("Dockerfile.md"),
+					],
+				}),
+			"/repos/WillIsback/demo/contents/backend/pyproject.toml": () =>
+				text('[project]\ndependencies = ["fastapi"]\n'),
+			"/repos/WillIsback/demo/contents/frontend/package.json": () =>
+				text('{"dependencies":{"next":"16"}}'),
+			"/repos/WillIsback/demo/contents/deploy/docker-compose.prod.yml": () =>
+				text("services:\n  db:\n    image: postgres:16\n"),
+			"/repos/WillIsback/demo/readme": () => json({}, 404),
+			"/repos/WillIsback/demo": () => json(meta),
+		});
+		const b = await getRepoBundle("WillIsback/demo", "tok");
+		expect(b.manifests.nested.map((n) => n.path).sort()).toEqual([
+			"backend/pyproject.toml",
+			"deploy/docker-compose.prod.yml",
+			"frontend/package.json",
+		]);
+		expect(calls.some((c) => c.url.includes("a/b/package.json"))).toBe(false);
+		expect(b.filePaths).toEqual(
+			expect.arrayContaining([
+				"backend/Dockerfile.prod",
+				"deploy/docker-compose.prod.yml",
+				"notebooks/eda.ipynb",
+				"test/x.test.js",
+			]),
+		);
+		expect(b.filePaths).not.toContain("notebooks/model.ipynb");
+		expect(b.filePaths).not.toContain("Dockerfile.md");
+	});
+
 	it("manifeste annoncé mais 404 -> null ; README absent -> vide", async () => {
 		mockFetch({
 			"/repos/WillIsback/demo/git/trees/main": () =>

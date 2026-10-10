@@ -4,31 +4,11 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { useProjects } from "@/hooks/CustomHooks";
 import type { MapPoint } from "@/lib/carnet/map-view";
-import { FAMILIES, type PracticeFamily } from "@/lib/practices";
 import { selectFeatured, splitIndex } from "@/lib/register";
+import { hasActiveFilters, parseFilters } from "@/lib/register-filters";
 import type { ProjectFilters } from "@/schemas";
 import FilterBar from "./FilterBar";
 import RegisterView from "./RegisterView";
-
-export function parseFilters(params: URLSearchParams): ProjectFilters {
-	const list = (key: string) =>
-		(params.get(key) ?? "").split(",").filter(Boolean);
-	return {
-		search: params.get("search") || undefined,
-		language: list("language") as ProjectFilters["language"],
-		database: list("database") as ProjectFilters["database"],
-		backend: list("backend") as ProjectFilters["backend"],
-		frontend: list("frontend") as ProjectFilters["frontend"],
-		devops: list("devops") as ProjectFilters["devops"],
-		domain: list("domain") as ProjectFilters["domain"],
-		practice: list("practice").filter((v): v is PracticeFamily =>
-			(FAMILIES as readonly string[]).includes(v),
-		),
-		training: (["only", "exclude"] as const).find(
-			(v) => v === params.get("training"),
-		),
-	};
-}
 
 // Constante de module : la clé de cache de useProjects (JSON.stringify) reste stable.
 const NO_FILTERS: ProjectFilters = {
@@ -52,18 +32,7 @@ export default function ProjectRegister({
 }>) {
 	const params = useSearchParams();
 	const filters = parseFilters(params);
-	const filtersActive =
-		Boolean(filters.search) ||
-		Boolean(filters.training) ||
-		[
-			filters.language,
-			filters.database,
-			filters.backend,
-			filters.frontend,
-			filters.devops,
-			filters.domain,
-			filters.practice,
-		].some((l) => (l?.length ?? 0) > 0);
+	const filtersActive = hasActiveFilters(filters);
 	const all = useProjects(NO_FILTERS);
 	const filtered = useProjects(filtersActive ? filters : NO_FILTERS);
 	const featured = useMemo(() => selectFeatured(all.projects), [all.projects]);

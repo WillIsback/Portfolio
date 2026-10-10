@@ -10,6 +10,7 @@ export const BACKEND_LABELS: Record<string, string> = {
 	FastAPI: "FastAPI",
 	Fastify: "Fastify",
 	ExpressJs: "Express.js",
+	JupyterNotebook: "Jupyter Notebook",
 };
 
 export const FRONTEND_LABELS: Record<string, string> = {

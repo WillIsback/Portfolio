@@ -10,7 +10,12 @@ export const DatabaseEnum = z.enum([
 	"Informix",
 	"SQLite",
 ]);
-export const BackendApiEnum = z.enum(["FastAPI", "Fastify", "ExpressJs"]);
+export const BackendApiEnum = z.enum([
+	"FastAPI",
+	"Fastify",
+	"ExpressJs",
+	"JupyterNotebook",
+]);
 export const FrontendEnum = z.enum([
 	"React",
 	"NextJs",

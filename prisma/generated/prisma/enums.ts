@@ -22,7 +22,8 @@ export type Database = (typeof Database)[keyof typeof Database]
 export const BackendApi = {
   FastAPI: 'FastAPI',
   Fastify: 'Fastify',
-  ExpressJs: 'ExpressJs'
+  ExpressJs: 'ExpressJs',
+  JupyterNotebook: 'JupyterNotebook'
 } as const
 
 export type BackendApi = (typeof BackendApi)[keyof typeof BackendApi]

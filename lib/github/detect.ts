@@ -13,7 +13,12 @@ export const DATABASES = [
 	"Informix",
 	"SQLite",
 ] as const;
-export const BACKENDS = ["FastAPI", "Fastify", "ExpressJs"] as const;
+export const BACKENDS = [
+	"FastAPI",
+	"Fastify",
+	"ExpressJs",
+	"JupyterNotebook",
+] as const;
 export const FRONTENDS = [
 	"React",
 	"NextJs",
@@ -83,6 +88,8 @@ export function detectProject(input: DetectInput): Detection {
 		languages.add(input.primaryLanguage as Detection["languages"][number]);
 	}
 	if (input.hasCargo) languages.add("Rust");
+	const jupyter = input.primaryLanguage === "Jupyter Notebook";
+	if (jupyter) languages.add("Python");
 
 	const databases = new Set<Detection["databases"][number]>();
 	if (
@@ -98,6 +105,8 @@ export function detectProject(input: DetectInput): Detection {
 	if (deps.has("fastapi")) backends.add("FastAPI");
 	if (deps.has("fastify")) backends.add("Fastify");
 	if (deps.has("express")) backends.add("ExpressJs");
+	if (jupyter || input.filePaths.some((p) => p.endsWith(".ipynb")))
+		backends.add("JupyterNotebook");
 
 	const frontends = new Set<Detection["frontends"][number]>();
 	if (deps.has("next")) frontends.add("NextJs");
@@ -112,7 +121,9 @@ export function detectProject(input: DetectInput): Detection {
 		input.filePaths.some((p) => /(^|\/)Dockerfile(\.(?!md$)[\w-]+)?$/.test(p))
 	)
 		devops.add("Docker");
-	if (input.filePaths.some((p) => p.startsWith(".github/workflows/")))
+	if (
+		input.filePaths.some((p) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(p))
+	)
 		devops.add("GithubActions");
 
 	const ml = new Set<Detection["mlStack"][number]>();
@@ -164,10 +175,16 @@ export function detectProject(input: DetectInput): Detection {
 	const practices = new Set<Practice>();
 	if (workflowNames.length > 0 || anyPath(/^\.gitlab-ci\.yml$/))
 		practices.add("ContinuousIntegration");
-	if (devops.has("Docker") || anyPath(/(^|\/)(docker-)?compose\.ya?ml$/))
+	if (
+		devops.has("Docker") ||
+		anyPath(/(^|\/)(docker-)?compose(\.[\w-]+)?\.ya?ml$/)
+	)
 		practices.add("Containerization");
 	// « cd » doit être un mot entier : `ci-cd.yml` oui, `abcd.yml` / `scd-report.yml` non.
-	if (wf(/(^|[-_.])(deploy|release|cd)([-_.]|$)/) || anyPath(/^vercel\.json$/))
+	if (
+		wf(/(^|[-_.])(deploy\w*|releases?|cd)([-_.]|$)/) ||
+		anyPath(/^vercel\.json$/)
+	)
 		practices.add("ContinuousDeployment");
 	if (
 		matches(
@@ -178,7 +195,7 @@ export function detectProject(input: DetectInput): Detection {
 			"@playwright/test",
 			"playwright",
 		) ||
-		anyPath(/(^|\/)(tests|__tests__)\//)
+		anyPath(/(^|\/)(tests?|__tests__)\//)
 	)
 		practices.add("AutomatedTesting");
 	if (
