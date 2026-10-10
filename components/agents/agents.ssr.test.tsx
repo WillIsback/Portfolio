@@ -24,7 +24,25 @@ describe("ProposalCard", () => {
 		expect(html).toContain("Mise à jour du projet");
 		expect(html).toContain("Ajouter le domaine Agents");
 		expect(html).toContain("domains");
+		expect(html).toContain("Agents");
 		expect(html).toContain("Appliquer");
+	});
+	it("affiche l'ancienne valeur et la nouvelle avec une flèche", () => {
+		const html = renderToStaticMarkup(
+			<ProposalCard
+				proposal={{
+					action: "update",
+					projectId: 3,
+					summary: "Changer les domaines",
+					data: { domains: ["Agents"] },
+					current: { domains: ["LLM"] },
+				}}
+			/>,
+		);
+		expect(html).toContain("domains");
+		expect(html).toContain("→");
+		expect(html).toContain("LLM");
+		expect(html).toContain("Agents");
 	});
 	it("affiche la suppression", () => {
 		const html = renderToStaticMarkup(

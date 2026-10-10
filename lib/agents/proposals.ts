@@ -54,6 +54,10 @@ export const ProjectProposalSchema = z
 
 export type ProjectProposal = z.infer<typeof ProjectProposalSchema>;
 
+export type ProjectProposalView = ProjectProposal & {
+	current?: Record<string, unknown> | null;
+};
+
 /** Champs effectivement fournis (pour l'affichage de la carte). */
 export function summarizeProposal(p: ProjectProposal): string[] {
 	return Object.keys(p.data ?? {}).sort();

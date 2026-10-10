@@ -1,26 +1,40 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { getProjects, getProjectById, analyzeRepo } = vi.hoisted(() => ({
-	getProjects: vi.fn(async () => [
-		{
-			id: 1,
-			title: "Alpha",
-			description: "Desc.",
-			pitch: null,
-			status: "Done",
-			domains: [{ domain: "LLM" }],
-			languages: [{ language: "Python" }],
-		} as never,
-	]),
-	getProjectById: vi.fn(async () => ({ id: 1, title: "Alpha" })),
-	analyzeRepo: vi.fn(async () => ({ ok: true, remote: { fullName: "a/b" } })),
+const { getProjects, getProjectById, getFilterOptions, analyzeRepo } =
+	vi.hoisted(() => ({
+		getProjects: vi.fn(async () => [
+			{
+				id: 1,
+				title: "Alpha",
+				description: "Desc.",
+				pitch: null,
+				status: "Done",
+				domains: [{ domain: "LLM" }],
+				languages: [{ language: "Python" }],
+			} as never,
+		]),
+		getProjectById: vi.fn(async () => ({ id: 1, title: "Alpha" })),
+		getFilterOptions: vi.fn(async () => ({
+			languages: ["Python"],
+			databases: [],
+			backends: [],
+			frontends: [],
+			devops: [],
+		})),
+		analyzeRepo: vi.fn(async () => ({ ok: true, remote: { fullName: "a/b" } })),
+	}));
+
+const { loadAdminProject } = vi.hoisted(() => ({
+	loadAdminProject: vi.fn(async () => null),
 }));
 
 vi.mock("@/app/actions/projects.action", () => ({
 	getProjects,
 	getProjectById,
+	getFilterOptions,
 }));
 vi.mock("@/app/actions/admin.action", () => ({ analyzeRepo }));
+vi.mock("@/lib/admin/load-project", () => ({ loadAdminProject }));
 
 import { projectTools } from "./projects.tools";
 
@@ -72,12 +86,24 @@ describe("projectTools", () => {
 		expect(getProjectById).toHaveBeenCalledWith(1);
 	});
 
+	it("getFilterOptions délègue", async () => {
+		const out = await projectTools.getFilterOptions.execute?.({}, {} as never);
+		expect(getFilterOptions).toHaveBeenCalledWith();
+		expect(out).toEqual({
+			languages: ["Python"],
+			databases: [],
+			backends: [],
+			frontends: [],
+			devops: [],
+		});
+	});
+
 	it("analyzeRepo délègue", async () => {
 		await projectTools.analyzeRepo.execute?.({ fullName: "a/b" }, {} as never);
 		expect(analyzeRepo).toHaveBeenCalledWith("a/b");
 	});
 
-	it("proposeProjectDraft renvoie la proposition sans l'appliquer", async () => {
+	it("proposeProjectDraft renvoie la proposition avec le projet courant sans l'appliquer", async () => {
 		const proposal = {
 			action: "update",
 			projectId: 3,
@@ -88,6 +114,22 @@ describe("projectTools", () => {
 			proposal as never,
 			{} as never,
 		);
+		expect(loadAdminProject).toHaveBeenCalledWith(3);
+		expect(out).toEqual({ ...proposal, current: null });
+	});
+
+	it("proposeProjectDraft renvoie la proposition telle quelle en création", async () => {
+		const proposal = {
+			action: "create",
+			projectId: null,
+			summary: "Nouveau projet",
+			data: { title: "Alpha" },
+		} as const;
+		const out = await projectTools.proposeProjectDraft.execute?.(
+			proposal as never,
+			{} as never,
+		);
+		expect(loadAdminProject).not.toHaveBeenCalled();
 		expect(out).toEqual(proposal);
 	});
 });

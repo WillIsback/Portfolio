@@ -1,7 +1,12 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { analyzeRepo } from "@/app/actions/admin.action";
-import { getProjectById, getProjects } from "@/app/actions/projects.action";
+import {
+	getFilterOptions,
+	getProjectById,
+	getProjects,
+} from "@/app/actions/projects.action";
+import { loadAdminProject } from "@/lib/admin/load-project";
 import { ProjectProposalSchema } from "@/lib/agents/proposals";
 
 function summarize(p: {
@@ -37,6 +42,12 @@ export const projectTools = {
 		inputSchema: z.object({ id: z.number().int().positive() }),
 		execute: async ({ id }) => getProjectById(id),
 	}),
+	getFilterOptions: tool({
+		description:
+			"Options de filtres disponibles (langages, bases, backends, frontends, devops).",
+		inputSchema: z.object({}),
+		execute: async () => getFilterOptions(),
+	}),
 	analyzeRepo: tool({
 		description:
 			"Analyse un dépôt GitHub (owner/repo) : stack détectée et écart avec le projet associé.",
@@ -47,6 +58,12 @@ export const projectTools = {
 		description:
 			"Prépare une écriture de projet (create/update/delete) SANS l'appliquer. L'humain validera ensuite dans l'interface.",
 		inputSchema: ProjectProposalSchema,
-		execute: async (proposal) => proposal,
+		execute: async (proposal) => {
+			if (proposal.action === "update" && proposal.projectId) {
+				const current = await loadAdminProject(proposal.projectId);
+				return { ...proposal, current };
+			}
+			return proposal;
+		},
 	}),
 };
