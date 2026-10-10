@@ -26,8 +26,14 @@ describe("ArticleDraftSchema", () => {
 describe("frontmatterToMdx", () => {
 	it("produit un bloc frontmatter + corps", () => {
 		const mdx = frontmatterToMdx(ArticleDraftSchema.parse(draft));
-		expect(mdx).toContain("title: Un carnet d'agents");
+		expect(mdx).toContain('title: "Un carnet d\'agents"');
 		expect(mdx).toContain("projects: [3, 4]");
 		expect(mdx).toContain("## Intro");
+	});
+	it("cite un titre contenant un deux-points", () => {
+		const mdx = frontmatterToMdx(
+			ArticleDraftSchema.parse({ ...draft, title: "Carnet : agents" }),
+		);
+		expect(mdx).toContain('title: "Carnet : agents"');
 	});
 });
