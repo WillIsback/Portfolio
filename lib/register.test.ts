@@ -217,6 +217,7 @@ describe("isCapture", () => {
 	it("ne reconnaît que des images matricielles, jamais un logo SVG ni l'image GitHub", () => {
 		expect(isCapture("/captures/syntheo.webp")).toBe(true);
 		expect(isCapture("https://example.com/shot.PNG")).toBe(false);
+		expect(isCapture("//evil.example/x.png")).toBe(false);
 		expect(
 			isCapture("http://raw.githubusercontent.com/WillIsback/r/main/a.png"),
 		).toBe(false);

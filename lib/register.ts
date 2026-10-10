@@ -116,8 +116,8 @@ const RAW_CAPTURE_PREFIX = "https://raw.githubusercontent.com/WillIsback/";
 /** Une vraie capture d'écran : image matricielle locale ("/…") ou hébergée sur raw.githubusercontent.com/WillIsback/ (seul hôte autorisé dans next/image). */
 export function isCapture(imagePath: string | null): boolean {
 	if (!imagePath) return false;
-	if (!imagePath.startsWith("/") && !imagePath.startsWith(RAW_CAPTURE_PREFIX))
-		return false;
+	const local = imagePath.startsWith("/") && !imagePath.startsWith("//");
+	if (!local && !imagePath.startsWith(RAW_CAPTURE_PREFIX)) return false;
 	return /\.(png|jpe?g|webp|avif)$/i.test(imagePath);
 }
 

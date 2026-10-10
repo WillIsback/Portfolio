@@ -154,10 +154,20 @@ function safeMessage(e: unknown): string {
 	return "Opération impossible.";
 }
 
-/** Id d'un projet sans `githubRepoId` dont l'URL, même non canonique, désigne ce dépôt. */
-async function findIdByRepoName(fullName: string): Promise<number | null> {
+/**
+ * Id d'un projet dont l'URL, même non canonique, désigne ce dépôt. Par défaut
+ * limité aux projets sans `githubRepoId` ; `anyRepoId` inclut ceux qui portent
+ * un ancien identifiant (dépôt supprimé puis recréé sous le même nom).
+ */
+async function findIdByRepoName(
+	fullName: string,
+	{ anyRepoId = false } = {},
+): Promise<number | null> {
 	const candidates = await prisma.project.findMany({
-		where: { githubRepoId: null, github: { not: null } },
+		where: {
+			github: { not: null },
+			...(anyRepoId ? {} : { githubRepoId: null }),
+		},
 		select: { id: true, github: true },
 	});
 	return matchByRepoName(candidates, fullName)?.id ?? null;
@@ -229,13 +239,17 @@ export async function importRepo(
 	if (!parsed.success) return { ok: false, error: "Données invalides." };
 	const data = parsed.data;
 	const name = fullNameOf(data.github);
-	const existing =
-		(await prisma.project.findUnique({
-			where: { githubRepoId: data.githubRepoId },
-			select: { id: true },
-		})) ?? (name ? { id: await findIdByRepoName(name) } : { id: null });
-	if (existing.id !== null)
-		return { ok: false, error: "Ce dépôt est déjà importé." };
+	const sameId = await prisma.project.findUnique({
+		where: { githubRepoId: data.githubRepoId },
+		select: { id: true },
+	});
+	if (sameId) return { ok: false, error: "Ce dépôt est déjà importé." };
+	// Même nom, quel que soit l'identifiant : `github` n'est pas unique en base.
+	if (name && (await findIdByRepoName(name, { anyRepoId: true })) !== null)
+		return {
+			ok: false,
+			error: "Un projet pointe déjà vers ce dépôt (ancien identifiant GitHub).",
+		};
 	try {
 		await createProject({ ...data, isAiGenerated: false });
 	} catch (e) {
