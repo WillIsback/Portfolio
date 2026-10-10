@@ -2,6 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import { analyzeRepo } from "@/app/actions/admin.action";
 import { getProjectById, getProjects } from "@/app/actions/projects.action";
+import { ProjectProposalSchema } from "@/lib/agents/proposals";
 
 function summarize(p: {
 	id: number;
@@ -41,5 +42,11 @@ export const projectTools = {
 			"Analyse un dépôt GitHub (owner/repo) : stack détectée et écart avec le projet associé.",
 		inputSchema: z.object({ fullName: z.string().min(3) }),
 		execute: async ({ fullName }) => analyzeRepo(fullName),
+	}),
+	proposeProjectDraft: tool({
+		description:
+			"Prépare une écriture de projet (create/update/delete) SANS l'appliquer. L'humain validera ensuite dans l'interface.",
+		inputSchema: ProjectProposalSchema,
+		execute: async (proposal) => proposal,
 	}),
 };
