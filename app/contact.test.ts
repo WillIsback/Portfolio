@@ -40,4 +40,21 @@ describe("Contact (fiche du carnet)", () => {
 		expect(page).not.toContain("border-ink-soft/50");
 		expect(page).not.toContain("ring-ring/50");
 	});
+
+	it("laisse le bouton actif hors envoi (plus de disabled={isPending || !isValid})", () => {
+		expect(page).not.toContain("disabled={isPending || !isValid}");
+		expect(page).toContain("disabled={isPending}");
+	});
+
+	it("annonce le résumé des erreurs dans une région live et ramène le focus", () => {
+		expect(page).toContain('aria-live="polite"');
+		expect(page).toContain("errorSummary");
+		expect(page).toContain("firstInvalidField");
+		expect(page).toContain(".focus()");
+	});
+
+	it("affiche aussi les erreurs renvoyées par le serveur (sans JavaScript)", () => {
+		expect(page).toContain("firstServerErrors");
+		expect(page).toContain("serverErrors");
+	});
 });
