@@ -127,6 +127,8 @@ export interface RepoManifests {
 	requirements: string | null;
 	cargo: string | null;
 	compose: string[];
+	/** Manifestes d'un sous-dossier de premier niveau (monorepo : backend/, frontend/…). */
+	nested: { path: string; content: string }[];
 }
 
 export interface RepoBundle {
@@ -157,14 +159,15 @@ const IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 export const isVendored = (path: string) =>
 	path.split("/").some((seg) => VENDORED.has(seg));
 
+/** `Dockerfile` ou `Dockerfile.<suffixe>` (pas `Dockerfile.md`). */
 const isDockerfile = (p: string) =>
-	p === "Dockerfile" || p.endsWith("/Dockerfile");
+	/(^|\/)Dockerfile(\.(?!md$)[\w-]+)?$/.test(p);
 
 /** Chemins utiles à la détection des pratiques (aucune requête de plus : l'arbre est déjà chargé). */
 const MARKER_RE =
-	/^(\.(github|forgejo)\/workflows\/|\.gitlab-ci\.yml$|\.github\/dependabot\.ya?ml$|(\.github\/)?renovate\.json5?$|\.semgrep\.ya?ml$|\.gitleaks\.toml$|\.secrets\.baseline$|dvc\.yaml$|vercel\.json$)|(^|\/)(docker-)?compose\.ya?ml$|\.dvc$/;
+	/^(\.(github|forgejo)\/workflows\/|\.gitlab-ci\.yml$|\.github\/dependabot\.ya?ml$|(\.github\/)?renovate\.json5?$|\.semgrep\.ya?ml$|\.gitleaks\.toml$|\.secrets\.baseline$|dvc\.yaml$|vercel\.json$)|(^|\/)(docker-)?compose(\.[\w-]+)?\.ya?ml$|\.dvc$/;
 /** Dossiers dont seule la présence compte : un chemin suffit, quel que soit leur volume. */
-const PRESENCE_RES = [/(^|\/)(tests|__tests__)\//, /^\.dvc\//];
+const PRESENCE_RES = [/(^|\/)(tests?|__tests__)\//, /^\.dvc\//, /\.ipynb$/];
 const MAX_MARKERS = 200;
 
 /** Dockerfile et marqueurs (plafonnés), plus un seul chemin par dossier « de présence ». */
@@ -178,6 +181,10 @@ function markerPaths(paths: string[]): string[] {
 	});
 	return [...markers, ...presence];
 }
+
+const NESTED_MANIFEST_RE =
+	/^[^/]+\/(package\.json|pyproject\.toml|requirements\.txt|Cargo\.toml|(docker-)?compose(\.[\w-]+)?\.ya?ml)$/;
+const MAX_NESTED = 8;
 
 interface TreeResponse {
 	tree?: { path: string; type: string }[];
@@ -254,6 +261,18 @@ export async function getRepoBundle(
 			fetchIf("compose.yaml"),
 		]);
 
+	const nestedPaths = paths
+		.filter((p) => NESTED_MANIFEST_RE.test(p))
+		.slice(0, MAX_NESTED);
+	const nested = (
+		await Promise.all(
+			nestedPaths.map(async (path) => ({
+				path,
+				content: await getRaw(fullName, path, token),
+			})),
+		)
+	).filter((n): n is { path: string; content: string } => n.content !== null);
+
 	let readme: string | null = null;
 	try {
 		const res = await githubGet(`/repos/${fullName}/readme`, token, {
@@ -273,6 +292,7 @@ export async function getRepoBundle(
 			requirements,
 			cargo,
 			compose: [c1, c2].filter((x): x is string => x !== null),
+			nested,
 		},
 		readmeHead: (readme ?? "").slice(0, README_HEAD_CHARS),
 		images,

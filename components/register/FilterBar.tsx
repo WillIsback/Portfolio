@@ -16,6 +16,7 @@ import {
 import { debounce } from "@/lib/debounce";
 import { DOMAIN_LABELS } from "@/lib/domains";
 import { FAMILIES } from "@/lib/practices";
+import { parseFilters } from "@/lib/register-filters";
 import { nextSearchField } from "@/lib/search-field-sync";
 import {
 	BACKEND_LABELS,
@@ -69,9 +70,8 @@ export default function FilterBar() {
 	const frontend =
 		searchParams.get("frontend")?.split(",").filter(Boolean) ?? [];
 	const devops = searchParams.get("devops")?.split(",").filter(Boolean) ?? [];
-	const practice =
-		searchParams.get("practice")?.split(",").filter(Boolean) ?? [];
-	const training = searchParams.get("training");
+	// Valeurs validées : un paramètre inconnu n'affiche ni sélection vide ni « Réinitialiser ».
+	const { practice = [], training } = parseFilters(searchParams);
 
 	// Mettre à jour l'URL avec les nouveaux paramètres
 	const updateSearchParams = useCallback(

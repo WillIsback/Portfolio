@@ -94,19 +94,26 @@ export function toRemoteRepo(r: ListedRepo): RemoteRepo {
 	};
 }
 
-/** Détection à partir d'un dépôt lu en entier. */
+/** Détection à partir d'un dépôt lu en entier (manifestes racine et premier niveau). */
 export function detectFromBundle(bundle: RepoBundle): Detection {
 	const { manifests: m, meta } = bundle;
+	const nested = (name: RegExp) =>
+		m.nested.filter((n) => name.test(n.path)).map((n) => n.content);
+	const packageJsons = [m.packageJson, ...nested(/\/package\.json$/)];
+	const requirements = [m.requirements, ...nested(/\/requirements\.txt$/)];
+	const pyprojects = [m.pyproject, ...nested(/\/pyproject\.toml$/)];
+	const composes = [...m.compose, ...nested(/compose(\.[\w-]+)?\.ya?ml$/)];
+	const present = (x: string | null): x is string => x !== null;
 	return detectProject({
 		primaryLanguage: meta.language,
 		filePaths: bundle.filePaths,
-		npm: m.packageJson ? parsePackageJson(m.packageJson) : [],
+		npm: packageJsons.filter(present).flatMap(parsePackageJson),
 		python: [
-			...(m.requirements ? parseRequirements(m.requirements) : []),
-			...(m.pyproject ? parsePyproject(m.pyproject) : []),
+			...requirements.filter(present).flatMap(parseRequirements),
+			...pyprojects.filter(present).flatMap(parsePyproject),
 		],
-		composeImages: m.compose.flatMap(parseComposeImages),
-		hasCargo: m.cargo !== null,
+		composeImages: composes.flatMap(parseComposeImages),
+		hasCargo: m.cargo !== null || nested(/\/Cargo\.toml$/).length > 0,
 		readmeHead: bundle.readmeHead,
 		topics: meta.topics ?? [],
 	});

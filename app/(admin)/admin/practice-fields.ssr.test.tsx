@@ -8,7 +8,11 @@ describe("PracticeFields", () => {
 		const html = renderToStaticMarkup(
 			<PracticeFields selected={["Hardening"]} onToggle={() => {}} />,
 		);
-		for (const legend of ["DevOps", "SecOps", "MLOps"])
+		for (const legend of [
+			"Pratiques DevOps",
+			"Pratiques SecOps",
+			"Pratiques MLOps",
+		])
 			expect(html).toContain(legend);
 		expect(html).toContain("Durcissement");
 		expect(html).toContain("Évaluation / monitoring LLM");

@@ -3,6 +3,7 @@ import { planWrite } from "./apply";
 import {
 	type BoardProject,
 	buildBoardRows,
+	detectFromBundle,
 	formatValue,
 	summarizeDiff,
 	toBoardProject,
@@ -144,5 +145,50 @@ describe("planWrite", () => {
 		expect(() => planWrite({ languages: ["Cobol"] })).toThrow();
 		expect(() => planWrite({ status: "Done" })).toThrow();
 		expect(() => planWrite({ github: "http://evil.example/x/y" })).toThrow();
+	});
+});
+
+describe("detectFromBundle — monorepo", () => {
+	it("lit les manifestes des sous-dossiers de premier niveau", () => {
+		const d = detectFromBundle({
+			meta: {
+				id: 1,
+				full_name: "WillIsback/m",
+				description: null,
+				homepage: null,
+				private: false,
+				archived: false,
+				pushed_at: null,
+				default_branch: "main",
+				language: "TypeScript",
+			},
+			filePaths: [],
+			images: [],
+			readmeHead: "",
+			manifests: {
+				packageJson: null,
+				pyproject: null,
+				requirements: null,
+				cargo: null,
+				compose: [],
+				nested: [
+					{
+						path: "frontend/package.json",
+						content: '{"dependencies":{"next":"16"}}',
+					},
+					{ path: "backend/requirements.txt", content: "fastapi\npsycopg\n" },
+					{
+						path: "deploy/compose.yaml",
+						content: "services:\n  v:\n    image: vllm/vllm-openai\n",
+					},
+					{ path: "engine/Cargo.toml", content: "[package]\nname='x'\n" },
+				],
+			},
+		});
+		expect(d.frontends).toContain("NextJs");
+		expect(d.backends).toContain("FastAPI");
+		expect(d.databases).toContain("Postgresql");
+		expect(d.languages).toContain("Rust");
+		expect(d.mlStack).toContain("VLLM");
 	});
 });

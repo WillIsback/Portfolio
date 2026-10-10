@@ -1,4 +1,5 @@
 /** Statut de synchronisation et écarts GitHub ↔ base. Logique pure. */
+import { normalizeDomains } from "@/lib/domains";
 import { normalizePractices } from "@/lib/practices";
 
 export type SyncStatus =
@@ -57,8 +58,20 @@ export const LIST_FIELDS = [
 ] as const;
 export type ListField = (typeof LIST_FIELDS)[number];
 
-/** Champs dont la détection ne voit pas tout (cochés à la main) : elle ajoute, ne retire jamais. */
-export const ADDITIVE_FIELDS: readonly ListField[] = ["practices"];
+/**
+ * Union base ∪ détection. La détection ne voit pas tout (sous-dossiers, notebooks, valeurs
+ * cochées à la main) : elle ajoute, ne retire jamais ; un retrait se fait dans la fiche.
+ */
+function mergeList(
+	field: ListField,
+	current: string[],
+	detected: string[],
+): string[] {
+	const union = [...current, ...detected.filter((v) => !current.includes(v))];
+	if (field === "domains") return normalizeDomains(union);
+	if (field === "practices") return normalizePractices(union);
+	return union;
+}
 export type ScalarField =
 	| "description"
 	| "lastUpdate"
@@ -128,7 +141,8 @@ export function computeDiff(
 ): FieldDiff[] {
 	const diffs: FieldDiff[] = [];
 
-	if (remote.description && remote.description !== project.description) {
+	// La description en base est éditoriale : proposée seulement si elle est vide.
+	if (remote.description && !project.description.trim()) {
 		diffs.push({
 			field: "description",
 			kind: "scalar",
@@ -164,9 +178,7 @@ export function computeDiff(
 		const detected = remote[field];
 		if (!detected) continue;
 		const current = project[field];
-		const proposedList = ADDITIVE_FIELDS.includes(field)
-			? normalizePractices([...current, ...detected])
-			: detected;
+		const proposedList = mergeList(field, current, detected);
 		const added = proposedList.filter((v) => !current.includes(v));
 		const removed = current.filter((v) => !proposedList.includes(v));
 		if (added.length || removed.length) {

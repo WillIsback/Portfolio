@@ -16,7 +16,7 @@ export function PracticeFields({
 			{FAMILIES.map((family) => (
 				<ChipGroup
 					key={family}
-					legend={family}
+					legend={`Pratiques ${family}`}
 					options={PRACTICES_OF[family]}
 					selected={selected}
 					onToggle={onToggle}

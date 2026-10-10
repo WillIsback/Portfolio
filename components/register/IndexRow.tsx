@@ -1,7 +1,12 @@
+import type React from "react";
+import { Fragment } from "react";
 import { isExternalHref } from "@/lib/carnet/map-view";
+import { domainLabels } from "@/lib/domains";
+import { familiesOf } from "@/lib/practices";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { projectYear, techNames } from "@/lib/register";
 import { type ProjectStatusValue, STATUS_LABELS } from "@/lib/status";
+import { isTraining } from "@/lib/training";
 import DomainChips from "./DomainChips";
 import PracticeMarks from "./PracticeMarks";
 import TrainingBadge from "./TrainingBadge";
@@ -17,6 +22,22 @@ export default function IndexRow({
 			? STATUS_LABELS[project.status as ProjectStatusValue]
 			: null;
 	const tech = techNames(project).slice(0, 4).join(" · ");
+	// Segments présents seulement ; séparés pour un lecteur d'écran (le visuel n'a que des espaces).
+	const segments = [
+		isTraining(project.training) && {
+			key: "training",
+			node: <TrainingBadge training={project.training} short />,
+		},
+		domainLabels(project.domains).length > 0 && {
+			key: "domains",
+			node: <DomainChips domains={project.domains} />,
+		},
+		tech && { key: "tech", node: <span>{tech}</span> },
+		familiesOf(project.practices.map((x) => x.practice)).length > 0 && {
+			key: "practices",
+			node: <PracticeMarks practices={project.practices} variant="compact" />,
+		},
+	].filter((x): x is { key: string; node: React.JSX.Element } => Boolean(x));
 	return (
 		<li className="grid grid-cols-[1fr_auto] items-start gap-x-4 gap-y-0.5 border-b border-border/60 py-2.5 sm:grid-cols-[minmax(10rem,14rem)_1fr_auto]">
 			<span>
@@ -41,15 +62,15 @@ export default function IndexRow({
 				<span className="line-clamp-1">
 					{project.pitch?.trim() || project.description}
 				</span>
-				{tech ||
-				project.domains.length > 0 ||
-				project.practices.length > 0 ||
-				project.training ? (
+				{segments.length > 0 ? (
 					<span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
-						<TrainingBadge training={project.training} short />
-						<DomainChips domains={project.domains} />
-						{tech ? <span>{tech}</span> : null}
-						<PracticeMarks practices={project.practices} variant="compact" />
+						<span className="sr-only">, </span>
+						{segments.map((segment, i) => (
+							<Fragment key={segment.key}>
+								{i > 0 ? <span className="sr-only">, </span> : null}
+								{segment.node}
+							</Fragment>
+						))}
 					</span>
 				) : null}
 			</span>

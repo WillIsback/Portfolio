@@ -24,6 +24,7 @@ enum BackendApi {
   FastAPI
   Fastify
   ExpressJs
+  JupyterNotebook
 }
 
 // Enum pour les frameworks frontend

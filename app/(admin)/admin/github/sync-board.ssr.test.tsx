@@ -59,7 +59,7 @@ describe("SyncBoard (rendu serveur)", () => {
 });
 
 describe("DiffPanel (rendu serveur)", () => {
-	it("cases non cochées, étiquetées, avec mention « décoché = conservé »", () => {
+	it("cases non cochées, étiquetées, listes en ajout seulement", () => {
 		const html = renderToStaticMarkup(
 			<DiffPanel
 				projectId={7}
@@ -70,8 +70,8 @@ describe("DiffPanel (rendu serveur)", () => {
 						field: "languages",
 						kind: "list",
 						added: ["Rust"],
-						removed: ["Informix"],
-						proposedList: ["Rust"],
+						removed: [],
+						proposedList: ["Python", "Rust"],
 					},
 					{
 						field: "status",
@@ -84,9 +84,10 @@ describe("DiffPanel (rendu serveur)", () => {
 		);
 		expect(html).not.toContain("checked");
 		expect(html).toContain('for="diff-7-languages"');
-		expect(html).toContain("Décoché = valeur actuelle conservée");
+		expect(html).toContain("Langages : ajouter les valeurs détectées");
+		expect(html).not.toContain("remplacer");
 		expect(html).toContain("Passer le statut à archivé");
-		expect(html).toContain("Informix");
+		expect(html).toContain("+ Rust");
 	});
 });
 

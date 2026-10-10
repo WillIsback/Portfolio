@@ -47,7 +47,7 @@ describe("computeDiff", () => {
 	it("aucun écart → []", () => {
 		expect(computeDiff(project, remote)).toEqual([]);
 	});
-	it("écart de liste : ajouts et retraits", () => {
+	it("écart de liste : ajouts seulement, rien n'est retiré", () => {
 		const diffs = computeDiff(project, {
 			...remote,
 			devops: ["GithubActions"],
@@ -57,25 +57,51 @@ describe("computeDiff", () => {
 				field: "devops",
 				kind: "list",
 				added: ["GithubActions"],
-				removed: ["Docker"],
-				proposedList: ["GithubActions"],
+				removed: [],
+				proposedList: ["Docker", "GithubActions"],
 			},
 		]);
+	});
+	it("détection plus pauvre que la base : aucun écart", () => {
+		expect(
+			computeDiff(project, {
+				...remote,
+				languages: [],
+				backends: [],
+				devops: [],
+				domains: [],
+			}),
+		).toEqual([]);
+	});
+	it("domaines ajoutés : liste normalisée (ML imposé)", () => {
+		const d = computeDiff(
+			{ ...project, domains: ["LLM"] },
+			{ ...remote, domains: ["Classifier"] },
+		).find((x) => x.field === "domains");
+		expect(d).toMatchObject({ added: ["ML", "Classifier"], removed: [] });
+	});
+	it("description en base : jamais remplacée ; vide : proposée", () => {
+		expect(
+			computeDiff(project, { ...remote, description: "Autre" }).map(
+				(d) => d.field,
+			),
+		).not.toContain("description");
+		expect(
+			computeDiff(
+				{ ...project, description: "  " },
+				{ ...remote, description: "Autre" },
+			)[0],
+		).toMatchObject({ field: "description", proposed: "Autre" });
 	});
 	it("écarts scalaires", () => {
 		const later = new Date("2026-10-05T00:00:00Z");
 		const diffs = computeDiff(project, {
 			...remote,
-			description: "Nouveau",
 			pushedAt: later,
 			isPrivate: true,
 		});
-		expect(diffs.map((d) => d.field)).toEqual([
-			"description",
-			"lastUpdate",
-			"isPrivate",
-		]);
-		expect(diffs[1]).toMatchObject({ current: date, proposed: later });
+		expect(diffs.map((d) => d.field)).toEqual(["lastUpdate", "isPrivate"]);
+		expect(diffs[0]).toMatchObject({ current: date, proposed: later });
 	});
 	it("description distante vide : jamais proposée", () => {
 		expect(computeDiff(project, { ...remote, description: null })).toEqual([]);
@@ -146,7 +172,7 @@ describe("syncStatus", () => {
 	it("up-to-date / modified", () => {
 		expect(syncStatus({ repo: remote, project })).toBe("up-to-date");
 		expect(
-			syncStatus({ repo: { ...remote, description: "autre" }, project }),
+			syncStatus({ repo: { ...remote, devops: ["GithubActions"] }, project }),
 		).toBe("modified");
 	});
 	it("renamed : même id, full_name différent (casse ignorée)", () => {
@@ -177,16 +203,16 @@ describe("syncStatus", () => {
 });
 
 describe("applyAccepted", () => {
+	const later = new Date("2026-10-05T00:00:00Z");
 	const diffs = computeDiff(project, {
 		...remote,
-		description: "Nouveau",
-		devops: [],
-		pushedAt: new Date("2026-10-05T00:00:00Z"),
+		devops: ["GithubActions"],
+		pushedAt: later,
 	});
 	it("ne retient que les champs cochés", () => {
-		expect(applyAccepted(project, diffs, ["description", "devops"])).toEqual({
-			description: "Nouveau",
-			devops: [],
+		expect(applyAccepted(project, diffs, ["lastUpdate", "devops"])).toEqual({
+			lastUpdate: later,
+			devops: ["Docker", "GithubActions"],
 		});
 	});
 	it("rien de coché → objet vide ; champ sans écart ignoré", () => {

@@ -16,7 +16,7 @@ export default function TrainingBadge({
 			{short ? (
 				<>
 					<span aria-hidden="true">{trainingBadgeShort(training)}</span>
-					<span className="sr-only">{full}</span>
+					<span className="sr-only normal-case">{full}</span>
 				</>
 			) : (
 				full

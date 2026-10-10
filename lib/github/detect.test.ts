@@ -269,3 +269,39 @@ describe("detectProject — pratiques", () => {
 		]);
 	});
 });
+
+describe("detectProject — Jupyter et variantes de noms", () => {
+	it("Jupyter Notebook : langage Python et back-end JupyterNotebook", () => {
+		const r = detect({ primaryLanguage: "Jupyter Notebook" });
+		expect(r.languages).toEqual(["Python"]);
+		expect(r.backends).toEqual(["JupyterNotebook"]);
+		expect(detect({ filePaths: ["notebooks/eda.ipynb"] }).backends).toEqual([
+			"JupyterNotebook",
+		]);
+		expect(detect({ primaryLanguage: "Python" }).backends).toEqual([]);
+	});
+
+	it("variantes de noms reconnues", () => {
+		const p = (paths: string[]) => detect({ filePaths: paths }).practices;
+		expect(p([".github/workflows/deployment.yml"])).toContain(
+			"ContinuousDeployment",
+		);
+		expect(p([".github/workflows/releases.yml"])).toContain(
+			"ContinuousDeployment",
+		);
+		expect(p(["docker-compose.prod.yml"])).toContain("Containerization");
+		expect(p(["test/api.test.js"])).toContain("AutomatedTesting");
+		expect(p([".github/workflows/redeploy-docs.yml"])).not.toContain(
+			"ContinuousDeployment",
+		);
+		expect(detect({ filePaths: ["Dockerfile.prod"] }).devops).toEqual([
+			"Docker",
+		]);
+	});
+
+	it("GithubActions ignore un README sous .github/workflows/", () => {
+		expect(
+			detect({ filePaths: [".github/workflows/README.md"] }).devops,
+		).toEqual([]);
+	});
+});

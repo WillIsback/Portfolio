@@ -2,11 +2,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
+import { hasActiveFilters, parseFilters } from "@/lib/register-filters";
 import DomainChips from "./DomainChips";
 import FeaturedCard from "./FeaturedCard";
 import IndexRow from "./IndexRow";
 import MiniMap from "./MiniMap";
-import { parseFilters } from "./ProjectRegister";
 import TechBar from "./TechBar";
 
 const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
@@ -414,5 +414,37 @@ describe("parseFilters — pratiques et formation", () => {
 		const g = parseFilters(new URLSearchParams("training=maybe"));
 		expect(g.training).toBeUndefined();
 		expect(g.practice).toEqual([]);
+	});
+});
+
+describe("petits défauts PR #15", () => {
+	it("paramètre inconnu : aucun filtre actif", () => {
+		expect(
+			hasActiveFilters(
+				parseFilters(new URLSearchParams("training=maybe&practice=Foo")),
+			),
+		).toBe(false);
+		expect(
+			hasActiveFilters(parseFilters(new URLSearchParams("training=only"))),
+		).toBe(true);
+		expect(
+			hasActiveFilters(parseFilters(new URLSearchParams("search=x"))),
+		).toBe(true);
+	});
+
+	it("IndexRow : segments séparés pour lecteur d'écran, badge sans capitales", () => {
+		const html = renderToStaticMarkup(
+			<IndexRow
+				project={p({
+					training: "AIEngineer",
+					domains: [{ domain: "LLM" }],
+					practices: [{ practice: "Hardening" }],
+				})}
+			/>,
+		);
+		expect(
+			html.match(/<span class="sr-only">, <\/span>/g)?.length,
+		).toBeGreaterThanOrEqual(3);
+		expect(html).toContain('class="sr-only normal-case"');
 	});
 });

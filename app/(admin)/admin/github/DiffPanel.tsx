@@ -54,9 +54,9 @@ export function DiffPanel({
 	return (
 		<div className="space-y-3">
 			<p className="text-xs text-zinc-500">
-				Coche les champs à écrire. Un champ décoché garde sa valeur actuelle, y
-				compris les valeurs retirées que la détection ne peut pas voir (ex. une
-				technologie ajoutée à la main).
+				Coche les champs à écrire. La synchronisation ajoute les valeurs
+				détectées sans jamais rien retirer : un retrait se fait dans la fiche du
+				projet.
 			</p>
 			<ul className="space-y-2">
 				{diff.map((d) => {
@@ -64,11 +64,9 @@ export function DiffPanel({
 					const label =
 						d.field === "status"
 							? "Passer le statut à archivé"
-							: d.field === "practices"
-								? "Pratiques : ajouter les pratiques détectées"
-								: d.kind === "list"
-									? `${FIELD_LABELS[d.field]} : remplacer par la liste GitHub`
-									: FIELD_LABELS[d.field];
+							: d.kind === "list"
+								? `${FIELD_LABELS[d.field]} : ajouter les valeurs détectées`
+								: FIELD_LABELS[d.field];
 					return (
 						<li
 							key={d.field}
