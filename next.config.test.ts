@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import nextConfig from "./next.config";
+import { baseConfig as nextConfig } from "./next.config";
 
 describe("next.config", () => {
 	it("sert les fichiers du modèle avec un cache immuable", async () => {
