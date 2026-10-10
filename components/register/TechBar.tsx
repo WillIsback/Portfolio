@@ -3,6 +3,7 @@ import type { TechShare } from "@/lib/register";
 
 const TINT: Record<TechShare["key"], string> = {
 	languages: "var(--cluster-1)",
+	mlStack: "var(--primary)",
 	databases: "var(--cluster-2)",
 	backends: "var(--cluster-3)",
 	frontends: "var(--cluster-4)",

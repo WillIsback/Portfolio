@@ -169,6 +169,33 @@ describe("techNames", () => {
 	});
 });
 
+describe("ML & Data", () => {
+	it("entre dans techComposition et techNames, après les langages", () => {
+		const p = project(1, {
+			databases: [{ database: "SQLite" }],
+			languages: [{ language: "Python" }],
+			mlStack: [{ ml: "PyTorch" }, { ml: "ScikitLearn" }],
+		});
+		expect(techComposition(p).map((s) => s.key)).toEqual([
+			"languages",
+			"mlStack",
+			"databases",
+		]);
+		expect(techComposition(p)[1]).toEqual({
+			key: "mlStack",
+			label: "ML & Data",
+			count: 2,
+			share: 0.5,
+		});
+		expect(techNames(p)).toEqual([
+			"Python",
+			"PyTorch",
+			"scikit-learn",
+			"SQLite",
+		]);
+	});
+});
+
 describe("techNames libellés", () => {
 	it("humanise les valeurs de la base, brut à défaut", () => {
 		const p = project(1, {
@@ -192,6 +219,12 @@ describe("isCapture", () => {
 		expect(isCapture("https://example.com/shot.PNG")).toBe(true);
 		expect(isCapture("logo/ML.svg")).toBe(false);
 		expect(isCapture("https://opengraph.githubassets.com/1/x/y.png")).toBe(
+			false,
+		);
+		expect(
+			isCapture("https://raw.githubusercontent.com/o/r/main/docs/shot.png"),
+		).toBe(true);
+		expect(isCapture("https://avatars.githubusercontent.com/u/1.png")).toBe(
 			false,
 		);
 		expect(isCapture("")).toBe(false);

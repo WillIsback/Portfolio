@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+	images: {
+		// Captures d'écran choisies dans les dépôts GitHub (admin, fiche projet).
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "raw.githubusercontent.com",
+				pathname: "/**",
+			},
+		],
+	},
 	async headers() {
 		return [
 			{

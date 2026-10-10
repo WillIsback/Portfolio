@@ -18,6 +18,7 @@ const baseProject: ProjectForCorpus = {
 	backends: [{ backend: "FastAPI" }],
 	frontends: [],
 	devops: [{ devops: "Docker" }],
+	mlStack: [],
 	domains: [],
 };
 
@@ -89,6 +90,21 @@ describe("projectToCorpusItem", () => {
 			"ml",
 			"classification",
 			"vision",
+		]);
+		expect(item?.text).toBe(projectToCorpusItem(baseProject)?.text);
+	});
+
+	it("ajoute la stack ML aux mots-clés sans changer le texte", () => {
+		const item = projectToCorpusItem({
+			...baseProject,
+			mlStack: [{ ml: "PyTorch" }, { ml: "HuggingFace" }],
+		});
+		expect(item?.keywords).toEqual([
+			"python",
+			"fastapi",
+			"docker",
+			"pytorch",
+			"huggingface",
 		]);
 		expect(item?.text).toBe(projectToCorpusItem(baseProject)?.text);
 	});

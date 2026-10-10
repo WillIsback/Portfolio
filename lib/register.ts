@@ -45,7 +45,13 @@ export function splitIndex(
 }
 
 export interface TechShare {
-	key: "languages" | "databases" | "backends" | "frontends" | "devops";
+	key:
+		| "languages"
+		| "mlStack"
+		| "databases"
+		| "backends"
+		| "frontends"
+		| "devops";
 	label: string;
 	count: number;
 	share: number;
@@ -60,6 +66,11 @@ const CATEGORIES: {
 		key: "languages",
 		label: "Langages",
 		names: (p) => p.languages.map((l) => l.language),
+	},
+	{
+		key: "mlStack",
+		label: "ML & Data",
+		names: (p) => p.mlStack.map((m) => m.ml),
 	},
 	{
 		key: "databases",
@@ -100,10 +111,15 @@ export function techNames(p: NormalizedProject): string[] {
 	return CATEGORIES.flatMap((c) => c.names(p)).map(techLabel);
 }
 
-/** Une vraie capture d'écran : image matricielle hors images GitHub par défaut (spec §8.1). */
+/** Une vraie capture d'écran : image matricielle hors images GitHub par défaut (opengraph, avatars) ; raw.githubusercontent.com accepté. */
 export function isCapture(imagePath: string | null): boolean {
 	if (!imagePath) return false;
-	if (/github/i.test(imagePath)) return false;
+	if (
+		/^https?:\/\/(opengraph\.githubassets|avatars\.githubusercontent)\.com\//i.test(
+			imagePath,
+		)
+	)
+		return false;
 	return /\.(png|jpe?g|webp|avif)$/i.test(imagePath);
 }
 
