@@ -111,7 +111,15 @@ export async function getArticleRun(runId: string): Promise<ArticleRunResult> {
 		const status = await run.status;
 		if (status === "completed")
 			return { ok: true, status, draft: await run.returnValue };
-		if (status === "failed") return { ok: false, error: "Génération échouée." };
+		if (status === "failed") {
+			try {
+				await run.returnValue;
+			} catch (e) {
+				const message = e instanceof Error ? e.message : "Génération échouée.";
+				return { ok: false, error: `Génération échouée : ${message.slice(0, 300)}` };
+			}
+			return { ok: false, error: "Génération échouée." };
+		}
 		if (status === "cancelled")
 			return { ok: false, error: "Génération annulée." };
 		return { ok: true, status, draft: null };
