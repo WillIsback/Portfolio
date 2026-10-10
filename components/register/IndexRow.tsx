@@ -40,22 +40,24 @@ export default function IndexRow({
 	].filter((x): x is { key: string; node: React.JSX.Element } => Boolean(x));
 	return (
 		<li className="grid grid-cols-[1fr_auto] items-start gap-x-4 gap-y-0.5 border-b border-border/60 py-2.5 sm:grid-cols-[minmax(10rem,14rem)_1fr_auto]">
-			<span>
+			<span className="min-w-0">
 				{project.github && !project.isPrivate ? (
 					<a
 						href={project.github}
 						{...(isExternalHref(project.github)
 							? { target: "_blank", rel: "noopener noreferrer" }
 							: {})}
-						className="rounded-sm hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+						className="block truncate rounded-sm hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 					>
 						{name}
 					</a>
 				) : (
-					<>
-						{name}{" "}
-						<span className="font-mono text-[11px] text-ink-soft">privé</span>
-					</>
+					<span className="flex min-w-0 items-baseline gap-2">
+						<span className="truncate">{name}</span>
+						<span className="shrink-0 font-mono text-[11px] text-ink-soft">
+							privé
+						</span>
+					</span>
 				)}
 			</span>
 			<span className="order-3 col-span-2 self-start text-sm text-ink-soft sm:order-none sm:col-span-1">

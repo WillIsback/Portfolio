@@ -195,6 +195,19 @@ describe("IndexRow", () => {
 		expect(html).toContain("Python");
 	});
 
+	it("garde un nom de projet long sur une seule ligne, sans casser la ligne", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow
+					project={p({ title: "OC-P5_Deployez_un_modele_de_Machine_Learning" })}
+				/>
+			</ul>,
+		);
+		expect(html).toContain("OC-P5_Deployez_un_modele_de_Machine_Learning");
+		expect(html).toContain("truncate");
+		expect(html).toContain("min-w-0");
+	});
+
 	it("garde la liste des technologies hors de la description tronquée", () => {
 		const html = renderToStaticMarkup(
 			<ul>
