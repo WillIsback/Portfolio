@@ -403,3 +403,16 @@ describe("badge formation et pratiques", () => {
 		expect(html).not.toContain("DevOps");
 	});
 });
+
+describe("parseFilters — pratiques et formation", () => {
+	it("lit les familles et la formation, ignore l'inconnu", () => {
+		const f = parseFilters(
+			new URLSearchParams("practice=MLOps,Foo&training=only"),
+		);
+		expect(f.practice).toEqual(["MLOps"]);
+		expect(f.training).toBe("only");
+		const g = parseFilters(new URLSearchParams("training=maybe"));
+		expect(g.training).toBeUndefined();
+		expect(g.practice).toEqual([]);
+	});
+});
