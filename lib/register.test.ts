@@ -37,6 +37,8 @@ const project = (
 	period: null,
 	featuredRank: null,
 	githubRepoId: null,
+	practices: [],
+	training: null,
 	...over,
 });
 

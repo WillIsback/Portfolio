@@ -14,6 +14,8 @@ describe("withProjectDefaults", () => {
 		expect(p.featuredRank).toBeNull();
 		expect(p.pitch).toBeNull();
 		expect(p.status).toBeNull();
+		expect(p.practices).toEqual([]);
+		expect(p.training).toBeNull();
 		expect(p.title).toBe("t");
 	});
 	it("conserve les valeurs existantes", () => {

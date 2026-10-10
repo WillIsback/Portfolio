@@ -32,6 +32,8 @@ const p = (over: Partial<NormalizedProject> = {}): NormalizedProject => ({
 	period: null,
 	featuredRank: null,
 	githubRepoId: null,
+	practices: [],
+	training: null,
 	...over,
 });
 const points: MapPoint[] = [

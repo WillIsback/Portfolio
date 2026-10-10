@@ -26,6 +26,8 @@ const base: AdminProject = {
 	mlStack: ["PyTorch"],
 	pitch: "Mon accroche",
 	status: "Done",
+	practices: [],
+	training: null,
 };
 
 const render = (over: Partial<AdminProject> = {}) =>

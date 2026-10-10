@@ -23,6 +23,7 @@ export default async function EditProjectPage({
 			devops: true,
 			domains: true,
 			mlStack: true,
+			practices: true,
 		},
 	});
 
@@ -52,6 +53,8 @@ export default async function EditProjectPage({
 		period: project.period ?? undefined,
 		githubRepoId: project.githubRepoId ?? undefined,
 		featuredRank: project.featuredRank ?? undefined,
+		practices: project.practices.map((p) => p.practice),
+		training: project.training ?? null,
 	};
 
 	return (

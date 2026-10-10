@@ -26,6 +26,8 @@ const p = (id: number): NormalizedProject => ({
 	period: null,
 	featuredRank: null,
 	githubRepoId: null,
+	practices: [],
+	training: null,
 });
 const base = {
 	featuredStatus: "ready" as const,

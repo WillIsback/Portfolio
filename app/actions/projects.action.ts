@@ -7,6 +7,7 @@ import {
 	type NormalizedProject,
 	withProjectDefaults,
 } from "@/lib/projects-data";
+import { buildProjectWhere } from "@/lib/projects-filters";
 import { type ProjectFilters, ProjectFiltersSchema } from "@/schemas";
 
 // Utiliser JSON si explicitement demandé (fallback sans BDD)
@@ -50,62 +51,7 @@ async function getProjectsFromDb(
 		return getProjectsFromJson(filters);
 	}
 
-	const where: any = {};
-
-	if (filters?.search) {
-		where.OR = [
-			{ title: { contains: filters.search } },
-			{ description: { contains: filters.search } },
-		];
-	}
-
-	if (filters?.language?.length) {
-		where.languages = {
-			some: {
-				language: { in: filters.language },
-			},
-		};
-	}
-
-	if (filters?.database?.length) {
-		where.databases = {
-			some: {
-				database: { in: filters.database },
-			},
-		};
-	}
-
-	if (filters?.backend?.length) {
-		where.backends = {
-			some: {
-				backend: { in: filters.backend },
-			},
-		};
-	}
-
-	if (filters?.frontend?.length) {
-		where.frontends = {
-			some: {
-				frontend: { in: filters.frontend },
-			},
-		};
-	}
-
-	if (filters?.devops?.length) {
-		where.devops = {
-			some: {
-				devops: { in: filters.devops },
-			},
-		};
-	}
-
-	if (filters?.domain?.length) {
-		where.domains = {
-			some: {
-				domain: { in: filters.domain },
-			},
-		};
-	}
+	const where = buildProjectWhere(filters ?? {});
 
 	const dbProjects = await prisma.project.findMany({
 		where,
@@ -132,6 +78,8 @@ async function getProjectsFromDb(
 			period: true,
 			featuredRank: true,
 			githubRepoId: true,
+			practices: true,
+			training: true,
 		},
 		orderBy: { lastUpdate: "desc" },
 	});
@@ -146,6 +94,7 @@ async function getProjectsFromDb(
 		devops: p.devops.map((d) => ({ devops: d.devops })),
 		domains: p.domains.map((d) => ({ domain: d.domain })),
 		mlStack: p.mlStack.map((m) => ({ ml: m.ml })),
+		practices: p.practices.map((x) => ({ practice: x.practice })),
 	}));
 }
 
@@ -175,7 +124,7 @@ export async function getProjects(rawFilters?: ProjectFilters) {
 	// Fonction cachée (production seulement)
 	const getCachedProjects = unstable_cache(
 		async () => getProjectsFromDb(filters),
-		["projects-v2", cacheKey],
+		["projects-v3", cacheKey],
 		{
 			tags: ["projects"],
 			revalidate: 300,
@@ -225,9 +174,11 @@ export async function getProjectById(id: number) {
 					period: true,
 					featuredRank: true,
 					githubRepoId: true,
+					practices: true,
+					training: true,
 				},
 			}),
-		["project-v2", String(id)],
+		["project-v3", String(id)],
 		{
 			tags: ["projects", `project-${id}`],
 			revalidate: 300,

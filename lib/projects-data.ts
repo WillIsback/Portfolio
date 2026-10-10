@@ -1,4 +1,5 @@
 import projectsData from "@/app/data/github-projects.json";
+import { PRACTICES_OF } from "@/lib/practices";
 import type { ProjectFilters } from "@/schemas";
 
 // Type pour un projet JSON
@@ -43,6 +44,8 @@ export interface NormalizedProject {
 	period: string | null;
 	featuredRank: number | null;
 	githubRepoId: number | null;
+	practices: { practice: string }[];
+	training: string | null;
 }
 
 // Transformer un projet JSON en format normalisé
@@ -80,6 +83,8 @@ function normalizeProject(
 		period: null,
 		featuredRank: null,
 		githubRepoId: null,
+		practices: [],
+		training: null,
 	};
 }
 
@@ -134,6 +139,21 @@ export function getProjectsFromJson(
 		);
 	}
 
+	if (filters?.training === "only")
+		projects = projects.filter((p) => p.training);
+	if (filters?.training === "exclude")
+		projects = projects.filter((p) => !p.training);
+
+	// Le JSON n'a pas de pratiques : un filtre par famille y vide la liste.
+	if (filters?.practice?.length) {
+		const wanted = new Set<string>(
+			filters.practice.flatMap((f) => PRACTICES_OF[f]),
+		);
+		projects = projects.filter((p) =>
+			p.practices.some((x) => wanted.has(x.practice)),
+		);
+	}
+
 	// Trier par date de mise à jour (plus récent en premier)
 	return projects.sort((a, b) => {
 		const dateA = a.lastUpdate?.getTime() ?? 0;
@@ -151,5 +171,7 @@ export function withProjectDefaults(p: NormalizedProject): NormalizedProject {
 		featuredRank: p.featuredRank ?? null,
 		pitch: p.pitch ?? null,
 		status: p.status ?? null,
+		practices: p.practices ?? [],
+		training: p.training ?? null,
 	};
 }
