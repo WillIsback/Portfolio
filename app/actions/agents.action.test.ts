@@ -32,7 +32,23 @@ vi.mock("@/lib/admin/load-project", () => ({
 	loadAdminProject: h.loadAdminProject,
 }));
 
-import { applyProjectProposal } from "./agents.action";
+const start = vi.hoisted(() => vi.fn(async () => ({ runId: "run_1" })));
+const getRun = vi.hoisted(() => vi.fn());
+const createArticlePr = vi.hoisted(() =>
+	vi.fn(async () => ({ ok: true, url: "https://github.com/x/pr/1" })),
+);
+vi.mock("workflow/api", () => ({ start, getRun }));
+vi.mock("@/lib/agents/github-pr", () => ({ createArticlePr }));
+vi.mock("@/app/workflows/article.workflow", () => ({
+	articleWorkflow: vi.fn(),
+}));
+
+import {
+	applyProjectProposal,
+	getArticleRun,
+	openArticlePr,
+	startArticleWorkflow,
+} from "./agents.action";
 
 const { auth, createProject, updateProject, deleteProject } = h;
 
@@ -112,5 +128,78 @@ describe("applyProjectProposal", () => {
 		});
 		expect(r.ok).toBe(false);
 		expect(createProject).not.toHaveBeenCalled();
+	});
+});
+
+describe("agent articles", () => {
+	it("startArticleWorkflow exige l'admin et renvoie le runId", async () => {
+		const r = await startArticleWorkflow({
+			slug: "a",
+			title: "A",
+			description: "d",
+			tags: [],
+			notes: "n",
+		});
+		expect(r).toEqual({ ok: true, runId: "run_1" });
+	});
+
+	it("startArticleWorkflow refuse un non-admin", async () => {
+		auth.mockResolvedValueOnce({ user: { githubId: "999" } } as never);
+		const r = await startArticleWorkflow({
+			slug: "a",
+			title: "A",
+			description: "d",
+			tags: [],
+			notes: "n",
+		});
+		expect(r).toEqual({ ok: false, error: "Non autorisé." });
+		expect(start).not.toHaveBeenCalled();
+	});
+
+	it("openArticlePr refuse un non-admin", async () => {
+		auth.mockResolvedValueOnce({ user: { githubId: "999" } } as never);
+		const r = await openArticlePr({
+			slug: "a",
+			mdx: "x",
+			title: "A",
+			body: "b",
+		});
+		expect(r.ok).toBe(false);
+		expect(createArticlePr).not.toHaveBeenCalled();
+	});
+
+	it("openArticlePr ouvre une PR", async () => {
+		const r = await openArticlePr({
+			slug: "a",
+			mdx: "x",
+			title: "A",
+			body: "b",
+		});
+		expect(r).toEqual({ ok: true, url: "https://github.com/x/pr/1" });
+		expect(createArticlePr).toHaveBeenCalledWith(
+			expect.objectContaining({ slug: "a", branch: "agent/article-a" }),
+			expect.objectContaining({ repo: "WillIsback/portfolio" }),
+		);
+	});
+
+	it("getArticleRun renvoie le brouillon quand terminé", async () => {
+		getRun.mockReturnValueOnce({
+			status: Promise.resolve("completed"),
+			returnValue: Promise.resolve({ slug: "a" }),
+		} as never);
+		const r = await getArticleRun("run_1");
+		expect(r).toEqual({ ok: true, status: "completed", draft: { slug: "a" } });
+	});
+
+	it("getArticleRun renvoie le statut en cours", async () => {
+		getRun.mockReturnValueOnce({ status: Promise.resolve("running") } as never);
+		const r = await getArticleRun("run_1");
+		expect(r).toEqual({ ok: true, status: "running", draft: null });
+	});
+
+	it("getArticleRun signale un échec", async () => {
+		getRun.mockReturnValueOnce({ status: Promise.resolve("failed") } as never);
+		const r = await getArticleRun("run_1");
+		expect(r).toEqual({ ok: false, error: "Génération échouée." });
 	});
 });
