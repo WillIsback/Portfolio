@@ -64,7 +64,10 @@ export default function Contact() {
 	// Erreurs de champ renvoyées par le serveur (soumission sans JavaScript notamment).
 	const serverErrors = useMemo(
 		() =>
-			state && "error" in state && state.error && typeof state.error === "object"
+			state &&
+			"error" in state &&
+			state.error &&
+			typeof state.error === "object"
 				? firstServerErrors(
 						state.error as Partial<Record<ContactField, string[]>>,
 					)

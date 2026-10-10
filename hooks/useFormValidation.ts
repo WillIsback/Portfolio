@@ -52,9 +52,10 @@ export function useFormValidation<T extends Record<string, unknown>>({
 	// Erreurs affichées : le serveur prime ; sinon le client, une fois le champ touché ou l'envoi tenté.
 	const displayedErrors = useMemo(() => {
 		const shown: FormErrors<T> = {};
-		for (const [field, message] of Object.entries(
-			serverErrorsProp ?? {},
-		) as [keyof T, string | undefined][]) {
+		for (const [field, message] of Object.entries(serverErrorsProp ?? {}) as [
+			keyof T,
+			string | undefined,
+		][]) {
 			if (message && !dismissed[field]) shown[field] = message;
 		}
 		for (const field of Object.keys(errors) as (keyof T)[]) {
