@@ -11,7 +11,8 @@ export default async function AdminLayout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
-	if (!session) redirect("/admin/login");
+	if (!session?.user || session.user.githubId !== process.env.ADMIN_GITHUB_ID)
+		redirect("/admin/login");
 
 	return (
 		<div className="flex min-h-screen font-sans bg-zinc-950 text-zinc-100">

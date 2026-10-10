@@ -49,9 +49,12 @@ export default function IndexRow({
 			<span className="font-mono text-xs text-ink-soft">
 				{projectYear(project)}
 				{statusLabel ? (
-					<span className="ml-2 font-mono text-[11px] text-ink-soft">
-						{statusLabel}
-					</span>
+					<>
+						<span className="sr-only">, </span>
+						<span className="ml-2 font-mono text-[11px] text-ink-soft">
+							{statusLabel}
+						</span>
+					</>
 				) : null}
 			</span>
 		</li>

@@ -18,10 +18,11 @@ const COOKIE = "authjs.session-token";
 export async function getAdminGithubToken(): Promise<GithubAuth> {
 	const h = await headers();
 	const secret = process.env.AUTH_SECRET;
+	const adminId = process.env.ADMIN_GITHUB_ID;
 	const https =
 		h.get("x-forwarded-proto")?.split(",")[0].trim() === "https" ||
 		process.env.AUTH_URL?.startsWith("https://") === true;
-	if (secret) {
+	if (secret && adminId) {
 		// Essaie d'abord la variante attendue, puis l'autre (proxy mal déclaré).
 		for (const secureCookie of [https, !https]) {
 			const jwt = await getToken({
@@ -32,11 +33,7 @@ export async function getAdminGithubToken(): Promise<GithubAuth> {
 			});
 			const t = jwt?.githubAccessToken;
 			// Le jeton n'est utilisé que si le JWT appartient à l'admin.
-			if (
-				typeof t === "string" &&
-				t &&
-				jwt?.githubId === process.env.ADMIN_GITHUB_ID
-			)
+			if (typeof t === "string" && t && jwt?.githubId === adminId)
 				return { token: t, mode: "oauth" };
 		}
 	}

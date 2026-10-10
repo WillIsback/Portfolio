@@ -25,7 +25,6 @@
 		"seed": "tsx prisma/seed.ts"
 	},
 	"dependencies": {
-		"@auth/core": "^0.34.3",
 		"@libsql/client": "^0.17.0",
 		"@opentelemetry/exporter-trace-otlp-http": "^0.219.0",
 		"@opentelemetry/resources": "^2.8.0",

@@ -33,6 +33,14 @@ describe("getAdminGithubToken", () => {
 			mode: "public",
 		});
 	});
+	it("ADMIN_GITHUB_ID absent -> public, jamais undefined===undefined", async () => {
+		vi.stubEnv("ADMIN_GITHUB_ID", "");
+		getToken.mockResolvedValue({ githubAccessToken: "gho" });
+		expect(await getAdminGithubToken()).toEqual({
+			token: "pat",
+			mode: "public",
+		});
+	});
 	it("pas de JWT -> public", async () => {
 		getToken.mockResolvedValue(null);
 		expect(await getAdminGithubToken()).toEqual({

@@ -343,3 +343,14 @@ describe("parseFilters", () => {
 		expect(parseFilters(new URLSearchParams("")).domain).toEqual([]);
 	});
 });
+
+describe("IndexRow lecteurs d'écran", () => {
+	it("sépare l'année et le statut par une virgule masquée", () => {
+		const html = renderToStaticMarkup(
+			<ul>
+				<IndexRow project={p({ status: "Archived" })} />
+			</ul>,
+		);
+		expect(html).toContain('<span class="sr-only">, </span>');
+	});
+});
