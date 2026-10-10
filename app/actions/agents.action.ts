@@ -116,7 +116,10 @@ export async function getArticleRun(runId: string): Promise<ArticleRunResult> {
 				await run.returnValue;
 			} catch (e) {
 				const message = e instanceof Error ? e.message : "Génération échouée.";
-				return { ok: false, error: `Génération échouée : ${message.slice(0, 300)}` };
+				return {
+					ok: false,
+					error: `Génération échouée : ${message.slice(0, 300)}`,
+				};
 			}
 			return { ok: false, error: "Génération échouée." };
 		}

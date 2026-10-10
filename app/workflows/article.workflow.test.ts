@@ -9,7 +9,8 @@ import {
 describe("parsePlan", () => {
 	it("accepte un JSON valide", () => {
 		expect(
-			parsePlan('{"sections":[{"heading":"A","brief":"b"}]}').sections[0].heading,
+			parsePlan('{"sections":[{"heading":"A","brief":"b"}]}').sections[0]
+				.heading,
 		).toBe("A");
 	});
 	it("retire les clôtures Markdown", () => {
