@@ -44,6 +44,12 @@ export default async function AdminLayout({
 				>
 					Agent Projets
 				</Link>
+				<Link
+					href="/admin/agents/articles"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Agent Articles
+				</Link>
 				<div className="mt-auto pt-4 border-t border-zinc-800">
 					<p className="text-xs text-zinc-600 mb-2 truncate">
 						{session.user?.name}

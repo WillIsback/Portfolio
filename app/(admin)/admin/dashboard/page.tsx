@@ -52,6 +52,12 @@ export default async function AdminDashboardPage() {
 				>
 					Agent Projets
 				</Link>
+				<Link
+					href="/admin/agents/articles"
+					className="border border-zinc-700 text-zinc-300 px-5 py-2.5 rounded-lg text-sm font-medium hover:border-zinc-500 transition-colors"
+				>
+					Agent Articles
+				</Link>
 			</div>
 		</div>
 	);
