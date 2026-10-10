@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSections, planSchema } from "./article.workflow";
+import { assembleArticle, buildSections, planSchema } from "./article.workflow";
 
 describe("shared logic", () => {
 	it("planSchema valide un plan", () => {
@@ -16,5 +16,41 @@ describe("shared logic", () => {
 				{ heading: "B", brief: "y" },
 			]),
 		).toEqual(["A", "B"]);
+	});
+
+	it("planSchema borne le nombre de sections", () => {
+		expect(planSchema.safeParse({ sections: [] }).success).toBe(false);
+		expect(
+			planSchema.safeParse({
+				sections: Array.from({ length: 9 }, (_, i) => ({
+					heading: String(i),
+					brief: "b",
+				})),
+			}).success,
+		).toBe(false);
+		expect(
+			planSchema.safeParse({
+				sections: Array.from({ length: 8 }, (_, i) => ({
+					heading: String(i),
+					brief: "b",
+				})),
+			}).success,
+		).toBe(true);
+	});
+
+	it("assembleArticle assemble les sections en MDX", async () => {
+		const draft = await assembleArticle({
+			brief: {
+				slug: "a",
+				title: "A",
+				description: "d",
+				tags: ["x"],
+				notes: "n",
+			},
+			sections: [{ heading: "Intro", body: "Texte." }],
+		});
+		expect(draft.body).toContain("## Intro");
+		expect(draft.body).toContain("Texte.");
+		expect(draft.status).toBe("brouillon");
 	});
 });

@@ -31,17 +31,27 @@ async function model() {
 	return vllmProvider()(await resolveModelId());
 }
 
+/** Extrait un objet JSON d'une réponse LLM (retire les clôtures Markdown). */
+function parsePlan(text: string) {
+	const cleaned = text
+		.replace(/^```(?:json)?\s*/i, "")
+		.replace(/\s*```$/, "")
+		.trim();
+	return planSchema.parse(JSON.parse(cleaned));
+}
+
 export async function planArticle(brief: ArticleBrief) {
 	"use step";
 	const opts = requestOptions("generation");
 	const { text } = await generateText({
 		model: await model(),
+		maxOutputTokens: 1500,
 		system:
 			'Tu planifies un article de blog technique en français (style carnet de labo). Réponds UNIQUEMENT en JSON: {"sections":[{"heading":"...","brief":"..."}]}.',
 		prompt: `Titre: ${brief.title}\nDescription: ${brief.description}\nNotes: ${brief.notes}`,
 		...opts,
 	});
-	return planSchema.parse(JSON.parse(text));
+	return parsePlan(text);
 }
 
 export async function writeSection(args: {
@@ -53,6 +63,7 @@ export async function writeSection(args: {
 	const opts = requestOptions("generation");
 	const { text } = await generateText({
 		model: await model(),
+		maxOutputTokens: 3000,
 		system:
 			"Tu rédiges une section d'article technique en français, en Markdown, sans le titre de section.",
 		prompt: `Article: ${args.brief.title}\nPlan: ${buildSections(args.plan.sections).join(" > ")}\nSection: ${args.section.heading}\nConsigne: ${args.section.brief}`,
