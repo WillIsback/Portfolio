@@ -52,6 +52,20 @@ describe("ProjectEditForm (rendu serveur)", () => {
 		expect(html).toContain("Choisir dans le dépôt");
 	});
 
+	it("pratiques par famille et parcours de formation", () => {
+		const html = render({
+			practices: ["Hardening"],
+			training: "AIEngineer",
+		});
+		expect(html).toContain("Pratiques");
+		expect(html).toContain("Durcissement");
+		expect(html).toMatch(/<option value="AIEngineer" selected="">/);
+		expect(html).not.toContain("Ressemble à un projet OpenClassrooms");
+		expect(
+			render({ github: "https://github.com/WillIsback/OC-P5_x" }),
+		).toContain("Ressemble à un projet OpenClassrooms");
+	});
+
 	it("n'affiche le rang que si « mettre en avant » est coché", () => {
 		expect(render()).not.toContain('id="rank"');
 		const html = render({ featuredRank: 2 });

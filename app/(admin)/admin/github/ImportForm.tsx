@@ -4,6 +4,7 @@ import { useState } from "react";
 import { importRepo } from "@/app/actions/admin.action";
 import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
 import { type AnalyzeOk, formatPushed, repoName } from "@/lib/github/board";
+import { looksLikeOpenClassrooms, type Training } from "@/lib/training";
 import {
 	BackendApiEnum,
 	DatabaseEnum,
@@ -20,7 +21,8 @@ type ListKey =
 	| "frontends"
 	| "devops"
 	| "mlStack"
-	| "domains";
+	| "domains"
+	| "practices";
 
 const GROUPS: { key: ListKey; legend: string; options: readonly string[] }[] = [
 	{ key: "languages", legend: "Langages", options: LanguageEnum.options },
@@ -36,6 +38,8 @@ const GROUPS: { key: ListKey; legend: string; options: readonly string[] }[] = [
 	{ key: "domains", legend: "Domaines", options: AI_DOMAINS },
 ];
 
+import { PracticeFields } from "../PracticeFields";
+import { TrainingSelect } from "../TrainingSelect";
 import { ChipGroup } from "./ChipGroup";
 
 const field =
@@ -61,7 +65,9 @@ export function ImportForm({
 		devops: remote.devops ?? [],
 		mlStack: remote.mlStack ?? [],
 		domains: remote.domains ?? [],
+		practices: remote.practices ?? [],
 	});
+	const [training, setTraining] = useState<Training | null>(null);
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const id = `imp-${remote.id}`;
@@ -87,6 +93,7 @@ export function ImportForm({
 				lastUpdate: remote.pushedAt?.toISOString(),
 				isPrivate,
 				...lists,
+				training,
 			});
 			if (res.ok) onDone("Projet créé.");
 			else setError(res.error);
@@ -145,6 +152,23 @@ export function ImportForm({
 					onToggle={(v) => toggle(g.key, v)}
 				/>
 			))}
+			<fieldset>
+				<legend className="text-xs text-zinc-500 mb-1.5">Pratiques</legend>
+				<PracticeFields
+					selected={lists.practices}
+					onToggle={(v) => toggle("practices", v)}
+				/>
+			</fieldset>
+			<TrainingSelect
+				id={`${id}-training`}
+				className={field}
+				value={training}
+				onChange={setTraining}
+				hint={
+					training === null &&
+					looksLikeOpenClassrooms(repoName(remote.fullName))
+				}
+			/>
 			<label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
 				<input
 					type="checkbox"
