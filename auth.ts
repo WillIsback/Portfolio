@@ -1,8 +1,8 @@
 // auth.ts
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
-import { isAdminSession } from "@/lib/admin-guard";
 import {
+	authorizedCallback,
 	jwtCallback,
 	sessionCallback,
 	signInCallback,
@@ -16,17 +16,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		signIn: signInCallback,
 		jwt: jwtCallback,
 		session: sessionCallback,
-		authorized({ auth: session, request: { nextUrl } }) {
-			const isLoginPage = nextUrl.pathname === "/admin/login";
-			if (isLoginPage) return true;
-
-			if (!session?.user) return false;
-
-			if (!isAdminSession(session))
-				return Response.redirect(new URL("/admin/login", nextUrl));
-
-			return true;
-		},
+		authorized: authorizedCallback,
 	},
 	pages: { signIn: "/admin/login" },
 });
