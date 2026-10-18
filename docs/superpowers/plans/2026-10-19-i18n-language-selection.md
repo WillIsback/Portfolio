@@ -2041,7 +2041,7 @@ française avec un avis, ce qui est préférable à une traduction approximative
 - [ ] **Étape 5 : vérifier la parité et la compilation**
 
 ```bash
-pnpm vitest run i18n/locale-dirs.test.ts tests/message-parity.test.ts
+pnpm vitest run i18n/locale-dirs.test.ts messages/message-parity.test.ts
 pnpm build 2>&1 | tail -20
 ```
 
