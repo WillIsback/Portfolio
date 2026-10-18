@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 import { withWorkflow } from "workflow/next";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 export const baseConfig: NextConfig = {
 	images: {
@@ -28,4 +31,6 @@ export const baseConfig: NextConfig = {
 	},
 };
 
-export default withWorkflow(baseConfig);
+// withWorkflow renvoie une fonction de config Next (phase) => Promise<NextConfig> :
+// next-intl doit donc recevoir un objet de config, jamais la sortie de withWorkflow.
+export default withWorkflow(withNextIntl(baseConfig));
