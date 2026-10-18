@@ -56,7 +56,7 @@ modifications non commitées qui ne doivent pas être touchées.
 | `components/LocaleSwitcher/LocaleSwitcher.tsx` | Sélecteur de langue (client). |
 | `components/LocaleSwitcher/locale-switcher.test.tsx` | Test de rendu du sélecteur. |
 | `tests/i18n-render.tsx` | Helper de rendu SSR avec `NextIntlClientProvider`. |
-| `tests/message-parity.test.ts` | Parité des clés fr/en/zh. |
+| `messages/message-parity.test.ts` | Parité des clés fr/en/zh, dérivée de `routing.locales`. |
 | `i18n/locale-dirs.test.ts` | Résolution du répertoire d'articles par locale. |
 
 ### Modifiés
@@ -109,7 +109,7 @@ Attendu : `next-intl 4.14.x` ajouté aux `dependencies`.
 
 - [x] **Étape 2 : écrire le test de parité des clés (il doit échouer)**
 
-Créer `tests/message-parity.test.ts` :
+Créer `messages/message-parity.test.ts` :
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -155,7 +155,7 @@ au moins une clé :
 - [x] **Étape 3 : exécuter le test et vérifier qu'il échoue**
 
 ```bash
-pnpm vitest run tests/message-parity.test.ts
+pnpm vitest run messages/message-parity.test.ts
 ```
 
 Attendu : ÉCHEC sur le cas `en`, `["meta.title"]` attendu mais `[]` reçu.
@@ -285,7 +285,7 @@ export default withWorkflow(withNextIntl(baseConfig));
 - [x] **Étape 9 : exécuter le test et vérifier qu'il passe**
 
 ```bash
-pnpm vitest run tests/message-parity.test.ts
+pnpm vitest run messages/message-parity.test.ts
 ```
 
 Attendu : 3 tests PASSENT (`fr` non vide, `en` en parité, `zh` en parité).
@@ -293,8 +293,8 @@ Attendu : 3 tests PASSENT (`fr` non vide, `en` en parité, `zh` en parité).
 - [x] **Étape 10 : commiter**
 
 ```bash
-pnpm exec biome check --write i18n messages tests next.config.ts package.json
-git add package.json pnpm-lock.yaml next.config.ts i18n messages tests
+pnpm exec biome check --write i18n messages next.config.ts package.json
+git add package.json pnpm-lock.yaml next.config.ts i18n messages
 git commit -m "feat(i18n): squelette next-intl et dictionnaires fr/en/zh en parité"
 ```
 
@@ -1783,7 +1783,7 @@ it("affiche le libellé de recherche localisé", () => {
 - [ ] **Étape 6 : vérifier l'égalité des clés et la suite complète**
 
 ```bash
-pnpm vitest run tests/message-parity.test.ts
+pnpm vitest run messages/message-parity.test.ts
 pnpm test 2>&1 | tail -15
 ```
 
