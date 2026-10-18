@@ -1,5 +1,22 @@
 {
 	"meta": {
-		"title": "William Derue | Développeur IA · parcours AI Engineer"
+		"title": "William Derue | Développeur IA · parcours AI Engineer",
+		"description": "Portfolio de William Derue - Développeur IA en parcours AI Engineer : projets de machine learning, LLM et infrastructure, et retours d'expérience.",
+		"keywords": [
+			"développeur fullstack",
+			"AI engineer",
+			"machine learning",
+			"IA",
+			"intelligence artificielle",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"portfolio"
+		]
+	},
+	"notFound": {
+		"title": "Page introuvable",
+		"body": "Cette page n'existe pas ou a été déplacée.",
+		"back": "Retour à l'accueil"
 	}
 }

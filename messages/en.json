@@ -1,5 +1,22 @@
 {
 	"meta": {
-		"title": "William Derue | AI Developer · AI Engineer track"
+		"title": "William Derue | AI Developer · AI Engineer track",
+		"description": "Portfolio of William Derue - AI developer on the AI Engineer track: machine learning, LLM and infrastructure projects, and field notes.",
+		"keywords": [
+			"fullstack developer",
+			"AI engineer",
+			"machine learning",
+			"AI",
+			"artificial intelligence",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"portfolio"
+		]
+	},
+	"notFound": {
+		"title": "Page not found",
+		"body": "This page does not exist or has been moved.",
+		"back": "Back to home"
 	}
 }

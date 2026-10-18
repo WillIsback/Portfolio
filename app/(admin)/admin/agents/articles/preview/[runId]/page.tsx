@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import { getArticleRun } from "@/app/actions/agents.action";
 import { mdxComponents } from "@/components/articles/mdx";
 
-import "@/app/articles/articles.css";
+import "@/app/[locale]/articles/articles.css";
 
 export default async function ArticlePreviewPage({
 	params,

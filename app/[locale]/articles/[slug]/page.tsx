@@ -1,6 +1,5 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -9,6 +8,7 @@ import { mdxComponents } from "@/components/articles/mdx";
 import OnTheMap from "@/components/articles/OnTheMap";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
+import { Link } from "@/i18n/navigation";
 import { numberFigures } from "@/lib/articles/figures";
 import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
 import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";

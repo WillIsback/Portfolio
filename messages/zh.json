@@ -1,5 +1,21 @@
 {
 	"meta": {
-		"title": "William Derue | AI 开发工程师 · AI Engineer 方向"
+		"title": "William Derue | AI 开发工程师 · AI Engineer 方向",
+		"description": "William Derue 的作品集 —— AI Engineer 方向的 AI 开发工程师：机器学习、大语言模型与基础设施项目，以及实践复盘。",
+		"keywords": [
+			"全栈开发",
+			"AI 工程师",
+			"机器学习",
+			"人工智能",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"作品集"
+		]
+	},
+	"notFound": {
+		"title": "页面不存在",
+		"body": "该页面不存在或已被移动。",
+		"back": "返回首页"
 	}
 }

@@ -1,0 +1,13 @@
+import "../globals.css";
+
+export default function AdminRootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<html lang="fr" suppressHydrationWarning>
+			<body className="antialiased">{children}</body>
+		</html>
+	);
+}

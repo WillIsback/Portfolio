@@ -12,6 +12,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { sendEmail } from "@/app/actions/contact.action";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import ThemedToaster from "@/components/theme/ThemedToaster";
@@ -24,7 +25,6 @@ import {
 	firstInvalidField,
 	firstServerErrors,
 } from "@/lib/contact-form";
-import { sendEmail } from "../actions/contact.action";
 
 // Schéma de validation
 const formSchema = z.object({

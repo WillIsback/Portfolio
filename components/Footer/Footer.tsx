@@ -1,4 +1,8 @@
-import Link from "next/link";
+"use client";
+
+// Voir `components/Header/Header.tsx` : le `Link` de next-intl doit être rendu
+// depuis un composant client, sinon `headers()` est appelé et la page devient dynamique.
+import { Link } from "@/i18n/navigation";
 
 export default function Footer() {
 	return (
