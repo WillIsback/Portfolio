@@ -56,10 +56,11 @@ describe("proxy", () => {
 		expect(res.status).toBe(200);
 	});
 
-	// Passe par le callback `authorized` : dès qu'un handler est fourni à `auth()`,
-	// NextAuth n'applique plus sa propre redirection (branche `userMiddlewareOrRoute`
-	// de node_modules/next-auth/lib/index.js). C'est donc `proxy.ts` qui doit
-	// rediriger, sinon `/admin` redeviendrait accessible à tout le monde.
+	// Sans session, `authorizedCallback` renvoie `false`, or un résultat booléen est
+	// ignoré dès qu'un handler est fourni à `auth()` : dans `handleAuth`, la branche
+	// `else if (userMiddlewareOrRoute)` passe avant `else if (!authorized)`. C'est donc
+	// `proxy.ts` qui doit rediriger, sinon `/admin` redeviendrait accessible à tout le
+	// monde.
 	it("redirige un visiteur non authentifié de /admin vers la page de connexion", async () => {
 		vi.stubEnv("ADMIN_GITHUB_ID", ADMIN_ID);
 		authState.session = null;
@@ -73,6 +74,12 @@ describe("proxy", () => {
 		expect(location(res)).toContain("callbackUrl=");
 	});
 
+	// ATTENTION : ce test ne prouve PAS un comportement vivant. `vi.mock("@/auth")`
+	// remplace tout le wrapper `auth()`, donc `authorizedCallback` n'est jamais
+	// exécuté ici. En production, c'est précisément ce callback qui renvoie la
+	// `Response` correspondante et court-circuite cette branche de `proxy.ts` (voir
+	// `handleAuth` et le commentaire dans `proxy.ts`). Le comportement réel est
+	// vérifié dans `proxy.seam.test.ts`, sans mock.
 	it("renvoie vers /admin/login un compte connecté non-admin qui vise /admin", async () => {
 		vi.stubEnv("ADMIN_GITHUB_ID", ADMIN_ID);
 		authState.session = { user: { githubId: "9999" } };
@@ -89,8 +96,10 @@ describe("proxy", () => {
 
 		const res = await proxy(request("/admin"));
 
-		expect(res.status).not.toBe(307);
-		expect(location(res) ?? "").not.toContain("/admin/login");
+		// `NextResponse.next()` : 200 et aucun Location. `not.toBe(307)` laisserait
+		// passer un 302, 404 ou 500.
+		expect(res.status).toBe(200);
+		expect(location(res)).toBeNull();
 	});
 
 	it("laisse passer la page de connexion elle-même", async () => {

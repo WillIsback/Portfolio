@@ -3,7 +3,7 @@
 // recopié dans la session renvoyée au navigateur.
 import type { NextAuthRequest, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { isAdminSession } from "@/lib/admin-guard";
+import { isAdminPath, isAdminSession } from "@/lib/admin-guard";
 
 type SessionUser = { githubId: string };
 
@@ -51,10 +51,11 @@ export function authorizedCallback({
 }): boolean | Response {
 	// Hors /admin, ce callback ne décide de rien : un compte connecté non-admin ne doit
 	// jamais être renvoyé vers /admin/login depuis une page publique. NextAuth honore
-	// un `Response` renvoyé ici AVANT d'appeler le handler du proxy
-	// (node_modules/next-auth/lib/index.js:150 précède la branche :163), donc un
-	// callback non restreint redirigerait tout le site public.
-	if (!nextUrl.pathname.startsWith("/admin")) return true;
+	// une `Response` renvoyée ici AVANT d'appeler le handler du proxy (dans
+	// `handleAuth`, la branche `if (authorized instanceof Response)` précède la
+	// branche `else if (userMiddlewareOrRoute)`), donc un callback non restreint
+	// redirigerait tout le site public. Voir la couture dans `proxy.seam.test.ts`.
+	if (!isAdminPath(nextUrl.pathname)) return true;
 
 	// La page de connexion doit rester atteignable, sinon on redirige vers elle-même.
 	if (nextUrl.pathname === "/admin/login") return true;
