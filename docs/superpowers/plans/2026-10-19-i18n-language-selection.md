@@ -306,7 +306,7 @@ git commit -m "feat(i18n): squelette next-intl et dictionnaires fr/en/zh en pari
 - Modifier : `proxy.ts`
 - Créer : `proxy.test.ts`
 
-- [ ] **Étape 1 : écrire le test qui échoue**
+- [x] **Étape 1 : écrire le test qui échoue**
 
 Créer `proxy.test.ts` :
 
@@ -342,7 +342,7 @@ describe("proxy", () => {
 });
 ```
 
-- [ ] **Étape 2 : vérifier l'échec**
+- [x] **Étape 2 : vérifier l'échec**
 
 ```bash
 pnpm vitest run proxy.test.ts
@@ -350,7 +350,7 @@ pnpm vitest run proxy.test.ts
 
 Attendu : ÉCHEC — `./proxy` n'exporte pas de `config` compatible ni ne gère les locales.
 
-- [ ] **Étape 3 : réécrire `proxy.ts`**
+- [x] **Étape 3 : réécrire `proxy.ts`**
 
 ```ts
 import createMiddleware from "next-intl/middleware";
@@ -366,7 +366,7 @@ export const config = {
 };
 ```
 
-- [ ] **Étape 4 : vérifier le succès**
+- [x] **Étape 4 : vérifier le succès**
 
 ```bash
 pnpm vitest run proxy.test.ts
@@ -377,7 +377,7 @@ Attendu : 3 tests PASSENT.
 > Si `auth` exige `AUTH_SECRET` au chargement en environnement de test, ajouter `vi.mock("@/auth", …)` dans le
 > test plutôt que de toucher à `auth.ts`.
 
-- [ ] **Étape 5 : commiter**
+- [x] **Étape 5 : commiter**
 
 ```bash
 pnpm exec biome check --write proxy.ts proxy.test.ts
@@ -387,7 +387,38 @@ git commit -m "feat(i18n): proxy composé du contrôle NextAuth et du routage de
 
 ---
 
+
+### Conséquence découverte pendant la tâche 2
+
+Composer `auth((req) => intlProxy(req))` **désactive le callback `authorized`** de NextAuth : dans
+`node_modules/next-auth/lib/index.js`, la branche `userMiddlewareOrRoute` (`:163`) précède
+`else if (!authorized)` (`:171`). Un visiteur anonyme sur `/admin` n'était donc plus redirigé par le proxy
+(307 → `/admin/login` devenu 200).
+
+Pire : `authorized` est évalué à `:147`, **avant** le handler, et un `Response` renvoyé est honoré à `:150`
+inconditionnellement. Sa branche `Response.redirect` pour un compte non-admin fuyait donc sur **tout** le
+site public, le matcher couvrant l'ensemble des routes.
+
+Correctif retenu : `lib/admin-guard.ts` exporte `isAdminSession(session)`, source de vérité partagée, et
+
+- `lib/auth-callbacks.ts` expose `authorizedCallback`, restreint à `/admin` par un `return true` immédiat
+  sur toute autre route. Le contrôle `/admin/login` est **conservé séparément** : une fois le callback
+  restreint, `/admin/login` passe `startsWith("/admin")` puis `!session?.user` rendrait `false`, donc la page
+  de connexion se redirigerait vers elle-même ;
+- `proxy.ts` court-circuite `/admin` avant `intlProxy` : page de connexion passante, session absente → 307
+  avec `callbackUrl`, non-admin → 307, admin → `NextResponse.next()`, le reste allant à `intlProxy`.
+
+> **Contrainte pour la tâche 3 :** `/admin` doit rester **hors** de `app/[locale]/`. Les deux gardes font
+> `pathname.startsWith("/admin")` ; si l'admin passait sous un préfixe de locale, `/fr/admin` ne
+> correspondrait plus et tomberait dans `intlProxy` — sans garde ni préfixe. Aucun test ne l'attraperait,
+> les tests n'utilisant que des chemins sans préfixe.
+
 ## Tâche 3 — Restructuration des routes et des root layouts
+
+> **Contrainte héritée de la tâche 2 :** `/admin` reste hors de `app/[locale]/`. Les gardes de
+> `proxy.ts` et de `authorizedCallback` testent `pathname.startsWith("/admin")` ; sous un préfixe
+> de locale (`/fr/admin`) elles ne correspondraient plus et l'admin retomberait dans `intlProxy`,
+> sans garde. Ajouter un test le vérifiant si l'arborescence évolue.
 
 > **Tâche bloquante.** Entre l'étape 2 et l'étape 12, le dépôt ne compile pas. Ne pas s'arrêter au milieu.
 
