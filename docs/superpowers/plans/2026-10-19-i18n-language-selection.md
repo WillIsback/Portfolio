@@ -96,7 +96,7 @@ modifications non commitées qui ne doivent pas être touchées.
 - Créer : `i18n/routing.ts`, `i18n/request.ts`, `i18n/navigation.ts`
 - Créer : `messages/fr.json`
 
-- [ ] **Étape 1 : installer next-intl**
+- [x] **Étape 1 : installer next-intl**
 
 ```bash
 pnpm add next-intl@^4.14.9
@@ -107,7 +107,7 @@ Attendu : `next-intl 4.14.x` ajouté aux `dependencies`.
 > next-intl 4.14.9 a déjà été installé dans ce worktree pendant la vérification du plan ; la commande est idempotente.
 > La version installée est à contrôler avec `pnpm list next-intl`.
 
-- [ ] **Étape 2 : écrire le test de parité des clés (il doit échouer)**
+- [x] **Étape 2 : écrire le test de parité des clés (il doit échouer)**
 
 Créer `tests/message-parity.test.ts` :
 
@@ -152,7 +152,7 @@ au moins une clé :
 }
 ```
 
-- [ ] **Étape 3 : exécuter le test et vérifier qu'il échoue**
+- [x] **Étape 3 : exécuter le test et vérifier qu'il échoue**
 
 ```bash
 pnpm vitest run tests/message-parity.test.ts
@@ -160,7 +160,7 @@ pnpm vitest run tests/message-parity.test.ts
 
 Attendu : ÉCHEC sur le cas `en`, `["meta.title"]` attendu mais `[]` reçu.
 
-- [ ] **Étape 4 : créer `i18n/routing.ts`**
+- [x] **Étape 4 : créer `i18n/routing.ts`**
 
 ```ts
 import { defineRouting } from "next-intl/routing";
@@ -174,7 +174,7 @@ export const routing = defineRouting({
 export type Locale = (typeof routing.locales)[number];
 ```
 
-- [ ] **Étape 5 : créer `i18n/request.ts`**
+- [x] **Étape 5 : créer `i18n/request.ts`**
 
 ```ts
 import { hasLocale } from "next-intl";
@@ -192,7 +192,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 ```
 
-- [ ] **Étape 6 : créer `i18n/navigation.ts`**
+- [x] **Étape 6 : créer `i18n/navigation.ts`**
 
 ```ts
 import { createNavigation } from "next-intl/navigation";
@@ -202,7 +202,7 @@ export const { Link, redirect, usePathname, useRouter, getPathname } =
 	createNavigation(routing);
 ```
 
-- [ ] **Étape 7 : brancher le plugin next-intl dans `next.config.ts`**
+- [x] **Étape 7 : brancher le plugin next-intl dans `next.config.ts`**
 
 Remplacer le fichier par :
 
@@ -238,10 +238,19 @@ export const baseConfig: NextConfig = {
 	},
 };
 
-export default withNextIntl(withWorkflow(baseConfig));
+export default withWorkflow(withNextIntl(baseConfig));
 ```
 
-- [ ] **Étape 8 : réécrire les trois dictionnaires en parité**
+> **L'ordre est obligatoire et ne doit pas être « corrigé ».** `withWorkflow` renvoie une **fonction de
+> configuration** asynchrone `(phase, ctx) => Promise<NextConfig>` — c'est la forme valide côté Next. `withNextIntl`,
+> lui, lit `nextConfig.turbopack`, `.webpack`, `.basePath` et `.env` sur un **objet simple**, puis renvoie
+> `Object.assign({}, nextConfig, …)`. Lui passer une fonction produit un objet sans aucune propriété : `images`,
+> `headers()` et toute la configuration workflow seraient silencieusement perdues. `tsc` remonte l'erreur
+> `TS2559: Type '(phase: string, ctx: …) => Promise<NextConfig>' has no properties in common with type 'NextConfig'`.
+> Les deux se composent sans conflit : next-intl pose `turbopack.resolveAlias`, `withWorkflow` conserve un
+> `turbopack` existant en y ajoutant ses `rules`.
+
+- [x] **Étape 8 : réécrire les trois dictionnaires en parité**
 
 `messages/fr.json` (contenu de référence) :
 
@@ -273,7 +282,7 @@ export default withNextIntl(withWorkflow(baseConfig));
 }
 ```
 
-- [ ] **Étape 9 : exécuter le test et vérifier qu'il passe**
+- [x] **Étape 9 : exécuter le test et vérifier qu'il passe**
 
 ```bash
 pnpm vitest run tests/message-parity.test.ts
@@ -281,7 +290,7 @@ pnpm vitest run tests/message-parity.test.ts
 
 Attendu : 3 tests PASSENT (`fr` non vide, `en` en parité, `zh` en parité).
 
-- [ ] **Étape 10 : commiter**
+- [x] **Étape 10 : commiter**
 
 ```bash
 pnpm exec biome check --write i18n messages tests next.config.ts package.json
