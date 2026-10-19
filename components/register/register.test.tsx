@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { hasActiveFilters, parseFilters } from "@/lib/register-filters";
-import { renderFr } from "@/tests/i18n-render";
+import fr from "@/messages/fr.json";
+import { escapeHtml, renderFr } from "@/tests/i18n-render";
 import DomainChips from "./DomainChips";
 import FeaturedCard from "./FeaturedCard";
 import IndexRow from "./IndexRow";
@@ -106,8 +107,15 @@ describe("TechBar", () => {
 			/>,
 		);
 		expect(html).toContain('role="img"');
+		// Les guillemets entourent l'attribut HTML, pas le message : seul le contenu
+		// du dictionnaire passe par `escapeHtml`.
 		expect(html).toContain(
-			'aria-label="Composition technique : Langages 50\u00a0%, DevOps 50\u00a0%"',
+			`aria-label="${escapeHtml(
+				fr.register.techComposition.replace(
+					"{list}",
+					"Langages 50\u00a0%, DevOps 50\u00a0%",
+				),
+			)}"`,
 		);
 		expect(html).toContain("flex-grow:1");
 		expect(html).not.toContain("width:50%");
@@ -132,11 +140,11 @@ describe("FeaturedCard", () => {
 		expect(html).toContain("P13-Fashion-Insta");
 		expect(html).toContain("Segmentation de vêtements.");
 		expect(html).not.toContain("Deuxième phrase");
-		expect(html).toContain("Fig. 2 · ");
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "2"));
 		expect(html).toContain("Python");
 		expect(html).toContain('href="https://github.com/x/p13"');
 		expect(html).toContain('rel="noopener noreferrer"');
-		expect(html).not.toContain("Lire l");
+		expect(html).not.toContain(escapeHtml(fr.register.readEntry));
 	});
 
 	it("renvoie à l'entrée du carnet qui cite le projet", () => {
@@ -150,7 +158,7 @@ describe("FeaturedCard", () => {
 			/>,
 		);
 		expect(html).toContain('href="/articles/a"');
-		expect(html).toContain("Lire l&#x27;entrée du carnet");
+		expect(html).toContain(escapeHtml(fr.register.readEntry));
 	});
 
 	it("préfère une vraie capture à la mini-carte", () => {
@@ -176,7 +184,13 @@ describe("FeaturedCard", () => {
 			/>,
 		);
 		expect(html).not.toContain('data-role="focus"');
-		expect(html).toContain("Composition technique");
+		// La barre technique reste : son étiquette commence par le libellé traduit.
+		// (`{list}` n'est jamais vide dans le rendu réel, d'où le `trimEnd`.)
+		expect(html).toContain(
+			`aria-label="${escapeHtml(
+				fr.register.techComposition.replace("{list}", "").trimEnd(),
+			)}`,
+		);
 	});
 });
 
@@ -254,7 +268,7 @@ describe("IndexRow", () => {
 			</ul>,
 		);
 		expect(html).not.toContain("<a ");
-		expect(html).toContain("privé");
+		expect(html).toContain(fr.register.private);
 	});
 });
 
@@ -284,10 +298,10 @@ describe("accroche et statut", () => {
 	});
 
 	it("affiche « en cours » et « archivé », pas « terminé »", () => {
-		expect(row(p({ status: "InProgress" }))).toContain("en cours");
-		expect(row(p({ status: "Archived" }))).toContain("archivé");
-		expect(row(p({ status: "Done" }))).not.toContain("terminé");
-		expect(row(p({ status: null }))).not.toContain("en cours");
+		expect(row(p({ status: "InProgress" }))).toContain(fr.status.InProgress);
+		expect(row(p({ status: "Archived" }))).toContain(fr.status.Archived);
+		expect(row(p({ status: "Done" }))).not.toContain(fr.status.Done);
+		expect(row(p({ status: null }))).not.toContain(fr.status.InProgress);
 	});
 
 	it("TechBar teinte ML & Data avec --primary", () => {
@@ -309,7 +323,7 @@ describe("DomainChips", () => {
 		const html = renderFr(
 			<DomainChips domains={[{ domain: "LLM" }, { domain: "Classifier" }]} />,
 		);
-		expect(html).toContain('aria-label="Domaines"');
+		expect(html).toContain(`aria-label="${fr.register.domainsLabel}"`);
 		const labels = [...html.matchAll(/<li[^>]*>(.*?)<\/li>/g)].map((m) => m[1]);
 		expect(labels).toEqual(["ML", "Classification", "LLM"]);
 	});
@@ -327,8 +341,10 @@ describe("puces de domaine dans le registre", () => {
 				neighborIds={[]}
 			/>,
 		);
-		expect(html).toContain('aria-label="Domaines"');
-		expect(html.indexOf("</h3>")).toBeLessThan(html.indexOf("Domaines"));
+		expect(html).toContain(`aria-label="${fr.register.domainsLabel}"`);
+		expect(html.indexOf("</h3>")).toBeLessThan(
+			html.indexOf(fr.register.domainsLabel),
+		);
 	});
 
 	it("IndexRow les montre avant les technologies", () => {
@@ -347,7 +363,7 @@ describe("puces de domaine dans le registre", () => {
 				<IndexRow project={p()} />
 			</ul>,
 		);
-		expect(html).not.toContain("Domaines");
+		expect(html).not.toContain(fr.register.domainsLabel);
 	});
 });
 
@@ -390,27 +406,39 @@ describe("badge formation et pratiques", () => {
 			/>,
 		);
 		expect(html).toContain(
-			"Projet de formation · OpenClassrooms · AI Engineer",
+			fr.training.badge.replace("{course}", fr.training.AIEngineer),
 		);
 		expect(html).toContain("DevOps");
-		expect(html).toContain("Intégration continue");
+		expect(html).toContain(fr.practices.ContinuousIntegration);
 		expect(html).toContain("MLOps");
-		expect(html).toContain("Suivi d&#x27;expériences, Service de modèle");
+		expect(html).toContain(
+			escapeHtml(
+				`${fr.practices.ExperimentTracking}, ${fr.practices.ModelServing}`,
+			),
+		);
 	});
 
 	it("IndexRow : abrégé visible, complet pour lecteur d'écran", () => {
 		const html = renderFr(<IndexRow project={withOps} />);
-		expect(html).toContain("Formation OC · AI Engineer");
+		expect(html).toContain(
+			fr.training.badgeShort.replace("{course}", fr.training.AIEngineer),
+		);
 		expect(html).toMatch(
-			/sr-only[^>]*>Projet de formation · OpenClassrooms · AI Engineer/,
+			new RegExp(
+				`sr-only[^>]*>${fr.training.badge.replace("{course}", fr.training.AIEngineer)}`,
+			),
 		);
 		expect(html).toContain("DevOps · MLOps");
-		expect(html).toMatch(/sr-only[^>]*>[^<]*Intégration continue/);
+		expect(html).toMatch(
+			new RegExp(`sr-only[^>]*>[^<]*${fr.practices.ContinuousIntegration}`),
+		);
 	});
 
 	it("rien sans données, valeur inconnue ignorée", () => {
 		const html = renderFr(<IndexRow project={p({ training: "Bac" })} />);
-		expect(html).not.toContain("Formation OC");
+		expect(html).not.toContain(
+			fr.training.badgeShort.replace("{course}", "Bac"),
+		);
 		expect(html).not.toContain("DevOps");
 	});
 });

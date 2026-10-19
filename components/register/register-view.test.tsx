@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { NormalizedProject } from "@/lib/projects-data";
-import { renderFr } from "@/tests/i18n-render";
+import fr from "@/messages/fr.json";
+import { escapeHtml, renderFr } from "@/tests/i18n-render";
 import RegisterView from "./RegisterView";
 
 const p = (id: number): NormalizedProject => ({
@@ -47,7 +48,7 @@ describe("RegisterView", () => {
 			<RegisterView {...base} indexStatus="loading" featured={[p(1)]} />,
 		);
 		expect(html).toContain('aria-busy="true"');
-		expect(html).toContain("Chargement du registre");
+		expect(html).toContain(fr.register.loading);
 		expect(html).toContain("filtres");
 		expect(html).toContain("<details");
 		expect(html).toContain("Projet 1");
@@ -67,13 +68,13 @@ describe("RegisterView", () => {
 			<RegisterView {...base} indexStatus="error" featured={[p(1)]} />,
 		);
 		expect(idx).toContain('role="alert"');
-		expect(idx).toContain("Réessaie dans un instant.");
+		expect(idx).toContain(escapeHtml(fr.register.error));
 		expect(idx).toContain("Projet 1");
 		expect(idx).toContain("filtres");
 		const feat = renderFr(
 			<RegisterView {...base} featuredStatus="error" index={[p(3)]} />,
 		);
-		expect(feat).toContain("Réessaie dans un instant.");
+		expect(feat).toContain(escapeHtml(fr.register.error));
 		expect(feat).toContain("Projet 3");
 	});
 
@@ -81,9 +82,9 @@ describe("RegisterView", () => {
 		const html = renderFr(
 			<RegisterView {...base} featured={[p(1), p(2)]} index={[p(3)]} />,
 		);
-		expect(html).toContain("Projets phares");
-		expect(html).toContain("Fig. 2 · ");
-		expect(html).toContain("Fig. 3 · ");
+		expect(html).toContain(fr.register.featured);
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "2"));
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "3"));
 		expect(html).toContain("Projet 3");
 		expect(html.match(/<h3/g)?.length).toBeGreaterThanOrEqual(3);
 	});
@@ -112,6 +113,6 @@ describe("RegisterView", () => {
 
 	it("dit quand l'index filtré est vide", () => {
 		const html = renderFr(<RegisterView {...base} filtersActive />);
-		expect(html).toContain("Aucun projet ne correspond à ces filtres.");
+		expect(html).toContain(fr.register.noMatch);
 	});
 });

@@ -219,6 +219,25 @@
 		"tagline": "AI 开发工程师 · AI Engineer 方向",
 		"ageLine": "{age} 岁 — 法国南部"
 	},
+	"register": {
+		"loading": "正在加载项目登记表…",
+		"error": "项目登记表加载失败，请稍后重试。",
+		"featured": "重点项目",
+		"index": "索引",
+		"noMatch": "没有符合这些筛选条件的项目。",
+		"empty": "暂时没有其他项目。",
+		"filters": "筛选登记表",
+		"private": "私有",
+		"domainsLabel": "领域",
+		"practicesLabel": "实践",
+		"practicesSrOnly": "实践：{full}",
+		"githubRepo": "GitHub 仓库",
+		"readEntry": "阅读笔记条目",
+		"captureAlt": "{title} 的截图",
+		"amongNeighbors": "{title} 及其邻居",
+		"composition": "{title} 的构成",
+		"techComposition": "技术构成：{list}"
+	},
 	"articles": {
 		"eyebrow": "实验笔记 · 条目",
 		"title": "文章",

@@ -219,6 +219,25 @@
 		"tagline": "Développeur IA · parcours AI Engineer",
 		"ageLine": "{age} ans — Sud de la France"
 	},
+	"register": {
+		"loading": "Chargement du registre des projets…",
+		"error": "Le registre des projets n'a pas pu être chargé. Réessaie dans un instant.",
+		"featured": "Projets phares",
+		"index": "Index",
+		"noMatch": "Aucun projet ne correspond à ces filtres.",
+		"empty": "Aucun autre projet pour l'instant.",
+		"filters": "Filtrer le registre",
+		"private": "privé",
+		"domainsLabel": "Domaines",
+		"practicesLabel": "Pratiques",
+		"practicesSrOnly": "Pratiques : {full}",
+		"githubRepo": "Dépôt GitHub",
+		"readEntry": "Lire l'entrée du carnet",
+		"captureAlt": "Capture de {title}",
+		"amongNeighbors": "{title} parmi ses voisins",
+		"composition": "Composition de {title}",
+		"techComposition": "Composition technique : {list}"
+	},
 	"articles": {
 		"eyebrow": "Carnet · entrées",
 		"title": "Articles",

@@ -14,10 +14,13 @@ const TINT: Record<TechShare["key"], string> = {
 /** Barre de composition technique : proportions réelles des technologies en base. */
 export default function TechBar({ shares }: Readonly<{ shares: TechShare[] }>) {
 	const t = useTranslations("percent");
+	const tRegister = useTranslations("register");
 	if (shares.length === 0) return null;
 	const total = shares.reduce((t, x) => t + x.count, 0);
 	const pct = (s: TechShare) => formatPercent(t, s.count, total);
-	const label = `Composition technique : ${shares.map((s) => `${s.label} ${pct(s)}`).join(", ")}`;
+	const label = tRegister("techComposition", {
+		list: shares.map((s) => `${s.label} ${pct(s)}`).join(", "),
+	});
 	return (
 		<div>
 			<div

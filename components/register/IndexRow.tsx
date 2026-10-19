@@ -15,6 +15,7 @@ import TrainingBadge from "./TrainingBadge";
 export default function IndexRow({
 	project,
 }: Readonly<{ project: NormalizedProject }>) {
+	const t = useTranslations("register");
 	const tStatus = useTranslations("status");
 	const tDomains = useTranslations("domains");
 	const name = (
@@ -58,7 +59,7 @@ export default function IndexRow({
 					<span className="flex min-w-0 items-baseline gap-2">
 						<span className="truncate">{name}</span>
 						<span className="shrink-0 font-mono text-[11px] text-ink-soft">
-							privé
+							{t("private")}
 						</span>
 					</span>
 				)}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 /**
@@ -10,6 +11,7 @@ export default function FilterDisclosure({
 	filtersActive,
 	children,
 }: Readonly<{ filtersActive: boolean; children: ReactNode }>) {
+	const t = useTranslations("register");
 	// Attribut figé au premier rendu (SSR ouvert si filtres dans l'URL) : React ne le
 	// touche plus ensuite, l'état ouvert/fermé appartient au DOM et au visiteur.
 	const [initiallyOpen] = useState(filtersActive);
@@ -20,7 +22,7 @@ export default function FilterDisclosure({
 	return (
 		<details ref={ref} open={initiallyOpen} className="mt-3">
 			<summary className="cursor-pointer rounded-sm font-mono text-xs text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-				Filtrer le registre
+				{t("filters")}
 			</summary>
 			<div className="mt-3">{children}</div>
 		</details>

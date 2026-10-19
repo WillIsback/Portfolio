@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import FigureCaption from "@/components/notebook/FigureCaption";
 import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
@@ -31,6 +32,7 @@ export default function FeaturedCard({
 	neighborIds,
 	entry,
 }: Readonly<FeaturedCardProps>) {
+	const t = useTranslations("register");
 	const mapId = `project:${project.id}`;
 	const onMap = points.some((pt) => pt.id === mapId);
 	const capture = isCapture(project.imagePath) ? project.imagePath : null;
@@ -42,7 +44,7 @@ export default function FeaturedCard({
 					<div className="relative aspect-[16/10] overflow-hidden rounded-sm border border-border">
 						<Image
 							src={capture}
-							alt={`Capture de ${project.title}`}
+							alt={t("captureAlt", { title: project.title })}
 							fill
 							sizes="(min-width: 1024px) 30vw, 100vw"
 							className="object-cover"
@@ -92,12 +94,12 @@ export default function FeaturedCard({
 						rel="noopener noreferrer"
 						className={LINK}
 					>
-						Dépôt GitHub
+						{t("githubRepo")}
 					</a>
 				) : null}
 				{entry ? (
 					<Link href={`/articles/${entry.slug}`} className={LINK}>
-						Lire l&apos;entrée du carnet
+						{t("readEntry")}
 					</Link>
 				) : null}
 			</div>

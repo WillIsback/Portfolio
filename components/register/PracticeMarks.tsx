@@ -12,6 +12,7 @@ export default function PracticeMarks({
 	className?: string;
 }>) {
 	const t = useTranslations("practices");
+	const tRegister = useTranslations("register");
 	const labels = practiceLabels(t);
 	const groups = practicesByFamily(practices.map((p) => p.practice));
 	if (groups.length === 0) return null;
@@ -24,13 +25,15 @@ export default function PracticeMarks({
 				<span aria-hidden="true">
 					{groups.map((g) => g.family).join(" · ")}
 				</span>
-				<span className="sr-only">Pratiques : {full}</span>
+				<span className="sr-only">
+					{tRegister("practicesSrOnly", { full })}
+				</span>
 			</span>
 		);
 	}
 	return (
 		<ul
-			aria-label="Pratiques"
+			aria-label={tRegister("practicesLabel")}
 			className={`m-0 list-none p-0 font-mono text-[11px] text-ink-soft ${className}`}
 		>
 			{groups.map((g) => (

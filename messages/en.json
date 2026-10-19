@@ -219,6 +219,25 @@
 		"tagline": "AI developer · AI Engineer track",
 		"ageLine": "{age} years old — Southern France"
 	},
+	"register": {
+		"loading": "Loading the project register…",
+		"error": "The project register could not be loaded. Try again in a moment.",
+		"featured": "Featured projects",
+		"index": "Index",
+		"noMatch": "No project matches these filters.",
+		"empty": "No other project just yet.",
+		"filters": "Filter the register",
+		"private": "private",
+		"domainsLabel": "Domains",
+		"practicesLabel": "Practices",
+		"practicesSrOnly": "Practices: {full}",
+		"githubRepo": "GitHub repository",
+		"readEntry": "Read the logbook entry",
+		"captureAlt": "Screenshot of {title}",
+		"amongNeighbors": "{title} among its neighbours",
+		"composition": "Composition of {title}",
+		"techComposition": "Tech composition: {list}"
+	},
 	"articles": {
 		"eyebrow": "Logbook · entries",
 		"title": "Articles",
