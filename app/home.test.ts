@@ -7,7 +7,7 @@ const read = (file: string) =>
 
 describe("accueil L2", () => {
 	it("est un composant serveur qui monte la Fig. 1", () => {
-		const page = read("app/page.tsx");
+		const page = read("app/[locale]/page.tsx");
 		expect(page).not.toContain('"use client"');
 		expect(page).toContain("CarnetExplorer");
 	});
@@ -19,12 +19,12 @@ describe("accueil L2", () => {
 			),
 		).toBe(false);
 		for (const file of [
-			"app/page.tsx",
+			"app/[locale]/page.tsx",
 			"components/Header/Header.tsx",
 			"components/Header/NavMenu.tsx",
-			"app/About/page.tsx",
-			"app/Contact/page.tsx",
-			"app/articles/layout.tsx",
+			"app/[locale]/About/page.tsx",
+			"app/[locale]/Contact/page.tsx",
+			"app/[locale]/articles/layout.tsx",
 		]) {
 			expect(read(file)).not.toMatch(
 				/HeroPrompt|highlightContact|contactBtnRef/,
@@ -33,7 +33,7 @@ describe("accueil L2", () => {
 	});
 
 	it("assemble l'accueil dans l'ordre du carnet et retire les compétences", () => {
-		const page = read("app/page.tsx");
+		const page = read("app/[locale]/page.tsx");
 		const order = [
 			"CarnetExplorer",
 			"LatestEntries",

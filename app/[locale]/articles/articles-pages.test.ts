@@ -6,11 +6,11 @@ const read = (f: string) => readFileSync(path.join(process.cwd(), f), "utf8");
 
 describe("pages articles (carnet)", () => {
 	it("la liste réutilise les entrées datées de l'accueil", () => {
-		expect(read("app/articles/page.tsx")).toContain("<LatestEntries");
+		expect(read("app/[locale]/articles/page.tsx")).toContain("<LatestEntries");
 	});
 
 	it("la prose n'a plus de dégradé décoratif et lit en Source Serif", () => {
-		const css = read("app/articles/articles.css");
+		const css = read("app/[locale]/articles/articles.css");
 		expect(css).not.toContain("linear-gradient");
 		expect(css).toMatch(
 			/\.article-prose\s*\{[^}]*font-family:\s*var\(--font-serif\)/,
@@ -18,7 +18,7 @@ describe("pages articles (carnet)", () => {
 	});
 
 	it("la date de l'article est en Fira Code", () => {
-		expect(read("app/articles/[slug]/page.tsx")).toMatch(
+		expect(read("app/[locale]/articles/[slug]/page.tsx")).toMatch(
 			/font-mono[^>]*>\s*<time/,
 		);
 	});

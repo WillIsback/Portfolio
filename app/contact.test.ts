@@ -2,8 +2,14 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+/**
+ * La fiche contact a été séparée serveur/client : `Contact/page.tsx` est une
+ * coquille serveur (en-tête, `<Header>`, `<Footer>`) et toute la logique testée
+ * ici — `useActionState`, validation, aria, `<ThemedToaster />` — vit dans le
+ * composant client `ContactForm.tsx`, seul fichier où elle existe encore.
+ */
 const page = readFileSync(
-	path.join(process.cwd(), "app/Contact/page.tsx"),
+	path.join(process.cwd(), "app/[locale]/Contact/ContactForm.tsx"),
 	"utf8",
 );
 

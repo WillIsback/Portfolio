@@ -47,7 +47,7 @@ describe("Chronology", () => {
 
 	it("la page À propos n'utilise plus framer-motion", () => {
 		const page = readFileSync(
-			path.join(process.cwd(), "app/About/page.tsx"),
+			path.join(process.cwd(), "app/[locale]/About/page.tsx"),
 			"utf8",
 		);
 		expect(page).not.toContain("framer-motion");
