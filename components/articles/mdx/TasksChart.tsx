@@ -1,13 +1,10 @@
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type StackedBarLayout,
 	stackedBarLayout,
 	type TaskDay,
 } from "@/lib/articles/chart-geometry";
 import { formatNumber } from "@/lib/articles/format";
-
-const SCANS_LABEL = "Scans d'infrastructure (sre-monitor)";
-const OTHER_LABEL = "Toutes les autres tâches";
 
 function TasksSvg({
 	layout,
@@ -23,6 +20,7 @@ function TasksSvg({
 	// Séparateur décimal et de milliers dépendent de la locale : 0,24 en français, 0.24
 	// en anglais.
 	const locale = useLocale();
+	const t = useTranslations("mdx");
 	return (
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
@@ -31,7 +29,7 @@ function TasksSvg({
 			className={`chart-svg chart-svg--${variant}`}
 			style={{ minWidth: compact ? 300 : 480 }}
 		>
-			<title>Tâches Kanban créées par jour</title>
+			<title>{t("tasksTitle")}</title>
 			{gridlines.map((g) => (
 				<g key={g.value}>
 					<line
@@ -96,13 +94,15 @@ function TasksSvg({
 
 export function TasksChart({
 	days,
-	caption = "Tâches Kanban créées par jour",
+	caption,
 	figureNumber,
 }: Readonly<{
 	days: TaskDay[];
 	caption?: string;
 	figureNumber?: number;
 }>) {
+	const t = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
 	const full = stackedBarLayout(days);
 	const compact = stackedBarLayout(days, {
 		width: 340,
@@ -111,33 +111,40 @@ export function TasksChart({
 		barRatio: 0.7,
 	});
 	const summary = full.bars
-		.map(
-			(b) =>
-				`${b.label} : ${b.total} tâches dont ${b.scans} scans et ${b.other} autres`,
+		.map((b) =>
+			t("tasksRow", {
+				label: b.label,
+				total: b.total,
+				scans: b.scans,
+				other: b.other,
+			}),
 		)
 		.join(" ; ");
-	const ariaLabel = `Diagramme en barres empilées des tâches Kanban créées par jour. ${summary}.`;
+	const ariaLabel = t("tasksAriaLabel", { summary });
+	// Défaut porté par le message, plus par une valeur par défaut de paramètre : celle-ci
+	// serait figée à la compilation, avant que la locale soit connue.
+	const text = caption ?? t("tasksTitle");
 
 	return (
 		<figure className="article-figure my-10">
 			<ul className="mb-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-scan" />
-					{SCANS_LABEL}
+					{t("tasksScans")}
 				</li>
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-work" />
-					{OTHER_LABEL}
+					{t("tasksOther")}
 				</li>
 			</ul>
 			<div className="chart-scroll">
 				<TasksSvg layout={full} ariaLabel={ariaLabel} variant="full" />
 				<TasksSvg layout={compact} ariaLabel={ariaLabel} variant="compact" />
 			</div>
-			{caption || figureNumber ? (
+			{text || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
-					{caption}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
+					{text}
 				</figcaption>
 			) : null}
 		</figure>

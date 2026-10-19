@@ -33,14 +33,23 @@ export function FaultBuckets({
 	// Séparateur décimal (nombres) et espace avant `%` (part) dépendent de la locale.
 	const locale = useLocale();
 	const t = useTranslations("percent");
+	const tMdx = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
 	const segments = shares(items, total).map((s, i) => ({
 		...s,
 		color: BUCKET_COLORS[Math.min(i, BUCKET_COLORS.length - 1)],
 		percentLabel: formatPercent(t, s.item.count, total),
 	}));
-	const ariaLabel = `Répartition des ${formatNumber(total, 1, locale)} échecs d'outils sur ${formatNumber(traces, 1, locale)} traces : ${segments
-		.map((s) => `${s.item.label} ${s.item.count} (${s.percentLabel})`)
-		.join(", ")}.`;
+	// Les valeurs sont déjà formatées pour la locale : ICU n'applique ici qu'un
+	// remplacement de texte, sans re-formatage numérique.
+	const ariaLabel = tMdx("faultAriaLabel", {
+		total: formatNumber(total, 1, locale),
+		traces: formatNumber(traces, 1, locale),
+		segments: segments
+			.map((s) => `${s.item.label} ${s.item.count} (${s.percentLabel})`)
+			.join(", "),
+	});
+	const text = caption ?? tMdx("faultCaption");
 
 	return (
 		<figure className="article-figure my-10 rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -93,10 +102,10 @@ export function FaultBuckets({
 					</li>
 				))}
 			</ul>
-			{caption || figureNumber ? (
+			{text || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
-					{caption ?? "Répartition des échecs d'outils"}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
+					{text}
 				</figcaption>
 			) : null}
 		</figure>

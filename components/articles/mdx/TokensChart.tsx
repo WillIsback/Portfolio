@@ -1,4 +1,4 @@
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type HBarLayout,
 	horizontalBarLayout,
@@ -21,6 +21,7 @@ function TokensSvg({
 	// Séparateur décimal et de milliers dépendent de la locale : 0,24 en français, 0.24
 	// en anglais.
 	const locale = useLocale();
+	const t = useTranslations("mdx");
 	return (
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
@@ -29,7 +30,7 @@ function TokensSvg({
 			className={`chart-svg chart-svg--${variant}`}
 			style={{ minWidth: compact ? 300 : 480 }}
 		>
-			<title>Tokens d&apos;entrée par profil (millions)</title>
+			<title>{t("tokensTitle")}</title>
 			{gridlines.map((g) => (
 				<g key={g.value}>
 					<line
@@ -79,7 +80,7 @@ function TokensSvg({
 
 export function TokensChart({
 	profiles,
-	caption = "Tokens d'entrée par profil",
+	caption,
 	figureNumber,
 }: Readonly<{
 	profiles: TokenProfile[];
@@ -87,6 +88,8 @@ export function TokensChart({
 	figureNumber?: number;
 }>) {
 	const locale = useLocale();
+	const t = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
 	const full = horizontalBarLayout(profiles);
 	const compact = horizontalBarLayout(profiles, {
 		width: 340,
@@ -95,33 +98,37 @@ export function TokensChart({
 		labelGap: 4,
 	});
 	const summary = full.rows
-		.map(
-			(r) =>
-				`${r.name} : ${formatNumber(r.value, 1, locale)} M (${r.kind === "scan" ? "scan" : "travail"})`,
+		.map((r) =>
+			t("tokensRow", {
+				name: r.name,
+				value: formatNumber(r.value, 1, locale),
+				kind: r.kind === "scan" ? t("tokensKindScan") : t("tokensKindWork"),
+			}),
 		)
 		.join(" ; ");
-	const ariaLabel = `Diagramme en barres horizontales des tokens d'entrée par profil, en millions. ${summary}.`;
+	const ariaLabel = t("tokensAriaLabel", { summary });
+	const text = caption ?? t("tokensCaption");
 
 	return (
 		<figure className="article-figure my-10">
 			<ul className="mb-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-scan" />
-					Boucle de scan
+					{t("tokensScanSeries")}
 				</li>
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-work" />
-					Autres profils
+					{t("tokensOtherSeries")}
 				</li>
 			</ul>
 			<div className="chart-scroll">
 				<TokensSvg layout={full} ariaLabel={ariaLabel} variant="full" />
 				<TokensSvg layout={compact} ariaLabel={ariaLabel} variant="compact" />
 			</div>
-			{caption || figureNumber ? (
+			{text || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
-					{caption}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
+					{text}
 				</figcaption>
 			) : null}
 		</figure>

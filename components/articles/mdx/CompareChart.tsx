@@ -1,4 +1,4 @@
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type CompareGroup,
 	type GroupedBarLayout,
@@ -127,6 +127,8 @@ export function CompareChart({
 	// Séparateur décimal et milliers dépendent de la locale : 0,24 en français, 0.24 en
 	// anglais. `useLocale` (et non `getTranslations`) garde le composant synchrone.
 	const locale = useLocale();
+	const t = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
 	const format = (value: number) => formatNumber(value, digits, locale);
 	// Monospace labels: reserve their width so long ones are not clipped.
 	const longest = Math.max(0, ...groups.map(([label]) => label.length));
@@ -161,9 +163,11 @@ export function CompareChart({
 			const parts = values.flatMap((v, i) =>
 				v === null
 					? []
-					: [`${series[i] ?? `série ${i + 1}`} ${format(v)}${suffix}`],
+					: [
+							`${series[i] ?? t("compareFallbackSeries", { n: i + 1 })} ${format(v)}${suffix}`,
+						],
 			);
-			return `${label} : ${parts.join(", ")}`;
+			return t("compareSummary", { label, values: parts.join(", ") });
 		})
 		.join(" ; ");
 	const ariaLabel = `${title}. ${summary}.`;
@@ -201,7 +205,7 @@ export function CompareChart({
 			</div>
 			{caption || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
 					{caption}
 				</figcaption>
 			) : null}

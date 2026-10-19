@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import { describe, expect, it } from "vitest";
-import { renderFr } from "@/tests/i18n-render";
+import fr from "@/messages/fr.json";
+import { escapeHtml, renderFr } from "@/tests/i18n-render";
 import { CompareChart } from "./CompareChart";
 import { FaultBuckets } from "./FaultBuckets";
 import { Screenshot } from "./Screenshot";
@@ -84,7 +85,9 @@ describe("légendes par défaut", () => {
 			<TasksChart days={[["J1", 10, 4]]} figureNumber={1} />,
 		);
 		expect(html).toMatch(
-			/Fig\. 1 · Tâches Kanban créées par jour<\/figcaption>/,
+			new RegExp(
+				`${escapeHtml(fr.figure.prefix.replace("{n}", "1"))}${escapeHtml(fr.mdx.tasksTitle)}</figcaption>`,
+			),
 		);
 	});
 	it("TokensChart", () => {
@@ -92,7 +95,9 @@ describe("légendes par défaut", () => {
 			<TokensChart profiles={[["sre-dev", 3, "work"]]} figureNumber={1} />,
 		);
 		expect(html).toMatch(
-			/Fig\. 1 · Tokens d(?:'|&#x27;)entrée par profil<\/figcaption>/,
+			new RegExp(
+				`${escapeHtml(fr.figure.prefix.replace("{n}", "1"))}${escapeHtml(fr.mdx.tokensCaption)}</figcaption>`,
+			),
 		);
 	});
 });
@@ -100,11 +105,17 @@ describe("légendes par défaut", () => {
 describe.each(cases)("%s", (_name, render) => {
 	it("préfixe la légende de « Fig. N · »", () => {
 		const html = renderFr(render(2));
-		expect(html).toMatch(/<figcaption[^>]*>Fig\. 2 · Légende/);
+		expect(html).toMatch(
+			new RegExp(
+				`<figcaption[^>]*>${escapeHtml(fr.figure.prefix.replace("{n}", "2"))}Légende`,
+			),
+		);
 	});
 
 	it("n'écrit pas « Fig. » sans numéro", () => {
-		expect(renderFr(render())).not.toContain("Fig.");
+		expect(renderFr(render())).not.toContain(
+			fr.figure.prefix.replace("{n}", ""),
+		);
 	});
 });
 
@@ -114,7 +125,7 @@ describe("FaultBuckets sans légende", () => {
 			<FaultBuckets total={4} traces={2} items={items} figureNumber={3} />,
 		);
 		expect(html).toContain(
-			"Fig. 3 · Répartition des échecs d&#x27;outils</figcaption>",
+			`${escapeHtml(fr.figure.prefix.replace("{n}", "3"))}${escapeHtml(fr.mdx.faultCaption)}</figcaption>`,
 		);
 		expect(html.indexOf("<figcaption")).toBeGreaterThan(html.indexOf("</ul>"));
 	});
@@ -132,8 +143,16 @@ describe("CompareChart", () => {
 				figureNumber={1}
 			/>,
 		);
-		expect(html).toContain("Fig. 1 · R² sur le test</figcaption>");
-		expect(html).toContain("Énergie : CatBoost 0,24");
+		expect(html).toContain(
+			`${escapeHtml(fr.figure.prefix.replace("{n}", "1"))}R² sur le test</figcaption>`,
+		);
+		expect(html).toContain(
+			escapeHtml(
+				fr.mdx.compareSummary
+					.replace("{label}", "Énergie")
+					.replace("{values}", "CatBoost 0,24"),
+			),
+		);
 		expect(html).not.toContain("Kumo 0");
 	});
 });

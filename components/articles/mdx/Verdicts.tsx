@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export interface Verdict {
 	title: string;
@@ -56,10 +57,11 @@ export function Verdicts({
 	good,
 	bad,
 }: Readonly<{ good: Verdict[]; bad: Verdict[] }>) {
+	const t = useTranslations("mdx");
 	return (
 		<div className="my-10 grid grid-cols-1 gap-4 md:grid-cols-2">
-			<Column heading="Ce qui a tenu" items={good} tone="good" />
-			<Column heading="Ce qui a cassé" items={bad} tone="bad" />
+			<Column heading={t("verdictsGood")} items={good} tone="good" />
+			<Column heading={t("verdictsBad")} items={bad} tone="bad" />
 		</div>
 	);
 }
