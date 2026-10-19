@@ -1,3 +1,4 @@
+import type { Translator } from "@/i18n/translator";
 import {
 	keywordMatches,
 	placeQuery,
@@ -101,10 +102,18 @@ export function computeView(
 	};
 }
 
-/** Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie). */
-export function announcement(titles: string[], searched: boolean): string {
+/**
+ * Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie).
+ *
+ * Le décompte vient du dictionnaire (`carnet.resultCount`) : pluriel ICU en français et
+ * en anglais, forme simple en chinois, qui n'a pas de catégorie `one`/`other`.
+ */
+export function announcement(
+	t: Translator,
+	titles: string[],
+	searched: boolean,
+): string {
 	if (!searched) return "";
-	if (titles.length === 0) return "Aucun résultat";
-	const count = `${titles.length} ${titles.length > 1 ? "résultats" : "résultat"}`;
-	return `${count} : ${titles.join(", ")}`;
+	const count = t("resultCount", { count: titles.length });
+	return titles.length === 0 ? count : `${count} : ${titles.join(", ")}`;
 }

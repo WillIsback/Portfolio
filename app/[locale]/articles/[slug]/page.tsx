@@ -11,7 +11,7 @@ import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
 import { Link } from "@/i18n/navigation";
 import { numberFigures } from "@/lib/articles/figures";
-import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
+import { formatDate, formatReadingTime } from "@/lib/articles/format";
 import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
@@ -70,7 +70,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	// Les noms de groupes sont traduits : la vue se construit ici, et plus au niveau du
 	// module où aucune locale n'est encore connue.
-	const view = toMapView(map, clusterLabels(await getTranslations("clusters")));
+	const tClusters = await getTranslations("clusters");
+	const tReadingTime = await getTranslations("readingTime");
+	const view = toMapView(map, clusterLabels(tClusters));
 
 	const { source, count: figureCount } = numberFigures(article.content);
 
@@ -134,7 +136,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 				</p>
 				<p className="font-mono text-xs text-ink-soft">
 					<time dateTime={article.date}>
-						{formatDateFr(article.date)}
+						{formatDate(article.date, locale)}
 					</time>
 					{article.period ? (
 						<>
@@ -143,7 +145,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 							{article.period}
 						</>
 					) : null}
-					{` · ${formatReadingTime(article.readingTimeMinutes)}`}
+					{` · ${formatReadingTime(tReadingTime, article.readingTimeMinutes)}`}
 				</p>
 				<ArticleTags tags={article.tags} />
 			</header>

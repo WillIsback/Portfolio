@@ -1,9 +1,10 @@
+import { useLocale } from "next-intl";
 import {
 	type CompareGroup,
 	type GroupedBarLayout,
 	groupedBarLayout,
 } from "@/lib/articles/chart-geometry";
-import { formatNumberFr } from "@/lib/articles/format";
+import { formatNumber } from "@/lib/articles/format";
 
 /** Series colors, in order: neutral reference first, accent second. */
 const SERIES_TONES = ["base", "accent"] as const;
@@ -123,7 +124,10 @@ export function CompareChart({
 	caption?: string;
 	figureNumber?: number;
 }>) {
-	const format = (value: number) => formatNumberFr(value, digits);
+	// Séparateur décimal et milliers dépendent de la locale : 0,24 en français, 0.24 en
+	// anglais. `useLocale` (et non `getTranslations`) garde le composant synchrone.
+	const locale = useLocale();
+	const format = (value: number) => formatNumber(value, digits, locale);
 	// Monospace labels: reserve their width so long ones are not clipped.
 	const longest = Math.max(0, ...groups.map(([label]) => label.length));
 	const full = groupedBarLayout(groups, {

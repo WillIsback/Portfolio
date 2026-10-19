@@ -1,4 +1,7 @@
+import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
+import { frTranslator } from "@/i18n/fr";
+import zhMessages from "@/messages/zh.json";
 import {
 	errorSummary,
 	firstInvalidField,
@@ -6,10 +9,26 @@ import {
 } from "./contact-form";
 
 describe("errorSummary", () => {
+	const t = frTranslator("contact");
+
 	it("accorde le résumé selon le nombre de champs", () => {
-		expect(errorSummary(0)).toBe("");
-		expect(errorSummary(1)).toBe("1 champ à corriger");
-		expect(errorSummary(3)).toBe("3 champs à corriger");
+		expect(errorSummary(t, 0)).toBe("");
+		expect(errorSummary(t, 1)).toBe("1 champ à corriger");
+		expect(errorSummary(t, 3)).toBe("3 champs à corriger");
+	});
+
+	it("l'accord vient du dictionnaire, pas d'un ternaire en code", () => {
+		// Le chinois n'a pas de catégorie de pluriel ICU : son message reste un gabarit
+		// simple, et `errorSummary` ne doit rien y ajouter.
+		const zh = createTranslator({
+			locale: "zh",
+			messages: zhMessages as never,
+			namespace: "contact" as never,
+		});
+		expect(zhMessages.contact.errorSummary).not.toMatch(/plural/);
+		expect(errorSummary(zh as never, 1)).toBe("需修正 1 个字段");
+		expect(errorSummary(zh as never, 5)).toBe("需修正 5 个字段");
+		expect(errorSummary(zh as never, 0)).toBe("");
 	});
 });
 

@@ -1,9 +1,10 @@
+import { useLocale } from "next-intl";
 import {
 	type HBarLayout,
 	horizontalBarLayout,
 	type TokenProfile,
 } from "@/lib/articles/chart-geometry";
-import { formatNumberFr } from "@/lib/articles/format";
+import { formatNumber } from "@/lib/articles/format";
 
 function TokensSvg({
 	layout,
@@ -17,6 +18,9 @@ function TokensSvg({
 	const { width, height, margin, plotLeft, gridlines, rows, xMax } = layout;
 	const axisY = height - margin.bottom;
 	const compact = variant === "compact";
+	// Séparateur décimal et de milliers dépendent de la locale : 0,24 en français, 0.24
+	// en anglais.
+	const locale = useLocale();
 	return (
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
@@ -65,7 +69,7 @@ function TokensSvg({
 						className={r.kind === "scan" ? "chart-bar-scan" : "chart-bar-work"}
 					/>
 					<text x={r.valueX} y={r.cy} dy="0.35em" className="chart-value">
-						{formatNumberFr(r.value)}
+						{formatNumber(r.value, 1, locale)}
 					</text>
 				</g>
 			))}
@@ -82,6 +86,7 @@ export function TokensChart({
 	caption?: string;
 	figureNumber?: number;
 }>) {
+	const locale = useLocale();
 	const full = horizontalBarLayout(profiles);
 	const compact = horizontalBarLayout(profiles, {
 		width: 340,
@@ -92,7 +97,7 @@ export function TokensChart({
 	const summary = full.rows
 		.map(
 			(r) =>
-				`${r.name} : ${formatNumberFr(r.value)} M (${r.kind === "scan" ? "scan" : "travail"})`,
+				`${r.name} : ${formatNumber(r.value, 1, locale)} M (${r.kind === "scan" ? "scan" : "travail"})`,
 		)
 		.join(" ; ");
 	const ariaLabel = `Diagramme en barres horizontales des tokens d'entrée par profil, en millions. ${summary}.`;

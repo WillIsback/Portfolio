@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { frTranslator } from "@/i18n/fr";
 import {
 	announcement,
 	computeView,
@@ -186,10 +187,14 @@ describe("computeView", () => {
 });
 
 describe("announcement", () => {
+	const t = frTranslator("carnet");
+
 	it("résume les résultats pour la région annoncée", () => {
-		expect(announcement([], false)).toBe("");
-		expect(announcement([], true)).toBe("Aucun résultat");
-		expect(announcement(["A"], true)).toBe("1 résultat : A");
-		expect(announcement(["A", "B", "C"], true)).toBe("3 résultats : A, B, C");
+		expect(announcement(t, [], false)).toBe("");
+		expect(announcement(t, [], true)).toBe("Aucun résultat");
+		expect(announcement(t, ["A"], true)).toBe("1 résultat : A");
+		expect(announcement(t, ["A", "B", "C"], true)).toBe(
+			"3 résultats : A, B, C",
+		);
 	});
 });

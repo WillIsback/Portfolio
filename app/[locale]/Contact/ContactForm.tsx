@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Send } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type FormEvent,
 	useActionState,
@@ -16,7 +17,7 @@ import { z } from "zod";
 import { sendEmail } from "@/app/actions/contact.action";
 import ThemedToaster from "@/components/theme/ThemedToaster";
 import { useFormValidation } from "@/hooks/useFormValidation";
-import { formatDateFr } from "@/lib/articles/format";
+import { formatDate } from "@/lib/articles/format";
 import {
 	CONTACT_FIELDS,
 	type ContactField,
@@ -59,6 +60,8 @@ const initialFormValues = { email: "", sujet: "", message: "" };
  * donc encore de la tâche 8.
  */
 export default function ContactForm() {
+	const locale = useLocale();
+	const tContact = useTranslations("contact");
 	const today = useToday();
 	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
@@ -85,8 +88,8 @@ export default function ContactForm() {
 
 	// Résumé annoncé : celui de la tentative côté client prime, sinon celui du serveur.
 	const serverAnnouncement = useMemo(
-		() => errorSummary(Object.keys(serverErrors).length),
-		[serverErrors],
+		() => errorSummary(tContact, Object.keys(serverErrors).length),
+		[tContact, serverErrors],
 	);
 	const announcement = submitAnnouncement || serverAnnouncement;
 
@@ -150,7 +153,7 @@ export default function ContactForm() {
 		}
 		e.preventDefault();
 		showAllErrors();
-		setSubmitAnnouncement(errorSummary(Object.keys(errors).length));
+		setSubmitAnnouncement(errorSummary(tContact, Object.keys(errors).length));
 		focusField(firstInvalidField(CONTACT_FIELDS, errors));
 	};
 
@@ -165,7 +168,7 @@ export default function ContactForm() {
 				<div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 font-mono text-xs text-ink-soft">
 					<span>Fiche n° — à remplir</span>
 					<time dateTime={today || undefined} suppressHydrationWarning>
-						{today ? formatDateFr(today) : ""}
+						{today ? formatDate(today, locale) : ""}
 					</time>
 				</div>
 				<p aria-live="polite" className="sr-only">

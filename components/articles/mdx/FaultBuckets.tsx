@@ -1,5 +1,6 @@
+import { useLocale, useTranslations } from "next-intl";
 import { shares } from "@/lib/articles/chart-geometry";
-import { formatNumberFr, formatPercentFr } from "@/lib/articles/format";
+import { formatNumber, formatPercent } from "@/lib/articles/format";
 
 export interface FaultBucket {
 	id: string;
@@ -29,12 +30,15 @@ export function FaultBuckets({
 	caption?: string;
 	figureNumber?: number;
 }>) {
+	// Séparateur décimal (nombres) et espace avant `%` (part) dépendent de la locale.
+	const locale = useLocale();
+	const t = useTranslations("percent");
 	const segments = shares(items, total).map((s, i) => ({
 		...s,
 		color: BUCKET_COLORS[Math.min(i, BUCKET_COLORS.length - 1)],
-		percentLabel: formatPercentFr(s.item.count, total),
+		percentLabel: formatPercent(t, s.item.count, total),
 	}));
-	const ariaLabel = `Répartition des ${formatNumberFr(total)} échecs d'outils sur ${formatNumberFr(traces)} traces : ${segments
+	const ariaLabel = `Répartition des ${formatNumber(total, 1, locale)} échecs d'outils sur ${formatNumber(traces, 1, locale)} traces : ${segments
 		.map((s) => `${s.item.label} ${s.item.count} (${s.percentLabel})`)
 		.join(", ")}.`;
 
@@ -42,10 +46,10 @@ export function FaultBuckets({
 		<figure className="article-figure my-10 rounded-xl border border-border bg-card p-5 shadow-sm">
 			<div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 				<p className="font-display text-lg font-semibold text-foreground">
-					{formatNumberFr(total)} échecs d&apos;outils
+					{formatNumber(total, 1, locale)} échecs d&apos;outils
 				</p>
 				<p className="text-sm text-muted-foreground">
-					sur {formatNumberFr(traces)} traces
+					sur {formatNumber(traces, 1, locale)} traces
 				</p>
 			</div>
 			<div
@@ -80,7 +84,7 @@ export function FaultBuckets({
 							{s.item.label}
 						</span>
 						<span className="font-code text-sm tabular-nums text-foreground">
-							{formatNumberFr(s.item.count)}
+							{formatNumber(s.item.count, 1, locale)}
 							<span className="text-muted-foreground"> · {s.percentLabel}</span>
 						</span>
 						<p className="col-start-2 col-end-4 text-[0.95rem] leading-relaxed text-muted-foreground">

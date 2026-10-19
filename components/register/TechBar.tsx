@@ -1,4 +1,5 @@
-import { formatPercentFr } from "@/lib/articles/format";
+import { useTranslations } from "next-intl";
+import { formatPercent } from "@/lib/articles/format";
 import type { TechShare } from "@/lib/register";
 
 const TINT: Record<TechShare["key"], string> = {
@@ -12,9 +13,10 @@ const TINT: Record<TechShare["key"], string> = {
 
 /** Barre de composition technique : proportions réelles des technologies en base. */
 export default function TechBar({ shares }: Readonly<{ shares: TechShare[] }>) {
+	const t = useTranslations("percent");
 	if (shares.length === 0) return null;
 	const total = shares.reduce((t, x) => t + x.count, 0);
-	const pct = (s: TechShare) => formatPercentFr(s.count, total);
+	const pct = (s: TechShare) => formatPercent(t, s.count, total);
 	const label = `Composition technique : ${shares.map((s) => `${s.label} ${pct(s)}`).join(", ")}`;
 	return (
 		<div>

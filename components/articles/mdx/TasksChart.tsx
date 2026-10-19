@@ -1,9 +1,10 @@
+import { useLocale } from "next-intl";
 import {
 	type StackedBarLayout,
 	stackedBarLayout,
 	type TaskDay,
 } from "@/lib/articles/chart-geometry";
-import { formatNumberFr } from "@/lib/articles/format";
+import { formatNumber } from "@/lib/articles/format";
 
 const SCANS_LABEL = "Scans d'infrastructure (sre-monitor)";
 const OTHER_LABEL = "Toutes les autres tâches";
@@ -19,6 +20,9 @@ function TasksSvg({
 }>) {
 	const { width, height, margin, baselineY, gridlines, bars } = layout;
 	const compact = variant === "compact";
+	// Séparateur décimal et de milliers dépendent de la locale : 0,24 en français, 0.24
+	// en anglais.
+	const locale = useLocale();
 	return (
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
@@ -74,7 +78,7 @@ function TasksSvg({
 						textAnchor="middle"
 						className="chart-value"
 					>
-						{formatNumberFr(b.total)}
+						{formatNumber(b.total, 1, locale)}
 					</text>
 					<text
 						x={b.cx}

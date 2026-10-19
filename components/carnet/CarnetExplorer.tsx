@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type ReactNode,
 	useEffect,
@@ -47,6 +48,8 @@ export default function CarnetExplorer({
 	intro,
 	note,
 }: Readonly<CarnetExplorerProps>) {
+	const locale = useLocale();
+	const t = useTranslations("carnet");
 	const [state, dispatch] = useReducer(explorerReducer, initialExplorerState);
 	const [hoverId, setHoverId] = useState<string | null>(null);
 	const [searchItems, setSearchItems] = useState<SearchItem[] | null>(null);
@@ -113,6 +116,7 @@ export default function CarnetExplorer({
 	useEffect(() => () => workerRef.current?.terminate(), []);
 
 	const summary = announcement(
+		t,
 		view.results.flatMap((r) => byId.get(r.id)?.title ?? []),
 		view.mode !== "rest",
 	);
@@ -213,7 +217,7 @@ export default function CarnetExplorer({
 													</span>
 												</>
 											) : (
-												formatScore(r.score)
+												formatScore(r.score, locale)
 											)}
 										</span>
 										<a

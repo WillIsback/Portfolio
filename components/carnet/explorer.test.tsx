@@ -1,6 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapCluster, MapPoint } from "@/lib/carnet/map-view";
+import { renderFr } from "@/tests/i18n-render";
 import CarnetExplorer from "./CarnetExplorer";
 
 const points: MapPoint[] = [
@@ -19,7 +19,7 @@ const clusters: MapCluster[] = [
 ];
 
 describe("CarnetExplorer (rendu serveur)", () => {
-	const html = renderToStaticMarkup(
+	const html = renderFr(
 		<CarnetExplorer
 			points={points}
 			clusters={clusters}

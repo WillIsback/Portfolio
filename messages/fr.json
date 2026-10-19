@@ -105,5 +105,18 @@
 			"title": "Parcours AI Engineer",
 			"description": "Dans la continuité, parcours AI Engineer chez OpenClassrooms."
 		}
+	},
+	"readingTime": {
+		"minutes": "{minutes, number}\u00a0min de lecture"
+	},
+	"percent": {
+		"value": "{value, number}\u00a0%",
+		"underOne": "<\u00a01\u00a0%"
+	},
+	"contact": {
+		"errorSummary": "{count, plural, =0 {Aucun champ à corriger} one {# champ à corriger} other {# champs à corriger}}"
+	},
+	"carnet": {
+		"resultCount": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}"
 	}
 }

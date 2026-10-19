@@ -1,4 +1,3 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { renderFr } from "@/tests/i18n-render";
 import Instruments from "./Instruments";
@@ -15,7 +14,7 @@ const article = (slug: string, date: string) => ({
 
 describe("LatestEntries", () => {
 	it("liste les entrées datées en Fira Code, avec temps de lecture et thèmes", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<LatestEntries articles={[article("a", "2026-10-07")]} />,
 		);
 		expect(html).toContain('<time dateTime="2026-10-07"');
@@ -28,7 +27,7 @@ describe("LatestEntries", () => {
 	});
 
 	it("peut servir de liste complète : sans lien « Toutes les entrées », titres en h2", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<LatestEntries
 				articles={[article("a", "2026-10-07")]}
 				showAllLink={false}
@@ -41,7 +40,7 @@ describe("LatestEntries", () => {
 	});
 
 	it("ne rend rien sans article", () => {
-		expect(renderToStaticMarkup(<LatestEntries articles={[]} />)).toBe("");
+		expect(renderFr(<LatestEntries articles={[]} />)).toBe("");
 	});
 });
 

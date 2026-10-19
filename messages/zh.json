@@ -105,5 +105,18 @@
 			"title": "AI Engineer 课程",
 			"description": "延续前路，在 OpenClassrooms 修读 AI Engineer 课程。"
 		}
+	},
+	"readingTime": {
+		"minutes": "阅读约 {minutes, number} 分钟"
+	},
+	"percent": {
+		"value": "{value, number}%",
+		"underOne": "不足 1%"
+	},
+	"contact": {
+		"errorSummary": "需修正 {count} 个字段"
+	},
+	"carnet": {
+		"resultCount": "{count} 条结果"
 	}
 }

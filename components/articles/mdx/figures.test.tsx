@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { renderFr } from "@/tests/i18n-render";
 import { CompareChart } from "./CompareChart";
 import { FaultBuckets } from "./FaultBuckets";
 import { Screenshot } from "./Screenshot";
@@ -80,7 +80,7 @@ const cases: [string, (n?: number) => ReactElement][] = [
 
 describe("légendes par défaut", () => {
 	it("TasksChart", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<TasksChart days={[["J1", 10, 4]]} figureNumber={1} />,
 		);
 		expect(html).toMatch(
@@ -88,7 +88,7 @@ describe("légendes par défaut", () => {
 		);
 	});
 	it("TokensChart", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<TokensChart profiles={[["sre-dev", 3, "work"]]} figureNumber={1} />,
 		);
 		expect(html).toMatch(
@@ -99,18 +99,18 @@ describe("légendes par défaut", () => {
 
 describe.each(cases)("%s", (_name, render) => {
 	it("préfixe la légende de « Fig. N · »", () => {
-		const html = renderToStaticMarkup(render(2));
+		const html = renderFr(render(2));
 		expect(html).toMatch(/<figcaption[^>]*>Fig\. 2 · Légende/);
 	});
 
 	it("n'écrit pas « Fig. » sans numéro", () => {
-		expect(renderToStaticMarkup(render())).not.toContain("Fig.");
+		expect(renderFr(render())).not.toContain("Fig.");
 	});
 });
 
 describe("FaultBuckets sans légende", () => {
 	it("utilise une légende par défaut avec un numéro", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FaultBuckets total={4} traces={2} items={items} figureNumber={3} />,
 		);
 		expect(html).toContain(
@@ -122,7 +122,7 @@ describe("FaultBuckets sans légende", () => {
 
 describe("CompareChart", () => {
 	it("prend le titre comme légende par défaut et décrit les valeurs", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<CompareChart
 				series={["CatBoost", "Kumo"]}
 				groups={[["Énergie", 0.24, null]]}

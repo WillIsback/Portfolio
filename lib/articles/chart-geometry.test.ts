@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { frTranslator } from "@/i18n/fr";
 import {
 	type CompareGroup,
 	groupedBarLayout,
@@ -11,7 +12,7 @@ import {
 	type TokenProfile,
 	ticks,
 } from "./chart-geometry";
-import { formatNumberFr, formatPercentFr } from "./format";
+import { formatDate, formatNumber, formatPercent } from "./format";
 
 const DAYS: TaskDay[] = [
 	["28/09", 4, 0],
@@ -140,10 +141,17 @@ describe("horizontalBarLayout", () => {
 		}
 	});
 
-	it("formats values French-style", () => {
-		expect(formatNumberFr(19.4)).toBe("19,4");
-		expect(formatNumberFr(0.2)).toBe("0,2");
-		expect(formatNumberFr(24537)).toMatch(/^24\s537$/u);
+	it("formats values French-style by default", () => {
+		expect(formatNumber(19.4)).toBe("19,4");
+		expect(formatNumber(0.2)).toBe("0,2");
+		expect(formatNumber(24537)).toMatch(/^24\s537$/u);
+	});
+
+	it("suit la locale demandée pour les nombres et les dates", () => {
+		expect(formatNumber(19.4, 1, "en")).toBe("19.4");
+		expect(formatNumber(24537, 1, "en")).toBe("24,537");
+		expect(formatDate("2026-10-07", "fr")).toBe("7 octobre 2026");
+		expect(formatDate("2026-10-07", "en")).toBe("October 7, 2026");
 	});
 });
 
@@ -188,11 +196,14 @@ describe("shares", () => {
 		expect(shares(items)[1].percent).toBeCloseTo((128 / 428) * 100, 9);
 	});
 
-	it("rounds percentages in French format", () => {
-		expect(formatPercentFr(199, 428)).toBe("46 %");
-		expect(formatPercentFr(128, 428)).toBe("30 %");
-		expect(formatPercentFr(100, 428)).toBe("23 %");
-		expect(formatPercentFr(1, 428)).toBe("< 1 %");
+	it("arrondit et met la part en français", () => {
+		const t = frTranslator("percent");
+		expect(formatPercent(t, 199, 428)).toBe("46\u00a0%");
+		expect(formatPercent(t, 128, 428)).toBe("30\u00a0%");
+		expect(formatPercent(t, 100, 428)).toBe("23\u00a0%");
+		expect(formatPercent(t, 1, 428)).toBe("<\u00a01\u00a0%");
+		// Rien à arrondir : pas de « < 1 % » pour un total vide.
+		expect(formatPercent(t, 0, 0)).toBe("0\u00a0%");
 	});
 });
 

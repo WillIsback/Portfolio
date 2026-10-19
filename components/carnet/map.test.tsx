@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapCluster, MapPoint } from "@/lib/carnet/map-view";
+import { renderFr } from "@/tests/i18n-render";
 import MapItemList from "./MapItemList";
 import MapLegend from "./MapLegend";
 import MapSvg from "./MapSvg";
@@ -93,7 +94,7 @@ describe("MapLegend", () => {
 
 describe("MapItemList", () => {
 	it("double la carte par des liens navigables au clavier", () => {
-		const html = renderToStaticMarkup(<MapItemList points={points} />);
+		const html = renderFr(<MapItemList points={points} />);
 		expect(html).toContain("<details");
 		expect(html).toContain("Les 3 éléments de la carte");
 		expect(html).toContain('href="/articles/a"');
