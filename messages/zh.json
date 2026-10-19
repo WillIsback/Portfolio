@@ -31,6 +31,25 @@
 		"selected": "已选 {count} 项",
 		"search": "搜索…"
 	},
+	"filterBar": {
+		"searchPlaceholder": "搜索项目…",
+		"language": "编程语言",
+		"allLanguages": "所有语言",
+		"domain": "领域",
+		"allDomains": "所有领域",
+		"practice": "实践",
+		"allPractices": "所有实践",
+		"training": "培训",
+		"allProjects": "所有项目",
+		"trainingProjects": "培训项目",
+		"excludeTraining": "排除培训项目",
+		"database": "数据库",
+		"backend": "后端 API",
+		"frontend": "前端",
+		"devops": "DevOps",
+		"reset": "重置",
+		"loading": "加载中…"
+	},
 	"errorBoundary": {
 		"title": "出现了一个错误",
 		"unknown": "未知错误",

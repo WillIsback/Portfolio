@@ -31,6 +31,25 @@
 		"selected": "{count, plural, one {# sélectionné} other {# sélectionnés}}",
 		"search": "Rechercher..."
 	},
+	"filterBar": {
+		"searchPlaceholder": "Rechercher un projet...",
+		"language": "Langage",
+		"allLanguages": "Tous les langages",
+		"domain": "Domaine",
+		"allDomains": "Tous les domaines",
+		"practice": "Pratiques",
+		"allPractices": "Toutes les pratiques",
+		"training": "Formation",
+		"allProjects": "Tous les projets",
+		"trainingProjects": "Projets de formation",
+		"excludeTraining": "Hors formation",
+		"database": "Base de données",
+		"backend": "API Backend",
+		"frontend": "Frontend",
+		"devops": "DevOps",
+		"reset": "Réinitialiser",
+		"loading": "Chargement..."
+	},
 	"errorBoundary": {
 		"title": "Une erreur est survenue",
 		"unknown": "Erreur inconnue",

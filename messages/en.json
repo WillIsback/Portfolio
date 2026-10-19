@@ -31,6 +31,25 @@
 		"selected": "{count, plural, one {# selected} other {# selected}}",
 		"search": "Search..."
 	},
+	"filterBar": {
+		"searchPlaceholder": "Search a project...",
+		"language": "Language",
+		"allLanguages": "All languages",
+		"domain": "Domain",
+		"allDomains": "All domains",
+		"practice": "Practices",
+		"allPractices": "All practices",
+		"training": "Training",
+		"allProjects": "All projects",
+		"trainingProjects": "Training projects",
+		"excludeTraining": "Excluding training",
+		"database": "Database",
+		"backend": "Backend API",
+		"frontend": "Frontend",
+		"devops": "DevOps",
+		"reset": "Reset",
+		"loading": "Loading..."
+	},
 	"errorBoundary": {
 		"title": "Something went wrong",
 		"unknown": "Unknown error",
