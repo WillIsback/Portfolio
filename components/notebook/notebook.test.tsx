@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
+import { renderFr } from "@/tests/i18n-render";
 import FigureCaption from "./FigureCaption";
 import InkPath from "./InkPath";
 import InkUnderline from "./InkUnderline";
@@ -8,11 +10,14 @@ import MarginNote from "./MarginNote";
 
 describe("FigureCaption", () => {
 	it("numérote la figure et garde la légende", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FigureCaption number={2}>Carte des projets</FigureCaption>,
 		);
 		expect(html).toContain("<figcaption");
-		expect(html).toContain("Fig. 2 · ");
+		// Le préfixe vient du dictionnaire : l'espace final de `figure.prefix` est
+		// porteur (il sépare « · » de la légende), l'assertion le vérifie en même
+		// temps que le rendu.
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "2"));
 		expect(html).toContain("Carte des projets");
 	});
 });

@@ -1,5 +1,5 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { renderFr } from "@/tests/i18n-render";
 import OnTheMap from "./OnTheMap";
 
 const points = [
@@ -24,7 +24,7 @@ const points = [
 ];
 
 describe("OnTheMap", () => {
-	const html = renderToStaticMarkup(
+	const html = renderFr(
 		<OnTheMap
 			articleId="article:a"
 			points={points}
@@ -54,7 +54,7 @@ describe("OnTheMap", () => {
 
 	it("ne rend rien sans voisin", () => {
 		expect(
-			renderToStaticMarkup(
+			renderFr(
 				<OnTheMap
 					articleId="article:a"
 					points={points}
@@ -68,7 +68,7 @@ describe("OnTheMap", () => {
 
 describe("OnTheMap liens internes", () => {
 	it("les voisins externes s'ouvrent dans un nouvel onglet, les internes restent des liens Next", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<OnTheMap
 				articleId="article:a"
 				points={points}

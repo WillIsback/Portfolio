@@ -14,6 +14,9 @@
 			"portfolio"
 		]
 	},
+	"figure": {
+		"prefix": "Fig. {n} · "
+	},
 	"notFound": {
 		"title": "Page introuvable",
 		"body": "Cette page n'existe pas ou a été déplacée.",
