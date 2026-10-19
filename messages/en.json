@@ -18,5 +18,13 @@
 		"title": "Page not found",
 		"body": "This page does not exist or has been moved.",
 		"back": "Back to home"
+	},
+	"locale": {
+		"label": "Language",
+		"names": {
+			"fr": "Français",
+			"en": "English",
+			"zh": "中文"
+		}
 	}
 }

@@ -1,3 +1,4 @@
+import LocaleSwitcher from "@/components/LocaleSwitcher/LocaleSwitcher";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { Link } from "@/i18n/navigation";
 import NavMenu from "./NavMenu";
@@ -19,6 +20,7 @@ export default function Header() {
 				</Link>
 				<div className="flex items-center gap-1 sm:gap-2">
 					<NavMenu />
+					<LocaleSwitcher />
 					<ThemeToggle />
 				</div>
 			</div>

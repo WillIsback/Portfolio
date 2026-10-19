@@ -18,5 +18,13 @@
 		"title": "Page introuvable",
 		"body": "Cette page n'existe pas ou a été déplacée.",
 		"back": "Retour à l'accueil"
+	},
+	"locale": {
+		"label": "Langue",
+		"names": {
+			"fr": "Français",
+			"en": "English",
+			"zh": "中文"
+		}
 	}
 }
