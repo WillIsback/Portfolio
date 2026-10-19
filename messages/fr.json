@@ -166,7 +166,26 @@
 		"underOne": "< 1 %"
 	},
 	"contact": {
-		"errorSummary": "{count, plural, =0 {Aucun champ à corriger} one {# champ à corriger} other {# champs à corriger}}"
+		"errorSummary": "{count, plural, =0 {Aucun champ à corriger} one {# champ à corriger} other {# champs à corriger}}",
+		"eyebrow": "Carnet · fiche contact",
+		"title": "Formulaire de contact",
+		"intro": "Une question sur un projet, une expérience ou un article ? Je réponds sous quelques jours.",
+		"sheetLabel": "Fiche n° — à remplir",
+		"emailLabel": "Adresse mail",
+		"subjectLabel": "Sujet",
+		"subjectPlaceholder": "Sujet du mail...",
+		"messageLabel": "Message",
+		"messagePlaceholder": "Votre message...",
+		"sending": "Envoi...",
+		"send": "Envoyer",
+		"invalidEmail": "Adresse email invalide",
+		"subjectTooShort": "Le sujet doit faire au moins 3 caractères",
+		"messageTooShort": "Le message doit faire au moins 10 caractères",
+		"successTitle": "Message envoyé !",
+		"successBody": "Votre message a bien été envoyé. Je vous répondrai rapidement.",
+		"sendErrorTitle": "Erreur d'envoi",
+		"validationErrorTitle": "Erreurs de validation",
+		"validationErrorBody": "Veuillez vérifier les champs du formulaire."
 	},
 	"carnet": {
 		"noResults": "Aucun résultat",

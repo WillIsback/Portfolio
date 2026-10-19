@@ -26,12 +26,21 @@ import {
 	firstServerErrors,
 } from "@/lib/contact-form";
 
-// Schéma de validation
-const formSchema = z.object({
-	email: z.string().email("Adresse email invalide"),
-	sujet: z.string().min(3, "Le sujet doit faire au moins 3 caractères"),
-	message: z.string().min(10, "Le message doit faire au moins 10 caractères"),
-});
+/**
+ * Schéma de validation, construit à chaque rendu.
+ *
+ * Les messages d'erreur de zod sont des libellés d'interface : ils dépendent de la locale,
+ * donc ils viennent du dictionnaire. Le schéma ne peut donc plus être une constante de
+ * module — `useFormValidation` mémoïse sur son identité, d'où le `useMemo` pour ne pas
+ * reconstruire le schéma (et invalider les erreurs) à chaque frappe.
+ */
+function formSchemaFor(t: (key: string) => string) {
+	return z.object({
+		email: z.string().email(t("invalidEmail")),
+		sujet: z.string().min(3, t("subjectTooShort")),
+		message: z.string().min(10, t("messageTooShort")),
+	});
+}
 
 const noopSubscribe = () => () => {};
 
@@ -51,18 +60,24 @@ function useToday(): string {
 const initialFormValues = { email: "", sujet: "", message: "" };
 
 /**
+ * Exemple d'adresse, pas un libellé : il reste hors dictionnaire, comme les noms de
+ * marque (`GitHub`, `ML`). Le traduire n'aurait pas de sens.
+ */
+const EMAIL_PLACEHOLDER = "john.doe@company.com";
+
+/**
  * Formulaire de contact interactif.
  *
- * Isolé dans un composant client pour que `page.tsx` reste un Server Component :
- * la tâche 8 le passera en `async` avec `getTranslations("contact")`, ce qui est
- * interdit dans un composant client (« getTranslations is not supported in Client
- * Components »). Les chaînes de validation et les libellés restent en dur, et relèvent
- * donc encore de la tâche 8.
+ * Isolé dans un composant client pour que `page.tsx` reste un Server Component : c'est
+ * ce qui permet à cette page d'appeler `getTranslations("contact")`, interdit dans un
+ * composant client (« getTranslations is not supported in Client Components »). Les
+ * libellés sont donc lus ici par `useTranslations("contact")`.
  */
 export default function ContactForm() {
 	const locale = useLocale();
 	const tContact = useTranslations("contact");
 	const today = useToday();
+	const formSchema = useMemo(() => formSchemaFor(tContact), [tContact]);
 	const lastHandledState = useRef<typeof state>(null);
 	const [state, formAction, isPending] = useActionState(sendEmail, null);
 	const [submitAnnouncement, setSubmitAnnouncement] = useState("");
@@ -120,9 +135,8 @@ export default function ContactForm() {
 		lastHandledState.current = state;
 
 		if ("success" in state && state.success) {
-			toast.success("Message envoyé !", {
-				description:
-					"Votre message a bien été envoyé. Je vous répondrai rapidement.",
+			toast.success(tContact("successTitle"), {
+				description: tContact("successBody"),
 			});
 			resetForm();
 			return;
@@ -130,20 +144,20 @@ export default function ContactForm() {
 
 		if ("error" in state && state.error) {
 			if (typeof state.error === "string") {
-				toast.error("Erreur d'envoi", {
+				toast.error(tContact("sendErrorTitle"), {
 					description: state.error,
 				});
 				return;
 			}
-			toast.error("Erreurs de validation", {
-				description: "Veuillez vérifier les champs du formulaire.",
+			toast.error(tContact("validationErrorTitle"), {
+				description: tContact("validationErrorBody"),
 			});
 			const serverFieldErrors = firstServerErrors(
 				state.error as Partial<Record<ContactField, string[]>>,
 			);
 			focusField(firstInvalidField(CONTACT_FIELDS, serverFieldErrors));
 		}
-	}, [state, resetForm, focusField]);
+	}, [state, resetForm, focusField, tContact]);
 
 	// Le bouton reste actif : au clic invalide, on montre toutes les erreurs et on guide le visiteur.
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -166,7 +180,7 @@ export default function ContactForm() {
 				className="flex flex-col gap-6 border border-border bg-background/80 rounded-sm px-6 py-8 sm:px-10 sm:py-10 w-full"
 			>
 				<div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 font-mono text-xs text-ink-soft">
-					<span>Fiche n° — à remplir</span>
+					<span>{tContact("sheetLabel")}</span>
 					<time dateTime={today || undefined} suppressHydrationWarning>
 						{today ? formatDate(today, locale) : ""}
 					</time>
@@ -179,7 +193,7 @@ export default function ContactForm() {
 						htmlFor="email"
 						className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 					>
-						Adresse mail
+						{tContact("emailLabel")}
 					</label>
 					<input
 						ref={(el) => {
@@ -200,7 +214,7 @@ export default function ContactForm() {
 						aria-describedby={
 							getFieldError("email") ? "email-error" : undefined
 						}
-						placeholder="john.doe@company.com"
+						placeholder={EMAIL_PLACEHOLDER}
 						required
 					/>
 					{getFieldError("email") && (
@@ -219,7 +233,7 @@ export default function ContactForm() {
 						htmlFor="sujet"
 						className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 					>
-						Sujet
+						{tContact("subjectLabel")}
 					</label>
 					<input
 						ref={(el) => {
@@ -240,7 +254,7 @@ export default function ContactForm() {
 						aria-describedby={
 							getFieldError("sujet") ? "sujet-error" : undefined
 						}
-						placeholder="Sujet du mail..."
+						placeholder={tContact("subjectPlaceholder")}
 						required
 					/>
 					{getFieldError("sujet") && (
@@ -259,7 +273,7 @@ export default function ContactForm() {
 						htmlFor="message"
 						className="block mb-2 font-mono text-xs uppercase tracking-[0.12em] text-ink-soft"
 					>
-						Message
+						{tContact("messageLabel")}
 					</label>
 					<textarea
 						ref={(el) => {
@@ -280,7 +294,7 @@ export default function ContactForm() {
 						aria-describedby={
 							getFieldError("message") ? "message-error" : undefined
 						}
-						placeholder="Votre message..."
+						placeholder={tContact("messagePlaceholder")}
 					/>
 					{getFieldError("message") && (
 						<p
@@ -301,11 +315,11 @@ export default function ContactForm() {
 					{isPending ? (
 						<>
 							<Loader2 className="size-4 animate-spin" />
-							<span className="text-sm">Envoi...</span>
+							<span className="text-sm">{tContact("sending")}</span>
 						</>
 					) : (
 						<>
-							<span className="text-sm">Envoyer</span>
+							<span className="text-sm">{tContact("send")}</span>
 							<Send className="size-4" />
 						</>
 					)}

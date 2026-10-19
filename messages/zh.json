@@ -166,7 +166,26 @@
 		"underOne": "不足 1%"
 	},
 	"contact": {
-		"errorSummary": "需修正 {count} 个字段"
+		"errorSummary": "需修正 {count} 个字段",
+		"eyebrow": "实验笔记 · 联系单",
+		"title": "联系表单",
+		"intro": "对某个项目、某次实践或某篇文章有疑问？我通常会在几天内回复。",
+		"sheetLabel": "单据 № — 待填写",
+		"emailLabel": "电子邮箱",
+		"subjectLabel": "主题",
+		"subjectPlaceholder": "邮件主题…",
+		"messageLabel": "正文",
+		"messagePlaceholder": "您的留言…",
+		"sending": "发送中…",
+		"send": "发送",
+		"invalidEmail": "邮箱地址无效",
+		"subjectTooShort": "主题至少需要 3 个字符",
+		"messageTooShort": "正文至少需要 10 个字符",
+		"successTitle": "消息已发送！",
+		"successBody": "您的消息已成功发送，我会尽快回复您。",
+		"sendErrorTitle": "发送失败",
+		"validationErrorTitle": "校验出错",
+		"validationErrorBody": "请检查表单中的各字段。"
 	},
 	"carnet": {
 		"noResults": "没有结果",

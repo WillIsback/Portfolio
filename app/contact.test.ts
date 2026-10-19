@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
 
 /**
  * La fiche contact a été séparée serveur/client : `Contact/page.tsx` est une
@@ -54,8 +55,12 @@ describe("Contact (fiche du carnet)", () => {
 	});
 
 	it("se présente comme une fiche du carnet", () => {
-		expect(form).toContain("Fiche");
-		expect(form).toContain("font-mono");
+		// Le libellé est passé par le dictionnaire : ni la coquille ni le formulaire ne
+		// l'écrivent en dur. La copie française reste vérifiée, mais par le dictionnaire.
+		expect(form).toContain('tContact("sheetLabel")');
+		expect(fr.contact.sheetLabel).toContain("Fiche");
+		expectAbsent("Fiche n° — à remplir");
+		expect(shell).toContain("getTranslations");
 	});
 
 	it("met la couleur de bordure dans le ternaire (invalide = destructive, sinon ink-soft)", () => {
