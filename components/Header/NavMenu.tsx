@@ -1,37 +1,47 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-const LINKS = [
-	{ href: "/", label: "Carnet", isActive: (p: string) => p === "/" },
+/**
+ * Cibles seulement : les libellés dépendent de la locale, donc ils sont traduits dans le
+ * composant et non au niveau du module.
+ *
+ * `usePathname` vient de `@/i18n/navigation` et rend le chemin **sans** le préfixe de
+ * locale, ce qu'attend `isActive`. Celui de `next/navigation` renverrait `/en/articles`,
+ * jamais actif.
+ */
+const TARGETS = [
+	{ href: "/", key: "home", isActive: (p: string) => p === "/" },
 	{
 		href: "/articles",
-		label: "Articles",
+		key: "articles",
 		isActive: (p: string) => p.startsWith("/articles"),
 	},
 	{
 		href: "/About",
-		label: "À propos",
+		key: "about",
 		isActive: (p: string) => p === "/About",
 	},
 	{
 		href: "/Contact",
-		label: "Contact",
+		key: "contact",
 		isActive: (p: string) => p === "/Contact",
 	},
-];
+] as const;
 
 export default function NavMenu() {
+	const t = useTranslations("nav");
 	const pathname = usePathname() ?? "/";
 	return (
-		<nav aria-label="Navigation principale">
+		<nav aria-label={t("ariaLabel")}>
 			<ul className="flex flex-wrap items-center gap-0.5 sm:gap-1">
-				{LINKS.map((link) => {
-					const active = link.isActive(pathname);
+				{TARGETS.map((target) => {
+					const active = target.isActive(pathname);
 					return (
-						<li key={link.href}>
+						<li key={target.href}>
 							<Button
 								asChild
 								variant="ghost"
@@ -44,10 +54,10 @@ export default function NavMenu() {
 								)}
 							>
 								<Link
-									href={link.href}
+									href={target.href}
 									aria-current={active ? "page" : undefined}
 								>
-									{link.label}
+									{t(target.key)}
 								</Link>
 							</Button>
 						</li>

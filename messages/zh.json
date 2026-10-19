@@ -17,10 +17,25 @@
 	"figure": {
 		"prefix": "图 {n} · "
 	},
+	"header": {
+		"tagline": "实验笔记"
+	},
+	"footer": {
+		"credit": "实验笔记由 William Derue 维护 · © {year}",
+		"ariaLabel": "页脚链接",
+		"articles": "文章"
+	},
 	"notFound": {
 		"title": "页面不存在",
 		"body": "该页面不存在或已被移动。",
 		"back": "返回首页"
+	},
+	"nav": {
+		"ariaLabel": "主导航",
+		"home": "笔记",
+		"articles": "文章",
+		"about": "关于",
+		"contact": "联系"
 	},
 	"locale": {
 		"label": "语言",
@@ -122,7 +137,7 @@
 	"carnet": {
 		"noResults": "没有结果",
 		"resultCount": "{count} 条结果",
-		"searchLabel": "浏览笔记",
+		"searchLabel": "浏览实验笔记",
 		"searchPlaceholder": "描述一个主题：视觉、本地大模型、智能体…",
 		"mapTitle": "我的项目与文章地图",
 		"mapDescription": "按主题相近程度排布的 {count} 个条目，由嵌入模型计算得出。地图下方的条目列表提供等价内容。",

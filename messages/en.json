@@ -17,10 +17,25 @@
 	"figure": {
 		"prefix": "Fig. {n} · "
 	},
+	"header": {
+		"tagline": "Lab logbook"
+	},
+	"footer": {
+		"credit": "Lab logbook by William Derue · © {year}",
+		"ariaLabel": "Footer links",
+		"articles": "Articles"
+	},
 	"notFound": {
 		"title": "Page not found",
 		"body": "This page does not exist or has been moved.",
 		"back": "Back to home"
+	},
+	"nav": {
+		"ariaLabel": "Main navigation",
+		"home": "Logbook",
+		"articles": "Articles",
+		"about": "About",
+		"contact": "Contact"
 	},
 	"locale": {
 		"label": "Language",

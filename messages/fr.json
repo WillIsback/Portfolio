@@ -17,10 +17,25 @@
 	"figure": {
 		"prefix": "Fig. {n} · "
 	},
+	"header": {
+		"tagline": "Carnet de labo"
+	},
+	"footer": {
+		"credit": "Carnet tenu par William Derue · © {year}",
+		"ariaLabel": "Liens du pied de page",
+		"articles": "Articles"
+	},
 	"notFound": {
 		"title": "Page introuvable",
 		"body": "Cette page n'existe pas ou a été déplacée.",
 		"back": "Retour à l'accueil"
+	},
+	"nav": {
+		"ariaLabel": "Navigation principale",
+		"home": "Carnet",
+		"articles": "Articles",
+		"about": "À propos",
+		"contact": "Contact"
 	},
 	"locale": {
 		"label": "Langue",
