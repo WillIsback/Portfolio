@@ -12,9 +12,10 @@ export function PracticeFields({
 	selected: readonly string[];
 	onToggle: (value: string) => void;
 }) {
-	// L'admin est hors segment `[locale]` et figé en français (`<html lang="fr">`) :
-	// pas de provider next-intl dans son arbre, donc pas de hook. Traduire l'admin est
-	// hors périmètre ; brancher le provider et passer à `useTranslations` suffirait.
+	// L'admin dispose d'un provider figé sur `fr`, mais `frTranslator` garde ce module
+	// indépendant de React : utilisable aussi en script Node et en test. Traduire l'admin
+	// reste hors périmètre ; il suffirait de remplacer cette ligne par
+	// `useTranslations("practices")`.
 	const labels = practiceLabels(frTranslator("practices"));
 	return (
 		<div className="space-y-3">

@@ -3,7 +3,14 @@
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MultiSelect, type Option } from "@/components/ui/multi-select";
@@ -39,7 +46,12 @@ export default function FilterBar() {
 	// au niveau du module. Les autres jeux d'options (technologies) sont des noms de
 	// marques, d'où leurs constantes au niveau du module.
 	const tDomains = useTranslations("domains");
-	const domainOptions = toOptions(domainLabels(tDomains));
+	// Mémoïsé comme les feuilles de calcul : `domainLabels` reconstruit un enregistrement
+	// de neuf domaines, et ce composant rend à chaque frappe dans la barre de recherche.
+	const domainOptions = useMemo(
+		() => toOptions(domainLabels(tDomains)),
+		[tDomains],
+	);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();

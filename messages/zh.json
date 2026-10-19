@@ -117,6 +117,7 @@
 		"errorSummary": "需修正 {count} 个字段"
 	},
 	"carnet": {
+		"noResults": "没有结果",
 		"resultCount": "{count} 条结果"
 	}
 }

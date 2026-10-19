@@ -1,7 +1,7 @@
-import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
 import { frTranslator } from "@/i18n/fr";
 import zhMessages from "@/messages/zh.json";
+import { LOCALES, translator } from "@/tests/translator";
 import {
 	errorSummary,
 	firstInvalidField,
@@ -20,15 +20,26 @@ describe("errorSummary", () => {
 	it("l'accord vient du dictionnaire, pas d'un ternaire en code", () => {
 		// Le chinois n'a pas de catégorie de pluriel ICU : son message reste un gabarit
 		// simple, et `errorSummary` ne doit rien y ajouter.
-		const zh = createTranslator({
-			locale: "zh",
-			messages: zhMessages as never,
-			namespace: "contact" as never,
-		});
 		expect(zhMessages.contact.errorSummary).not.toMatch(/plural/);
-		expect(errorSummary(zh as never, 1)).toBe("需修正 1 个字段");
-		expect(errorSummary(zh as never, 5)).toBe("需修正 5 个字段");
-		expect(errorSummary(zh as never, 0)).toBe("");
+		expect(errorSummary(translator("zh", "contact"), 1)).toBe(
+			"需修正 1 个字段",
+		);
+		expect(errorSummary(translator("zh", "contact"), 5)).toBe(
+			"需修正 5 个字段",
+		);
+		expect(errorSummary(translator("zh", "contact"), 0)).toBe("");
+	});
+});
+
+describe("errorSummary — même structure dans les trois langues", () => {
+	it.each(LOCALES)("%s : rien à zéro, un décompte au-delà", (locale) => {
+		const t = translator(locale, "contact");
+		// La position du décompte varie (le chinois énonce « 需修正 1 个字段 ») : ce qui ne
+		// varie pas, c'est qu'il est présent, et que zéro ne se dit pas.
+		expect(errorSummary(t, 0)).toBe("");
+		expect(errorSummary(t, 1)).toContain("1");
+		expect(errorSummary(t, 3)).toContain("3");
+		expect(errorSummary(t, 1)).not.toBe(errorSummary(t, 3));
 	});
 });
 

@@ -37,7 +37,9 @@ export function formatPercent(
 	total: number,
 ): string {
 	const pct = total > 0 ? Math.round((part / total) * 100) : 0;
-	if (pct === 0 && part > 0) return t("underOne");
+	// `total > 0` est indispensable : sans lui, un `part > 0` sur un total vide tombait
+	// dans « < 1 % », alors que la part vaut précisément zéro de zéro.
+	if (pct === 0 && part > 0 && total > 0) return t("underOne");
 	return t("value", { value: pct });
 }
 

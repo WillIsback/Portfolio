@@ -35,6 +35,20 @@ const messages: Record<Locale, unknown> = { fr, en, zh };
 
 const base = keys(fr);
 
+/** Tous les messages d'un dictionnaire, avec leur chemin — feuilles scalaires seulement. */
+function leaves(
+	value: unknown,
+	prefix = "",
+	out: [string, unknown][] = [],
+): [string, unknown][] {
+	if (value === null || typeof value !== "object" || Array.isArray(value))
+		out.push([prefix, value]);
+	else
+		for (const [k, v] of Object.entries(value as Record<string, unknown>))
+			leaves(v, prefix ? `${prefix}.${k}` : k, out);
+	return out;
+}
+
 describe("parité des messages", () => {
 	it("fr est le dictionnaire de référence non vide", () => {
 		expect(base.length).toBeGreaterThan(0);
@@ -52,6 +66,52 @@ describe("parité des messages", () => {
 		routing.locales,
 	)("%s couvre exactement les mêmes clés que fr", (locale) => {
 		expect(keys(messages[locale])).toEqual(base);
+	});
+});
+
+/**
+ * Apostrophe ICU, règle générale plutôt que cas par cas.
+ *
+ * ICU est en mode `DOUBLE_OPTIONAL` : une apostrophe n'ouvre une zone littérale que
+ * si elle est suivie de `{`, `}` ou — dans un pluriel — de `#`. Sinon elle est
+ * rendue telle quelle. Une apostrophe suivie d'une lettre est donc sûre aujourd'hui,
+ * mais rien ne le garantissait : le premier message écrivant « de l'{IA} » avalerait
+ * le `{`, et le texte deviendrait « de lIA » sans qu'aucune erreur ne remonte.
+ *
+ * Plutôt qu'une assertion sur une clé choisie à la main, on balaie tous les messages
+ * des trois dictionnaires. Écrire `''` ou `{'}'` reste correct pour un cas torché.
+ */
+const DANGEROUS_APOSTROPHE = /'\s*[{}#]/;
+
+describe("échappement ICU des apostrophes", () => {
+	it.each(
+		routing.locales,
+	)("%s : aucune apostrophe n'ouvre de zone littérale", (locale) => {
+		const offenders = leaves(messages[locale])
+			.filter(([, v]) => typeof v === "string")
+			.filter(([, v]) => DANGEROUS_APOSTROPHE.test(v as string))
+			.map(([path]) => path);
+		expect(
+			offenders,
+			`${locale}.json : apostrophe avant un caractère réservé par ICU. Écrire '' ou {'}' pour un littéral.`,
+		).toEqual([]);
+	});
+
+	/**
+	 * La règle doit mordre : sans apostrophe dans le dictionnaire, elle ne protège rien
+	 * et passerait au vert pour la mauvaise raison. Le chinois n'en a aucune — il écrit
+	 * 「」 et —, sans guillemet droit —, donc c'est le français qui sert de témoin.
+	 */
+	it("le dictionnaire français contient bien des apostrophes à protéger", () => {
+		const withApostrophe = leaves(fr)
+			.filter(([, v]) => typeof v === "string")
+			.filter(([, v]) => (v as string).includes("'"));
+		expect(withApostrophe.length).toBeGreaterThan(5);
+		// …dont au moins une qui survit au rendu ICU, sinon le filet est mal placé.
+		expect(fr.parcours.adminSysteme.description).toContain("l'Éducation");
+		expect(withApostrophe.map(([path]) => path)).toContain(
+			"parcours.adminSysteme.description",
+		);
 	});
 });
 

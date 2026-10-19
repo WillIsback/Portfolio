@@ -105,8 +105,11 @@ export function computeView(
 /**
  * Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie).
  *
- * Le décompte vient du dictionnaire (`carnet.resultCount`) : pluriel ICU en français et
- * en anglais, forme simple en chinois, qui n'a pas de catégorie `one`/`other`.
+ * Zéro est un cas à part, pas un pluriel : « Aucun résultat » se lit, « 0 条结果 » ne se
+ * dit pas en chinois. D'où `carnet.noResults`, distinct de `carnet.resultCount`, qui ne
+ * porte que le pluriel ICU (absent en chinois). C'est aussi pourquoi `resultCount` ne
+ * contient aucune clause `=0` : la seule façon d'énoncer le zéro est cette branche, donc
+ * une régression ici se lit dans les trois langues au lieu d'être masquée en fr/en.
  */
 export function announcement(
 	t: Translator,
@@ -114,6 +117,6 @@ export function announcement(
 	searched: boolean,
 ): string {
 	if (!searched) return "";
-	const count = t("resultCount", { count: titles.length });
-	return titles.length === 0 ? count : `${count} : ${titles.join(", ")}`;
+	if (titles.length === 0) return t("noResults");
+	return `${t("resultCount", { count: titles.length })} : ${titles.join(", ")}`;
 }

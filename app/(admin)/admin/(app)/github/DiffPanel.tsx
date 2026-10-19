@@ -24,6 +24,9 @@ export function DiffPanel({
 	const [checked, setChecked] = useState<Set<string>>(new Set());
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	// Construit une fois par rendu, pas une fois par puce : `createTranslator` +
+	// l'enregistrement de 14 pratiques coûient ~8 µs, à répéter par ligne d'écart.
+	const labels = practiceLabels(frTranslator("practices"));
 
 	const toggle = (field: string) =>
 		setChecked((prev) => {
@@ -102,9 +105,7 @@ export function DiffPanel({
 												>
 													<span className="sr-only">Ajout : </span>+{" "}
 													{d.field === "practices"
-														? (practiceLabels(frTranslator("practices"))[
-																v as Practice
-															] ?? v)
+														? (labels[v as Practice] ?? v)
 														: v}
 												</span>
 											))}

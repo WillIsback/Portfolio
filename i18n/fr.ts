@@ -3,32 +3,34 @@ import fr from "@/messages/fr.json";
 import type { Translator } from "./translator";
 
 /**
- * Traducteur français autonome : ni provider React, ni locale de requête.
+ * Namespaces de `messages/fr.json`. `keyof typeof fr` plutôt que `string` : une faute de
+ * frappe (`frTranslator("statuss")`) casserait la compilation, au lieu d'atteindre la
+ * branche `MISSING_MESSAGE` de next-intl à l'exécution et de rendre la clé brute — un
+ * `<select>` admin affichant `statuss.InProgress`.
+ */
+export type FrNamespace = keyof typeof fr;
+
+/**
+ * Traducteur français autonome, indépendant de React et de la locale de requête.
  *
- * Trois surfaces en ont besoin et ne peuvent pas appeler de hook — l'espace admin
- * `app/(admin)/`, hors segment `[locale]`, où `<html lang="fr">` est figé ; les scripts
- * Node qui régénèrent le carnet (`pnpm embeddings`) ; les tests unitaires de `lib/`,
- * hors arbre React. Partout ailleurs, `getTranslations`/`useTranslations` avec la locale
- * de la route.
+ * L'admin dispose d'un provider figé sur `fr` (cf. `app/(admin)/…/projects/[id]/layout.tsx`),
+ * mais `frTranslator` sert aussi les scripts Node qui régénèrent le carnet
+ * (`pnpm embeddings`) et les tests unitaires de `lib/` : deux surfaces sans arbre React,
+ * où un hook ne peut pas s'exécuter.
  *
  * `createTranslator` vient de `use-intl/core`, réexporté par l'entrée cliente ET serveur
  * de `next-intl` : le module est donc importable aussi bien d'un composant client que
  * d'un script Node.
  *
- * Le transtypage en `Translator` est volontaire : le type public de `lib/` ne doit pas
- * dépendre du type exact des messages, qui change à chaque clé ajoutée.
+ * Aucun `as unknown as Translator` : le `any` de `Translator` rend le traducteur
+ * next-intl directement assignable (cf. `i18n/translator.test.ts`, qui fige cette
+ * propriété à la compilation). Seul le `namespace` reste transtypé, `string` ne
+ * satisfaissant pas `NamespaceKeys`.
  */
-export function frTranslator(namespace: string): Translator;
-export function frTranslator(): Translator;
-export function frTranslator(namespace?: string): Translator {
-	if (namespace === undefined)
-		return createTranslator({
-			locale: "fr",
-			messages: fr as never,
-		}) as unknown as Translator;
+export function frTranslator(namespace: FrNamespace): Translator {
 	return createTranslator({
 		locale: "fr",
-		messages: fr as never,
+		messages: fr,
 		namespace: namespace as never,
-	}) as unknown as Translator;
+	});
 }

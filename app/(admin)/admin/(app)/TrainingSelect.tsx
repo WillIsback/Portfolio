@@ -22,7 +22,7 @@ export function TrainingSelect({
 	hint: boolean;
 	className?: string;
 }) {
-	// Voir `PracticeFields.tsx` : l'admin n'a pas de provider next-intl.
+	// Voir `PracticeFields.tsx` : pourquoi `frTranslator` et non `useTranslations`.
 	const labels = trainingLabels(frTranslator("training"));
 	return (
 		<div>

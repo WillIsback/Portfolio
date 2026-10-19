@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { frTranslator } from "@/i18n/fr";
+import { LOCALES, translator } from "@/tests/translator";
 import {
 	announcement,
 	computeView,
@@ -196,5 +197,43 @@ describe("announcement", () => {
 		expect(announcement(t, ["A", "B", "C"], true)).toBe(
 			"3 résultats : A, B, C",
 		);
+	});
+});
+
+/**
+ * Règle transversale : `announcement` doit produire la même *structure* dans les trois
+ * langues — une phrase dédiée au zéro, puis « N éléments : titres ».
+ *
+ * Elle est ici parce qu'elle a été appliquée à un seul endroit et rompue à un autre : le
+ * chinois n'ayant pas de pluriel ICU, une implémentation qui délègait le zéro au message
+ * rendait « 0 条结果 » là où fr/en annonçaient « aucun résultat ». Tester le français
+ * seul ne voit pas la différence ; d'où `describe.each` sur toutes les locales.
+ */
+describe.each(LOCALES)("announcement — structure commune à %s", (locale) => {
+	const t = translator(locale, "carnet");
+
+	it("réserve une phrase à l'absence de résultat, jamais un décompte à zéro", () => {
+		const zero = announcement(t, [], true);
+		expect(zero).not.toMatch(/^0\b/);
+		expect(zero).not.toBe("");
+	});
+
+	it("annonce le décompte, puis la liste des titres", () => {
+		expect(announcement(t, ["A"], true)).toMatch(/^1[^:]*: A$/);
+		expect(announcement(t, ["A", "B", "C"], true)).toMatch(/^3[^:]*: A, B, C$/);
+	});
+
+	it("ne dit rien tant que rien n'a été saisi", () => {
+		expect(announcement(t, [], false)).toBe("");
+	});
+});
+
+describe("announcement — messages à zéro résultat", () => {
+	it.each([
+		["fr", "Aucun résultat"],
+		["en", "No results"],
+		["zh", "没有结果"],
+	] as const)("%s : %s", (locale, attendu) => {
+		expect(announcement(translator(locale, "carnet"), [], true)).toBe(attendu);
 	});
 });

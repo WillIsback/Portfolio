@@ -61,6 +61,13 @@ export function ProjectEditForm({
 	const [modalOpen, setModalOpen] = useState(false);
 	const [featured, setFeatured] = useState(initial.featuredRank !== undefined);
 	const [rankText, setRankText] = useState(String(initial.featuredRank ?? 1));
+	// Une fois par rendu, et non une fois par `<option>` ou par domaine : ces deux tables
+	// étaient construites dans leurs boucles `.map()`, soit 12 `createTranslator` par rendu.
+	// Voir `app/(admin)/admin/(app)/projects/page.tsx`, qui procède de même.
+	const labels = {
+		status: statusLabels(frTranslator("status")),
+		domains: domainLabels(frTranslator("domains")),
+	};
 
 	function setField<K extends keyof AdminProject>(
 		key: K,
@@ -217,7 +224,7 @@ export function ProjectEditForm({
 						<option value="">Non renseigné</option>
 						{PROJECT_STATUSES.map((s) => (
 							<option key={s} value={s}>
-								{statusLabels(frTranslator("status"))[s]}
+								{labels.status[s]}
 							</option>
 						))}
 					</select>
@@ -328,7 +335,7 @@ export function ProjectEditForm({
 								checked={form.domains.includes(domain)}
 								onChange={() => toggleArrayValue("domains", domain)}
 							/>
-							{domainLabels(frTranslator("domains"))[domain]}
+							{labels.domains[domain]}
 						</label>
 					))}
 				</div>

@@ -1,7 +1,4 @@
-import { NextIntlClientProvider } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { fontVariables } from "@/lib/fonts";
-import fr from "@/messages/fr.json";
 
 import "../globals.css";
 
@@ -19,28 +16,21 @@ import "../globals.css";
  * (`bg-zinc-950` sur un div plein écran) et n'instancie pas de ThemeProvider, donc
  * la trame de points de `.paper::before` s'afficherait en clair sur clair, inerte.
  *
- * Le provider next-intl est là pour les composants du registre public
- * (`components/register/*`), réutilisés par l'aperçu projet : ils sont localisés et
- * lisent la locale par hook. L'admin, elle, reste figée en français (`<html lang="fr">`
- * ci-dessus) ; ses propres libellés passent par `frTranslator()` (`i18n/fr.ts`), pas par
- * le provider.
- *
- * `setRequestLocale("fr")` avant le provider : sans lui, `NextIntlClientProvider`
- * résout la locale par `headers()` et `/admin/login` bascule de `○` (statique) à `ƒ`.
+ * Pas de `NextIntlClientProvider` ici, et c'est délibéré : il sérialise le dictionnaire
+ * `fr` entier dans le HTML de *chaque* route admin, y compris `/admin/login` qui n'affiche
+ * aucun texte traduit. Le dictionnaire grossit à chaque tâche de traduction, et ce poids
+ * était payé dix fois pour un besoin réel unique. Le provider est donc descendu dans le
+ * seul sous-arbre qui en dépend, `admin/(app)/projects/[id]/` — voir le layout de ce
+ * dossier. Les modules `lib/` eux-mêmes restent indépendants de React (`i18n/fr.ts`).
  */
 export default function AdminRootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	setRequestLocale("fr");
 	return (
 		<html lang="fr" suppressHydrationWarning className={fontVariables}>
-			<body className="antialiased">
-				<NextIntlClientProvider locale="fr" messages={fr}>
-					{children}
-				</NextIntlClientProvider>
-			</body>
+			<body className="antialiased">{children}</body>
 		</html>
 	);
 }

@@ -69,7 +69,7 @@ describe("parcours ↔ dictionnaire", () => {
 		expect(zh.parcours.automaticien.title).not.toBe(
 			fr.parcours.automaticien.title,
 		);
-		// L'apostrophe est un caractère d'échappement en ICU : « l'IA » doit survivre.
-		expect(fr.parcours.adminSysteme.description).toContain("l'Éducation");
+		// L'échappement des apostrophes ICU est couvert par la règle générale de
+		// `messages/message-parity.test.ts`, sur les trois dictionnaires.
 	});
 });
