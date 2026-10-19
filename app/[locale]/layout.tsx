@@ -3,26 +3,16 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import ThemeProvider from "@/components/theme/ThemeProvider";
-import { type Locale, routing } from "@/i18n/routing";
+import { routing } from "@/i18n/routing";
 import { cjkFontVariable, fontVariables } from "@/lib/fonts";
+import {
+	canonicalUrl,
+	languageAlternates,
+	ogLocale,
+	SITE_URL,
+} from "@/lib/seo";
 
 import "../globals.css";
-
-/**
- * Locale OpenGraph : `fr` → `fr_FR`.
- *
- * Table fermée plutôt qu'une cascade ternaire : une locale inconnue doit casser
- * bruyamment (elle n'est pas dans `Record<Locale, …>`), pas être étiquetée `zh_CN`.
- */
-const OG_LOCALES: Record<Locale, string> = {
-	fr: "fr_FR",
-	en: "en_US",
-	zh: "zh_CN",
-};
-
-function ogLocale(locale: Locale): string {
-	return OG_LOCALES[locale];
-}
 
 export async function generateMetadata({
 	params,
@@ -39,11 +29,15 @@ export async function generateMetadata({
 		keywords: t.raw("keywords"),
 		authors: [{ name: "William Derue" }],
 		creator: "William Derue",
-		metadataBase: new URL("https://www.willisback.fr"),
+		metadataBase: new URL(SITE_URL),
+		alternates: {
+			canonical: canonicalUrl(locale),
+			languages: languageAlternates(),
+		},
 		openGraph: {
 			type: "website",
 			locale: ogLocale(locale),
-			url: "https://www.willisback.fr",
+			url: canonicalUrl(locale),
 			title: t("title"),
 			description: t("description"),
 			siteName: "Portfolio WillisBack",

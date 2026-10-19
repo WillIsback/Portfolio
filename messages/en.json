@@ -12,7 +12,15 @@
 			"Next.js",
 			"TypeScript",
 			"portfolio"
-		]
+		],
+		"about": {
+			"title": "About | William Derue",
+			"description": "Background, experience and education of William Derue, an AI developer on the AI Engineer track."
+		},
+		"contact": {
+			"title": "Contact | William Derue",
+			"description": "A question about a project, an experiment or an article? Get in touch with William Derue through the contact form."
+		}
 	},
 	"figure": {
 		"prefix": "Fig. {n} · "

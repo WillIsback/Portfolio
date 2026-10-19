@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -17,8 +18,13 @@ import { listArticleSlugs, readArticle } from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { nearestTo } from "@/lib/carnet/neighbors";
-
-const SITE_URL = "https://www.willisback.fr";
+import {
+	canonicalUrl,
+	inLanguage,
+	languageAlternates,
+	ogLocale,
+	SITE_URL,
+} from "@/lib/seo";
 
 const map = MapDataSchema.parse(mapJson);
 
@@ -38,17 +44,19 @@ export async function generateMetadata({
 	params,
 }: ArticlePageProps): Promise<Metadata> {
 	const { locale, slug } = await params;
+	if (!hasLocale(routing.locales, locale)) return {};
 	const { article } = readArticle(slug, locale);
 	if (!article) return {};
-	const url = `${SITE_URL}/articles/${article.slug}`;
+	const path = `/articles/${article.slug}`;
+	const url = canonicalUrl(locale, path);
 	return {
 		title: `${article.title} | William Derue`,
 		description: article.description,
 		keywords: article.tags,
-		alternates: { canonical: url },
+		alternates: { canonical: url, languages: languageAlternates(path) },
 		openGraph: {
 			type: "article",
-			locale: "fr_FR",
+			locale: ogLocale(locale),
 			url,
 			title: article.title,
 			description: article.description,
@@ -68,6 +76,7 @@ export async function generateMetadata({
 export default async function ArticlePage({ params }: ArticlePageProps) {
 	const { locale, slug } = await params;
 	setRequestLocale(locale);
+	if (!hasLocale(routing.locales, locale)) notFound();
 	const { article, fallback } = readArticle(slug, locale);
 	if (!article) notFound();
 
@@ -101,10 +110,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 		headline: article.title,
 		description: article.description,
 		datePublished: article.date,
-		inLanguage: "fr-FR",
+		inLanguage: inLanguage(locale),
 		keywords: article.tags.join(", "),
 		author: { "@type": "Person", name: "William Derue", url: SITE_URL },
-		mainEntityOfPage: `${SITE_URL}/articles/${article.slug}`,
+		mainEntityOfPage: canonicalUrl(locale, `/articles/${article.slug}`),
 	};
 
 	return (

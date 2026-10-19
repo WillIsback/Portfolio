@@ -12,7 +12,15 @@
 			"Next.js",
 			"TypeScript",
 			"portfolio"
-		]
+		],
+		"about": {
+			"title": "À propos | William Derue",
+			"description": "Parcours, expériences et formation de William Derue, développeur IA en parcours AI Engineer."
+		},
+		"contact": {
+			"title": "Contact | William Derue",
+			"description": "Une question sur un projet, une expérience ou un article ? Écrivez à William Derue via le formulaire de contact."
+		}
 	},
 	"figure": {
 		"prefix": "Fig. {n} · "

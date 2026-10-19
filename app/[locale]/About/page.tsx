@@ -1,10 +1,28 @@
+import type { Metadata } from "next";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Chronology from "@/components/about/Chronology";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import { routing } from "@/i18n/routing";
 import { ageOn, parcours } from "@/lib/about";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 86400;
+
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) return {};
+	const t = await getTranslations({ locale, namespace: "meta.about" });
+	return pageMetadata(locale, "/About", {
+		title: t("title"),
+		description: t("description"),
+	});
+}
 
 export default async function About({
 	params,

@@ -1,7 +1,25 @@
+import type { Metadata } from "next";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import { routing } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import ContactForm from "./ContactForm";
+
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) return {};
+	const t = await getTranslations({ locale, namespace: "meta.contact" });
+	return pageMetadata(locale, "/Contact", {
+		title: t("title"),
+		description: t("description"),
+	});
+}
 
 /**
  * Coquille serveur de la fiche contact.

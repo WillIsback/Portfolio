@@ -12,7 +12,15 @@
 			"Next.js",
 			"TypeScript",
 			"作品集"
-		]
+		],
+		"about": {
+			"title": "关于 | William Derue",
+			"description": "William Derue 的经历、经验与教育背景 —— AI Engineer 方向的 AI 开发工程师。"
+		},
+		"contact": {
+			"title": "联系 | William Derue",
+			"description": "对某个项目、某次实践或某篇文章有疑问？通过联系表单与 William Derue 取得联系。"
+		}
 	},
 	"figure": {
 		"prefix": "图 {n} · "
