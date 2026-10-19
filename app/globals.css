@@ -174,6 +174,39 @@
   --cluster-5: oklch(0.76 0.13 20);
 }
 
+/*
+ * Les visages du labo sont chargés en sous-ensemble latin : leurs glyphes CJK tombent
+ * donc sur la police par défaut du système, et l'identité « carnet de labo » se casse en
+ * chinois. Sous `:lang(zh)`, on remappe les jetons vers le visage CJK.
+ *
+ * Les jetons sont déclarés par `@theme inline`, qui FIGE leur valeur dans les utilitaires
+ * générés (`.font-display { font-family: var(--font-bricolage), … }`, et non
+ * `var(--font-display)`). Redéclarer `--font-display` ne suffit donc pas : on cible aussi
+ * les classes, sans quoi les `<h1 class="font-display">` resteraient en Bricolage.
+ *
+ * Les règles sont hors couche : elles l'emportent sur `@layer theme` (les jetons) et sur
+ * `@layer utilities` (les classes), quelle que soit la spécificité.
+ *
+ * Un visage CJK rend le latin correctement (noms de produits, unités : `CatBoost`,
+ * `146,6 M`), donc une seule pile suffit — pas de bascule par caractère.
+ */
+:lang(zh) {
+  --font-display: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-serif: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-serif-italic: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-hand: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-sans: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  /* Fira Code n'a pas de glyphes CJK : on l'épaule du visage CJK, qui sert de repli par
+     glyphe — le latin reste monospace, le chinois cesse de tomber sur la police système. */
+  --font-mono: var(--font-fira), var(--font-cjk), ui-monospace, SFMono-Regular, monospace;
+}
+:lang(zh) :is(.font-display, .font-sans, .font-serif, .font-serif-italic, .font-hand) {
+  font-family: var(--font-cjk), "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+:lang(zh) .font-mono {
+  font-family: var(--font-fira), var(--font-cjk), ui-monospace, SFMono-Regular, monospace;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

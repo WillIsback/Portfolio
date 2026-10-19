@@ -4,7 +4,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { type Locale, routing } from "@/i18n/routing";
-import { fontVariables } from "@/lib/fonts";
+import { cjkFontVariable, fontVariables } from "@/lib/fonts";
 
 import "../globals.css";
 
@@ -84,8 +84,14 @@ export default async function LocaleLayout({
 
 	setRequestLocale(locale);
 
+	// `--font-cjk` n'est posé que pour le chinois : les glyphes latins n'en ont pas besoin,
+	// et le bloc `:lang(zh)` de `globals.css` s'appuie sur sa présence pour remapper les
+	// visages du labo. L'admin (monolingue) garde `fontVariables` seul.
+	const fontClasses =
+		locale === "zh" ? `${fontVariables} ${cjkFontVariable}` : fontVariables;
+
 	return (
-		<html lang={locale} suppressHydrationWarning className={fontVariables}>
+		<html lang={locale} suppressHydrationWarning className={fontClasses}>
 			<body className="paper antialiased">
 				<ThemeProvider
 					attribute="class"
