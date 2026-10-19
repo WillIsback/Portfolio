@@ -236,3 +236,115 @@ export function shares<T extends { count: number }>(
 		return share;
 	});
 }
+
+/* ------------------------------------------------------------------ */
+/* Grouped horizontal bars (CompareChart)                              */
+/* ------------------------------------------------------------------ */
+
+/** One group of bars: a label, then one value per series (`null` = no bar). */
+export type CompareGroup = [label: string, ...values: (number | null)[]];
+
+export interface GroupedBar {
+	/** index of the series, for color and legend */
+	series: number;
+	value: number;
+	y: number;
+	cy: number;
+	barHeight: number;
+	barWidth: number;
+	/** x where the value label starts */
+	valueX: number;
+}
+
+export interface GroupedRow {
+	label: string;
+	/** vertical center of the group, for its label */
+	cy: number;
+	bars: GroupedBar[];
+}
+
+export interface GroupedBarLayout {
+	width: number;
+	height: number;
+	margin: Margin;
+	xMax: number;
+	plotLeft: number;
+	plotRight: number;
+	gridlines: { value: number; x: number }[];
+	groups: GroupedRow[];
+}
+
+export function groupedBarLayout(
+	groups: CompareGroup[],
+	{
+		width = 640,
+		barHeight = 18,
+		barGap = 4,
+		groupGap = 16,
+		margin = { top: 8, right: 84, bottom: 28, left: 140 },
+		step = 5,
+		minMax = step,
+		labelGap = 6,
+	}: {
+		width?: number;
+		barHeight?: number;
+		barGap?: number;
+		groupGap?: number;
+		margin?: Margin;
+		step?: number;
+		minMax?: number;
+		labelGap?: number;
+	} = {},
+): GroupedBarLayout {
+	const values = groups.flatMap(([, ...v]) =>
+		v.filter((x): x is number => x !== null),
+	);
+	for (const [label, ...v] of groups) {
+		if (v.some((x) => x !== null && x < 0)) {
+			throw new Error(`Invalid group ${label}: values must be ≥ 0`);
+		}
+	}
+	const xMax = niceMax(Math.max(0, ...values), step, minMax);
+	const plotLeft = margin.left;
+	const plotRight = width - margin.right;
+	const x = linearScale(xMax, plotLeft, plotRight);
+
+	let top = margin.top;
+	const rows = groups.map(([label, ...v]) => {
+		const present = v.flatMap((value, series) =>
+			value === null ? [] : [{ series, value }],
+		);
+		const groupHeight = Math.max(
+			barHeight,
+			present.length * barHeight + (present.length - 1) * barGap,
+		);
+		const bars = present.map(({ series, value }, i) => {
+			const y = top + i * (barHeight + barGap);
+			const barWidth = x(value) - plotLeft;
+			return {
+				series,
+				value,
+				y,
+				cy: y + barHeight / 2,
+				barHeight,
+				barWidth,
+				valueX: plotLeft + barWidth + labelGap,
+			};
+		});
+		const row = { label, cy: top + groupHeight / 2, bars };
+		top += groupHeight + groupGap;
+		return row;
+	});
+	const height = top - (groups.length > 0 ? groupGap : 0) + margin.bottom;
+
+	return {
+		width,
+		height,
+		margin,
+		xMax,
+		plotLeft,
+		plotRight,
+		gridlines: ticks(xMax, step).map((value) => ({ value, x: x(value) })),
+		groups: rows,
+	};
+}

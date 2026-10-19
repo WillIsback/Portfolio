@@ -4,6 +4,7 @@ vi.mock("@/lib/db", () => ({
 	default: { project: { findMany: vi.fn(async () => []) } },
 }));
 
+import { getArticleBySlug } from "@/lib/articles/loader";
 import { articleTools } from "./articles.tools";
 
 describe("articleTools", () => {
@@ -51,11 +52,13 @@ describe("articleTools", () => {
 			{} as never,
 		)) as { slug: string }[];
 		const slug = meta[0].slug;
+		// Base simulée vide : chaque projet lié à l'article est signalé absent.
+		const ids = getArticleBySlug(slug)?.projects ?? [];
 		const out = (await articleTools.checkProjectLinks.execute?.(
 			{ slug },
 			{} as never,
 		)) as { linked: { id: number; title: string }[]; missing: number[] };
-		expect(out).toEqual({ linked: [], missing: [] });
+		expect(out).toEqual({ linked: [], missing: ids });
 		expect(Array.isArray(out.linked)).toBe(true);
 		expect(Array.isArray(out.missing)).toBe(true);
 	});

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+	type CompareGroup,
+	groupedBarLayout,
 	horizontalBarLayout,
 	linearScale,
 	niceMax,
@@ -191,5 +193,49 @@ describe("shares", () => {
 		expect(formatPercentFr(128, 428)).toBe("30 %");
 		expect(formatPercentFr(100, 428)).toBe("23 %");
 		expect(formatPercentFr(1, 428)).toBe("< 1 %");
+	});
+});
+
+describe("groupedBarLayout", () => {
+	const GROUPS: CompareGroup[] = [
+		["Énergie", 0.24, 0.45],
+		["Émissions", 0.11, 0.21],
+		["Seul", null, 0.3],
+	];
+	const layout = groupedBarLayout(GROUPS, { step: 0.1 });
+
+	it("rounds the axis up to the step", () => {
+		expect(layout.xMax).toBeCloseTo(0.5);
+		expect(layout.gridlines).toHaveLength(6);
+	});
+
+	it("draws bar widths on the gridline scale", () => {
+		const plot = layout.plotRight - layout.plotLeft;
+		for (const bar of layout.groups.flatMap((g) => g.bars)) {
+			expect(bar.barWidth).toBeCloseTo((bar.value / layout.xMax) * plot);
+		}
+	});
+
+	it("skips null values but keeps the series index", () => {
+		const seul = layout.groups[2];
+		expect(seul.bars).toHaveLength(1);
+		expect(seul.bars[0].series).toBe(1);
+	});
+
+	it("stacks groups top to bottom without overlap", () => {
+		const bars = layout.groups.flatMap((g) => g.bars);
+		for (let i = 1; i < bars.length; i++) {
+			expect(bars[i].y).toBeGreaterThanOrEqual(
+				bars[i - 1].y + bars[i - 1].barHeight,
+			);
+		}
+		const last = bars[bars.length - 1];
+		expect(layout.height).toBeCloseTo(
+			last.y + last.barHeight + layout.margin.bottom,
+		);
+	});
+
+	it("rejects negative values", () => {
+		expect(() => groupedBarLayout([["R²", -0.07]])).toThrow();
 	});
 });

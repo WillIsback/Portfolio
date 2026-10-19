@@ -2,6 +2,8 @@ export const FIGURE_COMPONENTS = [
 	"TasksChart",
 	"TokensChart",
 	"FaultBuckets",
+	"CompareChart",
+	"Screenshot",
 ] as const;
 
 const FENCE = /^(```|~~~)/;
