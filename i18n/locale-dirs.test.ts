@@ -19,11 +19,11 @@ describe("répertoires d'articles par locale", () => {
 	});
 
 	it("retombe sur le français quand la locale n'a pas de dossier", () => {
-		expect(articlesDir("zh")).toBe(path.join(root, "content", "articles"));
+		expect(articlesDir("de")).toBe(path.join(root, "content", "articles"));
 	});
 
 	it("signale qu'un article n'est pas traduit dans la locale demandée", () => {
-		const result = readArticle("neuf-agents-neuf-jours", "en");
+		const result = readArticle("neuf-agents-neuf-jours", "de");
 		expect(result.fallback).toBe(true);
 		expect(result.article).not.toBeNull();
 	});
