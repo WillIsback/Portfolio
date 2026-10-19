@@ -1,4 +1,8 @@
-// app/(admin)/admin/layout.tsx
+// app/(admin)/admin/(app)/layout.tsx
+//
+// Garde d'accès + chrome de l'admin, limités au groupe `(app)`. La page de
+// connexion est sa voisine `admin/login/`, hors de ce groupe : elle doit rester
+// atteignable SANS session, sinon ce layout la redirigerait vers elle-même.
 
 import Link from "next/link";
 import { redirect } from "next/navigation";

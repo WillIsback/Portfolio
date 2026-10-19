@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
@@ -24,7 +25,7 @@ const view = toMapView(map, clusterLabels);
 export const dynamicParams = false;
 
 interface ArticlePageProps {
-	params: Promise<{ slug: string }>;
+	params: Promise<{ locale: string; slug: string }>;
 }
 
 export function generateStaticParams() {
@@ -63,7 +64,8 @@ export async function generateMetadata({
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-	const { slug } = await params;
+	const { locale, slug } = await params;
+	setRequestLocale(locale);
 	const article = getArticleBySlug(slug);
 	if (!article) notFound();
 

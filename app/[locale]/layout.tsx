@@ -1,57 +1,27 @@
 import type { Metadata } from "next";
-import {
-	Bricolage_Grotesque,
-	Caveat,
-	Fira_Code,
-	Source_Serif_4,
-} from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import ThemeProvider from "@/components/theme/ThemeProvider";
-import { routing } from "@/i18n/routing";
+import { type Locale, routing } from "@/i18n/routing";
+import { fontVariables } from "@/lib/fonts";
 
 import "../globals.css";
 
-const bricolage = Bricolage_Grotesque({
-	subsets: ["latin"],
-	weight: ["600", "700"],
-	variable: "--font-bricolage",
-	display: "swap",
-});
-const sourceSerif = Source_Serif_4({
-	subsets: ["latin"],
-	weight: ["400", "600"],
-	style: "normal",
-	variable: "--font-source-serif",
-	display: "swap",
-});
-const sourceSerifItalic = Source_Serif_4({
-	subsets: ["latin"],
-	weight: ["400", "600"],
-	style: "italic",
-	variable: "--font-source-serif-italic",
-	preload: false,
-	display: "swap",
-});
-const caveat = Caveat({
-	subsets: ["latin"],
-	weight: ["500"],
-	variable: "--font-caveat",
-	preload: false,
-	display: "swap",
-});
-const firaCode = Fira_Code({
-	subsets: ["latin"],
-	weight: ["400", "500"],
-	variable: "--font-fira",
-	preload: false,
-	display: "swap",
-});
+/**
+ * Locale OpenGraph : `fr` → `fr_FR`.
+ *
+ * Table fermée plutôt qu'une cascade ternaire : une locale inconnue doit casser
+ * bruyamment (elle n'est pas dans `Record<Locale, …>`), pas être étiquetée `zh_CN`.
+ */
+const OG_LOCALES: Record<Locale, string> = {
+	fr: "fr_FR",
+	en: "en_US",
+	zh: "zh_CN",
+};
 
-/** Locale OpenGraph : `fr` → `fr_FR`. */
-function ogLocale(locale: string): string {
-	return locale === "fr" ? "fr_FR" : locale === "en" ? "en_US" : "zh_CN";
+function ogLocale(locale: Locale): string {
+	return OG_LOCALES[locale];
 }
 
 export async function generateMetadata({
@@ -115,11 +85,7 @@ export default async function LocaleLayout({
 	setRequestLocale(locale);
 
 	return (
-		<html
-			lang={locale}
-			suppressHydrationWarning
-			className={`${bricolage.variable} ${sourceSerif.variable} ${sourceSerifItalic.variable} ${caveat.variable} ${firaCode.variable}`}
-		>
+		<html lang={locale} suppressHydrationWarning className={fontVariables}>
 			<body className="paper antialiased">
 				<ThemeProvider
 					attribute="class"

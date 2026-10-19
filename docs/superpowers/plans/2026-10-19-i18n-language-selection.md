@@ -628,7 +628,7 @@ ce stade sont celles liées aux liens et aux metadata par page, traitées en tâ
 
 ```tsx
 import { useTranslations } from "next-intl";
-import Link from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 
 export default function LocaleNotFound() {
 	const t = useTranslations("notFound");
@@ -730,14 +730,20 @@ export default function LocaleNotFound() {
 - [ ] **Étape 8 : localiser les liens internes des pages déplacées**
 
 Remplacer dans tous les fichiers de `app/[locale]/` les imports `next/link` et `next/navigation` :
-`Link` vient désormais de `@/i18n/navigation` ; `redirect` aussi.
+> `i18n/navigation.ts` n'a **aucun export par défaut** : l'import est nommé,
+> `import { Link } from "@/i18n/navigation";`. La forme `import Link from …` ne compile pas.
+>
+> `Link` vient désormais de `@/i18n/navigation` ; `redirect` aussi.
+>
+> Un fichier qui importe autre chose de `next/navigation` (`usePathname`, `useSearchParams`,
+> `useRouter`) doit scinder l'import en deux statements.
 
 ```bash
 grep -rn 'from "next/link"' "app/[locale]" components/Header components/Footer
 ```
 
 Pour chaque occurrence dans `app/[locale]/` :
-`import Link from "next/link";` → `import Link from "@/i18n/navigation";`
+`import Link from "next/link";` → `import { Link } from "@/i18n/navigation";`
 
 - [ ] **Étape 9 : supprimer les `metadata` statiques en doublon des layouts**
 
@@ -764,6 +770,48 @@ git commit -m "refactor(routes): segment [locale] et deux root layouts (public +
 ```
 
 ---
+
+
+### Écarts découverts pendant la tâche 3
+
+1. **`import Link from "@/i18n/navigation"` ne compile pas.** `createNavigation` n'expose pas d'export par
+   défaut : l'import est nommé, `import { Link } from "@/i18n/navigation";`.
+2. **`NextIntlClientProvider` est nécessaire** dans `app/[locale]/layout.tsx` : sans lui, le prerendu de
+   `/[locale]/Contact` échoue, et `NavMenu` (client) n'a pas accès à la configuration de requête.
+3. **`Header` et `Footer` doivent rester des Server Components.** Un premier essai les avait
+   passés en `"use client"` : le build repassait bien en statique, mais par le mauvais chemin.
+   La vraie cause est l'ordre d'appel — `getRequestLocale()` =
+   `getCachedRequestLocale() || await headers()`, et `headers()` n'est atteint que si aucun
+   `setRequestLocale()` n'a tourné dans le même scope React `cache()`. Next rend le sous-arbre
+   page avant le corps du root layout, donc le `setRequestLocale()` du layout arrive trop tard.
+   **Le correctif est d'appeler `setRequestLocale()` dans chaque page et chaque layout sous
+   `[locale]`** (`page.tsx`, `About/page.tsx`, `articles/layout.tsx`, `articles/[slug]/page.tsx`),
+   chacun attendant `params` — c'est la guidance next-intl elle-même. Les cinq routes publiques
+   repassent alors en `●` pour les trois locales, `Header` et `Footer` restant des Server
+   Components.
+4. **`/admin/login` : le groupe de routes disparaît de l'URL.** `app/admin/login/` déplacé vers
+   `app/(admin)/login/` servait `/login`, pas `/admin/login` : l'admin était verrouillé (404
+   derrière chaque redirection de `proxy.ts`, `lib/auth-callbacks.ts` et
+   `app/(admin)/admin/layout.tsx`). Déplacé en `app/(admin)/admin/login/`, la page hérite
+   en revanche du layout gardé de `app/(admin)/admin/`, qui la redirige vers elle-même : boucle
+   307 infinie, vérifiée au runtime. L'arbre authentifié est donc passé dans un groupe imbriqué
+   `app/(admin)/admin/(app)/`, la page de connexion restant sa voisine sous `admin/`. URLs
+   inchangées, garde intacte. `app/admin-login-route.test.ts` verrouille l'emplacement.
+5. **`app/(admin)/layout.tsx` ne pose pas les variables `--font-*`.** `app/globals.css:9-14` les consomme via
+   `var(--font-bricolage), system-ui, sans-serif` ; une `var()` non définie invalide la déclaration en temps
+   de calcul, donc l'admin retombe sur la police héritée alors qu'il héritait de `app/layout.tsx` avant. Les
+   cinq déclarations `next/font/google` sont désormais dans `lib/fonts.ts`, importées par les deux
+   root layouts. `paper` n'est pas reporté sur l'admin : aucune page admin ne l'utilise, l'admin
+   peint déjà `bg-zinc-950` et n'a pas de ThemeProvider, donc la trame de points serait inerte.
+6. **La 404 localisée a un coût de statique.** `app/not-found.tsx` est nécessaire : sans lui,
+   `/en/nope`, `/xx` et `/en/articles/does-not-exist` renvoient la coquille 404 brute de Next.
+   Mais la bordure `not-found` est présente dans l'arbre de **toutes** les routes : y lire la
+   locale (`headers()` sur `x-next-intl-locale`) fait retomber toutes les routes publiques en `ƒ`,
+   mesuré. La 404 globale est donc servie dans la locale par défaut, et `app/[locale]/not-found.tsx`
+   a été supprimé : avec deux root layouts, Next compose la bordure racine ET celle du segment,
+   ce qui affichait deux 404 superposées sur le même HTML.
+7. **`components/about/chronology.test.tsx`** lit `app/About/page.tsx` en source et échoue après le déplacement.
+   Il ne figurait pas dans la tâche 4 : à y ajouter.
 
 ## Tâche 4 — Helper de rendu et repointage des tests existants
 
@@ -1639,7 +1687,7 @@ Les libellés sortent du tableau de liens, qui devient une fonction :
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { usePathname } from "next-intl/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -1716,7 +1764,7 @@ Version chinoise : `"mainLabel": "主导航"`, `"home": "实验笔记"`, `"artic
 - [ ] **Étape 3 : traiter `Footer.tsx`**
 
 ```tsx
-import Link from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 
 export default async function Footer() {

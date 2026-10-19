@@ -1,3 +1,4 @@
+import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -25,7 +26,14 @@ const entries = latestArticles(3);
 const byProject = projectEntries(getAllArticles());
 const neighbors = mapNeighbors(map);
 
-export default function Home() {
+export default async function Home({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}) {
+	const { locale } = await params;
+	setRequestLocale(locale);
+
 	return (
 		<main className="relative flex min-h-screen flex-col">
 			<div className="sticky top-0 z-50 w-full">

@@ -1,8 +1,3 @@
-"use client";
-
-// Composant client : le `Link` de next-intl résout la locale via le contexte client.
-// Rendu depuis un Server Component, il appellerait `getRequestLocale()` → `headers()`,
-// ce qui ferait basculer toute la branche `[locale]` en rendu dynamique.
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { Link } from "@/i18n/navigation";
 import NavMenu from "./NavMenu";

@@ -1,3 +1,4 @@
+import { setRequestLocale } from "next-intl/server";
 import Chronology from "@/components/about/Chronology";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
@@ -5,7 +6,14 @@ import { ageOn, PARCOURS } from "@/lib/about";
 
 export const revalidate = 86400;
 
-export default function About() {
+export default async function About({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}) {
+	const { locale } = await params;
+	setRequestLocale(locale);
+
 	return (
 		<main className="relative flex min-h-screen flex-col">
 			<div className="sticky top-0 z-50 w-full">

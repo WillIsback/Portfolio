@@ -1,4 +1,7 @@
-// app/(admin)/login/page.tsx
+// app/(admin)/admin/login/page.tsx
+//
+// Le groupe de routes `(admin)` disappears de l'URL : ce fichier sert `/admin/login`,
+// et non `/login`. C'est l'URL que cible `proxy.ts` et `lib/auth-callbacks.ts`.
 import { signIn } from "@/auth";
 
 export default function AdminLoginPage() {
