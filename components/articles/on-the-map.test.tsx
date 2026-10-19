@@ -1,5 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
+import { renderFr } from "@/tests/i18n-render";
 import OnTheMap from "./OnTheMap";
 
 const points = [
@@ -24,7 +25,7 @@ const points = [
 ];
 
 describe("OnTheMap", () => {
-	const html = renderToStaticMarkup(
+	const html = renderFr(
 		<OnTheMap
 			articleId="article:a"
 			points={points}
@@ -42,19 +43,19 @@ describe("OnTheMap", () => {
 
 	it("titre la section et numérote sa figure", () => {
 		expect(html).toContain("<h2");
-		expect(html).toContain("Sur la carte");
-		expect(html).toContain("Fig. 4 · ");
+		expect(html).toContain(fr.articles.onTheMap);
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "4"));
 	});
 
 	it("liste les voisins en liens, externes ouverts dans un nouvel onglet", () => {
 		expect(html).toContain('href="https://github.com/x/p1"');
 		expect(html).toContain('rel="noopener noreferrer"');
-		expect(html).toContain("projet");
+		expect(html).toContain(fr.carnet.kindProject);
 	});
 
 	it("ne rend rien sans voisin", () => {
 		expect(
-			renderToStaticMarkup(
+			renderFr(
 				<OnTheMap
 					articleId="article:a"
 					points={points}
@@ -68,7 +69,7 @@ describe("OnTheMap", () => {
 
 describe("OnTheMap liens internes", () => {
 	it("les voisins externes s'ouvrent dans un nouvel onglet, les internes restent des liens Next", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<OnTheMap
 				articleId="article:a"
 				points={points}

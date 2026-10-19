@@ -1,14 +1,17 @@
-import { domainLabels } from "@/lib/domains";
+import { useTranslations } from "next-intl";
+import { domainLabelList } from "@/lib/domains";
 
 export default function DomainChips({
 	domains,
 	className = "",
 }: Readonly<{ domains: { domain: string }[]; className?: string }>) {
-	const labels = domainLabels(domains);
+	const t = useTranslations("domains");
+	const tRegister = useTranslations("register");
+	const labels = domainLabelList(t, domains);
 	if (labels.length === 0) return null;
 	return (
 		<ul
-			aria-label="Domaines"
+			aria-label={tRegister("domainsLabel")}
 			className={`m-0 flex list-none flex-wrap gap-1.5 p-0 ${className}`}
 		>
 			{labels.map((label) => (

@@ -1,8 +1,11 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import LocaleSwitcher from "@/components/LocaleSwitcher/LocaleSwitcher";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { Link } from "@/i18n/navigation";
 import NavMenu from "./NavMenu";
 
 export default function Header() {
+	const t = useTranslations("header");
 	return (
 		<header className="w-full border-b border-border/70 bg-background/85 backdrop-blur">
 			<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
@@ -14,11 +17,12 @@ export default function Header() {
 						William Derue
 					</span>
 					<span className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
-						Carnet de labo
+						{t("tagline")}
 					</span>
 				</Link>
 				<div className="flex items-center gap-1 sm:gap-2">
 					<NavMenu />
+					<LocaleSwitcher />
 					<ThemeToggle />
 				</div>
 			</div>

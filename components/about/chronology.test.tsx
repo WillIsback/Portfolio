@@ -2,17 +2,20 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { PARCOURS } from "@/lib/about";
+import { frTranslator } from "@/i18n/fr";
+import { parcours } from "@/lib/about";
 import Chronology from "./Chronology";
 
+const steps = parcours(frTranslator("parcours"));
+
 describe("Chronology", () => {
-	const html = renderToStaticMarkup(<Chronology steps={PARCOURS} />);
+	const html = renderToStaticMarkup(<Chronology steps={steps} />);
 
 	it("est une liste ordonnée d'étapes datées, titres en h2", () => {
 		expect(html).toContain("<ol");
-		expect(html.match(/<h2/g)?.length).toBe(PARCOURS.length);
+		expect(html.match(/<h2/g)?.length).toBe(steps.length);
 		expect(html).toContain("font-mono");
-		expect(html).toContain(PARCOURS[0].year);
+		expect(html).toContain(steps[0].year);
 	});
 
 	it("numérote les étapes (vraie chronologie) et ne cache rien au repos", () => {
@@ -47,7 +50,7 @@ describe("Chronology", () => {
 
 	it("la page À propos n'utilise plus framer-motion", () => {
 		const page = readFileSync(
-			path.join(process.cwd(), "app/About/page.tsx"),
+			path.join(process.cwd(), "app/[locale]/About/page.tsx"),
 			"utf8",
 		);
 		expect(page).not.toContain("framer-motion");

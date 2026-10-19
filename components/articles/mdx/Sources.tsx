@@ -1,6 +1,8 @@
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 export function Sources({ children }: Readonly<{ children: ReactNode }>) {
+	const t = useTranslations("mdx");
 	return (
 		<aside
 			aria-labelledby="sources-title"
@@ -10,7 +12,7 @@ export function Sources({ children }: Readonly<{ children: ReactNode }>) {
 				id="sources-title"
 				className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-foreground"
 			>
-				Sources des chiffres
+				{t("sourcesTitle")}
 			</p>
 			<div className="[&>p+p]:mt-2 [&>p]:m-0">{children}</div>
 		</aside>

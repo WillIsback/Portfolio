@@ -1,0 +1,299 @@
+{
+	"meta": {
+		"title": "William Derue | AI 开发工程师 · AI Engineer 方向",
+		"description": "William Derue 的作品集 —— AI Engineer 方向的 AI 开发工程师：机器学习、大语言模型与基础设施项目，以及实践复盘。",
+		"keywords": [
+			"全栈开发",
+			"AI 工程师",
+			"机器学习",
+			"AI",
+			"人工智能",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"作品集"
+		],
+		"about": {
+			"title": "关于 | William Derue - AI 开发工程师 · AI Engineer 方向",
+			"description": "了解我的经历 —— 从自动化工程师到 AI 开发工程师，如今正走在 AI Engineer 方向上。在技术与人工智能领域拥有 7 年经验。"
+		},
+		"contact": {
+			"title": "联系表单 | William Derue",
+			"description": "联系 William Derue，聊聊你的 AI 或全栈项目。给我留言，我会尽快回复。"
+		},
+		"articles": {
+			"title": "文章 | William Derue - AI 开发工程师 · AI Engineer 方向"
+		}
+	},
+	"figure": {
+		"prefix": "图 {n} · "
+	},
+	"header": {
+		"tagline": "实验笔记"
+	},
+	"footer": {
+		"credit": "实验笔记由 William Derue 维护 · © {year}",
+		"ariaLabel": "页脚链接",
+		"articles": "文章"
+	},
+	"multiSelect": {
+		"placeholder": "选择…",
+		"noResults": "没有结果。",
+		"selected": "已选 {count} 项",
+		"search": "搜索…"
+	},
+	"filterBar": {
+		"searchPlaceholder": "搜索项目…",
+		"language": "编程语言",
+		"allLanguages": "所有语言",
+		"domain": "领域",
+		"allDomains": "所有领域",
+		"practice": "实践",
+		"allPractices": "所有实践",
+		"training": "培训",
+		"allProjects": "所有项目",
+		"trainingProjects": "培训项目",
+		"excludeTraining": "排除培训项目",
+		"database": "数据库",
+		"backend": "后端 API",
+		"frontend": "前端",
+		"devops": "DevOps",
+		"reset": "重置",
+		"loading": "加载中…"
+	},
+	"errorBoundary": {
+		"title": "出现了一个错误",
+		"unknown": "未知错误",
+		"retry": "重试"
+	},
+	"theme": {
+		"toggle": "在浅色主题与深色主题之间切换",
+		"toggleTitle": "切换主题"
+	},
+	"notFound": {
+		"title": "页面不存在",
+		"body": "该页面不存在或已被移动。",
+		"back": "返回首页"
+	},
+	"nav": {
+		"ariaLabel": "主导航",
+		"home": "笔记",
+		"articles": "文章",
+		"about": "关于",
+		"contact": "联系"
+	},
+	"locale": {
+		"label": "语言",
+		"names": {
+			"fr": "Français",
+			"en": "English",
+			"zh": "中文"
+		}
+	},
+	"status": {
+		"InProgress": "进行中",
+		"Done": "已完成",
+		"Archived": "已归档"
+	},
+	"training": {
+		"FullstackAI": "全栈 AI 开发",
+		"AIEngineer": "AI Engineer",
+		"badge": "培训项目 · OpenClassrooms · {course}",
+		"badgeShort": "OC 培训 · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "持续集成",
+		"Containerization": "容器化",
+		"ContinuousDeployment": "自动部署",
+		"AutomatedTesting": "自动化测试",
+		"Observability": "可观测性",
+		"DependencyUpdates": "依赖监控",
+		"StaticAnalysis": "代码分析（SAST）",
+		"SecretsManagement": "密钥管理",
+		"Hardening": "安全加固",
+		"ExperimentTracking": "实验追踪",
+		"ModelRegistry": "模型注册表",
+		"DataVersioning": "数据版本管理",
+		"ModelServing": "模型服务",
+		"LlmEvaluation": "LLM 评估 / 监控"
+	},
+	"domains": {
+		"DataAnalysis": "数据分析",
+		"Classifier": "分类",
+		"Regressor": "回归",
+		"Agents": "智能体",
+		"Speech": "语音"
+	},
+	"clusters": {
+		"c1": "大语言模型与智能体",
+		"c2": "服务与 API",
+		"c3": "数据与 Web",
+		"c4": "视觉与分类",
+		"c5": "开发工具"
+	},
+	"instruments": {
+		"data-ml": "数据与机器学习",
+		"backend": "后端与 API",
+		"frontend": "前端",
+		"devops": "DevOps 与工具",
+		"seeDetail": "查看详情",
+		"libraries": "库",
+		"utilities": "工具"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "自动化工程师",
+			"description": "在能源行业担任自动化工程师七年，建造小型发电厂。人工智能的兴起极大丰富了我对计算机的兴趣与求知欲。"
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "C++ 开发者",
+			"description": "通过一个专业的 C++ 项目转向软件开发，随后完成多个探索不同技术的个人项目。"
+		},
+		"adminSysteme": {
+			"year": "2024 年 11 月",
+			"title": "系统管理员",
+			"description": "以系统管理员身份入职法国国民教育部，至今仍担任该职务，职责不断扩大。"
+		},
+		"fullstack": {
+			"year": "2025 年 9 月 – 2026 年 7 月",
+			"title": "全栈开发专业毕业生",
+			"description": "在 OpenClassrooms 修读全栈 AI 开发课程，2026 年 7 月以「全栈开发」认证通过考核。"
+		},
+		"celluleIa": {
+			"year": "2026 年 1 月",
+			"title": "人工智能单元 — 区域信息技术部",
+			"description": "区域信息技术部人工智能单元的活跃成员，致力于把挖掘人工智能潜力的项目落地为解决业务需求的作品。"
+		},
+		"aiEngineer": {
+			"year": "2026 年 9 月 – 进行中",
+			"title": "AI Engineer 课程",
+			"description": "延续前路，在 OpenClassrooms 修读 AI Engineer 课程。"
+		}
+	},
+	"readingTime": {
+		"minutes": "阅读约 {minutes, number} 分钟"
+	},
+	"percent": {
+		"value": "{value, number}%",
+		"underOne": "不足 1%"
+	},
+	"contact": {
+		"errorSummary": "需修正 {count} 个字段",
+		"eyebrow": "实验笔记 · 联系单",
+		"title": "联系表单",
+		"intro": "对某个项目、某次实践或某篇文章有疑问？我通常会在几天内回复。",
+		"sheetLabel": "单据 № — 待填写",
+		"emailLabel": "电子邮箱",
+		"subjectLabel": "主题",
+		"subjectPlaceholder": "邮件主题…",
+		"messageLabel": "正文",
+		"messagePlaceholder": "您的留言…",
+		"sending": "发送中…",
+		"send": "发送",
+		"invalidEmail": "邮箱地址无效",
+		"subjectTooShort": "主题至少需要 3 个字符",
+		"messageTooShort": "正文至少需要 10 个字符",
+		"successTitle": "消息已发送！",
+		"successBody": "您的消息已成功发送，我会尽快回复您。",
+		"sendErrorTitle": "发送失败",
+		"validationErrorTitle": "校验出错",
+		"validationErrorBody": "请检查表单中的各字段。"
+	},
+	"carnet": {
+		"noResults": "没有结果",
+		"resultCount": "{count} 条结果",
+		"searchLabel": "浏览实验笔记",
+		"searchPlaceholder": "描述一个主题：视觉、本地大模型、智能体…",
+		"mapTitle": "我的项目与文章地图",
+		"mapDescription": "按主题相近程度排布的 {count} 个条目，由嵌入模型计算得出。地图下方的条目列表提供等价内容。",
+		"noMatch": "没有匹配的条目，换个词试试。",
+		"keywordMatch": "关键词匹配",
+		"kindArticle": "文章",
+		"kindProject": "项目",
+		"itemListLabel": "地图中的 {count} 个条目",
+		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "实验笔记",
+		"intro": "William Derue，AI Engineer 方向的 AI 开发工程师。这个笔记记录我的实践：训练过的模型、智能体、基础设施。",
+		"note": "试试「vision」「agents」或「本地大模型」：地图在你的浏览器里用真实的嵌入模型检索",
+		"latestEntries": "最新条目",
+		"register": "项目登记表",
+		"registerNoscript": "登记表需要 JavaScript 才能加载；我的仓库也发布在",
+		"registerUnavailable": "项目登记表暂时无法访问。",
+		"instruments": "工具箱"
+	},
+	"about": {
+		"eyebrow": "实验笔记 · 经历",
+		"tagline": "AI 开发工程师 · AI Engineer 方向",
+		"ageLine": "{age} 岁 — 法国南部"
+	},
+	"register": {
+		"loading": "正在加载项目登记表…",
+		"error": "项目登记表加载失败，请稍后重试。",
+		"featured": "重点项目",
+		"index": "索引",
+		"noMatch": "没有符合这些筛选条件的项目。",
+		"empty": "暂时没有其他项目。",
+		"filters": "筛选登记表",
+		"private": "私有",
+		"domainsLabel": "领域",
+		"practicesLabel": "实践",
+		"practicesSrOnly": "实践：{full}",
+		"githubRepo": "GitHub 仓库",
+		"readEntry": "阅读笔记条目",
+		"captureAlt": "{title} 的截图",
+		"amongNeighbors": "{title} 及其邻居",
+		"composition": "{title} 的构成",
+		"techComposition": "技术构成：{list}",
+		"tech": {
+			"languages": "语言",
+			"mlStack": "ML 与数据",
+			"databases": "数据库",
+			"backends": "后端",
+			"frontends": "前端",
+			"devops": "DevOps"
+		}
+	},
+	"mdx": {
+		"tasksTitle": "每日创建的看板任务数",
+		"tasksScans": "基础设施扫描（sre-monitor）",
+		"tasksOther": "其余全部任务",
+		"tasksRow": "{label}：共 {total} 个任务，其中 {scans} 次扫描、{other} 次其他",
+		"tasksAriaLabel": "每日创建看板任务的堆叠柱状图。{summary}。",
+		"tokensTitle": "各配置的输入 token 数（百万）",
+		"tokensCaption": "各配置的输入 token 数",
+		"tokensScanSeries": "扫描循环",
+		"tokensOtherSeries": "其他配置",
+		"tokensRow": "{name}：{value} 百万（{kind}）",
+		"tokensAriaLabel": "各配置输入 token 数的横向柱状图，单位为百万。{summary}。",
+		"tokensKindScan": "扫描",
+		"tokensKindWork": "工作",
+		"faultAriaLabel": "{traces} 条 trace 中共 {total} 次工具失败，分布如下：{segments}。",
+		"faultTitle": "{count} 次工具失败",
+		"faultTraces": "共 {traces, number} 条 trace",
+		"faultCaption": "工具失败分布",
+		"verdictsGood": "站得住脚的部分",
+		"verdictsBad": "出问题的地方",
+		"sourcesTitle": "数据来源",
+		"compareFallbackSeries": "系列 {n}",
+		"compareSummary": "{label}：{values}",
+		"notePrefix": "注："
+	},
+	"articles": {
+		"eyebrow": "实验笔记 · 条目",
+		"title": "文章",
+		"description": "关于自主智能体、本地部署的大语言模型、可观测性与基础设施的量化实践复盘。",
+		"empty": "暂时还没有文章。",
+		"allEntries": "全部条目 →",
+		"allArticles": "全部文章",
+		"backToArticles": "返回文章列表",
+		"periodLabel": "时间：",
+		"tagsLabel": "主题",
+		"onTheMap": "地图位置",
+		"onTheMapCaption": "本条目及其邻居",
+		"untranslatedNotice": "本文尚未翻译成当前语言，以下为法语原文。"
+	}
+}

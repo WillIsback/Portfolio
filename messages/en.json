@@ -1,0 +1,299 @@
+{
+	"meta": {
+		"title": "William Derue | AI Developer · AI Engineer track",
+		"description": "Portfolio of William Derue - AI developer on the AI Engineer track: machine learning, LLM and infrastructure projects, and field notes.",
+		"keywords": [
+			"fullstack developer",
+			"AI engineer",
+			"machine learning",
+			"AI",
+			"artificial intelligence",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"portfolio"
+		],
+		"about": {
+			"title": "About | William Derue - AI Developer · AI Engineer track",
+			"description": "Discover my journey - from automation engineer to AI developer, now on the AI Engineer track. 7 years of expertise in technology and artificial intelligence."
+		},
+		"contact": {
+			"title": "Contact form | William Derue",
+			"description": "Contact William Derue to discuss your AI or fullstack projects. Send me a message and I will reply quickly."
+		},
+		"articles": {
+			"title": "Articles | William Derue - AI Developer · AI Engineer track"
+		}
+	},
+	"figure": {
+		"prefix": "Fig. {n} · "
+	},
+	"header": {
+		"tagline": "Lab logbook"
+	},
+	"footer": {
+		"credit": "Lab logbook by William Derue · © {year}",
+		"ariaLabel": "Footer links",
+		"articles": "Articles"
+	},
+	"multiSelect": {
+		"placeholder": "Select...",
+		"noResults": "No results.",
+		"selected": "{count, plural, one {# selected} other {# selected}}",
+		"search": "Search..."
+	},
+	"filterBar": {
+		"searchPlaceholder": "Search a project...",
+		"language": "Language",
+		"allLanguages": "All languages",
+		"domain": "Domain",
+		"allDomains": "All domains",
+		"practice": "Practices",
+		"allPractices": "All practices",
+		"training": "Training",
+		"allProjects": "All projects",
+		"trainingProjects": "Training projects",
+		"excludeTraining": "Excluding training",
+		"database": "Database",
+		"backend": "Backend API",
+		"frontend": "Frontend",
+		"devops": "DevOps",
+		"reset": "Reset",
+		"loading": "Loading..."
+	},
+	"errorBoundary": {
+		"title": "Something went wrong",
+		"unknown": "Unknown error",
+		"retry": "Try again"
+	},
+	"theme": {
+		"toggle": "Switch between the light and dark theme",
+		"toggleTitle": "Change theme"
+	},
+	"notFound": {
+		"title": "Page not found",
+		"body": "This page does not exist or has been moved.",
+		"back": "Back to home"
+	},
+	"nav": {
+		"ariaLabel": "Main navigation",
+		"home": "Logbook",
+		"articles": "Articles",
+		"about": "About",
+		"contact": "Contact"
+	},
+	"locale": {
+		"label": "Language",
+		"names": {
+			"fr": "Français",
+			"en": "English",
+			"zh": "中文"
+		}
+	},
+	"status": {
+		"InProgress": "in progress",
+		"Done": "completed",
+		"Archived": "archived"
+	},
+	"training": {
+		"FullstackAI": "Full-Stack AI Developer",
+		"AIEngineer": "AI Engineer",
+		"badge": "Training project · OpenClassrooms · {course}",
+		"badgeShort": "OC training · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "Continuous integration",
+		"Containerization": "Containerization",
+		"ContinuousDeployment": "Automated deployment",
+		"AutomatedTesting": "Automated testing",
+		"Observability": "Observability",
+		"DependencyUpdates": "Dependency monitoring",
+		"StaticAnalysis": "Code analysis (SAST)",
+		"SecretsManagement": "Secrets management",
+		"Hardening": "Hardening",
+		"ExperimentTracking": "Experiment tracking",
+		"ModelRegistry": "Model registry",
+		"DataVersioning": "Data versioning",
+		"ModelServing": "Model serving",
+		"LlmEvaluation": "LLM evaluation / monitoring"
+	},
+	"domains": {
+		"DataAnalysis": "Data analysis",
+		"Classifier": "Classification",
+		"Regressor": "Regression",
+		"Agents": "Agents",
+		"Speech": "Speech"
+	},
+	"clusters": {
+		"c1": "LLM and agents",
+		"c2": "Services and APIs",
+		"c3": "Data and web",
+		"c4": "Vision and classification",
+		"c5": "Developer tooling"
+	},
+	"instruments": {
+		"data-ml": "Data & ML",
+		"backend": "Back-end & API",
+		"frontend": "Front-end",
+		"devops": "DevOps & tooling",
+		"seeDetail": "see the detail",
+		"libraries": "Libraries",
+		"utilities": "Utilities"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "Automation engineer",
+			"description": "Seven years as an automation engineer in the energy sector, building small power plants. The rise of AI greatly enriched my interest in computing and my thirst for knowledge."
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "C++ developer",
+			"description": "A move into software development with a professional C++ project, followed by several personal projects exploring different technologies."
+		},
+		"adminSysteme": {
+			"year": "November 2024",
+			"title": "Systems administrator",
+			"description": "Joined the French Ministry of Education as a systems administrator, a role I still hold with growing responsibilities."
+		},
+		"fullstack": {
+			"year": "September 2025 – July 2026",
+			"title": "Graduate full-stack developer",
+			"description": "Full-Stack AI Developer track at OpenClassrooms, validated in July 2026 with the “full-stack developer” title."
+		},
+		"celluleIa": {
+			"year": "January 2026",
+			"title": "Regional AI unit — IT department",
+			"description": "Active member of the regional IT department's AI unit, determined to turn projects that harness the potential of AI into real answers to business needs."
+		},
+		"aiEngineer": {
+			"year": "September 2026 – ongoing",
+			"title": "AI Engineer track",
+			"description": "Carrying on with the AI Engineer track at OpenClassrooms."
+		}
+	},
+	"readingTime": {
+		"minutes": "{minutes, number} min read"
+	},
+	"percent": {
+		"value": "{value, number}%",
+		"underOne": "< 1%"
+	},
+	"contact": {
+		"errorSummary": "{count, plural, =0 {No fields to fix} one {# field to fix} other {# fields to fix}}",
+		"eyebrow": "Logbook · contact sheet",
+		"title": "Contact form",
+		"intro": "A question about a project, an experiment or an article? I usually reply within a few days.",
+		"sheetLabel": "Sheet no. — to fill in",
+		"emailLabel": "Email address",
+		"subjectLabel": "Subject",
+		"subjectPlaceholder": "Subject of the email...",
+		"messageLabel": "Message",
+		"messagePlaceholder": "Your message...",
+		"sending": "Sending...",
+		"send": "Send",
+		"invalidEmail": "Invalid email address",
+		"subjectTooShort": "The subject must be at least 3 characters",
+		"messageTooShort": "The message must be at least 10 characters",
+		"successTitle": "Message sent!",
+		"successBody": "Your message has been sent. I will get back to you shortly.",
+		"sendErrorTitle": "Sending failed",
+		"validationErrorTitle": "Validation errors",
+		"validationErrorBody": "Please check the form fields."
+	},
+	"carnet": {
+		"noResults": "No results",
+		"resultCount": "{count, plural, one {# result} other {# results}}",
+		"searchLabel": "Explore the logbook",
+		"searchPlaceholder": "Describe a topic: vision, local LLM, agents…",
+		"mapTitle": "Map of my projects and articles",
+		"mapDescription": "{count} items placed by topic proximity, computed with an embeddings model. The item list under the map gives the equivalent.",
+		"noMatch": "No items match. Try another word.",
+		"keywordMatch": "keyword match",
+		"kindArticle": "article",
+		"kindProject": "project",
+		"itemListLabel": "The {count} items on the map",
+		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "Lab logbook",
+		"intro": "William Derue, AI developer on the AI Engineer track. This logbook keeps a record of my experiments: trained models, agents, infrastructure.",
+		"note": "try \"vision\", \"agents\" or \"local LLM\": the map searches with a real embeddings model, in your browser",
+		"latestEntries": "Latest entries",
+		"register": "Project register",
+		"registerNoscript": "The register loads with JavaScript; my repositories are also on",
+		"registerUnavailable": "The project register is temporarily unavailable.",
+		"instruments": "Instruments"
+	},
+	"about": {
+		"eyebrow": "Logbook · path",
+		"tagline": "AI developer · AI Engineer track",
+		"ageLine": "{age} years old — Southern France"
+	},
+	"register": {
+		"loading": "Loading the project register…",
+		"error": "The project register could not be loaded. Try again in a moment.",
+		"featured": "Featured projects",
+		"index": "Index",
+		"noMatch": "No project matches these filters.",
+		"empty": "No other project just yet.",
+		"filters": "Filter the register",
+		"private": "private",
+		"domainsLabel": "Domains",
+		"practicesLabel": "Practices",
+		"practicesSrOnly": "Practices: {full}",
+		"githubRepo": "GitHub repository",
+		"readEntry": "Read the logbook entry",
+		"captureAlt": "Screenshot of {title}",
+		"amongNeighbors": "{title} among its neighbours",
+		"composition": "Composition of {title}",
+		"techComposition": "Tech composition: {list}",
+		"tech": {
+			"languages": "Languages",
+			"mlStack": "ML & Data",
+			"databases": "Databases",
+			"backends": "Back-end",
+			"frontends": "Front-end",
+			"devops": "DevOps"
+		}
+	},
+	"mdx": {
+		"tasksTitle": "Kanban tasks created per day",
+		"tasksScans": "Infrastructure scans (sre-monitor)",
+		"tasksOther": "All other tasks",
+		"tasksRow": "{label}: {total} tasks, of which {scans} scans and {other} other",
+		"tasksAriaLabel": "Stacked bar chart of Kanban tasks created per day. {summary}.",
+		"tokensTitle": "Input tokens per profile (millions)",
+		"tokensCaption": "Input tokens per profile",
+		"tokensScanSeries": "Scan loop",
+		"tokensOtherSeries": "Other profiles",
+		"tokensRow": "{name}: {value} M ({kind})",
+		"tokensAriaLabel": "Horizontal bar chart of input tokens per profile, in millions. {summary}.",
+		"tokensKindScan": "scan",
+		"tokensKindWork": "work",
+		"faultAriaLabel": "Breakdown of the {total} tool failures across {traces} traces: {segments}.",
+		"faultTitle": "{count, plural, one {# tool failure} other {# tool failures}}",
+		"faultTraces": "across {traces, number} traces",
+		"faultCaption": "Breakdown of tool failures",
+		"verdictsGood": "What held up",
+		"verdictsBad": "What broke",
+		"sourcesTitle": "Sources for the figures",
+		"compareFallbackSeries": "series {n}",
+		"compareSummary": "{label}: {values}",
+		"notePrefix": "Note: "
+	},
+	"articles": {
+		"eyebrow": "Logbook · entries",
+		"title": "Articles",
+		"description": "Quantified field notes on autonomous agents, LLMs served locally, observability and infrastructure.",
+		"empty": "No articles just yet.",
+		"allEntries": "All entries →",
+		"allArticles": "All articles",
+		"backToArticles": "Back to articles",
+		"periodLabel": "Period: ",
+		"tagsLabel": "Topics",
+		"onTheMap": "On the map",
+		"onTheMapCaption": "This entry among its neighbours",
+		"untranslatedNotice": "This article has not been translated into this language yet. French version below."
+	}
+}

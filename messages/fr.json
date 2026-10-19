@@ -1,0 +1,299 @@
+{
+	"meta": {
+		"title": "William Derue | Développeur IA · parcours AI Engineer",
+		"description": "Portfolio de William Derue - Développeur IA en parcours AI Engineer : projets de machine learning, LLM et infrastructure, et retours d'expérience.",
+		"keywords": [
+			"développeur fullstack",
+			"AI engineer",
+			"machine learning",
+			"IA",
+			"intelligence artificielle",
+			"React",
+			"Next.js",
+			"TypeScript",
+			"portfolio"
+		],
+		"about": {
+			"title": "À propos | William Derue - Développeur IA · parcours AI Engineer",
+			"description": "Découvrez mon parcours - De l'automaticien au développeur IA, aujourd'hui en parcours AI Engineer. 7 ans d'expertise en technologie et intelligence artificielle."
+		},
+		"contact": {
+			"title": "Formulaire de contact | William Derue",
+			"description": "Contactez William Derue pour discuter de vos projets IA ou fullstack. Envoyez-moi un message et je vous répondrai rapidement."
+		},
+		"articles": {
+			"title": "Articles | William Derue - Développeur IA · parcours AI Engineer"
+		}
+	},
+	"figure": {
+		"prefix": "Fig. {n} · "
+	},
+	"header": {
+		"tagline": "Carnet de labo"
+	},
+	"footer": {
+		"credit": "Carnet tenu par William Derue · © {year}",
+		"ariaLabel": "Liens du pied de page",
+		"articles": "Articles"
+	},
+	"multiSelect": {
+		"placeholder": "Sélectionner...",
+		"noResults": "Aucun résultat.",
+		"selected": "{count, plural, one {# sélectionné} other {# sélectionnés}}",
+		"search": "Rechercher..."
+	},
+	"filterBar": {
+		"searchPlaceholder": "Rechercher un projet...",
+		"language": "Langage",
+		"allLanguages": "Tous les langages",
+		"domain": "Domaine",
+		"allDomains": "Tous les domaines",
+		"practice": "Pratiques",
+		"allPractices": "Toutes les pratiques",
+		"training": "Formation",
+		"allProjects": "Tous les projets",
+		"trainingProjects": "Projets de formation",
+		"excludeTraining": "Hors formation",
+		"database": "Base de données",
+		"backend": "API Backend",
+		"frontend": "Frontend",
+		"devops": "DevOps",
+		"reset": "Réinitialiser",
+		"loading": "Chargement..."
+	},
+	"errorBoundary": {
+		"title": "Une erreur est survenue",
+		"unknown": "Erreur inconnue",
+		"retry": "Réessayer"
+	},
+	"theme": {
+		"toggle": "Basculer entre le thème clair et le thème sombre",
+		"toggleTitle": "Changer de thème"
+	},
+	"notFound": {
+		"title": "Page introuvable",
+		"body": "Cette page n'existe pas ou a été déplacée.",
+		"back": "Retour à l'accueil"
+	},
+	"nav": {
+		"ariaLabel": "Navigation principale",
+		"home": "Carnet",
+		"articles": "Articles",
+		"about": "À propos",
+		"contact": "Contact"
+	},
+	"locale": {
+		"label": "Langue",
+		"names": {
+			"fr": "Français",
+			"en": "English",
+			"zh": "中文"
+		}
+	},
+	"status": {
+		"InProgress": "en cours",
+		"Done": "terminé",
+		"Archived": "archivé"
+	},
+	"training": {
+		"FullstackAI": "Développeur FullStack IA",
+		"AIEngineer": "AI Engineer",
+		"badge": "Projet de formation · OpenClassrooms · {course}",
+		"badgeShort": "Formation OC · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "Intégration continue",
+		"Containerization": "Conteneurisation",
+		"ContinuousDeployment": "Déploiement automatisé",
+		"AutomatedTesting": "Tests automatisés",
+		"Observability": "Observabilité",
+		"DependencyUpdates": "Veille des dépendances",
+		"StaticAnalysis": "Analyse de code (SAST)",
+		"SecretsManagement": "Gestion des secrets",
+		"Hardening": "Durcissement",
+		"ExperimentTracking": "Suivi d'expériences",
+		"ModelRegistry": "Registre de modèles",
+		"DataVersioning": "Versionnage des données",
+		"ModelServing": "Service de modèle",
+		"LlmEvaluation": "Évaluation / monitoring LLM"
+	},
+	"domains": {
+		"DataAnalysis": "Data analyse",
+		"Classifier": "Classification",
+		"Regressor": "Régression",
+		"Agents": "Agents",
+		"Speech": "Parole"
+	},
+	"clusters": {
+		"c1": "LLM et agents",
+		"c2": "Services et API",
+		"c3": "Data et web",
+		"c4": "Vision et classification",
+		"c5": "Outillage développeur"
+	},
+	"instruments": {
+		"data-ml": "Data & ML",
+		"backend": "Back-end & API",
+		"frontend": "Front-end",
+		"devops": "DevOps & outils",
+		"seeDetail": "voir le détail",
+		"libraries": "Bibliothèques",
+		"utilities": "Utilitaires"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "Automaticien",
+			"description": "7 ans en tant qu'automaticien dans le secteur de l'énergie, construisant des petites centrales électriques. L'émergence de l'IA a considérablement enrichi mon intérêt pour l'informatique et ma soif de connaissance."
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "Développeur C++",
+			"description": "Passage à l'informatique logiciel avec un projet C++ professionnel, suivi de plusieurs projets personnels explorant différentes technologies."
+		},
+		"adminSysteme": {
+			"year": "Novembre 2024",
+			"title": "Administrateur Système",
+			"description": "Intégration au ministère de l'Éducation nationale en tant qu'administrateur système, poste que j'occupe toujours avec responsabilités croissantes."
+		},
+		"fullstack": {
+			"year": "Septembre 2025 – juillet 2026",
+			"title": "Diplômé Développeur full stack",
+			"description": "Parcours Développeur FullStack IA chez OpenClassrooms, validé en juillet 2026 par le titre « Développeur full stack »."
+		},
+		"celluleIa": {
+			"year": "Janvier 2026",
+			"title": "Cellule IA - DSI Régionale",
+			"description": "Membre actif de la cellule IA de la DSI régionale, déterminé à concrétiser des projets exploitant le potentiel de l'IA pour répondre aux besoins métier."
+		},
+		"aiEngineer": {
+			"year": "Septembre 2026 – en cours",
+			"title": "Parcours AI Engineer",
+			"description": "Dans la continuité, parcours AI Engineer chez OpenClassrooms."
+		}
+	},
+	"readingTime": {
+		"minutes": "{minutes, number} min de lecture"
+	},
+	"percent": {
+		"value": "{value, number} %",
+		"underOne": "< 1 %"
+	},
+	"contact": {
+		"errorSummary": "{count, plural, =0 {Aucun champ à corriger} one {# champ à corriger} other {# champs à corriger}}",
+		"eyebrow": "Carnet · fiche contact",
+		"title": "Formulaire de contact",
+		"intro": "Une question sur un projet, une expérience ou un article ? Je réponds sous quelques jours.",
+		"sheetLabel": "Fiche n° — à remplir",
+		"emailLabel": "Adresse mail",
+		"subjectLabel": "Sujet",
+		"subjectPlaceholder": "Sujet du mail...",
+		"messageLabel": "Message",
+		"messagePlaceholder": "Votre message...",
+		"sending": "Envoi...",
+		"send": "Envoyer",
+		"invalidEmail": "Adresse email invalide",
+		"subjectTooShort": "Le sujet doit faire au moins 3 caractères",
+		"messageTooShort": "Le message doit faire au moins 10 caractères",
+		"successTitle": "Message envoyé !",
+		"successBody": "Votre message a bien été envoyé. Je vous répondrai rapidement.",
+		"sendErrorTitle": "Erreur d'envoi",
+		"validationErrorTitle": "Erreurs de validation",
+		"validationErrorBody": "Veuillez vérifier les champs du formulaire."
+	},
+	"carnet": {
+		"noResults": "Aucun résultat",
+		"resultCount": "{count, plural, one {# résultat} other {# résultats}}",
+		"searchLabel": "Explorer le carnet",
+		"searchPlaceholder": "Décris un sujet : vision, LLM local, agents…",
+		"mapTitle": "Carte de mes projets et articles",
+		"mapDescription": "{count} éléments placés selon la proximité de leur sujet, calculée par un modèle d'embeddings. La liste des éléments sous la carte en donne l'équivalent.",
+		"noMatch": "Aucun élément ne correspond. Essaie un autre mot.",
+		"keywordMatch": "correspondance par mot-clé",
+		"kindArticle": "article",
+		"kindProject": "projet",
+		"itemListLabel": "Les {count} éléments de la carte",
+		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "Carnet de labo",
+		"intro": "William Derue, développeur IA en parcours AI Engineer. Ce carnet consigne mes expériences : modèles entraînés, agents, infrastructure.",
+		"note": "essaie « vision », « agents » ou « LLM local » : la carte cherche avec un vrai modèle d'embeddings, dans ton navigateur",
+		"latestEntries": "Dernières entrées",
+		"register": "Registre des projets",
+		"registerNoscript": "Le registre se charge avec JavaScript ; mes dépôts sont aussi sur",
+		"registerUnavailable": "Le registre des projets est momentanément indisponible.",
+		"instruments": "Instruments"
+	},
+	"about": {
+		"eyebrow": "Carnet · parcours",
+		"tagline": "Développeur IA · parcours AI Engineer",
+		"ageLine": "{age} ans — Sud de la France"
+	},
+	"register": {
+		"loading": "Chargement du registre des projets…",
+		"error": "Le registre des projets n'a pas pu être chargé. Réessaie dans un instant.",
+		"featured": "Projets phares",
+		"index": "Index",
+		"noMatch": "Aucun projet ne correspond à ces filtres.",
+		"empty": "Aucun autre projet pour l'instant.",
+		"filters": "Filtrer le registre",
+		"private": "privé",
+		"domainsLabel": "Domaines",
+		"practicesLabel": "Pratiques",
+		"practicesSrOnly": "Pratiques : {full}",
+		"githubRepo": "Dépôt GitHub",
+		"readEntry": "Lire l'entrée du carnet",
+		"captureAlt": "Capture de {title}",
+		"amongNeighbors": "{title} parmi ses voisins",
+		"composition": "Composition de {title}",
+		"techComposition": "Composition technique : {list}",
+		"tech": {
+			"languages": "Langages",
+			"mlStack": "ML & Data",
+			"databases": "Bases de données",
+			"backends": "Back-end",
+			"frontends": "Front-end",
+			"devops": "DevOps"
+		}
+	},
+	"mdx": {
+		"tasksTitle": "Tâches Kanban créées par jour",
+		"tasksScans": "Scans d'infrastructure (sre-monitor)",
+		"tasksOther": "Toutes les autres tâches",
+		"tasksRow": "{label} : {total} tâches dont {scans} scans et {other} autres",
+		"tasksAriaLabel": "Diagramme en barres empilées des tâches Kanban créées par jour. {summary}.",
+		"tokensTitle": "Tokens d'entrée par profil (millions)",
+		"tokensCaption": "Tokens d'entrée par profil",
+		"tokensScanSeries": "Boucle de scan",
+		"tokensOtherSeries": "Autres profils",
+		"tokensRow": "{name} : {value} M ({kind})",
+		"tokensAriaLabel": "Diagramme en barres horizontales des tokens d'entrée par profil, en millions. {summary}.",
+		"tokensKindScan": "scan",
+		"tokensKindWork": "travail",
+		"faultAriaLabel": "Répartition des {total} échecs d'outils sur {traces} traces : {segments}.",
+		"faultTitle": "{count, plural, one {# échec d'outils} other {# échecs d'outils}}",
+		"faultTraces": "sur {traces, number} traces",
+		"faultCaption": "Répartition des échecs d'outils",
+		"verdictsGood": "Ce qui a tenu",
+		"verdictsBad": "Ce qui a cassé",
+		"sourcesTitle": "Sources des chiffres",
+		"notePrefix": "Note : ",
+		"compareFallbackSeries": "série {n}",
+		"compareSummary": "{label} : {values}"
+	},
+	"articles": {
+		"eyebrow": "Carnet · entrées",
+		"title": "Articles",
+		"description": "Retours d'expérience chiffrés sur les agents autonomes, les LLM servis en local, l'observabilité et l'infrastructure.",
+		"empty": "Aucun article pour le moment.",
+		"allEntries": "Toutes les entrées →",
+		"allArticles": "Tous les articles",
+		"backToArticles": "Retour aux articles",
+		"periodLabel": "Période : ",
+		"tagsLabel": "Thèmes",
+		"onTheMap": "Sur la carte",
+		"onTheMapCaption": "Cette entrée parmi ses voisins",
+		"untranslatedNotice": "Cet article n'est pas encore traduit dans cette langue. Version française ci-dessous."
+	}
+}

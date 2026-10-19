@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildDomainRows, domainLabels, normalizeDomains } from "./domains";
+import { frTranslator } from "@/i18n/fr";
+import {
+	buildDomainRows,
+	domainLabelList,
+	domainLabels,
+	normalizeDomains,
+} from "./domains";
 
 describe("normalizeDomains", () => {
 	it("ajoute ML pour Classifier", () => {
@@ -27,13 +33,44 @@ describe("normalizeDomains", () => {
 });
 
 describe("domainLabels", () => {
+	const labels = domainLabels(frTranslator("domains"));
+
+	it("couvre chaque domaine, valeur inconnue comprise", () => {
+		expect(Object.keys(labels).sort()).toEqual(
+			[
+				"DataAnalysis",
+				"ML",
+				"Classifier",
+				"Regressor",
+				"LLM",
+				"Vision",
+				"NLP",
+				"Agents",
+				"Speech",
+			].sort(),
+		);
+		for (const label of Object.values(labels))
+			expect(label.trim().length).toBeGreaterThan(0);
+	});
+
+	it("garde les quatre sigles en littéral, dans toutes les langues", () => {
+		// ML, LLM, Vision et NLP sont des anglicismes : les mettre au dictionnaire
+		// créerait trois clés identiques, donc trois occasions de diverger pour rien.
+		for (const acronym of ["ML", "LLM", "Vision", "NLP"] as const)
+			expect(labels[acronym]).toBe(acronym);
+	});
+});
+
+describe("domainLabelList", () => {
+	const t = frTranslator("domains");
+
 	it("renvoie les libellés dans l'ordre", () => {
 		expect(
-			domainLabels([{ domain: "Speech" }, { domain: "Classifier" }]),
+			domainLabelList(t, [{ domain: "Speech" }, { domain: "Classifier" }]),
 		).toEqual(["ML", "Classification", "Parole"]);
 	});
 	it("tableau vide", () => {
-		expect(domainLabels([])).toEqual([]);
+		expect(domainLabelList(t, [])).toEqual([]);
 	});
 });
 

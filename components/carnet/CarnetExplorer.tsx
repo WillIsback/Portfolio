@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type ReactNode,
 	useEffect,
@@ -47,6 +48,8 @@ export default function CarnetExplorer({
 	intro,
 	note,
 }: Readonly<CarnetExplorerProps>) {
+	const locale = useLocale();
+	const t = useTranslations("carnet");
 	const [state, dispatch] = useReducer(explorerReducer, initialExplorerState);
 	const [hoverId, setHoverId] = useState<string | null>(null);
 	const [searchItems, setSearchItems] = useState<SearchItem[] | null>(null);
@@ -113,6 +116,7 @@ export default function CarnetExplorer({
 	useEffect(() => () => workerRef.current?.terminate(), []);
 
 	const summary = announcement(
+		t,
 		view.results.flatMap((r) => byId.get(r.id)?.title ?? []),
 		view.mode !== "rest",
 	);
@@ -124,6 +128,8 @@ export default function CarnetExplorer({
 	}, [summary]);
 
 	const tooltip = hoverId ? byId.get(hoverId) : undefined;
+	const kindLabel = (kind: "article" | "project") =>
+		kind === "article" ? t("kindArticle") : t("kindProject");
 
 	return (
 		<div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
@@ -133,7 +139,7 @@ export default function CarnetExplorer({
 					htmlFor="carnet-query"
 					className="mt-8 block font-mono text-xs uppercase tracking-[0.14em] text-ink-soft"
 				>
-					Explorer le carnet
+					{t("searchLabel")}
 				</label>
 				<input
 					id="carnet-query"
@@ -141,7 +147,7 @@ export default function CarnetExplorer({
 					autoComplete="off"
 					spellCheck={false}
 					value={state.query}
-					placeholder="Décris un sujet : vision, LLM local, agents…"
+					placeholder={t("searchPlaceholder")}
 					onFocus={activate}
 					onPointerEnter={activate}
 					onChange={(event) =>
@@ -174,15 +180,11 @@ export default function CarnetExplorer({
 								}}
 							>
 								<span className="block text-foreground">{tooltip.title}</span>
-								<span className="text-ink-soft">
-									{tooltip.kind === "article" ? "article" : "projet"}
-								</span>
+								<span className="text-ink-soft">{kindLabel(tooltip.kind)}</span>
 							</div>
 						) : null}
 					</div>
-					<FigureCaption number={1}>
-						Carte de mes projets et articles
-					</FigureCaption>
+					<FigureCaption number={1}>{t("mapTitle")}</FigureCaption>
 				</figure>
 				<MapLegend clusters={clusters} />
 
@@ -193,9 +195,7 @@ export default function CarnetExplorer({
 					{view.mode !== "rest" &&
 					!view.pending &&
 					view.results.length === 0 ? (
-						<p className="text-sm text-ink-soft">
-							Aucun élément ne correspond. Essaie un autre mot.
-						</p>
+						<p className="text-sm text-ink-soft">{t("noMatch")}</p>
 					) : null}
 					{view.results.length > 0 ? (
 						<ol className="space-y-1.5">
@@ -208,12 +208,10 @@ export default function CarnetExplorer({
 											{r.score === null ? (
 												<>
 													<span aria-hidden="true">≈</span>
-													<span className="sr-only">
-														correspondance par mot-clé
-													</span>
+													<span className="sr-only">{t("keywordMatch")}</span>
 												</>
 											) : (
-												formatScore(r.score)
+												formatScore(r.score, locale)
 											)}
 										</span>
 										<a
@@ -229,7 +227,7 @@ export default function CarnetExplorer({
 											{p.title}
 										</a>
 										<span className="shrink-0 font-mono text-[11px] text-ink-soft">
-											{p.kind === "article" ? "article" : "projet"}
+											{kindLabel(p.kind)}
 										</span>
 									</li>
 								);
@@ -243,7 +241,13 @@ export default function CarnetExplorer({
 						state.status !== "ready" && "invisible",
 					)}
 				>
-					recherche sémantique active
+					{/*
+					 * `carnet.semanticActive` est volontairement identique dans les trois
+					 * dictionnaires : l'indicateur nomme le moteur (la recherche sémantique),
+					 * pas une phrase d'interface. Le « traduire » produirait trois libellés
+					 * pour une chose identique ; ne pas le corriger sans décision contraire.
+					 */}
+					{t("semanticActive")}
 				</p>
 				<MapItemList points={points} onFocusItem={setHoverId} />
 			</div>

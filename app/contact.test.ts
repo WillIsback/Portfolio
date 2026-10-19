@@ -1,60 +1,93 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
 
-const page = readFileSync(
-	path.join(process.cwd(), "app/Contact/page.tsx"),
-	"utf8",
-);
+/**
+ * La fiche contact a été séparée serveur/client : `Contact/page.tsx` est une
+ * coquille serveur (en-tête, `<Header>`, `<Footer>`) et toute la logique testée
+ * ici — `useActionState`, validation, aria, `<ThemedToaster />` — vit dans le
+ * composant client `ContactForm.tsx`.
+ *
+ * Les positives sont donc lues sur le formulaire, seul fichier où le comportement
+ * existe ; les négatives sur les deux, voir `expectAbsent`.
+ */
+
+const read = (f: string) => readFileSync(path.join(process.cwd(), f), "utf8");
+
+const form = read("app/[locale]/Contact/ContactForm.tsx");
+const shell = read("app/[locale]/Contact/page.tsx");
+
+/**
+ * Une absence ne vaut que si elle tient dans les DEUX fichiers.
+ *
+ * La tâche 8 réécrit la coquille (`async` + `getTranslations`) : une régression
+ * qui y réintroduirait `framer-motion` passerait inaperçue si la suite ne lisait
+ * que le formulaire.
+ */
+function expectAbsent(needle: string) {
+	expect(form).not.toContain(needle);
+	expect(shell).not.toContain(needle);
+}
+
+/** Idem pour une absence exprimée par motif. */
+function expectAbsentPattern(pattern: RegExp) {
+	expect(form).not.toMatch(pattern);
+	expect(shell).not.toMatch(pattern);
+}
 
 describe("Contact (fiche du carnet)", () => {
 	it("n'utilise plus framer-motion", () => {
-		expect(page).not.toContain("framer-motion");
-		expect(page).not.toContain("motion.");
+		expectAbsent("framer-motion");
+		expectAbsent("motion.");
 	});
 
 	it("garde la logique d'envoi et de validation", () => {
-		expect(page).toContain("useActionState(sendEmail");
-		expect(page).toContain("useFormValidation");
-		expect(page).toContain("<ThemedToaster />");
+		expect(form).toContain("useActionState(sendEmail");
+		expect(form).toContain("useFormValidation");
+		expect(form).toContain("<ThemedToaster />");
 	});
 
 	it("annonce les erreurs de champ et les relie aux champs", () => {
-		expect(page).toContain('role="alert"');
-		expect(page).toContain("aria-describedby");
-		expect(page).toContain("aria-invalid");
+		expect(form).toContain('role="alert"');
+		expect(form).toContain("aria-describedby");
+		expect(form).toContain("aria-invalid");
 	});
 
 	it("se présente comme une fiche du carnet", () => {
-		expect(page).toContain("Fiche");
-		expect(page).toContain("font-mono");
+		// Le libellé est passé par le dictionnaire : ni la coquille ni le formulaire ne
+		// l'écrivent en dur. La copie française reste vérifiée, mais par le dictionnaire.
+		expect(form).toContain('tContact("sheetLabel")');
+		expect(fr.contact.sheetLabel).toContain("Fiche");
+		expectAbsent("Fiche n° — à remplir");
+		expect(shell).toContain("getTranslations");
 	});
 
 	it("met la couleur de bordure dans le ternaire (invalide = destructive, sinon ink-soft)", () => {
-		expect(page).toContain('"border-destructive focus:border-destructive"');
-		expect(page).toContain('"border-ink-soft focus:border-primary"');
-		expect(page).not.toMatch(/rounded-none[^`$]*border-ink-soft/);
+		expect(form).toContain('"border-destructive focus:border-destructive"');
+		expect(form).toContain('"border-ink-soft focus:border-primary"');
+		expectAbsentPattern(/rounded-none[^`$]*border-ink-soft/);
 	});
 
 	it("garde des bordures de champ contrastées (WCAG 1.4.11)", () => {
-		expect(page).not.toContain("border-ink-soft/50");
-		expect(page).not.toContain("ring-ring/50");
+		expectAbsent("border-ink-soft/50");
+		expectAbsent("ring-ring/50");
 	});
 
 	it("laisse le bouton actif hors envoi (plus de disabled={isPending || !isValid})", () => {
-		expect(page).not.toContain("disabled={isPending || !isValid}");
-		expect(page).toContain("disabled={isPending}");
+		expectAbsent("disabled={isPending || !isValid}");
+		expect(form).toContain("disabled={isPending}");
 	});
 
 	it("annonce le résumé des erreurs dans une région live et ramène le focus", () => {
-		expect(page).toContain('aria-live="polite"');
-		expect(page).toContain("errorSummary");
-		expect(page).toContain("firstInvalidField");
-		expect(page).toContain(".focus()");
+		expect(form).toContain('aria-live="polite"');
+		expect(form).toContain("errorSummary");
+		expect(form).toContain("firstInvalidField");
+		expect(form).toContain(".focus()");
 	});
 
 	it("affiche aussi les erreurs renvoyées par le serveur (sans JavaScript)", () => {
-		expect(page).toContain("firstServerErrors");
-		expect(page).toContain("serverErrors");
+		expect(form).toContain("firstServerErrors");
+		expect(form).toContain("serverErrors");
 	});
 });

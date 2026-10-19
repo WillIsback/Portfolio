@@ -1,4 +1,5 @@
-import { PRACTICE_LABELS, practicesByFamily } from "@/lib/practices";
+import { useTranslations } from "next-intl";
+import { practiceLabels, practicesByFamily } from "@/lib/practices";
 
 /** Pratiques par famille : une ligne par famille (`full`) ou les seules familles (`compact`). */
 export default function PracticeMarks({
@@ -10,10 +11,13 @@ export default function PracticeMarks({
 	variant: "full" | "compact";
 	className?: string;
 }>) {
+	const t = useTranslations("practices");
+	const tRegister = useTranslations("register");
+	const labels = practiceLabels(t);
 	const groups = practicesByFamily(practices.map((p) => p.practice));
 	if (groups.length === 0) return null;
 	const line = (g: (typeof groups)[number]) =>
-		`${g.family} — ${g.practices.map((p) => PRACTICE_LABELS[p]).join(", ")}`;
+		`${g.family} — ${g.practices.map((p) => labels[p]).join(", ")}`;
 	if (variant === "compact") {
 		const full = groups.map(line).join(" ; ");
 		return (
@@ -21,19 +25,21 @@ export default function PracticeMarks({
 				<span aria-hidden="true">
 					{groups.map((g) => g.family).join(" · ")}
 				</span>
-				<span className="sr-only">Pratiques : {full}</span>
+				<span className="sr-only">
+					{tRegister("practicesSrOnly", { full })}
+				</span>
 			</span>
 		);
 	}
 	return (
 		<ul
-			aria-label="Pratiques"
+			aria-label={tRegister("practicesLabel")}
 			className={`m-0 list-none p-0 font-mono text-[11px] text-ink-soft ${className}`}
 		>
 			{groups.map((g) => (
 				<li key={g.family}>
 					<span className="text-ink">{g.family}</span> —{" "}
-					{g.practices.map((p) => PRACTICE_LABELS[p]).join(", ")}
+					{g.practices.map((p) => labels[p]).join(", ")}
 				</li>
 			))}
 		</ul>

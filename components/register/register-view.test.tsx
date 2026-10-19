@@ -1,6 +1,7 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { NormalizedProject } from "@/lib/projects-data";
+import fr from "@/messages/fr.json";
+import { escapeHtml, renderFr } from "@/tests/i18n-render";
 import RegisterView from "./RegisterView";
 
 const p = (id: number): NormalizedProject => ({
@@ -43,18 +44,18 @@ const base = {
 
 describe("RegisterView", () => {
 	it("montre un squelette de l'index sans démonter les filtres", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<RegisterView {...base} indexStatus="loading" featured={[p(1)]} />,
 		);
 		expect(html).toContain('aria-busy="true"');
-		expect(html).toContain("Chargement du registre");
+		expect(html).toContain(fr.register.loading);
 		expect(html).toContain("filtres");
 		expect(html).toContain("<details");
 		expect(html).toContain("Projet 1");
 	});
 
 	it("montre un squelette des phares tout en gardant les filtres", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<RegisterView {...base} featuredStatus="loading" index={[p(3)]} />,
 		);
 		expect(html).toContain('aria-busy="true"');
@@ -63,47 +64,47 @@ describe("RegisterView", () => {
 	});
 
 	it("affiche une erreur par bloc sans casser la page", () => {
-		const idx = renderToStaticMarkup(
+		const idx = renderFr(
 			<RegisterView {...base} indexStatus="error" featured={[p(1)]} />,
 		);
 		expect(idx).toContain('role="alert"');
-		expect(idx).toContain("Réessaie dans un instant.");
+		expect(idx).toContain(escapeHtml(fr.register.error));
 		expect(idx).toContain("Projet 1");
 		expect(idx).toContain("filtres");
-		const feat = renderToStaticMarkup(
+		const feat = renderFr(
 			<RegisterView {...base} featuredStatus="error" index={[p(3)]} />,
 		);
-		expect(feat).toContain("Réessaie dans un instant.");
+		expect(feat).toContain(escapeHtml(fr.register.error));
 		expect(feat).toContain("Projet 3");
 	});
 
 	it("numérote les figures des projets phares à partir de 2 et liste l'index", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<RegisterView {...base} featured={[p(1), p(2)]} index={[p(3)]} />,
 		);
-		expect(html).toContain("Projets phares");
-		expect(html).toContain("Fig. 2 · ");
-		expect(html).toContain("Fig. 3 · ");
+		expect(html).toContain(fr.register.featured);
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "2"));
+		expect(html).toContain(fr.figure.prefix.replace("{n}", "3"));
 		expect(html).toContain("Projet 3");
 		expect(html.match(/<h3/g)?.length).toBeGreaterThanOrEqual(3);
 	});
 
 	it("replie les filtres par défaut et les ouvre quand un filtre est actif", () => {
-		expect(renderToStaticMarkup(<RegisterView {...base} />)).toMatch(
+		expect(renderFr(<RegisterView {...base} />)).toMatch(
 			/<details(?![^>]*open)/,
 		);
-		expect(
-			renderToStaticMarkup(<RegisterView {...base} filtersActive />),
-		).toMatch(/<details[^>]*open/);
+		expect(renderFr(<RegisterView {...base} filtersActive />)).toMatch(
+			/<details[^>]*open/,
+		);
 	});
 
 	it("affiche 4 emplacements et une grille à 2 colonnes pour les phares", () => {
-		const loading = renderToStaticMarkup(
+		const loading = renderFr(
 			<RegisterView {...base} featuredStatus="loading" />,
 		);
 		expect(loading.match(/animate-pulse/g)?.length).toBeGreaterThanOrEqual(4);
 		expect(loading).not.toContain("lg:grid-cols-3");
-		const ready = renderToStaticMarkup(
+		const ready = renderFr(
 			<RegisterView {...base} featured={[p(1), p(2), p(3), p(4)]} />,
 		);
 		expect(ready).toContain("md:grid-cols-2");
@@ -111,7 +112,7 @@ describe("RegisterView", () => {
 	});
 
 	it("dit quand l'index filtré est vide", () => {
-		const html = renderToStaticMarkup(<RegisterView {...base} filtersActive />);
-		expect(html).toContain("Aucun projet ne correspond à ces filtres.");
+		const html = renderFr(<RegisterView {...base} filtersActive />);
+		expect(html).toContain(fr.register.noMatch);
 	});
 });

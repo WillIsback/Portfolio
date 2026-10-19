@@ -1,11 +1,12 @@
+import { useTranslations } from "next-intl";
 import type React from "react";
 import { Fragment } from "react";
 import { isExternalHref } from "@/lib/carnet/map-view";
-import { domainLabels } from "@/lib/domains";
+import { domainLabelList } from "@/lib/domains";
 import { familiesOf } from "@/lib/practices";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { projectYear, techNames } from "@/lib/register";
-import { type ProjectStatusValue, STATUS_LABELS } from "@/lib/status";
+import { type ProjectStatusValue, statusLabels } from "@/lib/status";
 import { isTraining } from "@/lib/training";
 import DomainChips from "./DomainChips";
 import PracticeMarks from "./PracticeMarks";
@@ -14,12 +15,15 @@ import TrainingBadge from "./TrainingBadge";
 export default function IndexRow({
 	project,
 }: Readonly<{ project: NormalizedProject }>) {
+	const t = useTranslations("register");
+	const tStatus = useTranslations("status");
+	const tDomains = useTranslations("domains");
 	const name = (
 		<span className="font-display font-semibold">{project.title}</span>
 	);
 	const statusLabel =
 		project.status === "InProgress" || project.status === "Archived"
-			? STATUS_LABELS[project.status as ProjectStatusValue]
+			? statusLabels(tStatus)[project.status as ProjectStatusValue]
 			: null;
 	const tech = techNames(project).slice(0, 4).join(" · ");
 	// Segments présents seulement ; séparés pour un lecteur d'écran (le visuel n'a que des espaces).
@@ -28,7 +32,7 @@ export default function IndexRow({
 			key: "training",
 			node: <TrainingBadge training={project.training} short />,
 		},
-		domainLabels(project.domains).length > 0 && {
+		domainLabelList(tDomains, project.domains).length > 0 && {
 			key: "domains",
 			node: <DomainChips domains={project.domains} />,
 		},
@@ -55,7 +59,7 @@ export default function IndexRow({
 					<span className="flex min-w-0 items-baseline gap-2">
 						<span className="truncate">{name}</span>
 						<span className="shrink-0 font-mono text-[11px] text-ink-soft">
-							privé
+							{t("private")}
 						</span>
 					</span>
 				)}

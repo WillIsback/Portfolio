@@ -1,5 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
+import { renderFr } from "@/tests/i18n-render";
 import Instruments from "./Instruments";
 import LatestEntries from "./LatestEntries";
 
@@ -14,7 +15,7 @@ const article = (slug: string, date: string) => ({
 
 describe("LatestEntries", () => {
 	it("liste les entrées datées en Fira Code, avec temps de lecture et thèmes", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<LatestEntries articles={[article("a", "2026-10-07")]} />,
 		);
 		expect(html).toContain('<time dateTime="2026-10-07"');
@@ -24,10 +25,11 @@ describe("LatestEntries", () => {
 		expect(html).toContain("7\u00a0min de lecture");
 		expect(html).toContain("SRE");
 		expect(html).toContain('href="/articles"');
+		expect(html).toContain(fr.articles.allEntries);
 	});
 
 	it("peut servir de liste complète : sans lien « Toutes les entrées », titres en h2", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<LatestEntries
 				articles={[article("a", "2026-10-07")]}
 				showAllLink={false}
@@ -40,17 +42,19 @@ describe("LatestEntries", () => {
 	});
 
 	it("ne rend rien sans article", () => {
-		expect(renderToStaticMarkup(<LatestEntries articles={[]} />)).toBe("");
+		expect(renderFr(<LatestEntries articles={[]} />)).toBe("");
 	});
 });
 
 describe("Instruments", () => {
-	const html = renderToStaticMarkup(<Instruments />);
+	const html = renderFr(<Instruments />);
 
 	it("rend quatre lignes titrées avec le détail derrière une divulgation", () => {
 		expect(html.match(/<h3/g)?.length).toBe(4);
 		expect(html.match(/<details/g)?.length).toBe(4);
-		expect(html).toContain("voir le détail");
+		expect(html).toContain(fr.instruments.seeDetail);
+		expect(html).toContain(fr.instruments.libraries);
+		expect(html).toContain(fr.instruments.utilities);
 	});
 
 	it("n'anime rien (plus de cubes empilés)", () => {

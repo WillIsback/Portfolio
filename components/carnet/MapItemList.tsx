@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from "next-intl";
 import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
 
 interface MapItemListProps {
@@ -10,13 +11,17 @@ export default function MapItemList({
 	points,
 	onFocusItem,
 }: Readonly<MapItemListProps>) {
+	// Le tri dépend de la langue : le chinois ordonne par phonétique et par bloc, pas
+	// comme le français. La locale vient donc du contexte next-intl, pas d'une constante.
+	const locale = useLocale();
+	const t = useTranslations("carnet");
 	const sorted = [...points].sort((a, b) =>
-		a.title.localeCompare(b.title, "fr"),
+		a.title.localeCompare(b.title, locale),
 	);
 	return (
 		<details className="mt-4 text-sm">
 			<summary className="cursor-pointer rounded-sm font-mono text-xs text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-				Les {points.length} éléments de la carte
+				{t("itemListLabel", { count: points.length })}
 			</summary>
 			<ul className="mt-2 grid gap-1 sm:grid-cols-2">
 				{sorted.map((p) => (
@@ -33,7 +38,7 @@ export default function MapItemList({
 						>
 							{p.title}
 							<span className="ml-1 font-mono text-[11px] text-ink-soft">
-								{p.kind === "article" ? "article" : "projet"}
+								{p.kind === "article" ? t("kindArticle") : t("kindProject")}
 							</span>
 						</a>
 					</li>

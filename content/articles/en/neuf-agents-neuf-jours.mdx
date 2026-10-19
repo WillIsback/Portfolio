@@ -1,0 +1,164 @@
+---
+title: "Nine agents, nine days"
+description: "A quantified write-up of a fleet of nine autonomous SRE agents in real conditions: what held up, what broke, what trace analysis taught me, and what I'm keeping."
+date: "2026-10-07"
+period: "27 Sep → 6 Oct 2026"
+tags: ["Autonomous agents", "SRE", "Local LLM", "Observability", "Security"]
+status: "Experiment closed"
+---
+
+I ran a fleet of autonomous SRE agents on my real infrastructure: a home server, a DGX Spark and a VPS. The agentic loop worked. The value it produced for the infra, much less so. Here are the numbers, what held up, what broke, what trace analysis taught me, and what I'm keeping.
+
+<KeyFigures
+  items={[
+    { value: "9", label: "agent profiles, in a star topology driven by a Kanban board" },
+    { value: "78%", label: "of the 418 Kanban tasks were the same infrastructure scan (324 scans)", alert: true },
+    { value: "72%", label: "of the tokens attributed to a profile went to that scan loop; 1% to the profiles that fix things", alert: true },
+    { value: "75", label: "incidents opened: 21 resolved, 29 failed, 25 closed with no follow-up" },
+    { value: "37%", label: "of the incidents were about the fleet's own components", alert: true },
+    { value: "24,537", label: "LLM calls, 146.6 M input tokens and 12.6 M output, all served locally" },
+    { value: "428", label: "tool failures detected and classified automatically in the traces" },
+    { value: "270", label: "times an agent ran docker exec in its own container to become root again", alert: true },
+  ]}
+/>
+
+## The setup
+
+The project was born for the NVIDIA Claw Agent Challenge in Paris: to show an SRE agent able to monitor, diagnose and repair an infrastructure with no human in the loop. I used [Hermes Agent](https://github.com/NousResearch/hermes-agent), an LLM served locally by vLLM on a DGX Spark (Qwen3.8), and a home-made MCP server with 59 tools covering my three machines: reads, Docker writes behind guardrails, sandboxed execution.
+
+After the challenge, the fleet kept running on my home server with separate roles. A single agent, the conductor, is allowed to create tasks. The others return verdicts.
+
+```text
+cron */10 ─┐
+           ├─▶ sre-conductor ──Kanban──▶ sre-monitor   (read-only scan, classifies, reports)
+webhook ───┘   (sole dispatcher)          ├─▶ sre-diag      (root cause → verdict, applies nothing)
+(crash, OOM)                              ├─▶ sre-doctor    (infra hot-fix from a verdict)
+                                          ├─▶ sre-dev       (code fix in TDD → PR)
+                                          └─▶ sre-reporter  (the only one to notify the human, Telegram)
+
+alongside: sre-hygiene (incident cleanup), auto-eval (judges the traces), gardien (reminders)
+observability: Langfuse (per-profile traces) + Julia-1, a small decision model that scores every step
+```
+
+## Timeline
+
+<Timeline
+  items={[
+    { date: "mid-Sept", text: "First version for the challenge: four agents, direct delegation between them, crons every 5 minutes." },
+    { date: "23–24 Sept", key: true, title: "Injected failure", text: "I swap a service's model for a non-existent one. The container stays “healthy” and returns HTTP 200 with an error in the body. The plumbing holds: delegation, logging, Telegram, rollback. The judgment fails: 5 runs conclude “healthy” for lack of an error signal, and 3 incidents are closed as “SUCCESS” without evidence." },
+    { date: "27 Sept", text: "Profiles versioned in the repo, move to the Kanban topology with a single dispatcher." },
+    { date: "2 Oct", text: "Challenge deadline." },
+    { date: "3 Oct", key: true, text: "The conductor scans every 10 minutes. Task volume goes from a handful to more than 100 a day. Automatic detection of tool failures in the traces is put in place." },
+    { date: "4 Oct", text: "The most frequent “capacity” failures become dedicated MCP tools: allowlisted execution, network-less sandboxed Python, HTTP probe." },
+    { date: "5 Oct", key: true, title: "Two emergent loops", text: "An external memory provider models alerts as a “user” to be understood and queues 36 requests on the GPU. The same day, runs triggered by webhook lack the Kanban tool: the conductor writes some sixty “missing Kanban” memories that then bias its reasoning." },
+    { date: "6 Oct", key: true, title: "Security audit", text: "The agents have a terminal and the Docker socket: in practice the MCP guardrails are bypassed. I isolate the container with a read-only Docker proxy and an SSH gateway with pinned commands. In its last tasks, the fleet detects the regression this isolation has just introduced. I put the fleet on pause that same evening." },
+  ]}
+/>
+
+## Where the work and the tokens went
+
+<TasksChart
+  days={[
+    ["28/09", 4, 0], ["29/09", 2, 0], ["30/09", 5, 0], ["01/10", 16, 0], ["02/10", 6, 0],
+    ["03/10", 24, 12], ["04/10", 114, 98], ["05/10", 106, 86], ["06/10", 141, 128],
+  ]}
+  caption="Kanban tasks created per day. From 3 October on, the scan every 10 minutes swamps everything else: diagnostic and fix work stays around 10 tasks a day."
+/>
+
+<TokensChart
+  profiles={[
+    ["sre-conductor", 19.4, "scan"], ["sre-monitor", 16.6, "scan"], ["sre-diag", 6.5, "work"],
+    ["auto-eval", 4.8, "work"], ["sre-reporter", 1.4, "work"], ["sre-hygiene", 0.6, "work"],
+    ["sre-dev", 0.4, "work"], ["sre-doctor", 0.2, "work"],
+  ]}
+  caption="Input tokens per profile, in millions, out of the 50 M attributable to a profile. The remaining 96.6 M predate the addition of per-profile attribution in the traces."
+/>
+
+## Reading the traces to evolve the agents
+
+This is the part of the experiment that taught me the most. Every tool call by every agent ends up in Langfuse. Rather than reading transcripts by hand, I built a pipeline that detects failing calls, classifies them, and rewrites the verdict on the trace as a score.
+
+The classification rests on a simple question: whose fault is it? Four categories came out of it.
+
+<FaultBuckets
+  total={428}
+  traces={264}
+  items={[
+    { id: "capacity", label: "Capacity", count: 199, text: "The agent's intent was legitimate, but the environment blocked it or didn't give it the tool it needed." },
+    { id: "reasoning", label: "Reasoning", count: 128, text: "Wrong tool or wrong argument: a non-existent identifier, a tool called through the wrong intermediary." },
+    { id: "garbage", label: "Garbage", count: 100, text: "Structurally invalid payload, typically malformed JSON." },
+    { id: "unclassifiable", label: "Unclassifiable", count: 1, text: "No rule applies and the LLM didn't decide." },
+  ]}
+/>
+
+Two things surprised me. First, seven deterministic rules are enough to classify 88% of the failures. The LLM only steps in on the residue, and its recurring classifications are meant to become new rules. This is the only place in the fleet where the system became less dependent on the model the longer it ran.
+
+Second, the biggest category wasn't an agent error. Nearly half the failures fell under “capacity”: the agent wanted to do something reasonable and the environment forbade it. In autonomous mode, with no human to approve, code execution and the terminal are refused by the harness: 111 refusals for code execution, 69 for the terminal. These figures became a list of needs. I created narrow MCP tools to cover them: read-only command execution on an allowlist, sandboxed Python with no network or secrets, an HTTP probe limited to internal targets.
+
+The “reasoning” failures told another story. A good share came from the intermediary tool used to call tools loaded on demand: the model got the arity wrong or called directly a tool that was supposed to go through it. These patterns were fixed in the agents' instruction files, not in the code: a skill dedicated to tool usage, examples of correct calls, and instructions removed when they contradicted each other.
+
+The same work guided context-window management. Loading the schemas of 59 tools up front drowns the model. So tools are discovered on demand, from a list capped at 12,000 tokens, each profile has access only to the tools for its role (27 for diagnosis, for example), and loads automatically only its own skills. I also tuned the reasoning effort per role: low for orchestration, high for the probe that has to judge an ambiguous state.
+
+The underlying difficulty is evolving an agent inside a protected environment. Every security restriction creates a new category of “capacity” failures. The agent needs tools, but the tools provided never cover all its real needs. So you have to measure what it tries to do, tell the legitimate need from the workaround, then add the narrowest possible tool. The 6 October audit showed it the other way round: when the tool was missing, the agent went through the terminal and the Docker socket. Some of the “capacity” failures that disappeared weren't solved. They were bypassed.
+
+## What held up, what broke
+
+<Verdicts
+  good={[
+    { title: "The deterministic plumbing.", text: "Delegation, Kanban, incident log, notifications, rollback: everything that doesn't depend on the model's judgment worked on the first try, or nearly." },
+    { title: "A single dispatcher.", text: "The star topology removed the cascading delegations of the first version and made every task traceable." },
+    { title: "The Julia-1 judge.", text: "A 147 M-parameter model that answers typed questions (choice, score, yes/no) scores every step of every trace in Langfuse, on CPU, at negligible cost." },
+    { title: "Tool-failure classification.", text: "Seven rules, an LLM on the residue, a score rewritten on every trace: the only loop that produced reusable knowledge." },
+    { title: "Fallback models.", text: "When I unplugged the DGX or switched models, the agents kept going on another provider." },
+  ]}
+  bad={[
+    { title: "A loop over a stable state.", text: "A cron that queries an infra that's doing fine produces “nothing new”, 140 times a day." },
+    { title: "“Untested” taken for “healthy”.", text: "Without an error signal, the model concludes all is well instead of generating the proof." },
+    { title: "Self-reference.", text: "37% of the incidents concerned the fleet, its dashboard or its MCP server. It spent part of its time watching itself." },
+    { title: "Bypassed guardrails.", text: "With a terminal and the Docker socket, an agent doesn't need the MCP tools: 270 docker exec to become root again, docker run -v, direct compose up." },
+    { title: "Emergent loops.", text: "External memory and missing tools each created a cycle nobody had designed." },
+    { title: "The cost of the showcase.", text: "Of 185 commits to the MCP server and the dashboard, 46% are fixes, and the 3D visualization scene accounts for the largest share." },
+  ]}
+/>
+
+## What I'd do differently
+
+<Lesson title="Trigger on an event">
+An agent should work only when something new arrives: an alert, a PR, a document. Detection itself doesn't need an LLM. Today, Uptime Kuma and a 120-line script send the alerts straight to Telegram.
+</Lesson>
+
+<Lesson title="The LLM explores, the code consolidates">
+Each pass by an agent should leave behind an artifact that reduces the need for the next pass: a rule, a test, a line of dataset. Tool-failure classification already did this by turning the LLM's classifications into rules. That's the mechanism that should have been generalized, not the scan.
+</Lesson>
+
+<Lesson title="Measure what the agent is trying to do">
+Tool failures are the best specification of an agent's needs. Classifying them by responsibility (environment, reasoning, payload) says what to fix and where: a tool to add, an instruction to rewrite, or nothing.
+</Lesson>
+
+<Lesson title="Least privilege from day one">
+An agent with a terminal has everything mounted in its container. The right boundary isn't a list of allowed tools, it's what the container can reach: a read-only Docker proxy and an SSH key limited to three commands validated on the host side.
+</Lesson>
+
+<Lesson title="Verify through the real path">
+The gateway passes a filtered environment to the MCP servers. My tests went through docker exec, which sees everything: they were green, the agents were blind. Only a real agent session proves that a tool works.
+</Lesson>
+
+<Lesson title="Measure per profile from the start">
+Per-profile trace attribution came late: two thirds of the tokens can't be tied to any agent. Without that measure, you don't see that one loop costs 60 times more than the useful work.
+</Lesson>
+
+## What I'm keeping
+
+| Building block | What it brings |
+| --- | --- |
+| Rootless agent | Read-only Docker proxy and restart, SSH gateway with pinned commands, a single mounted key. |
+| Tool-failure classification | Rules first, LLM on the residue, verdict rewritten on every Langfuse trace. |
+| Julia-1 judge on Langfuse | Typed evaluation of every step and every turn, on CPU, wired in as a native evaluator. |
+| OpenTelemetry collector | A single entry point: infra traces to Jaeger, LLM spans to MLflow. |
+| Bitwarden secrets | Injected at launch, for Docker Compose as for the agents, nothing on disk. |
+
+The fleet remains reproducible from a git tag. Its crons are paused, not deleted. The next experiment starts from a narrower hypothesis: giving every LLM-consuming service its own account and its own keys through the MLflow gateway.
+
+<Sources>
+Fleet Kanban board (418 tasks), incident log (75 incidents), Langfuse events in ClickHouse (24,537 generations, production environment, judges excluded), tool-failure classification manifests (264 traces, 428 failures), git history and agent session history. Period: 27 September to 6 October 2026. The “on the fleet” incidents cover its own containers: gateway, dashboard, MCP server, visualization and judge.
+</Sources>

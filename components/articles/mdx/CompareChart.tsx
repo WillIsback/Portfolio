@@ -1,9 +1,10 @@
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type CompareGroup,
 	type GroupedBarLayout,
 	groupedBarLayout,
 } from "@/lib/articles/chart-geometry";
-import { formatNumberFr } from "@/lib/articles/format";
+import { formatNumber } from "@/lib/articles/format";
 
 /** Series colors, in order: neutral reference first, accent second. */
 const SERIES_TONES = ["base", "accent"] as const;
@@ -123,7 +124,12 @@ export function CompareChart({
 	caption?: string;
 	figureNumber?: number;
 }>) {
-	const format = (value: number) => formatNumberFr(value, digits);
+	// Séparateur décimal et milliers dépendent de la locale : 0,24 en français, 0.24 en
+	// anglais. `useLocale` (et non `getTranslations`) garde le composant synchrone.
+	const locale = useLocale();
+	const t = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
+	const format = (value: number) => formatNumber(value, digits, locale);
 	// Monospace labels: reserve their width so long ones are not clipped.
 	const longest = Math.max(0, ...groups.map(([label]) => label.length));
 	const full = groupedBarLayout(groups, {
@@ -157,9 +163,11 @@ export function CompareChart({
 			const parts = values.flatMap((v, i) =>
 				v === null
 					? []
-					: [`${series[i] ?? `série ${i + 1}`} ${format(v)}${suffix}`],
+					: [
+							`${series[i] ?? t("compareFallbackSeries", { n: i + 1 })} ${format(v)}${suffix}`,
+						],
 			);
-			return `${label} : ${parts.join(", ")}`;
+			return t("compareSummary", { label, values: parts.join(", ") });
 		})
 		.join(" ; ");
 	const ariaLabel = `${title}. ${summary}.`;
@@ -197,7 +205,7 @@ export function CompareChart({
 			</div>
 			{caption || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
 					{caption}
 				</figcaption>
 			) : null}

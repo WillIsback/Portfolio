@@ -1,0 +1,80 @@
+// app/(admin)/admin/(app)/layout.tsx
+//
+// Garde d'accès + chrome de l'admin, limités au groupe `(app)`. La page de
+// connexion est sa voisine `admin/login/`, hors de ce groupe : elle doit rester
+// atteignable SANS session, sinon ce layout la redirigerait vers elle-même.
+
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth, signOut } from "@/auth";
+import ThemedToaster from "@/components/theme/ThemedToaster";
+import { isAdminSession } from "@/lib/admin-guard";
+
+export default async function AdminLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const session = await auth();
+	if (!isAdminSession(session)) redirect("/admin/login");
+
+	return (
+		<div className="flex min-h-screen font-sans bg-zinc-950 text-zinc-100">
+			<aside className="w-56 border-r border-zinc-800 flex flex-col p-4 gap-1 shrink-0">
+				<p className="text-xs text-zinc-500 uppercase tracking-widest mb-4 font-mono">
+					Admin
+				</p>
+				<Link
+					href="/admin/dashboard"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Dashboard
+				</Link>
+				<Link
+					href="/admin/github"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Synchronisation GitHub
+				</Link>
+				<Link
+					href="/admin/projects"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Projects
+				</Link>
+				<Link
+					href="/admin/agents/projects"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Agent Projets
+				</Link>
+				<Link
+					href="/admin/agents/articles"
+					className="text-sm text-zinc-400 hover:text-white py-1.5 px-2 rounded hover:bg-zinc-800 transition-colors"
+				>
+					Agent Articles
+				</Link>
+				<div className="mt-auto pt-4 border-t border-zinc-800">
+					<p className="text-xs text-zinc-600 mb-2 truncate">
+						{session?.user?.name}
+					</p>
+					<form
+						action={async () => {
+							"use server";
+							await signOut({ redirectTo: "/admin/login" });
+						}}
+					>
+						<button
+							type="submit"
+							className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+						>
+							Sign out
+						</button>
+					</form>
+				</div>
+			</aside>
+			<main className="flex-1 p-8 overflow-auto">{children}</main>
+			<ThemedToaster />
+		</div>
+	);
+}

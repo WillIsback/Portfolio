@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatDateFr, formatReadingTime } from "@/lib/articles/format";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate, formatReadingTime } from "@/lib/articles/format";
 import type { ArticleMeta } from "@/lib/articles/loader";
 
 /** Dernières entrées du carnet (spec §6.3). */
@@ -7,11 +8,17 @@ export default function LatestEntries({
 	articles,
 	showAllLink = true,
 	headingLevel = 3,
+	fallbackSlugs = [],
 }: Readonly<{
 	articles: ArticleMeta[];
 	showAllLink?: boolean;
 	headingLevel?: 2 | 3;
+	/** Slugs servis en français faute de traduction : signalés avant le clic. */
+	fallbackSlugs?: readonly string[];
 }>) {
+	const locale = useLocale();
+	const t = useTranslations("readingTime");
+	const tArticles = useTranslations("articles");
 	if (articles.length === 0) return null;
 	const Heading = headingLevel === 2 ? "h2" : "h3";
 	return (
@@ -26,7 +33,7 @@ export default function LatestEntries({
 							dateTime={article.date}
 							className="font-mono text-xs text-ink-soft sm:pt-1.5"
 						>
-							{formatDateFr(article.date)}
+							{formatDate(article.date, locale)}
 						</time>
 						<div>
 							<Heading className="font-display text-lg font-semibold">
@@ -37,11 +44,16 @@ export default function LatestEntries({
 									{article.title}
 								</Link>
 							</Heading>
+							{fallbackSlugs.includes(article.slug) ? (
+								<p className="mt-1 text-xs text-ink-soft">
+									{tArticles("untranslatedNotice")}
+								</p>
+							) : null}
 							<p className="mt-1 line-clamp-2 text-base leading-relaxed">
 								{article.description}
 							</p>
 							<p className="mt-2 font-mono text-[11px] text-ink-soft">
-								{formatReadingTime(article.readingTimeMinutes)}
+								{formatReadingTime(t, article.readingTimeMinutes)}
 								{article.tags.length > 0
 									? ` · ${article.tags.join(" · ")}`
 									: ""}
@@ -55,7 +67,7 @@ export default function LatestEntries({
 					href="/articles"
 					className="mt-4 inline-block rounded-sm font-mono text-xs text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				>
-					Toutes les entrées →
+					{tArticles("allEntries")}
 				</Link>
 			) : null}
 		</div>

@@ -1,10 +1,14 @@
 import Image from "next/image";
-import { INSTRUMENTS } from "@/lib/instruments";
+import { useTranslations } from "next-intl";
+import { INSTRUMENTS, instrumentTitle } from "@/lib/instruments";
 import { invertOnDark } from "@/lib/theme-icons";
 import { cn } from "@/lib/utils";
 
 /** Instruments (spec §6.5) : une ligne par domaine, détail derrière une divulgation. */
 export default function Instruments() {
+	// `useTranslations` et non `getTranslations` : le composant reste synchrone, donc
+	// restituable par `renderToStaticMarkup` dans les tests.
+	const t = useTranslations("instruments");
 	return (
 		<ul className="divide-y divide-border/70 border-y border-border/70">
 			{INSTRUMENTS.map((instrument) => (
@@ -13,7 +17,7 @@ export default function Instruments() {
 					className="grid gap-3 py-4 sm:grid-cols-[12rem_1fr]"
 				>
 					<h3 className="font-display text-base font-semibold">
-						{instrument.title}
+						{instrumentTitle(t, instrument.id)}
 					</h3>
 					<div>
 						<ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -34,18 +38,18 @@ export default function Instruments() {
 						</ul>
 						<details className="mt-2">
 							<summary className="cursor-pointer rounded-sm font-mono text-[11px] text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-								voir le détail
+								{t("seeDetail")}
 							</summary>
 							<dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
 								<div>
 									<dt className="font-mono text-[11px] text-ink-soft">
-										Bibliothèques
+										{t("libraries")}
 									</dt>
 									<dd>{instrument.libraries.join(", ")}</dd>
 								</div>
 								<div>
 									<dt className="font-mono text-[11px] text-ink-soft">
-										Utilitaires
+										{t("utilities")}
 									</dt>
 									<dd>{instrument.utilities.join(", ")}</dd>
 								</div>

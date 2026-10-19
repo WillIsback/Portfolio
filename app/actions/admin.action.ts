@@ -5,6 +5,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { rawImageUrl } from "@/lib/admin/project-form";
+import { isAdminSession } from "@/lib/admin-guard";
 import prisma from "@/lib/db";
 import { buildDomainRows } from "@/lib/domains";
 import { ACCEPTABLE_FIELDS, planWrite } from "@/lib/github/apply";
@@ -29,7 +30,7 @@ import { type AdminProject, AdminProjectSchema } from "@/schemas";
 
 async function requireAdmin(): Promise<void> {
 	const session = await auth();
-	if (!session?.user || session.user.githubId !== process.env.ADMIN_GITHUB_ID) {
+	if (!isAdminSession(session)) {
 		throw new Error("Unauthorized");
 	}
 }

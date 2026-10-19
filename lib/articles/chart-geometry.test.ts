@@ -11,7 +11,6 @@ import {
 	type TokenProfile,
 	ticks,
 } from "./chart-geometry";
-import { formatNumberFr, formatPercentFr } from "./format";
 
 const DAYS: TaskDay[] = [
 	["28/09", 4, 0],
@@ -139,12 +138,6 @@ describe("horizontalBarLayout", () => {
 			expect(layout.rows[i].y).toBeGreaterThanOrEqual(prev.y + prev.barHeight);
 		}
 	});
-
-	it("formats values French-style", () => {
-		expect(formatNumberFr(19.4)).toBe("19,4");
-		expect(formatNumberFr(0.2)).toBe("0,2");
-		expect(formatNumberFr(24537)).toMatch(/^24\s537$/u);
-	});
 });
 
 describe("compact (mobile) variants", () => {
@@ -186,13 +179,6 @@ describe("shares", () => {
 
 	it("defaults total to the sum of counts", () => {
 		expect(shares(items)[1].percent).toBeCloseTo((128 / 428) * 100, 9);
-	});
-
-	it("rounds percentages in French format", () => {
-		expect(formatPercentFr(199, 428)).toBe("46 %");
-		expect(formatPercentFr(128, 428)).toBe("30 %");
-		expect(formatPercentFr(100, 428)).toBe("23 %");
-		expect(formatPercentFr(1, 428)).toBe("< 1 %");
 	});
 });
 

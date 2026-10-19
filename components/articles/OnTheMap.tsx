@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import FigureCaption from "@/components/notebook/FigureCaption";
 import MiniMap from "@/components/register/MiniMap";
 import { isExternalHref, type MapPoint } from "@/lib/carnet/map-view";
@@ -25,6 +26,8 @@ export default function OnTheMap({
 	neighbors: Neighbor[];
 	figureNumber: number;
 }>) {
+	const t = useTranslations("articles");
+	const tKind = useTranslations("carnet");
 	if (neighbors.length === 0) return null;
 	return (
 		<section
@@ -32,7 +35,7 @@ export default function OnTheMap({
 			className="mt-14 border-t border-border pt-8"
 		>
 			<h2 id="on-the-map" className="font-display text-xl font-semibold">
-				Sur la carte
+				{t("onTheMap")}
 			</h2>
 			<div className="mt-5 grid gap-6 sm:grid-cols-[10rem_1fr] sm:items-start">
 				<figure className="m-0">
@@ -44,7 +47,7 @@ export default function OnTheMap({
 						/>
 					</div>
 					<FigureCaption number={figureNumber}>
-						Cette entrée parmi ses voisins
+						{t("onTheMapCaption")}
 					</FigureCaption>
 				</figure>
 				<ol className="space-y-3">
@@ -65,7 +68,9 @@ export default function OnTheMap({
 								</Link>
 							)}
 							<span className="ml-2 font-mono text-[11px] text-ink-soft">
-								{n.kind === "article" ? "article" : "projet"}
+								{n.kind === "article"
+									? tKind("kindArticle")
+									: tKind("kindProject")}
 							</span>
 						</li>
 					))}

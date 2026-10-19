@@ -82,11 +82,17 @@ export function placeQuery(
 	return { x, y };
 }
 
-const SCORE_FORMAT = new Intl.NumberFormat("fr-FR", {
-	minimumFractionDigits: 2,
-	maximumFractionDigits: 2,
-});
+/** Un formateur par locale : la virgule décimale française n'a pas d'équivalent ailleurs. */
+const SCORE_FORMATS = new Map<string, Intl.NumberFormat>();
 
-export function formatScore(score: number): string {
-	return SCORE_FORMAT.format(score);
+export function formatScore(score: number, locale = "fr"): string {
+	let format = SCORE_FORMATS.get(locale);
+	if (!format) {
+		format = new Intl.NumberFormat(locale, {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+		SCORE_FORMATS.set(locale, format);
+	}
+	return format.format(score);
 }

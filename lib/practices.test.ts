@@ -1,22 +1,32 @@
 import { describe, expect, it } from "vitest";
+import { frTranslator } from "@/i18n/fr";
 import {
 	FAMILIES,
 	familiesOf,
 	normalizePractices,
 	PRACTICE_FAMILY,
-	PRACTICE_LABELS,
 	PRACTICES,
 	PRACTICES_OF,
+	practiceLabels,
 	practicesByFamily,
 } from "./practices";
 
 describe("practices", () => {
+	const labels = practiceLabels(frTranslator("practices"));
+
 	it("14 pratiques, chacune avec une famille et un libellé", () => {
 		expect(PRACTICES).toHaveLength(14);
+		expect(Object.keys(labels).sort()).toEqual([...PRACTICES].sort());
 		for (const p of PRACTICES) {
 			expect(FAMILIES).toContain(PRACTICE_FAMILY[p]);
-			expect(PRACTICE_LABELS[p].length).toBeGreaterThan(0);
+			expect(labels[p].trim().length).toBeGreaterThan(0);
 		}
+	});
+
+	it("les libellés viennent du dictionnaire, apostrophes ICU comprises", () => {
+		// « Suivi d'expériences » : une apostrophe seule est un caractère d'échappement
+		// en ICU. Un message mal échappé perdrait la lettre qui suit.
+		expect(labels.ExperimentTracking).toBe("Suivi d'expériences");
 	});
 
 	it("PRACTICES_OF partitionne PRACTICES (5 / 4 / 5)", () => {

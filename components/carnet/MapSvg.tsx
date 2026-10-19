@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { CSSProperties } from "react";
 import {
 	isExternalHref,
@@ -21,6 +22,7 @@ export default function MapSvg({
 	activeId,
 	onHover,
 }: Readonly<MapSvgProps>) {
+	const t = useTranslations("carnet");
 	return (
 		<svg
 			viewBox="0 0 100 100"
@@ -29,9 +31,9 @@ export default function MapSvg({
 			aria-describedby="carnet-map-desc"
 			className="h-full w-full overflow-visible text-ink-soft"
 		>
-			<title id="carnet-map-title">Carte de mes projets et articles</title>
+			<title id="carnet-map-title">{t("mapTitle")}</title>
 			<desc id="carnet-map-desc">
-				{`${points.length} éléments placés selon la proximité de leur sujet, calculée par un modèle d'embeddings. La liste des éléments sous la carte en donne l'équivalent.`}
+				{t("mapDescription", { count: points.length })}
 			</desc>
 			<path
 				className="carnet-axis"

@@ -1,3 +1,4 @@
+import type { Translator } from "@/i18n/translator";
 import type { MapData } from "@/lib/carnet/map-types";
 import { nearestTo } from "@/lib/carnet/neighbors";
 import type { NormalizedProject } from "@/lib/projects-data";
@@ -59,45 +60,48 @@ export interface TechShare {
 
 const CATEGORIES: {
 	key: TechShare["key"];
-	label: string;
 	names: (p: NormalizedProject) => string[];
 }[] = [
 	{
 		key: "languages",
-		label: "Langages",
 		names: (p) => p.languages.map((l) => l.language),
 	},
 	{
 		key: "mlStack",
-		label: "ML & Data",
 		names: (p) => p.mlStack.map((m) => m.ml),
 	},
 	{
 		key: "databases",
-		label: "Bases de données",
 		names: (p) => p.databases.map((d) => d.database),
 	},
 	{
 		key: "backends",
-		label: "Back-end",
 		names: (p) => p.backends.map((b) => b.backend),
 	},
 	{
 		key: "frontends",
-		label: "Front-end",
 		names: (p) => p.frontends.map((f) => f.frontend),
 	},
 	{
 		key: "devops",
-		label: "DevOps",
 		names: (p) => p.devops.map((d) => d.devops),
 	},
 ];
 
-export function techComposition(p: NormalizedProject): TechShare[] {
+/**
+ * Part de chaque famille technologique non vide, dans l'ordre fixe.
+ *
+ * `t` porte le namespace `register` : le libellé affiché vit dans `register.tech.*`,
+ * pas ici. `lib/` est consommé hors React (tests, scripts), donc il reçoit le
+ * traducteur au lieu de lire une locale de requête.
+ */
+export function techComposition(
+	p: NormalizedProject,
+	t: Translator,
+): TechShare[] {
 	const counts = CATEGORIES.map((c) => ({
 		key: c.key,
-		label: c.label,
+		label: t(`tech.${c.key}`),
 		count: c.names(p).length,
 	}));
 	const total = counts.reduce((s, c) => s + c.count, 0);

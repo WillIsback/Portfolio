@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 /** Capture d'écran numérotée comme les graphiques (fichier dans `public/`). */
 export function Screenshot({
@@ -16,6 +17,7 @@ export function Screenshot({
 	caption?: string;
 	figureNumber?: number;
 }>) {
+	const t = useTranslations("figure");
 	return (
 		<figure className="article-figure my-10">
 			<a href={src} target="_blank" rel="noopener noreferrer">
@@ -30,7 +32,7 @@ export function Screenshot({
 			</a>
 			{caption || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
+					{figureNumber ? t("prefix", { n: figureNumber }) : ""}
 					{caption}
 				</figcaption>
 			) : null}

@@ -1,3 +1,4 @@
+import type { Translator } from "@/i18n/translator";
 import {
 	keywordMatches,
 	placeQuery,
@@ -101,10 +102,21 @@ export function computeView(
 	};
 }
 
-/** Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie). */
-export function announcement(titles: string[], searched: boolean): string {
+/**
+ * Résumé lu par la région aria-live (mis à jour après un temps de stabilité de la saisie).
+ *
+ * Zéro est un cas à part, pas un pluriel : « Aucun résultat » se lit, « 0 条结果 » ne se
+ * dit pas en chinois. D'où `carnet.noResults`, distinct de `carnet.resultCount`, qui ne
+ * porte que le pluriel ICU (absent en chinois). C'est aussi pourquoi `resultCount` ne
+ * contient aucune clause `=0` : la seule façon d'énoncer le zéro est cette branche, donc
+ * une régression ici se lit dans les trois langues au lieu d'être masquée en fr/en.
+ */
+export function announcement(
+	t: Translator,
+	titles: string[],
+	searched: boolean,
+): string {
 	if (!searched) return "";
-	if (titles.length === 0) return "Aucun résultat";
-	const count = `${titles.length} ${titles.length > 1 ? "résultats" : "résultat"}`;
-	return `${count} : ${titles.join(", ")}`;
+	if (titles.length === 0) return t("noResults");
+	return `${t("resultCount", { count: titles.length })} : ${titles.join(", ")}`;
 }

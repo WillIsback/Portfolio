@@ -1,9 +1,10 @@
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type HBarLayout,
 	horizontalBarLayout,
 	type TokenProfile,
 } from "@/lib/articles/chart-geometry";
-import { formatNumberFr } from "@/lib/articles/format";
+import { formatNumber } from "@/lib/articles/format";
 
 function TokensSvg({
 	layout,
@@ -17,6 +18,10 @@ function TokensSvg({
 	const { width, height, margin, plotLeft, gridlines, rows, xMax } = layout;
 	const axisY = height - margin.bottom;
 	const compact = variant === "compact";
+	// Séparateur décimal et de milliers dépendent de la locale : 0,24 en français, 0.24
+	// en anglais.
+	const locale = useLocale();
+	const t = useTranslations("mdx");
 	return (
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
@@ -25,7 +30,7 @@ function TokensSvg({
 			className={`chart-svg chart-svg--${variant}`}
 			style={{ minWidth: compact ? 300 : 480 }}
 		>
-			<title>Tokens d&apos;entrée par profil (millions)</title>
+			<title>{t("tokensTitle")}</title>
 			{gridlines.map((g) => (
 				<g key={g.value}>
 					<line
@@ -65,7 +70,7 @@ function TokensSvg({
 						className={r.kind === "scan" ? "chart-bar-scan" : "chart-bar-work"}
 					/>
 					<text x={r.valueX} y={r.cy} dy="0.35em" className="chart-value">
-						{formatNumberFr(r.value)}
+						{formatNumber(r.value, 1, locale)}
 					</text>
 				</g>
 			))}
@@ -75,13 +80,16 @@ function TokensSvg({
 
 export function TokensChart({
 	profiles,
-	caption = "Tokens d'entrée par profil",
+	caption,
 	figureNumber,
 }: Readonly<{
 	profiles: TokenProfile[];
 	caption?: string;
 	figureNumber?: number;
 }>) {
+	const locale = useLocale();
+	const t = useTranslations("mdx");
+	const tFigure = useTranslations("figure");
 	const full = horizontalBarLayout(profiles);
 	const compact = horizontalBarLayout(profiles, {
 		width: 340,
@@ -90,33 +98,37 @@ export function TokensChart({
 		labelGap: 4,
 	});
 	const summary = full.rows
-		.map(
-			(r) =>
-				`${r.name} : ${formatNumberFr(r.value)} M (${r.kind === "scan" ? "scan" : "travail"})`,
+		.map((r) =>
+			t("tokensRow", {
+				name: r.name,
+				value: formatNumber(r.value, 1, locale),
+				kind: r.kind === "scan" ? t("tokensKindScan") : t("tokensKindWork"),
+			}),
 		)
 		.join(" ; ");
-	const ariaLabel = `Diagramme en barres horizontales des tokens d'entrée par profil, en millions. ${summary}.`;
+	const ariaLabel = t("tokensAriaLabel", { summary });
+	const text = caption ?? t("tokensCaption");
 
 	return (
 		<figure className="article-figure my-10">
 			<ul className="mb-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-scan" />
-					Boucle de scan
+					{t("tokensScanSeries")}
 				</li>
 				<li className="flex items-center gap-2">
 					<span aria-hidden="true" className="chart-swatch chart-swatch-work" />
-					Autres profils
+					{t("tokensOtherSeries")}
 				</li>
 			</ul>
 			<div className="chart-scroll">
 				<TokensSvg layout={full} ariaLabel={ariaLabel} variant="full" />
 				<TokensSvg layout={compact} ariaLabel={ariaLabel} variant="compact" />
 			</div>
-			{caption || figureNumber ? (
+			{text || figureNumber ? (
 				<figcaption>
-					{figureNumber ? `Fig. ${figureNumber} · ` : ""}
-					{caption}
+					{figureNumber ? tFigure("prefix", { n: figureNumber }) : ""}
+					{text}
 				</figcaption>
 			) : null}
 		</figure>

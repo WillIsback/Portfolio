@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { isTraining, trainingBadge, trainingBadgeShort } from "@/lib/training";
 
 /** Tampon « projet de formation » : complet, ou abrégé avec le texte complet pour lecteur d'écran. */
@@ -6,8 +7,9 @@ export default function TrainingBadge({
 	short = false,
 	className = "",
 }: Readonly<{ training: string | null; short?: boolean; className?: string }>) {
+	const t = useTranslations("training");
 	if (!isTraining(training)) return null;
-	const full = trainingBadge(training);
+	const full = trainingBadge(t, training);
 	return (
 		<span
 			title={short ? full : undefined}
@@ -15,7 +17,7 @@ export default function TrainingBadge({
 		>
 			{short ? (
 				<>
-					<span aria-hidden="true">{trainingBadgeShort(training)}</span>
+					<span aria-hidden="true">{trainingBadgeShort(t, training)}</span>
 					<span className="sr-only normal-case">{full}</span>
 				</>
 			) : (

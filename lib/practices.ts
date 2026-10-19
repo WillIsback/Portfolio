@@ -1,3 +1,5 @@
+import type { Translator } from "@/i18n/translator";
+
 /** Pratiques d'ingénierie (liste fermée) regroupées en trois familles. */
 export const FAMILIES = ["DevOps", "SecOps", "MLOps"] as const;
 export type PracticeFamily = (typeof FAMILIES)[number];
@@ -37,22 +39,28 @@ export const PRACTICE_FAMILY: Record<Practice, PracticeFamily> = {
 	LlmEvaluation: "MLOps",
 };
 
-export const PRACTICE_LABELS: Record<Practice, string> = {
-	ContinuousIntegration: "Intégration continue",
-	Containerization: "Conteneurisation",
-	ContinuousDeployment: "Déploiement automatisé",
-	AutomatedTesting: "Tests automatisés",
-	Observability: "Observabilité",
-	DependencyUpdates: "Veille des dépendances",
-	StaticAnalysis: "Analyse de code (SAST)",
-	SecretsManagement: "Gestion des secrets",
-	Hardening: "Durcissement",
-	ExperimentTracking: "Suivi d'expériences",
-	ModelRegistry: "Registre de modèles",
-	DataVersioning: "Versionnage des données",
-	ModelServing: "Service de modèle",
-	LlmEvaluation: "Évaluation / monitoring LLM",
-};
+/**
+ * Libellés d'affichage d'une pratique, traduits à la demande : la liste des pratiques et
+ * leur famille restent des constantes (elles sont la clé de la base, pas de l'affichage).
+ */
+export function practiceLabels(t: Translator): Record<Practice, string> {
+	return {
+		ContinuousIntegration: t("ContinuousIntegration"),
+		Containerization: t("Containerization"),
+		ContinuousDeployment: t("ContinuousDeployment"),
+		AutomatedTesting: t("AutomatedTesting"),
+		Observability: t("Observability"),
+		DependencyUpdates: t("DependencyUpdates"),
+		StaticAnalysis: t("StaticAnalysis"),
+		SecretsManagement: t("SecretsManagement"),
+		Hardening: t("Hardening"),
+		ExperimentTracking: t("ExperimentTracking"),
+		ModelRegistry: t("ModelRegistry"),
+		DataVersioning: t("DataVersioning"),
+		ModelServing: t("ModelServing"),
+		LlmEvaluation: t("LlmEvaluation"),
+	};
+}
 
 export const PRACTICES_OF: Record<PracticeFamily, Practice[]> = {
 	DevOps: PRACTICES.filter((p) => PRACTICE_FAMILY[p] === "DevOps"),

@@ -1,0 +1,197 @@
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import { ArticleTags } from "@/components/articles/ArticleMeta";
+import { mdxComponents } from "@/components/articles/mdx";
+import OnTheMap from "@/components/articles/OnTheMap";
+import mapJson from "@/content/map.json";
+import { clusterLabels } from "@/content/map-clusters";
+import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
+import { numberFigures } from "@/lib/articles/figures";
+import { formatDate, formatReadingTime } from "@/lib/articles/format";
+import { listArticleSlugs, readArticle } from "@/lib/articles/loader";
+import { MapDataSchema } from "@/lib/carnet/map-types";
+import { toMapView } from "@/lib/carnet/map-view";
+import { nearestTo } from "@/lib/carnet/neighbors";
+import {
+	canonicalUrl,
+	inLanguage,
+	languageAlternates,
+	ogLocale,
+	SITE_URL,
+} from "@/lib/seo";
+
+const map = MapDataSchema.parse(mapJson);
+
+export const dynamicParams = false;
+
+interface ArticlePageProps {
+	params: Promise<{ locale: string; slug: string }>;
+}
+
+export function generateStaticParams() {
+	return routing.locales.flatMap((locale) =>
+		listArticleSlugs(locale).map((slug) => ({ locale, slug })),
+	);
+}
+
+export async function generateMetadata({
+	params,
+}: ArticlePageProps): Promise<Metadata> {
+	const { locale, slug } = await params;
+	if (!hasLocale(routing.locales, locale)) return {};
+	const { article } = readArticle(slug, locale);
+	if (!article) return {};
+	const path = `/articles/${article.slug}`;
+	const url = canonicalUrl(locale, path);
+	return {
+		title: `${article.title} | William Derue`,
+		description: article.description,
+		keywords: article.tags,
+		alternates: { canonical: url, languages: languageAlternates(path) },
+		openGraph: {
+			type: "article",
+			locale: ogLocale(locale),
+			url,
+			title: article.title,
+			description: article.description,
+			siteName: "Portfolio WillisBack",
+			publishedTime: article.date,
+			authors: ["William Derue"],
+			tags: article.tags,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: article.title,
+			description: article.description,
+		},
+	};
+}
+
+export default async function ArticlePage({ params }: ArticlePageProps) {
+	const { locale, slug } = await params;
+	setRequestLocale(locale);
+	if (!hasLocale(routing.locales, locale)) notFound();
+	const { article, fallback } = readArticle(slug, locale);
+	if (!article) notFound();
+
+	// Les noms de groupes sont traduits : la vue se construit ici, et plus au niveau du
+	// module où aucune locale n'est encore connue.
+	const tClusters = await getTranslations("clusters");
+	const tReadingTime = await getTranslations("readingTime");
+	const tArticles = await getTranslations("articles");
+	const view = toMapView(map, clusterLabels(tClusters));
+
+	const { source, count: figureCount } = numberFigures(article.content);
+
+	const { content } = await compileMDX({
+		source,
+		components: mdxComponents,
+		options: {
+			// Component props are JS expressions (arrays/objects): keep them,
+			// but still strip dangerous code (eval, require, process...).
+			blockJS: false,
+			blockDangerousJS: true,
+			mdxOptions: { remarkPlugins: [remarkGfm] },
+		},
+	});
+
+	const articleId = `article:${article.slug}`;
+	const near = nearestTo(map, articleId, 3);
+
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "BlogPosting",
+		headline: article.title,
+		description: article.description,
+		datePublished: article.date,
+		inLanguage: inLanguage(locale),
+		keywords: article.tags.join(", "),
+		author: { "@type": "Person", name: "William Derue", url: SITE_URL },
+		mainEntityOfPage: canonicalUrl(locale, `/articles/${article.slug}`),
+	};
+
+	return (
+		<article className="mx-auto w-full max-w-[44rem]">
+			<script
+				type="application/ld+json"
+				// biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD built from our own frontmatter
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+				}}
+			/>
+			<nav className="mb-8">
+				<Link
+					href="/articles"
+					className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+				>
+					<ArrowLeft aria-hidden="true" className="size-4" />
+					{tArticles("allArticles")}
+				</Link>
+			</nav>
+
+			{fallback ? (
+				<p className="mb-8 rounded-md border border-border/70 bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
+					{tArticles("untranslatedNotice")}
+				</p>
+			) : null}
+
+			<header className="mb-10 space-y-5 border-b border-border pb-8">
+				{article.status ? (
+					<p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
+						{article.status}
+					</p>
+				) : null}
+				<h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+					{article.title}
+				</h1>
+				<p className="text-lg leading-relaxed text-muted-foreground sm:text-xl">
+					{article.description}
+				</p>
+				<p className="font-mono text-xs text-ink-soft">
+					<time dateTime={article.date}>
+						{formatDate(article.date, locale)}
+					</time>
+					{article.period ? (
+						<>
+							{" · "}
+							<span className="sr-only">{tArticles("periodLabel")}</span>
+							{article.period}
+						</>
+					) : null}
+					{` · ${formatReadingTime(tReadingTime, article.readingTimeMinutes)}`}
+				</p>
+				<ArticleTags tags={article.tags} />
+			</header>
+
+			<div className="article-prose">{content}</div>
+
+			<OnTheMap
+				articleId={articleId}
+				points={view.points}
+				neighbors={near.map(({ id, title, href, kind }) => ({
+					id,
+					title,
+					href,
+					kind,
+				}))}
+				figureNumber={figureCount + 1}
+			/>
+
+			<footer className="mt-14 border-t border-border pt-6">
+				<Link
+					href="/articles"
+					className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+				>
+					<ArrowLeft aria-hidden="true" className="size-4" />
+					{tArticles("backToArticles")}
+				</Link>
+			</footer>
+		</article>
+	);
+}

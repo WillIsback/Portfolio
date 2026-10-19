@@ -1,6 +1,7 @@
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { clusterLabels } from "../../content/map-clusters";
+import { frTranslator } from "../../i18n/fr";
 import { buildMap } from "../../lib/carnet/map-build";
 import { MapDataSchema } from "../../lib/carnet/map-types";
 import { toSearchItems } from "../../lib/carnet/map-view";
@@ -33,7 +34,9 @@ const OUT_SEARCH = path.join(process.cwd(), "content", "search-items.json");
 				seed: 24,
 				model: `carnet-static@${model.meta.version}`,
 				now: new Date(),
-				labels: clusterLabels,
+				// Le script écrit un artefact figé dans le français ; à l'affichage,
+				// `toMapView(map, clusterLabels(t))` le remplace par ceux de la locale.
+				labels: clusterLabels(frTranslator("clusters")),
 			},
 		),
 	);

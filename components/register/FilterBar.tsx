@@ -2,7 +2,15 @@
 
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MultiSelect, type Option } from "@/components/ui/multi-select";
@@ -14,7 +22,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { debounce } from "@/lib/debounce";
-import { DOMAIN_LABELS } from "@/lib/domains";
+import { domainLabels } from "@/lib/domains";
 import { FAMILIES } from "@/lib/practices";
 import { parseFilters } from "@/lib/register-filters";
 import { nextSearchField } from "@/lib/search-field-sync";
@@ -32,9 +40,19 @@ const BACKEND_OPTIONS: Option[] = toOptions(BACKEND_LABELS);
 const FRONTEND_OPTIONS: Option[] = toOptions(FRONTEND_LABELS);
 const DEVOPS_OPTIONS: Option[] = toOptions(DEVOPS_LABELS);
 const LANGUAGE_OPTIONS: Option[] = toOptions(LANGUAGE_LABELS);
-const DOMAIN_OPTIONS: Option[] = toOptions(DOMAIN_LABELS);
 
 export default function FilterBar() {
+	// Les options de domaine dépendent de la locale : elles se construisent ici, et plus
+	// au niveau du module. Les autres jeux d'options (technologies) sont des noms de
+	// marques, d'où leurs constantes au niveau du module.
+	const t = useTranslations("filterBar");
+	const tDomains = useTranslations("domains");
+	// Mémoïsé comme les feuilles de calcul : `domainLabels` reconstruit un enregistrement
+	// de neuf domaines, et ce composant rend à chaque frappe dans la barre de recherche.
+	const domainOptions = useMemo(
+		() => toOptions(domainLabels(tDomains)),
+		[tDomains],
+	);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -155,7 +173,7 @@ export default function FilterBar() {
 				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 				<Input
 					type="search"
-					placeholder="Rechercher un projet..."
+					placeholder={t("searchPlaceholder")}
 					ref={searchInputRef}
 					value={searchText}
 					onChange={(e) => {
@@ -176,10 +194,10 @@ export default function FilterBar() {
 					}
 				>
 					<SelectTrigger className="w-[160px]">
-						<SelectValue placeholder="Langage" />
+						<SelectValue placeholder={t("language")} />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">Tous les langages</SelectItem>
+						<SelectItem value="all">{t("allLanguages")}</SelectItem>
 						{LANGUAGE_OPTIONS.map((opt) => (
 							<SelectItem key={opt.value} value={opt.value}>
 								{opt.label}
@@ -195,12 +213,12 @@ export default function FilterBar() {
 						updateSearchParams("domain", value === "all" ? [] : [value])
 					}
 				>
-					<SelectTrigger className="w-[160px]" aria-label="Domaine">
-						<SelectValue placeholder="Domaine" />
+					<SelectTrigger className="w-[160px]" aria-label={t("domain")}>
+						<SelectValue placeholder={t("domain")} />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">Tous les domaines</SelectItem>
-						{DOMAIN_OPTIONS.map((opt) => (
+						<SelectItem value="all">{t("allDomains")}</SelectItem>
+						{domainOptions.map((opt) => (
 							<SelectItem key={opt.value} value={opt.value}>
 								{opt.label}
 							</SelectItem>
@@ -215,11 +233,11 @@ export default function FilterBar() {
 						updateSearchParams("practice", value === "all" ? [] : [value])
 					}
 				>
-					<SelectTrigger className="w-[160px]" aria-label="Pratiques">
-						<SelectValue placeholder="Pratiques" />
+					<SelectTrigger className="w-[160px]" aria-label={t("practice")}>
+						<SelectValue placeholder={t("practice")} />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">Toutes les pratiques</SelectItem>
+						<SelectItem value="all">{t("allPractices")}</SelectItem>
 						{FAMILIES.map((f) => (
 							<SelectItem key={f} value={f}>
 								{f}
@@ -235,13 +253,13 @@ export default function FilterBar() {
 						updateSearchParams("training", value === "all" ? [] : [value])
 					}
 				>
-					<SelectTrigger className="w-[180px]" aria-label="Formation">
-						<SelectValue placeholder="Formation" />
+					<SelectTrigger className="w-[180px]" aria-label={t("training")}>
+						<SelectValue placeholder={t("training")} />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">Tous les projets</SelectItem>
-						<SelectItem value="only">Projets de formation</SelectItem>
-						<SelectItem value="exclude">Hors formation</SelectItem>
+						<SelectItem value="all">{t("allProjects")}</SelectItem>
+						<SelectItem value="only">{t("trainingProjects")}</SelectItem>
+						<SelectItem value="exclude">{t("excludeTraining")}</SelectItem>
 					</SelectContent>
 				</Select>
 
@@ -250,7 +268,7 @@ export default function FilterBar() {
 					options={DATABASE_OPTIONS}
 					selected={database}
 					onChange={(value) => updateSearchParams("database", value)}
-					placeholder="Base de données"
+					placeholder={t("database")}
 				/>
 
 				{/* Backend (multi-select) */}
@@ -258,7 +276,7 @@ export default function FilterBar() {
 					options={BACKEND_OPTIONS}
 					selected={backend}
 					onChange={(value) => updateSearchParams("backend", value)}
-					placeholder="API Backend"
+					placeholder={t("backend")}
 				/>
 
 				{/* Frontend (multi-select) */}
@@ -266,7 +284,7 @@ export default function FilterBar() {
 					options={FRONTEND_OPTIONS}
 					selected={frontend}
 					onChange={(value) => updateSearchParams("frontend", value)}
-					placeholder="Frontend"
+					placeholder={t("frontend")}
 				/>
 
 				{/* DevOps (multi-select) */}
@@ -274,7 +292,7 @@ export default function FilterBar() {
 					options={DEVOPS_OPTIONS}
 					selected={devops}
 					onChange={(value) => updateSearchParams("devops", value)}
-					placeholder="DevOps"
+					placeholder={t("devops")}
 				/>
 
 				{/* Bouton reset */}
@@ -286,14 +304,14 @@ export default function FilterBar() {
 						className="text-muted-foreground hover:text-foreground"
 					>
 						<X className="h-4 w-4 mr-1" />
-						Réinitialiser
+						{t("reset")}
 					</Button>
 				)}
 			</div>
 
 			{/* Indicateur de chargement */}
 			{isPending && (
-				<div className="text-sm text-muted-foreground">Chargement...</div>
+				<div className="text-sm text-muted-foreground">{t("loading")}</div>
 			)}
 		</div>
 	);
