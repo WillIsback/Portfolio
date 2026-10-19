@@ -16,7 +16,7 @@ status: "实验已结束"
     { value: "72%", label: "分配给某个配置的 token 用在了这个扫描回路上；只有 1% 给了负责修复的配置", alert: true },
     { value: "75", label: "个未结事件：21 个已解决，29 个失败，25 个无后续关闭" },
     { value: "37%", label: "的事件涉及集群自身的组件", alert: true },
-    { value: "24,537", label: "次 LLM 调用，输入 146.6M token、输出 12.6M，全部本地推理" },
+    { value: "24,537", label: "次 LLM 调用，输入 146.6 M token、输出 12.6 M，全部本地推理" },
     { value: "428", label: "次工具失败被自动检测并在轨迹中分类" },
     { value: "270", label: "次智能体在自己容器里执行 docker exec 以重新取得 root", alert: true },
   ]}
@@ -71,7 +71,7 @@ webhook ───┘   (唯一调度者)                    ├─▶ sre-diag  
     ["auto-eval", 4.8, "work"], ["sre-reporter", 1.4, "work"], ["sre-hygiene", 0.6, "work"],
     ["sre-dev", 0.4, "work"], ["sre-doctor", 0.2, "work"],
   ]}
-  caption="各配置的输入 token 数，单位为百万，在可归属到某个配置的 50M 之内。其余 96.6M 发生在轨迹中加入按配置归属之前。"
+  caption="各配置的输入 token 数，单位为百万，在可归属到某个配置的 50 M 之内。其余 96.6 M 发生在轨迹中加入按配置归属之前。"
 />
 
 ## 读轨迹，让智能体进化

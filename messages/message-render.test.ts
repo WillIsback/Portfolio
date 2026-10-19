@@ -44,6 +44,19 @@ const VALUES: Record<string, unknown> = {
 	age: 30,
 	course: "AI Engineer",
 	value: 46,
+	name: "sre-dev",
+	kind: "work",
+	label: "Energy",
+	values: "CatBoost 0.24, Kumo 0.45",
+	summary: "28/09: 4 tasks",
+	segments: "Capacity 199 (47%)",
+	total: 428,
+	traces: 264,
+	scans: 5,
+	other: 3,
+	title: "Project X",
+	full: "CI, tests",
+	list: "Python, Docker",
 };
 
 /** Exemples de noms de paramètres ICU dans un message : {count}, {n}. */
@@ -51,6 +64,16 @@ function parameters(message: string): string[] {
 	return [...message.matchAll(/\{\s*([a-zA-Z][a-zA-Z0-9]*)\s*[,}]/g)].map(
 		(match) => match[1],
 	);
+}
+
+/** Lit la feuille `path` (« mdx.faultTraces ») dans un catalogue, sinon `undefined`. */
+function lookup(catalog: Catalog, path: string): string | undefined {
+	let node: unknown = catalog;
+	for (const key of path.split(".")) {
+		if (typeof node !== "object" || node === null) return undefined;
+		node = (node as Catalog)[key];
+	}
+	return typeof node === "string" ? node : undefined;
 }
 
 /** Aplatit un catalogue en [chemin, valeur] pour les feuilles textuelles. */
@@ -72,14 +95,33 @@ describe("rendu des messages dans les trois locales", () => {
 	it.each(
 		Object.keys(MESSAGES),
 	)("%s rend chaque feuille sans erreur ICU ni paramètre manquant", (locale) => {
-		const { translator } = MESSAGES[locale];
+		const { catalog, translator } = MESSAGES[locale];
 		const failures: string[] = [];
 
-		for (const [path, message] of leaves(MESSAGES.fr.catalog)) {
-			// Les libellés purement techniques n'ont pas de clé dans cette locale :
-			// c'est la parité qui les couvre, pas ce test.
+		for (const [path, frMessage] of leaves(MESSAGES.fr.catalog)) {
+			// Une locale peut déclarer un paramètre absent du français : on unit les
+			// deux jeux pour ne pas le manquer.
+			const declared = [
+				...new Set([
+					...parameters(frMessage),
+					...parameters(lookup(catalog, path) ?? frMessage),
+				]),
+			];
+
+			// Sans valeur d'exemple, l'interpolation ne peut pas être prouvée : on
+			// échoue bruyamment plutôt que d'ignorer le paramètre en silence.
+			const unsampled = declared.filter((name) => VALUES[name] === undefined);
+			if (unsampled.length > 0) {
+				failures.push(
+					`${path}: aucun exemple dans VALUES pour ${unsampled
+						.map((name) => `{${name}}`)
+						.join(", ")}`,
+				);
+				continue;
+			}
+
 			const values = Object.fromEntries(
-				parameters(message).map((name) => [name, VALUES[name]]),
+				declared.map((name) => [name, VALUES[name]]),
 			);
 
 			try {
@@ -88,7 +130,7 @@ describe("rendu des messages dans les trois locales", () => {
 					failures.push(`${path}: message manquant`);
 				}
 				for (const [name, value] of Object.entries(values)) {
-					if (value !== undefined && !rendered.includes(String(value))) {
+					if (!rendered.includes(String(value))) {
 						failures.push(`${path}: {${name}} non interpolé`);
 					}
 				}

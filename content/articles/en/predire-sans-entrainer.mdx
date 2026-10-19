@@ -64,8 +64,8 @@ The code is on [GitHub](https://github.com/WillIsback/OC-P5_Deployez_un_modele_d
 
 | Target | Model | R² | MAE | Median relative error |
 | --- | --- | --- | --- | --- |
-| Energy | CatBoost | 0.24 | 5.17M kBtu | 35.0% |
-| Energy | Kumo-Tabular | **0.45** | **4.71M kBtu** | 35.1% |
+| Energy | CatBoost | 0.24 | 5.17 M kBtu | 35.0% |
+| Energy | Kumo-Tabular | **0.45** | **4.71 M kBtu** | 35.1% |
 | Emissions | CatBoost | 0.11 | 145.9 t CO2e | **43.7%** |
 | Emissions | Kumo-Tabular | **0.21** | **136.6 t CO2e** | 48.3% |
 
@@ -73,7 +73,7 @@ On paper, Kumo wins clearly on R² and absolute error, metrics dominated by larg
 
 ## What these scores are worth
 
-**A single building makes the result.** On energy, five buildings concentrate 96 to 97% of the two models' squared error, and one alone carries 65 to 76%. It's an industrial site classified as a “campus”, with a power plant and laboratories: it consumes 448M kBtu, CatBoost predicts 36M, Kumo 63M. Both miss it. The second is a data center: 275M kBtu actual, 32M for CatBoost, 175M for Kumo. That one, Kumo comes close.
+**A single building makes the result.** On energy, five buildings concentrate 96 to 97% of the two models' squared error, and one alone carries 65 to 76%. It's an industrial site classified as a “campus”, with a power plant and laboratories: it consumes 448 M kBtu, CatBoost predicts 36 M, Kumo 63 M. Both miss it. The second is a data center: 275 M kBtu actual, 32 M for CatBoost, 175 M for Kumo. That one, Kumo comes close.
 
 | Buildings removed from the test (energy) | CatBoost R² | Kumo R² |
 | --- | --- | --- |

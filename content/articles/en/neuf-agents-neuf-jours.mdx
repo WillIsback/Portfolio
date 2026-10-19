@@ -16,7 +16,7 @@ I ran a fleet of autonomous SRE agents on my real infrastructure: a home server,
     { value: "72%", label: "of the tokens attributed to a profile went to that scan loop; 1% to the profiles that fix things", alert: true },
     { value: "75", label: "incidents opened: 21 resolved, 29 failed, 25 closed with no follow-up" },
     { value: "37%", label: "of the incidents were about the fleet's own components", alert: true },
-    { value: "24,537", label: "LLM calls, 146.6M input tokens and 12.6M output, all served locally" },
+    { value: "24,537", label: "LLM calls, 146.6 M input tokens and 12.6 M output, all served locally" },
     { value: "428", label: "tool failures detected and classified automatically in the traces" },
     { value: "270", label: "times an agent ran docker exec in its own container to become root again", alert: true },
   ]}
@@ -71,7 +71,7 @@ observability: Langfuse (per-profile traces) + Julia-1, a small decision model t
     ["auto-eval", 4.8, "work"], ["sre-reporter", 1.4, "work"], ["sre-hygiene", 0.6, "work"],
     ["sre-dev", 0.4, "work"], ["sre-doctor", 0.2, "work"],
   ]}
-  caption="Input tokens per profile, in millions, out of the 50M attributable to a profile. The remaining 96.6M predate the addition of per-profile attribution in the traces."
+  caption="Input tokens per profile, in millions, out of the 50 M attributable to a profile. The remaining 96.6 M predate the addition of per-profile attribution in the traces."
 />
 
 ## Reading the traces to evolve the agents
@@ -107,7 +107,7 @@ The underlying difficulty is evolving an agent inside a protected environment. E
   good={[
     { title: "The deterministic plumbing.", text: "Delegation, Kanban, incident log, notifications, rollback: everything that doesn't depend on the model's judgment worked on the first try, or nearly." },
     { title: "A single dispatcher.", text: "The star topology removed the cascading delegations of the first version and made every task traceable." },
-    { title: "The Julia-1 judge.", text: "A 147M-parameter model that answers typed questions (choice, score, yes/no) scores every step of every trace in Langfuse, on CPU, at negligible cost." },
+    { title: "The Julia-1 judge.", text: "A 147 M-parameter model that answers typed questions (choice, score, yes/no) scores every step of every trace in Langfuse, on CPU, at negligible cost." },
     { title: "Tool-failure classification.", text: "Seven rules, an LLM on the residue, a score rewritten on every trace: the only loop that produced reusable knowledge." },
     { title: "Fallback models.", text: "When I unplugged the DGX or switched models, the agents kept going on another provider." },
   ]}
