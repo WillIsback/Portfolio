@@ -11,15 +11,17 @@ export default function LocaleSwitcher() {
 	const locale = useLocale();
 	const router = useRouter();
 	const pathname = usePathname();
-	const [pending, startTransition] = useTransition();
+	const [isPending, startTransition] = useTransition();
 
-	// Annotation plutôt qu'un `as` : `Object.fromEntries` infère `{[k: string]: any}`
-	// depuis un tableau de `string[]`, et l'annotation fixe le type exact sans le
-	// faire mentir au lecteur sur ce que contient réellement `labels`.
+	// Annotation plutôt qu'un `as` : elle vérifie l'assignabilité au lieu de l'affirmer.
 	const labels: Record<string, string> = Object.fromEntries(
 		routing.locales.map((code) => [code, t(`names.${code}`)]),
 	);
 
+	// Volontairement sans `name` ni `<form>` : un `<select>` hors formulaire ne fait
+	// rien sans JavaScript, ce qui est le comportement attendu ici et la pratique de
+	// la documentation next-intl. Ajouter un formulaire ou un `name` déclencherait une
+	// navigation complète qui casserait la transition douce ci-dessous — ne pas « corriger ».
 	function change(next: string) {
 		startTransition(() => {
 			router.replace(pathname, { locale: next });
@@ -33,7 +35,7 @@ export default function LocaleSwitcher() {
 			locales={routing.locales}
 			labels={labels}
 			label={t("label")}
-			disabled={pending}
+			disabled={isPending}
 			onChange={change}
 		/>
 	);

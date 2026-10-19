@@ -12,6 +12,15 @@ describe("accueil L2", () => {
 		expect(page).toContain("CarnetExplorer");
 	});
 
+	it("garde l'en-tête en composant serveur", () => {
+		// `static-rendering.test.ts` ne couvre que `app/[locale]/**/{page,layout}`,
+		// donc l'en-tête lui échappe. Un « use client » ici ne romprait ni le build
+		// (un composant client reste rendu côté serveur) ni aucun test : la
+		// régression serait un gonflement silencieux du bundle. D'où ce garde-fou.
+		expect(read("components/Header/Header.tsx")).not.toContain('"use client"');
+		expect(read("components/Header/Header.tsx")).toContain("<LocaleSwitcher");
+	});
+
 	it("a retiré l'animation du message vers Contact", () => {
 		expect(
 			existsSync(

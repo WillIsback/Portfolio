@@ -36,7 +36,10 @@ export default function LocaleSelect({
 				className="rounded-none border border-border/70 bg-background px-1.5 py-1 font-mono text-xs text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 			>
 				{locales.map((code) => (
-					<option key={code} value={code}>
+					// `lang` fait annoncer « English » et « 中文 » avec leur phonétique
+					// d'origine sur une page française, au lieu de la prononciation du
+					// lecteur d'écran.
+					<option key={code} value={code} lang={code}>
 						{labels[code]}
 					</option>
 				))}

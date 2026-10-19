@@ -32,6 +32,17 @@ describe("LocaleSelect", () => {
 		expect(html).toContain(fr.locale.names.zh);
 	});
 
+	it("annonce chaque option dans sa propre langue", () => {
+		// `lang` est lié à la *valeur* de l'option, pas seulement présent dans le
+		// balisage : les assertions précédentes laisseraient passer une langue
+		// annoncée correctement mais attribuée à la mauvaise entrée.
+		for (const code of routing.locales) {
+			expect(html).toMatch(
+				new RegExp(`<option(?=[^>]*value="${code}")(?=[^>]*lang="${code}")`),
+			);
+		}
+	});
+
 	it("marque la langue active", () => {
 		expect(html).toMatch(/<option[^>]*value="fr"[^>]*selected/);
 	});
@@ -40,10 +51,20 @@ describe("LocaleSelect", () => {
 		expect(html).toMatch(/<label[^>]*for="locale-switcher"/);
 		expect(html).toContain('id="locale-switcher"');
 		expect(html).toContain(`aria-label="${fr.locale.label}"`);
+		// `label` et `select` sont des frères, pas imbriqués : les assertions
+		// ci-dessus ne trouvent qu'une paire for/id, peu importe l'ordre. Cette
+		// assertion est ordonnée, et `<select>` n'autorise que option/optgroup/hr —
+		// un `<label>` imbriqué serait du HTML invalide en plus d'inaccessible.
+		expect(html).toMatch(/<\/label><select/);
 	});
 
 	it("reste compatible avec les trois locales du routage", () => {
 		expect(routing.locales).toEqual(["fr", "en", "zh"]);
-		expect(Object.keys(labels)).toEqual(["fr", "en", "zh"]);
+		// `Object.keys(labels)` ne prouverait rien : une locale sans entrée dans
+		// `names` donnerait quand même sa clé, et rendrait une option vide plutôt
+		// qu'une erreur. On compare donc au dictionnaire — avec `toStrictEqual`,
+		// car `toEqual` ignore les clés dont la valeur est `undefined` et
+		// laisserait passer exactement ce cas.
+		expect(labels).toStrictEqual(fr.locale.names);
 	});
 });
