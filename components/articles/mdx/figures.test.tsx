@@ -1,7 +1,9 @@
 import type { ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { CompareChart } from "./CompareChart";
 import { FaultBuckets } from "./FaultBuckets";
+import { Screenshot } from "./Screenshot";
 import { TasksChart } from "./TasksChart";
 import { TokensChart } from "./TokensChart";
 
@@ -49,6 +51,31 @@ const cases: [string, (n?: number) => ReactElement][] = [
 			/>
 		),
 	],
+	[
+		"CompareChart",
+		(n) => (
+			<CompareChart
+				series={["A", "B"]}
+				groups={[["G", 1, 2]]}
+				title="Titre"
+				caption="Légende"
+				figureNumber={n}
+			/>
+		),
+	],
+	[
+		"Screenshot",
+		(n) => (
+			<Screenshot
+				src="/capture.png"
+				alt="Capture"
+				width={100}
+				height={50}
+				caption="Légende"
+				figureNumber={n}
+			/>
+		),
+	],
 ];
 
 describe("légendes par défaut", () => {
@@ -90,5 +117,23 @@ describe("FaultBuckets sans légende", () => {
 			"Fig. 3 · Répartition des échecs d&#x27;outils</figcaption>",
 		);
 		expect(html.indexOf("<figcaption")).toBeGreaterThan(html.indexOf("</ul>"));
+	});
+});
+
+describe("CompareChart", () => {
+	it("prend le titre comme légende par défaut et décrit les valeurs", () => {
+		const html = renderToStaticMarkup(
+			<CompareChart
+				series={["CatBoost", "Kumo"]}
+				groups={[["Énergie", 0.24, null]]}
+				title="R² sur le test"
+				digits={2}
+				step={0.1}
+				figureNumber={1}
+			/>,
+		);
+		expect(html).toContain("Fig. 1 · R² sur le test</figcaption>");
+		expect(html).toContain("Énergie : CatBoost 0,24");
+		expect(html).not.toContain("Kumo 0");
 	});
 });

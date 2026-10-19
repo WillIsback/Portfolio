@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { CompareChart } from "./CompareChart";
 import { FaultBuckets } from "./FaultBuckets";
 import { KeyFigures } from "./KeyFigures";
 import { Lesson } from "./Lesson";
 import Note from "./Note";
+import { Screenshot } from "./Screenshot";
 import { Sources } from "./Sources";
 import { TasksChart } from "./TasksChart";
 import { Timeline } from "./Timeline";
@@ -84,6 +86,8 @@ export const mdxComponents = {
 	TasksChart,
 	TokensChart,
 	FaultBuckets,
+	CompareChart,
+	Screenshot,
 	Verdicts,
 	Lesson,
 	Sources,

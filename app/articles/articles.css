@@ -312,6 +312,31 @@
   background: var(--chart-work);
 }
 
+/* CompareChart: neutral reference series, accent series. */
+.chart-bar-base {
+  fill: var(--chart-scan);
+}
+
+.chart-bar-accent {
+  fill: var(--chart-work);
+}
+
+.chart-swatch-base {
+  background: var(--chart-scan);
+}
+
+.chart-swatch-accent {
+  background: var(--chart-work);
+}
+
+.article-screenshot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+}
+
 /* Two server-rendered variants per chart; CSS shows exactly one
    (display:none also removes the hidden one from the a11y tree). */
 .chart-svg--compact {
