@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { MapCluster, MapPoint } from "@/lib/carnet/map-view";
+import fr from "@/messages/fr.json";
 import { renderFr } from "@/tests/i18n-render";
 import CarnetExplorer from "./CarnetExplorer";
 
@@ -30,9 +31,7 @@ describe("CarnetExplorer (rendu serveur)", () => {
 
 	it("rend la présentation, un champ étiqueté et la carte dès le HTML", () => {
 		expect(html).toContain("<h1>Carnet de labo</h1>");
-		expect(html).toContain(
-			'placeholder="Décris un sujet : vision, LLM local, agents…"',
-		);
+		expect(html).toContain(`placeholder="${fr.carnet.searchPlaceholder}"`);
 		expect(html).toMatch(/<label[^>]*for="carnet-query"/);
 		expect(html).toContain('role="img"');
 		expect(html).toContain("Fig. 1 · ");
@@ -40,8 +39,10 @@ describe("CarnetExplorer (rendu serveur)", () => {
 
 	it("prépare une région annoncée, vide au repos, sans mention sémantique", () => {
 		expect(html).toContain('aria-live="polite"');
-		expect(html).toContain("recherche sémantique active");
-		expect(html).toMatch(/invisible[^>]*>recherche sémantique active/);
+		expect(html).toContain(fr.carnet.semanticActive);
+		expect(html).toMatch(
+			new RegExp(`invisible[^>]*>${fr.carnet.semanticActive}`),
+		);
 		expect(html).not.toContain('class="carnet-query"');
 		expect(html).toMatch(/aria-live="polite"[^>]*><\/div>/);
 	});

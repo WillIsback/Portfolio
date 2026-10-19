@@ -121,6 +121,16 @@
 	},
 	"carnet": {
 		"noResults": "Aucun résultat",
-		"resultCount": "{count, plural, one {# résultat} other {# résultats}}"
+		"resultCount": "{count, plural, one {# résultat} other {# résultats}}",
+		"searchLabel": "Explorer le carnet",
+		"searchPlaceholder": "Décris un sujet : vision, LLM local, agents…",
+		"mapTitle": "Carte de mes projets et articles",
+		"mapDescription": "{count} éléments placés selon la proximité de leur sujet, calculée par un modèle d'embeddings. La liste des éléments sous la carte en donne l'équivalent.",
+		"noMatch": "Aucun élément ne correspond. Essaie un autre mot.",
+		"keywordMatch": "correspondance par mot-clé",
+		"kindArticle": "article",
+		"kindProject": "projet",
+		"itemListLabel": "Les {count} éléments de la carte",
+		"semanticActive": "recherche sémantique active"
 	}
 }

@@ -121,6 +121,16 @@
 	},
 	"carnet": {
 		"noResults": "No results",
-		"resultCount": "{count, plural, one {# result} other {# results}}"
+		"resultCount": "{count, plural, one {# result} other {# results}}",
+		"searchLabel": "Explore the logbook",
+		"searchPlaceholder": "Describe a topic: vision, local LLM, agents…",
+		"mapTitle": "Map of my projects and articles",
+		"mapDescription": "{count} items placed by topic proximity, computed with an embeddings model. The item list under the map gives the equivalent.",
+		"noMatch": "No items match. Try another word.",
+		"keywordMatch": "keyword match",
+		"kindArticle": "article",
+		"kindProject": "project",
+		"itemListLabel": "The {count} items on the map",
+		"semanticActive": "recherche sémantique active"
 	}
 }

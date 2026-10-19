@@ -1,7 +1,7 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapCluster, MapPoint } from "@/lib/carnet/map-view";
-import { renderFr } from "@/tests/i18n-render";
+import fr from "@/messages/fr.json";
+import { escapeHtml, renderFr } from "@/tests/i18n-render";
 import MapItemList from "./MapItemList";
 import MapLegend from "./MapLegend";
 import MapSvg from "./MapSvg";
@@ -42,24 +42,28 @@ const clusters: MapCluster[] = [
 
 describe("MapSvg", () => {
 	it("est une image décrite : carrés pour les articles, ronds pour les projets", () => {
-		const html = renderToStaticMarkup(<MapSvg points={points} />);
+		const html = renderFr(<MapSvg points={points} />);
 		expect(html).toContain('role="img"');
 		expect(html).toContain('aria-labelledby="carnet-map-title"');
 		expect(html).toContain('aria-describedby="carnet-map-desc"');
 		expect(html).toContain("<title");
 		expect(html).toContain("<desc");
+		expect(html).toContain(fr.carnet.mapTitle);
+		expect(html).toContain(
+			escapeHtml(fr.carnet.mapDescription.replace("{count}", "3")),
+		);
 		expect(html.match(/<rect[^>]*carnet-point/g)?.length).toBe(1);
 		expect(html.match(/<circle[^>]*carnet-point/g)?.length).toBe(2);
 	});
 
 	it("place les points avec la marge de 6 % et décale l'entrée par groupe", () => {
-		const html = renderToStaticMarkup(<MapSvg points={points} />);
+		const html = renderFr(<MapSvg points={points} />);
 		expect(html).toContain('cx="94"');
 		expect(html).toContain("--i:1");
 	});
 
 	it("allume les résultats et pose le point de la requête", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<MapSvg
 				points={points}
 				highlighted={new Set(["project:1"])}
@@ -71,13 +75,13 @@ describe("MapSvg", () => {
 	});
 
 	it("n'a pas de point de requête au repos et ne cache rien", () => {
-		const html = renderToStaticMarkup(<MapSvg points={points} />);
+		const html = renderFr(<MapSvg points={points} />);
 		expect(html).not.toContain("carnet-query");
 		expect(html).not.toContain("opacity:0");
 	});
 
 	it("garde les liens des points hors de l'ordre de tabulation", () => {
-		const html = renderToStaticMarkup(<MapSvg points={points} />);
+		const html = renderFr(<MapSvg points={points} />);
 		expect(html).toContain('href="/articles/a"');
 		expect(html.match(/tabindex="-1"/g)?.length).toBe(3);
 	});
@@ -85,7 +89,7 @@ describe("MapSvg", () => {
 
 describe("MapLegend", () => {
 	it("liste les groupes avec leur teinte et leur effectif", () => {
-		const html = renderToStaticMarkup(<MapLegend clusters={clusters} />);
+		const html = renderFr(<MapLegend clusters={clusters} />);
 		expect(html).toContain("Agents et SRE");
 		expect(html).toContain("var(--cluster-2)");
 		expect(html).toContain("font-mono");
@@ -96,7 +100,7 @@ describe("MapItemList", () => {
 	it("double la carte par des liens navigables au clavier", () => {
 		const html = renderFr(<MapItemList points={points} />);
 		expect(html).toContain("<details");
-		expect(html).toContain("Les 3 éléments de la carte");
+		expect(html).toContain(fr.carnet.itemListLabel.replace("{count}", "3"));
 		expect(html).toContain('href="/articles/a"');
 		expect(html).toContain('target="_blank"');
 		expect(html).toContain('rel="noopener noreferrer"');

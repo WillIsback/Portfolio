@@ -121,6 +121,16 @@
 	},
 	"carnet": {
 		"noResults": "没有结果",
-		"resultCount": "{count} 条结果"
+		"resultCount": "{count} 条结果",
+		"searchLabel": "浏览笔记",
+		"searchPlaceholder": "描述一个主题：视觉、本地大模型、智能体…",
+		"mapTitle": "我的项目与文章地图",
+		"mapDescription": "按主题相近程度排布的 {count} 个条目，由嵌入模型计算得出。地图下方的条目列表提供等价内容。",
+		"noMatch": "没有匹配的条目，换个词试试。",
+		"keywordMatch": "关键词匹配",
+		"kindArticle": "文章",
+		"kindProject": "项目",
+		"itemListLabel": "地图中的 {count} 个条目",
+		"semanticActive": "recherche sémantique active"
 	}
 }
