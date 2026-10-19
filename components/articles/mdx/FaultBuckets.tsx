@@ -55,10 +55,10 @@ export function FaultBuckets({
 		<figure className="article-figure my-10 rounded-xl border border-border bg-card p-5 shadow-sm">
 			<div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 				<p className="font-display text-lg font-semibold text-foreground">
-					{formatNumber(total, 1, locale)} échecs d&apos;outils
+					{tMdx("faultTitle", { count: total })}
 				</p>
 				<p className="text-sm text-muted-foreground">
-					sur {formatNumber(traces, 1, locale)} traces
+					{tMdx("faultTraces", { traces })}
 				</p>
 			</div>
 			<div

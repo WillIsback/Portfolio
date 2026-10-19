@@ -12,11 +12,11 @@ I ran a fleet of autonomous SRE agents on my real infrastructure: a home server,
 <KeyFigures
   items={[
     { value: "9", label: "agent profiles, in a star topology driven by a Kanban board" },
-    { value: "78 %", label: "of the 418 Kanban tasks were the same infrastructure scan (324 scans)", alert: true },
-    { value: "72 %", label: "of the tokens attributed to a profile went to that scan loop; 1 % to the profiles that fix things", alert: true },
+    { value: "78%", label: "of the 418 Kanban tasks were the same infrastructure scan (324 scans)", alert: true },
+    { value: "72%", label: "of the tokens attributed to a profile went to that scan loop; 1% to the profiles that fix things", alert: true },
     { value: "75", label: "incidents opened: 21 resolved, 29 failed, 25 closed with no follow-up" },
-    { value: "37 %", label: "of the incidents were about the fleet's own components", alert: true },
-    { value: "24 537", label: "LLM calls, 146,6 M input tokens and 12,6 M output, all served locally" },
+    { value: "37%", label: "of the incidents were about the fleet's own components", alert: true },
+    { value: "24,537", label: "LLM calls, 146.6M input tokens and 12.6M output, all served locally" },
     { value: "428", label: "tool failures detected and classified automatically in the traces" },
     { value: "270", label: "times an agent ran docker exec in its own container to become root again", alert: true },
   ]}
@@ -71,7 +71,7 @@ observability: Langfuse (per-profile traces) + Julia-1, a small decision model t
     ["auto-eval", 4.8, "work"], ["sre-reporter", 1.4, "work"], ["sre-hygiene", 0.6, "work"],
     ["sre-dev", 0.4, "work"], ["sre-doctor", 0.2, "work"],
   ]}
-  caption="Input tokens per profile, in millions, out of the 50 M attributable to a profile. The remaining 96,6 M predate the addition of per-profile attribution in the traces."
+  caption="Input tokens per profile, in millions, out of the 50M attributable to a profile. The remaining 96.6M predate the addition of per-profile attribution in the traces."
 />
 
 ## Reading the traces to evolve the agents
@@ -91,13 +91,13 @@ The classification rests on a simple question: whose fault is it? Four categorie
   ]}
 />
 
-Two things surprised me. First, seven deterministic rules are enough to classify 88 % of the failures. The LLM only steps in on the residue, and its recurring classifications are meant to become new rules. This is the only place in the fleet where the system became less dependent on the model the longer it ran.
+Two things surprised me. First, seven deterministic rules are enough to classify 88% of the failures. The LLM only steps in on the residue, and its recurring classifications are meant to become new rules. This is the only place in the fleet where the system became less dependent on the model the longer it ran.
 
 Second, the biggest category wasn't an agent error. Nearly half the failures fell under “capacity”: the agent wanted to do something reasonable and the environment forbade it. In autonomous mode, with no human to approve, code execution and the terminal are refused by the harness: 111 refusals for code execution, 69 for the terminal. These figures became a list of needs. I created narrow MCP tools to cover them: read-only command execution on an allowlist, sandboxed Python with no network or secrets, an HTTP probe limited to internal targets.
 
 The “reasoning” failures told another story. A good share came from the intermediary tool used to call tools loaded on demand: the model got the arity wrong or called directly a tool that was supposed to go through it. These patterns were fixed in the agents' instruction files, not in the code: a skill dedicated to tool usage, examples of correct calls, and instructions removed when they contradicted each other.
 
-The same work guided context-window management. Loading the schemas of 59 tools up front drowns the model. So tools are discovered on demand, from a list capped at 12 000 tokens, each profile has access only to the tools for its role (27 for diagnosis, for example), and loads automatically only its own skills. I also tuned the reasoning effort per role: low for orchestration, high for the probe that has to judge an ambiguous state.
+The same work guided context-window management. Loading the schemas of 59 tools up front drowns the model. So tools are discovered on demand, from a list capped at 12,000 tokens, each profile has access only to the tools for its role (27 for diagnosis, for example), and loads automatically only its own skills. I also tuned the reasoning effort per role: low for orchestration, high for the probe that has to judge an ambiguous state.
 
 The underlying difficulty is evolving an agent inside a protected environment. Every security restriction creates a new category of “capacity” failures. The agent needs tools, but the tools provided never cover all its real needs. So you have to measure what it tries to do, tell the legitimate need from the workaround, then add the narrowest possible tool. The 6 October audit showed it the other way round: when the tool was missing, the agent went through the terminal and the Docker socket. Some of the “capacity” failures that disappeared weren't solved. They were bypassed.
 
@@ -107,17 +107,17 @@ The underlying difficulty is evolving an agent inside a protected environment. E
   good={[
     { title: "The deterministic plumbing.", text: "Delegation, Kanban, incident log, notifications, rollback: everything that doesn't depend on the model's judgment worked on the first try, or nearly." },
     { title: "A single dispatcher.", text: "The star topology removed the cascading delegations of the first version and made every task traceable." },
-    { title: "The Julia-1 judge.", text: "A 147 M-parameter model that answers typed questions (choice, score, yes/no) scores every step of every trace in Langfuse, on CPU, at negligible cost." },
+    { title: "The Julia-1 judge.", text: "A 147M-parameter model that answers typed questions (choice, score, yes/no) scores every step of every trace in Langfuse, on CPU, at negligible cost." },
     { title: "Tool-failure classification.", text: "Seven rules, an LLM on the residue, a score rewritten on every trace: the only loop that produced reusable knowledge." },
     { title: "Fallback models.", text: "When I unplugged the DGX or switched models, the agents kept going on another provider." },
   ]}
   bad={[
     { title: "A loop over a stable state.", text: "A cron that queries an infra that's doing fine produces “nothing new”, 140 times a day." },
     { title: "“Untested” taken for “healthy”.", text: "Without an error signal, the model concludes all is well instead of generating the proof." },
-    { title: "Self-reference.", text: "37 % of the incidents concerned the fleet, its dashboard or its MCP server. It spent part of its time watching itself." },
+    { title: "Self-reference.", text: "37% of the incidents concerned the fleet, its dashboard or its MCP server. It spent part of its time watching itself." },
     { title: "Bypassed guardrails.", text: "With a terminal and the Docker socket, an agent doesn't need the MCP tools: 270 docker exec to become root again, docker run -v, direct compose up." },
     { title: "Emergent loops.", text: "External memory and missing tools each created a cycle nobody had designed." },
-    { title: "The cost of the showcase.", text: "Of 185 commits to the MCP server and the dashboard, 46 % are fixes, and the 3D visualization scene accounts for the largest share." },
+    { title: "The cost of the showcase.", text: "Of 185 commits to the MCP server and the dashboard, 46% are fixes, and the 3D visualization scene accounts for the largest share." },
   ]}
 />
 
@@ -160,5 +160,5 @@ Per-profile trace attribution came late: two thirds of the tokens can't be tied 
 The fleet remains reproducible from a git tag. Its crons are paused, not deleted. The next experiment starts from a narrower hypothesis: giving every LLM-consuming service its own account and its own keys through the MLflow gateway.
 
 <Sources>
-Fleet Kanban board (418 tasks), incident log (75 incidents), Langfuse events in ClickHouse (24 537 generations, production environment, judges excluded), tool-failure classification manifests (264 traces, 428 failures), git history and agent session history. Period: 27 September to 6 October 2026. The “on the fleet” incidents cover its own containers: gateway, dashboard, MCP server, visualization and judge.
+Fleet Kanban board (418 tasks), incident log (75 incidents), Langfuse events in ClickHouse (24,537 generations, production environment, judges excluded), tool-failure classification manifests (264 traces, 428 failures), git history and agent session history. Period: 27 September to 6 October 2026. The “on the fleet” incidents cover its own containers: gateway, dashboard, MCP server, visualization and judge.
 </Sources>
