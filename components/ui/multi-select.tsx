@@ -37,10 +37,9 @@ interface MultiSelectProps {
 }
 
 /**
- * Les libellés par défaut (`Sélectionner...`, `Aucun résultat.`, `Rechercher...`, le
- * décompte de sélection) viennent de `multiSelect`. `placeholder` et `emptyMessage`
- * restent des props : l'appelant les connaît au moment du rendu, là où le dictionnaire
- * n'a pas encore été consulté.
+ * Les libellés par défaut (sélection, état vide, recherche, décompte) viennent de
+ * `multiSelect`. `placeholder` et `emptyMessage` restent des props : l'appelant les
+ * connaît au moment du rendu, là où le dictionnaire n'a pas encore été consulté.
  */
 export function MultiSelect({
 	options,
