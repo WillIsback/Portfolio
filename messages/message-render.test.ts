@@ -99,14 +99,35 @@ describe("rendu des messages dans les trois locales", () => {
 		const failures: string[] = [];
 
 		for (const [path, frMessage] of leaves(MESSAGES.fr.catalog)) {
-			// Une locale peut déclarer un paramètre absent du français : on unit les
-			// deux jeux pour ne pas le manquer.
-			const declared = [
-				...new Set([
-					...parameters(frMessage),
-					...parameters(lookup(catalog, path) ?? frMessage),
-				]),
-			];
+			const localeMessage = lookup(catalog, path) ?? frMessage;
+			const frParameters = new Set(parameters(frMessage));
+			const localeParameters = new Set(parameters(localeMessage));
+
+			// La parité porte sur les clés, pas sur les paramètres : une locale qui
+			// oublie un paramètre rend une phrase amputée sans que rien ne le signale.
+			// On compare donc structurellement, sans passer par le rendu.
+			const missing = [...frParameters].filter(
+				(name) => !localeParameters.has(name),
+			);
+			const extra = [...localeParameters].filter(
+				(name) => !frParameters.has(name),
+			);
+			if (missing.length > 0 || extra.length > 0) {
+				const parts: string[] = [];
+				if (missing.length > 0) {
+					parts.push(
+						`absents de cette locale : ${missing.map((n) => `{${n}}`).join(", ")}`,
+					);
+				}
+				if (extra.length > 0) {
+					parts.push(
+						`absents du français : ${extra.map((n) => `{${n}}`).join(", ")}`,
+					);
+				}
+				failures.push(`${path}: ${parts.join(" ; ")}`);
+			}
+
+			const declared = [...new Set([...frParameters, ...localeParameters])];
 
 			// Sans valeur d'exemple, l'interpolation ne peut pas être prouvée : on
 			// échoue bruyamment plutôt que d'ignorer le paramètre en silence.
@@ -129,8 +150,11 @@ describe("rendu des messages dans les trois locales", () => {
 				if (rendered === path || rendered.includes(`.${path}`)) {
 					failures.push(`${path}: message manquant`);
 				}
-				for (const [name, value] of Object.entries(values)) {
-					if (!rendered.includes(String(value))) {
+				// L'interpolation se prouve par la disparition du marqueur, jamais par
+				// la présence de la valeur brute : ICU formate ({n, number} → « 1 000 »,
+				// pluriels), donc `String(value)` peut légitimement être absent.
+				for (const name of declared) {
+					if (rendered.includes(`{${name}}`)) {
 						failures.push(`${path}: {${name}} non interpolé`);
 					}
 				}
