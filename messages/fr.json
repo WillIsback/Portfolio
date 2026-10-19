@@ -213,5 +213,18 @@
 		"registerNoscript": "Le registre se charge avec JavaScript ; mes dépôts sont aussi sur",
 		"registerUnavailable": "Le registre des projets est momentanément indisponible.",
 		"instruments": "Instruments"
+	},
+	"articles": {
+		"eyebrow": "Carnet · entrées",
+		"title": "Articles",
+		"description": "Retours d'expérience chiffrés sur les agents autonomes, les LLM servis en local, l'observabilité et l'infrastructure.",
+		"empty": "Aucun article pour le moment.",
+		"allEntries": "Toutes les entrées →",
+		"allArticles": "Tous les articles",
+		"backToArticles": "Retour aux articles",
+		"periodLabel": "Période : ",
+		"tagsLabel": "Thèmes",
+		"onTheMap": "Sur la carte",
+		"onTheMapCaption": "Cette entrée parmi ses voisins"
 	}
 }

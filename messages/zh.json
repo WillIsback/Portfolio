@@ -213,5 +213,18 @@
 		"registerNoscript": "登记表需要 JavaScript 才能加载；我的仓库也发布在",
 		"registerUnavailable": "项目登记表暂时无法访问。",
 		"instruments": "工具箱"
+	},
+	"articles": {
+		"eyebrow": "实验笔记 · 条目",
+		"title": "文章",
+		"description": "关于自主智能体、本地部署的大语言模型、可观测性与基础设施的量化实践复盘。",
+		"empty": "暂时还没有文章。",
+		"allEntries": "全部条目 →",
+		"allArticles": "全部文章",
+		"backToArticles": "返回文章列表",
+		"periodLabel": "时间：",
+		"tagsLabel": "主题",
+		"onTheMap": "地图位置",
+		"onTheMapCaption": "本条目及其邻居"
 	}
 }

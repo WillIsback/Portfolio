@@ -213,5 +213,18 @@
 		"registerNoscript": "The register loads with JavaScript; my repositories are also on",
 		"registerUnavailable": "The project register is temporarily unavailable.",
 		"instruments": "Instruments"
+	},
+	"articles": {
+		"eyebrow": "Logbook · entries",
+		"title": "Articles",
+		"description": "Quantified field notes on autonomous agents, LLMs served locally, observability and infrastructure.",
+		"empty": "No articles just yet.",
+		"allEntries": "All entries →",
+		"allArticles": "All articles",
+		"backToArticles": "Back to articles",
+		"periodLabel": "Period: ",
+		"tagsLabel": "Topics",
+		"onTheMap": "On the map",
+		"onTheMapCaption": "This entry among its neighbours"
 	}
 }

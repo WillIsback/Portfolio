@@ -25,6 +25,7 @@ describe("LatestEntries", () => {
 		expect(html).toContain("7\u00a0min de lecture");
 		expect(html).toContain("SRE");
 		expect(html).toContain('href="/articles"');
+		expect(html).toContain(fr.articles.allEntries);
 	});
 
 	it("peut servir de liste complète : sans lien « Toutes les entrées », titres en h2", () => {

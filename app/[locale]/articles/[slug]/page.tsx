@@ -72,6 +72,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	// module où aucune locale n'est encore connue.
 	const tClusters = await getTranslations("clusters");
 	const tReadingTime = await getTranslations("readingTime");
+	const tArticles = await getTranslations("articles");
 	const view = toMapView(map, clusterLabels(tClusters));
 
 	const { source, count: figureCount } = numberFigures(article.content);
@@ -118,7 +119,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
 				>
 					<ArrowLeft aria-hidden="true" className="size-4" />
-					Tous les articles
+					{tArticles("allArticles")}
 				</Link>
 			</nav>
 
@@ -141,7 +142,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					{article.period ? (
 						<>
 							{" · "}
-							<span className="sr-only">Période : </span>
+							<span className="sr-only">{tArticles("periodLabel")}</span>
 							{article.period}
 						</>
 					) : null}
@@ -170,7 +171,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
 				>
 					<ArrowLeft aria-hidden="true" className="size-4" />
-					Retour aux articles
+					{tArticles("backToArticles")}
 				</Link>
 			</footer>
 		</article>

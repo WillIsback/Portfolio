@@ -15,6 +15,7 @@ export default function LatestEntries({
 }>) {
 	const locale = useLocale();
 	const t = useTranslations("readingTime");
+	const tArticles = useTranslations("articles");
 	if (articles.length === 0) return null;
 	const Heading = headingLevel === 2 ? "h2" : "h3";
 	return (
@@ -58,7 +59,7 @@ export default function LatestEntries({
 					href="/articles"
 					className="mt-4 inline-block rounded-sm font-mono text-xs text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				>
-					Toutes les entrées →
+					{tArticles("allEntries")}
 				</Link>
 			) : null}
 		</div>
