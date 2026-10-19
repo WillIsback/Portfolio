@@ -1,10 +1,20 @@
+import { setRequestLocale } from "next-intl/server";
 import LatestEntries from "@/components/home/LatestEntries";
 import { getAllArticles } from "@/lib/articles/loader";
 
 const description =
 	"Retours d'expérience chiffrés sur les agents autonomes, les LLM servis en local, l'observabilité et l'infrastructure.";
 
-export default function ArticlesPage() {
+export default async function ArticlesPage({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}) {
+	const { locale } = await params;
+	// Redondant avec `articles/layout.tsx`, volontaire : voir
+	// `app/[locale]/static-rendering.test.ts`. Chaque module se protège lui-même.
+	setRequestLocale(locale);
+
 	const articles = getAllArticles();
 
 	return (

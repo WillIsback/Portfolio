@@ -803,14 +803,33 @@ git commit -m "refactor(routes): segment [locale] et deux root layouts (public +
    cinq déclarations `next/font/google` sont désormais dans `lib/fonts.ts`, importées par les deux
    root layouts. `paper` n'est pas reporté sur l'admin : aucune page admin ne l'utilise, l'admin
    peint déjà `bg-zinc-950` et n'a pas de ThemeProvider, donc la trame de points serait inerte.
-6. **La 404 localisée a un coût de statique.** `app/not-found.tsx` est nécessaire : sans lui,
-   `/en/nope`, `/xx` et `/en/articles/does-not-exist` renvoient la coquille 404 brute de Next.
-   Mais la bordure `not-found` est présente dans l'arbre de **toutes** les routes : y lire la
-   locale (`headers()` sur `x-next-intl-locale`) fait retomber toutes les routes publiques en `ƒ`,
-   mesuré. La 404 globale est donc servie dans la locale par défaut, et `app/[locale]/not-found.tsx`
-   a été supprimé : avec deux root layouts, Next compose la bordure racine ET celle du segment,
-   ce qui affichait deux 404 superposées sur le même HTML.
-7. **`components/about/chronology.test.tsx`** lit `app/About/page.tsx` en source et échoue après le déplacement.
+6. **La 404 globalese règle dans la locale par défaut.** `app/not-found.tsx` est nécessaire :
+   sans lui, `/en/nope`, `/xx` et `/en/articles/does-not-exist` renvoient la coquille 404 brute
+   de Next. Mais la bordure `not-found` est présente dans l'arbre de **toutes** les routes : y lire
+   la locale (`headers()` sur `x-next-intl-locale`) fait retomber toutes les routes publiques en
+   `ƒ`, mesuré. Elle rend donc le dictionnaire de `routing.defaultLocale`.
+   `app/[locale]/not-found.tsx` est conservé, en composant client, pour les `notFound()` levés
+   depuis le segment ; les deux fichiers rendent une page, jamais deux. **Correction d'un
+   constat erroné de la tâche 3** : la suppression du fichier de segment, censée éviter « deux
+   404 superposées », reposait sur une mesure faulty — un `grep` sur le HTML brut, qui contient
+   le payload RSC dans les `<script>` où les dictionnaires sont eux aussi sérialisés.
+   > Ce qui est mesuré aujourd'hui, et qui reste à confirmer : sur une URL sans route c'est le
+   > fichier racine qui rend, y compris quand `notFound()` est levé depuis
+   > `articles/[slug]/page.tsx` (expérimenté avec `dynamicParams = true`) ; le fichier du
+   > segment n'apparaît alors pas dans la sortie. Tant que `dynamicParams = false` fait
+   > répondre Next au routage, aucune 404 n'atteint le segment. Écrire le fichier du segment
+   > en Server Component double en revanche le `<main>` dans le payload : c'est ce que règle
+   > son `"use client"`.
+7. **Un `notFound()` client dans un composant client casse à la tâche 8.** `Contact/page.tsx` était
+   un unique composant `"use client"` qui rendait `Footer` ; la tâche 8 le rendant `async` avec
+   `getTranslations`, le build échouerait sur « getTranslations is not supported in Client
+   Components ». Page scindée en `page.tsx` (serveur : chrome et copie statique) +
+   `ContactForm.tsx` (client : formulaire et état).
+8. **`setRequestLocale()` doit être dans chaque page et layout, pas seulement au root.** Le
+   `setRequestLocale()` du root layout arrive après le rendu du sous-arbre page, donc hors du
+   scope React `cache()` qui évite `headers()`. `app/[locale]/static-rendering.test.ts` verrouille
+   l'invariant.
+9. **`components/about/chronology.test.tsx`** lit `app/About/page.tsx` en source et échoue après le déplacement.
    Il ne figurait pas dans la tâche 4 : à y ajouter.
 
 ## Tâche 4 — Helper de rendu et repointage des tests existants

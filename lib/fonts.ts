@@ -44,10 +44,12 @@ const firaCode = Fira_Code({
 /**
  * Classes CSS qui posent les variables `--font-*`.
  *
- * `app/globals.css` les consomme sans repli : `body { font-family: var(--font-serif) }`,
- * et les utilitaires `font-sans` / `font-mono` passent par `var(--font-bricolage)` /
- * `var(--font-fira)`. Une `var()` non définie invalide la déclaration en temps de
- * calcul, donc la police se dégrade silencieusement vers celle du navigateur.
+ * `app/globals.css` les consomme par `@theme inline` : `--font-serif: var(--font-source-serif),
+ * Georgia, …`, et les utilitaires `font-sans` / `font-mono` suivent la même forme. Chaque
+ * déclaration a bien une police de repli — mais une `var()` non définie invalide la
+ * déclaration ENTIÈRE au moment du calcul, sans avancer au jeton suivant : la famille
+ * entière est donc perdue, pas dégradée. D'où la nécessité de poser ces variables dans
+ * les deux root layouts.
  *
  * Les deux root layouts (`app/[locale]/layout.tsx` et `app/(admin)/layout.tsx`)
  * doivent donc poser ces variables : source unique, pour que les deux arbres ne

@@ -22,13 +22,19 @@ import "./globals.css";
  * seconde afficherait du français puis corrigerait à l'hydratation. Les deux coûtent
  * plus cher que l'absence de traduction sur une URL inexistante.
  *
- * Unique point d'entrée 404, volontairement : avec `app/(admin)/layout.tsx` et
- * `app/[locale]/layout.tsx` comme root layouts, Next compose la bordure racine AVEC
- * celle du segment. Un `app/[locale]/not-found.tsx` en doublon affichait donc deux
- * 404 superposées sur le même HTML (mesuré : « Page introuvable » et « Page not found »
- * dans la même page). Il était de toute façon inatteignable : le seul `notFound()` du
- * segment est celui du slug inconnu, et `dynamicParams = false` fait respondedre à
- * Next au niveau du routage avant que la page ne s'exécute.
+ * Point d'entrée 404 des URL sans route. `app/[locale]/not-found.tsx` existe aussi,
+ * pour les `notFound()` levés depuis une page du segment ; les deux fichiers rendent
+ * une page, jamais deux (mesuré : un seul `<main>` et un seul `<h1>` dans le HTML
+ * rendu de `/en/articles/does-not-exist`, `/xx`, `/en/nope` et `/nope`).
+ *
+ * Pourquoi celle-ci est en français : mesuré, sur une URL sans route c'est elle qui est
+ * rendue, y compris quand un `notFound()` est levé depuis `[slug]/page.tsx` — le fichier
+ * du segment n'apparaît alors pas dans la sortie. Donc tant que `dynamicParams = false`
+ * fait répondre Next au niveau du routage, aucune 404 du site n'atteint le segment.
+ *
+ * Écrire le fichier du segment en Server Component double au contraire le `<main>` dans
+ * le payload RSC : il faut le `"use client"` qu'il porte pour que la racine reste seule à
+ * rendre. C'est ce qui est en place.
  */
 export default async function RootNotFound() {
 	const { defaultLocale } = routing;

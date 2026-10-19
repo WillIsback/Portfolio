@@ -6,9 +6,11 @@ import "../globals.css";
  * Root layout de l'espace admin : `html` + `body`, rien d'autre (un second `<html>`
  * ou `<body>` dans le même arbre fait échouer la compilation Next).
  *
- * `className={fontVariables}` est indispensable : `app/globals.css` consomme
- * `--font-serif` / `--font-bricolage` / `--font-fira` sans repli, donc sans ces
- * variables toute page admin retomberait sur la police par défaut du navigateur.
+ * `className={fontVariables}` est indispensable : `app/globals.css` déclare ses familles
+ * via `@theme inline` (`--font-serif: var(--font-source-serif), Georgia, …`), et une
+ * `var()` non définie invalide la déclaration entière au moment du calcul — le repli
+ * suivant n'est pas pris. Sans ces variables, toute page admin retomberait sur la police
+ * par défaut du navigateur.
  *
  * Pas de `paper` ici, contrairement au root public : l'admin peint déjà son fond
  * (`bg-zinc-950` sur un div plein écran) et n'instancie pas de ThemeProvider, donc
