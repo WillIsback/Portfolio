@@ -124,7 +124,10 @@
 		"data-ml": "Data & ML",
 		"backend": "Back-end & API",
 		"frontend": "Front-end",
-		"devops": "DevOps & tooling"
+		"devops": "DevOps & tooling",
+		"seeDetail": "see the detail",
+		"libraries": "Libraries",
+		"utilities": "Utilities"
 	},
 	"parcours": {
 		"automaticien": {
@@ -200,5 +203,15 @@
 		"kindProject": "project",
 		"itemListLabel": "The {count} items on the map",
 		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "Lab logbook",
+		"intro": "William Derue, AI developer on the AI Engineer track. This logbook keeps a record of my experiments: trained models, agents, infrastructure.",
+		"note": "try \"vision\", \"agents\" or \"local LLM\": the map searches with a real embeddings model, in your browser",
+		"latestEntries": "Latest entries",
+		"register": "Project register",
+		"registerNoscript": "The register loads with JavaScript; my repositories are also on",
+		"registerUnavailable": "The project register is temporarily unavailable.",
+		"instruments": "Instruments"
 	}
 }

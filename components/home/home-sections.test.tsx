@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import fr from "@/messages/fr.json";
 import { renderFr } from "@/tests/i18n-render";
 import Instruments from "./Instruments";
 import LatestEntries from "./LatestEntries";
@@ -50,7 +51,9 @@ describe("Instruments", () => {
 	it("rend quatre lignes titrées avec le détail derrière une divulgation", () => {
 		expect(html.match(/<h3/g)?.length).toBe(4);
 		expect(html.match(/<details/g)?.length).toBe(4);
-		expect(html).toContain("voir le détail");
+		expect(html).toContain(fr.instruments.seeDetail);
+		expect(html).toContain(fr.instruments.libraries);
+		expect(html).toContain(fr.instruments.utilities);
 	});
 
 	it("n'anime rien (plus de cubes empilés)", () => {

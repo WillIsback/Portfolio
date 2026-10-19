@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 /** Instruments (spec §6.5) : une ligne par domaine, détail derrière une divulgation. */
 export default function Instruments() {
 	// `useTranslations` et non `getTranslations` : le composant reste synchrone, donc
-	// restituable par `renderToStaticMarkup` dans les tests. Les libellés JSX eux-mêmes
-	// restent en dur — ils relèvent de la tâche 8.
+	// restituable par `renderToStaticMarkup` dans les tests.
 	const t = useTranslations("instruments");
 	return (
 		<ul className="divide-y divide-border/70 border-y border-border/70">
@@ -44,13 +43,13 @@ export default function Instruments() {
 							<dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
 								<div>
 									<dt className="font-mono text-[11px] text-ink-soft">
-										Bibliothèques
+										{t("libraries")}
 									</dt>
 									<dd>{instrument.libraries.join(", ")}</dd>
 								</div>
 								<div>
 									<dt className="font-mono text-[11px] text-ink-soft">
-										Utilitaires
+										{t("utilities")}
 									</dt>
 									<dd>{instrument.utilities.join(", ")}</dd>
 								</div>

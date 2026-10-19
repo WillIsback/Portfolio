@@ -124,7 +124,10 @@
 		"data-ml": "Data & ML",
 		"backend": "Back-end & API",
 		"frontend": "Front-end",
-		"devops": "DevOps & outils"
+		"devops": "DevOps & outils",
+		"seeDetail": "voir le détail",
+		"libraries": "Bibliothèques",
+		"utilities": "Utilitaires"
 	},
 	"parcours": {
 		"automaticien": {
@@ -200,5 +203,15 @@
 		"kindProject": "projet",
 		"itemListLabel": "Les {count} éléments de la carte",
 		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "Carnet de labo",
+		"intro": "William Derue, développeur IA en parcours AI Engineer. Ce carnet consigne mes expériences : modèles entraînés, agents, infrastructure.",
+		"note": "essaie « vision », « agents » ou « LLM local » : la carte cherche avec un vrai modèle d'embeddings, dans ton navigateur",
+		"latestEntries": "Dernières entrées",
+		"register": "Registre des projets",
+		"registerNoscript": "Le registre se charge avec JavaScript ; mes dépôts sont aussi sur",
+		"registerUnavailable": "Le registre des projets est momentanément indisponible.",
+		"instruments": "Instruments"
 	}
 }

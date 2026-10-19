@@ -36,6 +36,7 @@ export default async function Home({
 	// Les noms de groupes sont traduits : la vue se construit donc dans le composant,
 	// et plus au niveau du module où aucune locale n'est encore connue.
 	const view = toMapView(map, clusterLabels(await getTranslations("clusters")));
+	const t = await getTranslations("home");
 
 	return (
 		<main className="relative flex min-h-screen flex-col">
@@ -56,21 +57,14 @@ export default async function Home({
 								id="carnet-title"
 								className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
 							>
-								Carnet de labo
+								{t("title")}
 							</h1>
 							<p className="mt-4 max-w-prose text-lg leading-relaxed">
-								William Derue, développeur IA en parcours AI Engineer. Ce carnet
-								consigne mes expériences : modèles entraînés, agents,
-								infrastructure.
+								{t("intro")}
 							</p>
 						</>
 					}
-					note={
-						<MarginNote inline>
-							essaie « vision », « agents » ou « LLM local » : la carte cherche
-							avec un vrai modèle d&apos;embeddings, dans ton navigateur
-						</MarginNote>
-					}
+					note={<MarginNote inline>{t("note")}</MarginNote>}
 				/>
 			</section>
 
@@ -78,7 +72,7 @@ export default async function Home({
 				{entries.length > 0 ? (
 					<section aria-labelledby="entries-title">
 						<h2 id="entries-title" className="font-display text-2xl font-bold">
-							Dernières entrées
+							{t("latestEntries")}
 						</h2>
 						<div className="mt-6">
 							<LatestEntries articles={entries} />
@@ -87,13 +81,14 @@ export default async function Home({
 				) : null}
 				<section id="realisations" aria-labelledby="register-title">
 					<h2 id="register-title" className="font-display text-2xl font-bold">
-						Registre des projets
+						{t("register")}
 					</h2>
 					<div className="mt-6">
 						<noscript>
 							<p className="text-sm text-ink-soft">
-								Le registre se charge avec JavaScript ; mes dépôts sont aussi
-								sur{" "}
+								{/* La phrase s'arrête avant le nom de marque, qui reste en dur
+								    comme `ML`/`LLM` : seul le texte se traduit. */}
+								{t("registerNoscript")}{" "}
 								<a
 									href="https://github.com/WillIsback"
 									className="text-primary underline underline-offset-4"
@@ -121,7 +116,7 @@ export default async function Home({
 							<ErrorBoundary
 								fallback={
 									<p role="alert" className="text-sm text-destructive">
-										Le registre des projets est momentanément indisponible.
+										{t("registerUnavailable")}
 									</p>
 								}
 							>
@@ -139,7 +134,7 @@ export default async function Home({
 						id="instruments-title"
 						className="font-display text-2xl font-bold"
 					>
-						Instruments
+						{t("instruments")}
 					</h2>
 					<div className="mt-6">
 						<Instruments />

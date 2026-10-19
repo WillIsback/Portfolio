@@ -124,7 +124,10 @@
 		"data-ml": "数据与机器学习",
 		"backend": "后端与 API",
 		"frontend": "前端",
-		"devops": "DevOps 与工具"
+		"devops": "DevOps 与工具",
+		"seeDetail": "查看详情",
+		"libraries": "库",
+		"utilities": "工具"
 	},
 	"parcours": {
 		"automaticien": {
@@ -200,5 +203,15 @@
 		"kindProject": "项目",
 		"itemListLabel": "地图中的 {count} 个条目",
 		"semanticActive": "recherche sémantique active"
+	},
+	"home": {
+		"title": "实验笔记",
+		"intro": "William Derue，AI Engineer 方向的 AI 开发工程师。这个笔记记录我的实践：训练过的模型、智能体、基础设施。",
+		"note": "试试「vision」「agents」或「本地大模型」：地图在你的浏览器里用真实的嵌入模型检索",
+		"latestEntries": "最新条目",
+		"register": "项目登记表",
+		"registerNoscript": "登记表需要 JavaScript 才能加载；我的仓库也发布在",
+		"registerUnavailable": "项目登记表暂时无法访问。",
+		"instruments": "工具箱"
 	}
 }
