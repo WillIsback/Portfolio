@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
@@ -20,7 +20,6 @@ import { nearestTo } from "@/lib/carnet/neighbors";
 const SITE_URL = "https://www.willisback.fr";
 
 const map = MapDataSchema.parse(mapJson);
-const view = toMapView(map, clusterLabels);
 
 export const dynamicParams = false;
 
@@ -68,6 +67,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	setRequestLocale(locale);
 	const article = getArticleBySlug(slug);
 	if (!article) notFound();
+
+	// Les noms de groupes sont traduits : la vue se construit ici, et plus au niveau du
+	// module où aucune locale n'est encore connue.
+	const view = toMapView(map, clusterLabels(await getTranslations("clusters")));
 
 	const { source, count: figureCount } = numberFigures(article.content);
 
@@ -130,7 +133,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					{article.description}
 				</p>
 				<p className="font-mono text-xs text-ink-soft">
-					<time dateTime={article.date}>{formatDateFr(article.date)}</time>
+					<time dateTime={article.date}>
+						{formatDateFr(article.date)}
+					</time>
 					{article.period ? (
 						<>
 							{" · "}

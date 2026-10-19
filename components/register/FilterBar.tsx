@@ -2,6 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { debounce } from "@/lib/debounce";
-import { DOMAIN_LABELS } from "@/lib/domains";
+import { domainLabels } from "@/lib/domains";
 import { FAMILIES } from "@/lib/practices";
 import { parseFilters } from "@/lib/register-filters";
 import { nextSearchField } from "@/lib/search-field-sync";
@@ -32,9 +33,13 @@ const BACKEND_OPTIONS: Option[] = toOptions(BACKEND_LABELS);
 const FRONTEND_OPTIONS: Option[] = toOptions(FRONTEND_LABELS);
 const DEVOPS_OPTIONS: Option[] = toOptions(DEVOPS_LABELS);
 const LANGUAGE_OPTIONS: Option[] = toOptions(LANGUAGE_LABELS);
-const DOMAIN_OPTIONS: Option[] = toOptions(DOMAIN_LABELS);
 
 export default function FilterBar() {
+	// Les options de domaine dépendent de la locale : elles se construisent ici, et plus
+	// au niveau du module. Les autres jeux d'options (technologies) sont des noms de
+	// marques, d'où leurs constantes au niveau du module.
+	const tDomains = useTranslations("domains");
+	const domainOptions = toOptions(domainLabels(tDomains));
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -200,7 +205,7 @@ export default function FilterBar() {
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="all">Tous les domaines</SelectItem>
-						{DOMAIN_OPTIONS.map((opt) => (
+						{domainOptions.map((opt) => (
 							<SelectItem key={opt.value} value={opt.value}>
 								{opt.label}
 							</SelectItem>

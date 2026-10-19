@@ -1,8 +1,8 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { MapPoint } from "@/lib/carnet/map-view";
 import type { NormalizedProject } from "@/lib/projects-data";
 import { hasActiveFilters, parseFilters } from "@/lib/register-filters";
+import { renderFr } from "@/tests/i18n-render";
 import DomainChips from "./DomainChips";
 import FeaturedCard from "./FeaturedCard";
 import IndexRow from "./IndexRow";
@@ -68,7 +68,7 @@ const points: MapPoint[] = [
 
 describe("MiniMap", () => {
 	it("met le projet à l'accent et cercle ses voisins, sans être annoncée", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<MiniMap
 				points={points}
 				focusId="project:7"
@@ -82,7 +82,7 @@ describe("MiniMap", () => {
 	});
 
 	it("dessine le projet focalisé en dernier, avec un halo", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<MiniMap
 				points={[points[0], ...points.slice(1)].reverse()}
 				focusId="project:7"
@@ -97,7 +97,7 @@ describe("MiniMap", () => {
 
 describe("TechBar", () => {
 	it("décrit la composition en texte et la dessine en segments proportionnels", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<TechBar
 				shares={[
 					{ key: "languages", label: "Langages", count: 1, share: 0.5 },
@@ -114,13 +114,13 @@ describe("TechBar", () => {
 	});
 
 	it("ne rend rien sans technologie", () => {
-		expect(renderToStaticMarkup(<TechBar shares={[]} />)).toBe("");
+		expect(renderFr(<TechBar shares={[]} />)).toBe("");
 	});
 });
 
 describe("FeaturedCard", () => {
 	it("montre une figure numérotée, la première phrase, les technologies et le dépôt", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={p()}
 				figureNumber={2}
@@ -140,7 +140,7 @@ describe("FeaturedCard", () => {
 	});
 
 	it("renvoie à l'entrée du carnet qui cite le projet", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={p()}
 				figureNumber={2}
@@ -154,7 +154,7 @@ describe("FeaturedCard", () => {
 	});
 
 	it("préfère une vraie capture à la mini-carte", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={p({ imagePath: "/captures/p13.webp" })}
 				figureNumber={2}
@@ -167,7 +167,7 @@ describe("FeaturedCard", () => {
 	});
 
 	it("sans point sur la carte, garde la seule barre de composition", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={p({ id: 99 })}
 				figureNumber={3}
@@ -182,7 +182,7 @@ describe("FeaturedCard", () => {
 
 describe("IndexRow", () => {
 	it("tient sur une ligne : nom, description, technologies, année", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p()} />
 			</ul>,
@@ -196,7 +196,7 @@ describe("IndexRow", () => {
 	});
 
 	it("garde un nom de projet long sur une seule ligne, sans casser la ligne", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow
 					project={p({ title: "OC-P5_Deployez_un_modele_de_Machine_Learning" })}
@@ -209,7 +209,7 @@ describe("IndexRow", () => {
 	});
 
 	it("garde la liste des technologies hors de la description tronquée", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p()} />
 			</ul>,
@@ -222,7 +222,7 @@ describe("IndexRow", () => {
 	});
 
 	it("tronque la description avec line-clamp-1, sans la classe block qui l'écraserait", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow
 					project={p({ description: "Description longue à tronquer" })}
@@ -239,7 +239,7 @@ describe("IndexRow", () => {
 	});
 
 	it("n'ouvre pas dans un nouvel onglet un lien non externe", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p({ github: "/projets/x" })} />
 			</ul>,
@@ -248,7 +248,7 @@ describe("IndexRow", () => {
 	});
 
 	it("affiche un projet privé sans lien, avec la mention privé", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p({ isPrivate: true, github: null })} />
 			</ul>,
@@ -260,7 +260,7 @@ describe("IndexRow", () => {
 
 describe("accroche et statut", () => {
 	const card = (project: NormalizedProject) =>
-		renderToStaticMarkup(
+		renderFr(
 			<FeaturedCard
 				project={project}
 				figureNumber={1}
@@ -269,7 +269,7 @@ describe("accroche et statut", () => {
 			/>,
 		);
 	const row = (project: NormalizedProject) =>
-		renderToStaticMarkup(
+		renderFr(
 			<ul>
 				<IndexRow project={project} />
 			</ul>,
@@ -291,7 +291,7 @@ describe("accroche et statut", () => {
 	});
 
 	it("TechBar teinte ML & Data avec --primary", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<TechBar
 				shares={[{ key: "mlStack", label: "ML & Data", count: 1, share: 1 }]}
 			/>,
@@ -302,11 +302,11 @@ describe("accroche et statut", () => {
 
 describe("DomainChips", () => {
 	it("ne rend rien sans domaine", () => {
-		expect(renderToStaticMarkup(<DomainChips domains={[]} />)).toBe("");
+		expect(renderFr(<DomainChips domains={[]} />)).toBe("");
 	});
 
 	it("rend les libellés dans l'ordre canonique, ML ajouté pour Classification", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<DomainChips domains={[{ domain: "LLM" }, { domain: "Classifier" }]} />,
 		);
 		expect(html).toContain('aria-label="Domaines"');
@@ -319,7 +319,7 @@ describe("puces de domaine dans le registre", () => {
 	const withDomains = p({ domains: [{ domain: "Vision" }] });
 
 	it("FeaturedCard les montre sous le titre", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={withDomains}
 				figureNumber={1}
@@ -332,7 +332,7 @@ describe("puces de domaine dans le registre", () => {
 	});
 
 	it("IndexRow les montre avant les technologies", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={withDomains} />
 			</ul>,
@@ -342,7 +342,7 @@ describe("puces de domaine dans le registre", () => {
 	});
 
 	it("sans domaine, aucune liste de puces", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p()} />
 			</ul>,
@@ -361,7 +361,7 @@ describe("parseFilters", () => {
 
 describe("IndexRow lecteurs d'écran", () => {
 	it("sépare l'année et le statut par une virgule masquée", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ul>
 				<IndexRow project={p({ status: "Archived" })} />
 			</ul>,
@@ -381,7 +381,7 @@ describe("badge formation et pratiques", () => {
 	});
 
 	it("FeaturedCard : badge complet et une ligne par famille", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<FeaturedCard
 				project={withOps}
 				figureNumber={1}
@@ -399,7 +399,7 @@ describe("badge formation et pratiques", () => {
 	});
 
 	it("IndexRow : abrégé visible, complet pour lecteur d'écran", () => {
-		const html = renderToStaticMarkup(<IndexRow project={withOps} />);
+		const html = renderFr(<IndexRow project={withOps} />);
 		expect(html).toContain("Formation OC · AI Engineer");
 		expect(html).toMatch(
 			/sr-only[^>]*>Projet de formation · OpenClassrooms · AI Engineer/,
@@ -409,9 +409,7 @@ describe("badge formation et pratiques", () => {
 	});
 
 	it("rien sans données, valeur inconnue ignorée", () => {
-		const html = renderToStaticMarkup(
-			<IndexRow project={p({ training: "Bac" })} />,
-		);
+		const html = renderFr(<IndexRow project={p({ training: "Bac" })} />);
 		expect(html).not.toContain("Formation OC");
 		expect(html).not.toContain("DevOps");
 	});
@@ -446,7 +444,7 @@ describe("petits défauts PR #15", () => {
 	});
 
 	it("IndexRow : segments séparés pour lecteur d'écran, badge sans capitales", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<IndexRow
 				project={p({
 					training: "AIEngineer",

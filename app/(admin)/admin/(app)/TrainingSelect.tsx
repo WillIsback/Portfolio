@@ -1,10 +1,11 @@
 "use client";
 
+import { frTranslator } from "@/i18n/fr";
 import {
 	isTraining,
-	TRAINING_LABELS,
 	TRAININGS,
 	type Training,
+	trainingLabels,
 } from "@/lib/training";
 
 /** Parcours OpenClassrooms ; `hint` affiche l'indice tiré du nom du dépôt (jamais de déduction). */
@@ -21,6 +22,8 @@ export function TrainingSelect({
 	hint: boolean;
 	className?: string;
 }) {
+	// Voir `PracticeFields.tsx` : l'admin n'a pas de provider next-intl.
+	const labels = trainingLabels(frTranslator("training"));
 	return (
 		<div>
 			<label htmlFor={id} className="text-xs text-zinc-500 block mb-1">
@@ -38,7 +41,7 @@ export function TrainingSelect({
 				<option value="">Aucune</option>
 				{TRAININGS.map((t) => (
 					<option key={t} value={t}>
-						{TRAINING_LABELS[t]}
+						{labels[t]}
 					</option>
 				))}
 			</select>

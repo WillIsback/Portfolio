@@ -1,4 +1,5 @@
-import { PRACTICE_LABELS, practicesByFamily } from "@/lib/practices";
+import { useTranslations } from "next-intl";
+import { practiceLabels, practicesByFamily } from "@/lib/practices";
 
 /** Pratiques par famille : une ligne par famille (`full`) ou les seules familles (`compact`). */
 export default function PracticeMarks({
@@ -10,10 +11,12 @@ export default function PracticeMarks({
 	variant: "full" | "compact";
 	className?: string;
 }>) {
+	const t = useTranslations("practices");
+	const labels = practiceLabels(t);
 	const groups = practicesByFamily(practices.map((p) => p.practice));
 	if (groups.length === 0) return null;
 	const line = (g: (typeof groups)[number]) =>
-		`${g.family} — ${g.practices.map((p) => PRACTICE_LABELS[p]).join(", ")}`;
+		`${g.family} — ${g.practices.map((p) => labels[p]).join(", ")}`;
 	if (variant === "compact") {
 		const full = groups.map(line).join(" ; ");
 		return (
@@ -33,7 +36,7 @@ export default function PracticeMarks({
 			{groups.map((g) => (
 				<li key={g.family}>
 					<span className="text-ink">{g.family}</span> —{" "}
-					{g.practices.map((p) => PRACTICE_LABELS[p]).join(", ")}
+					{g.practices.map((p) => labels[p]).join(", ")}
 				</li>
 			))}
 		</ul>

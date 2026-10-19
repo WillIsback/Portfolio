@@ -26,5 +26,84 @@
 			"en": "English",
 			"zh": "中文"
 		}
+	},
+	"status": {
+		"InProgress": "en cours",
+		"Done": "terminé",
+		"Archived": "archivé"
+	},
+	"training": {
+		"FullstackAI": "Développeur FullStack IA",
+		"AIEngineer": "AI Engineer",
+		"badge": "Projet de formation · OpenClassrooms · {course}",
+		"badgeShort": "Formation OC · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "Intégration continue",
+		"Containerization": "Conteneurisation",
+		"ContinuousDeployment": "Déploiement automatisé",
+		"AutomatedTesting": "Tests automatisés",
+		"Observability": "Observabilité",
+		"DependencyUpdates": "Veille des dépendances",
+		"StaticAnalysis": "Analyse de code (SAST)",
+		"SecretsManagement": "Gestion des secrets",
+		"Hardening": "Durcissement",
+		"ExperimentTracking": "Suivi d'expériences",
+		"ModelRegistry": "Registre de modèles",
+		"DataVersioning": "Versionnage des données",
+		"ModelServing": "Service de modèle",
+		"LlmEvaluation": "Évaluation / monitoring LLM"
+	},
+	"domains": {
+		"DataAnalysis": "Data analyse",
+		"Classifier": "Classification",
+		"Regressor": "Régression",
+		"Agents": "Agents",
+		"Speech": "Parole"
+	},
+	"clusters": {
+		"c1": "LLM et agents",
+		"c2": "Services et API",
+		"c3": "Data et web",
+		"c4": "Vision et classification",
+		"c5": "Outillage développeur"
+	},
+	"instruments": {
+		"data-ml": "Data & ML",
+		"backend": "Back-end & API",
+		"frontend": "Front-end",
+		"devops": "DevOps & outils"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "Automaticien",
+			"description": "7 ans en tant qu'automaticien dans le secteur de l'énergie, construisant des petites centrales électriques. L'émergence de l'IA a considérablement enrichi mon intérêt pour l'informatique et ma soif de connaissance."
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "Développeur C++",
+			"description": "Passage à l'informatique logiciel avec un projet C++ professionnel, suivi de plusieurs projets personnels explorant différentes technologies."
+		},
+		"adminSysteme": {
+			"year": "Novembre 2024",
+			"title": "Administrateur Système",
+			"description": "Intégration au ministère de l'Éducation nationale en tant qu'administrateur système, poste que j'occupe toujours avec responsabilités croissantes."
+		},
+		"fullstack": {
+			"year": "Septembre 2025 – juillet 2026",
+			"title": "Diplômé Développeur full stack",
+			"description": "Parcours Développeur FullStack IA chez OpenClassrooms, validé en juillet 2026 par le titre « Développeur full stack »."
+		},
+		"celluleIa": {
+			"year": "Janvier 2026",
+			"title": "Cellule IA - DSI Régionale",
+			"description": "Membre actif de la cellule IA de la DSI régionale, déterminé à concrétiser des projets exploitant le potentiel de l'IA pour répondre aux besoins métier."
+		},
+		"aiEngineer": {
+			"year": "Septembre 2026 – en cours",
+			"title": "Parcours AI Engineer",
+			"description": "Dans la continuité, parcours AI Engineer chez OpenClassrooms."
+		}
 	}
 }

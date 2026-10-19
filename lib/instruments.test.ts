@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { INSTRUMENTS } from "./instruments";
+import { frTranslator } from "@/i18n/fr";
+import { INSTRUMENTS, instrumentTitle } from "./instruments";
 
 describe("INSTRUMENTS", () => {
 	it("suit l'ordre de la spec : Data & ML, back-end, front-end, DevOps", () => {
@@ -27,5 +28,17 @@ describe("INSTRUMENTS", () => {
 			expect.arrayContaining(["PyTorch", "Transformers", "Scikit-learn"]),
 		);
 		expect(INSTRUMENTS[1].libraries).not.toContain("PyTorch");
+	});
+
+	it("tient un titre traduit pour chaque ligne, et lui seul", () => {
+		const t = frTranslator("instruments");
+		for (const instrument of INSTRUMENTS)
+			expect(instrumentTitle(t, instrument.id).trim().length).toBeGreaterThan(
+				0,
+			);
+		// Les noms d'outils sont des marques : ils restent dans `INSTRUMENTS`, pas au
+		// dictionnaire, et le composant ne les traduit pas.
+		expect(instrumentTitle(t, "data-ml")).toBe("Data & ML");
+		expect(INSTRUMENTS[0].tools.map((tool) => tool.name)).toContain("Python");
 	});
 });

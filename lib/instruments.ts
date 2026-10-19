@@ -1,15 +1,27 @@
+import type { Translator } from "@/i18n/translator";
+
+export type InstrumentId = "data-ml" | "backend" | "frontend" | "devops";
+
 export interface Instrument {
-	id: "data-ml" | "backend" | "frontend" | "devops";
-	title: string;
+	id: InstrumentId;
 	tools: { name: string; icon?: string }[];
 	libraries: string[];
 	utilities: string[];
 }
 
+/**
+ * Titre d'une ligne d'instruments, traduit à la demande.
+ *
+ * Seuls ces quatre titres voyagent dans le dictionnaire : les outils, bibliothèques et
+ * utilitaires sont des noms de marque, écrits pareil dans les trois langues.
+ */
+export function instrumentTitle(t: Translator, id: InstrumentId): string {
+	return t(id);
+}
+
 export const INSTRUMENTS: Instrument[] = [
 	{
 		id: "data-ml",
-		title: "Data & ML",
 		tools: [
 			{ name: "Python", icon: "/icon/Python.svg" },
 			{ name: "PostgreSQL", icon: "/icon/Postgresql.svg" },
@@ -33,7 +45,6 @@ export const INSTRUMENTS: Instrument[] = [
 	},
 	{
 		id: "backend",
-		title: "Back-end & API",
 		tools: [
 			{ name: "FastAPI", icon: "/icon/FastApi.svg" },
 			{ name: "Fastify", icon: "/icon/Fastify.svg" },
@@ -57,7 +68,6 @@ export const INSTRUMENTS: Instrument[] = [
 	},
 	{
 		id: "frontend",
-		title: "Front-end",
 		tools: [
 			{ name: "React", icon: "/icon/React.svg" },
 			{ name: "Next.js", icon: "/icon/Nextjs.svg" },
@@ -80,7 +90,6 @@ export const INSTRUMENTS: Instrument[] = [
 	},
 	{
 		id: "devops",
-		title: "DevOps & outils",
 		tools: [
 			{ name: "Docker", icon: "/icon/Docker.svg" },
 			{ name: "GitHub Actions", icon: "/icon/Github.svg" },

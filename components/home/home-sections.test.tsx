@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { renderFr } from "@/tests/i18n-render";
 import Instruments from "./Instruments";
 import LatestEntries from "./LatestEntries";
 
@@ -45,7 +46,7 @@ describe("LatestEntries", () => {
 });
 
 describe("Instruments", () => {
-	const html = renderToStaticMarkup(<Instruments />);
+	const html = renderFr(<Instruments />);
 
 	it("rend quatre lignes titrées avec le détail derrière une divulgation", () => {
 		expect(html.match(/<h3/g)?.length).toBe(4);

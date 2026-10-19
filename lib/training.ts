@@ -1,17 +1,22 @@
+import type { Translator } from "@/i18n/translator";
+
 /** Parcours de formation OpenClassrooms (badge « Projet de formation »). */
 export const TRAININGS = ["FullstackAI", "AIEngineer"] as const;
 export type Training = (typeof TRAININGS)[number];
 
-export const TRAINING_LABELS: Record<Training, string> = {
-	FullstackAI: "Développeur FullStack IA",
-	AIEngineer: "AI Engineer",
-};
+export function trainingLabels(t: Translator): Record<Training, string> {
+	return {
+		FullstackAI: t("FullstackAI"),
+		AIEngineer: t("AIEngineer"),
+	};
+}
 
-export const trainingBadge = (t: Training) =>
-	`Projet de formation · OpenClassrooms · ${TRAINING_LABELS[t]}`;
+/** `{course}` est injecté par le message : le libellé vit dans le dictionnaire, pas ici. */
+export const trainingBadge = (t: Translator, training: Training) =>
+	t("badge", { course: trainingLabels(t)[training] });
 
-export const trainingBadgeShort = (t: Training) =>
-	`Formation OC · ${TRAINING_LABELS[t]}`;
+export const trainingBadgeShort = (t: Translator, training: Training) =>
+	t("badgeShort", { course: trainingLabels(t)[training] });
 
 export const isTraining = (v: unknown): v is Training =>
 	typeof v === "string" && (TRAININGS as readonly string[]).includes(v);

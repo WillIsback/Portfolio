@@ -26,5 +26,84 @@
 			"en": "English",
 			"zh": "中文"
 		}
+	},
+	"status": {
+		"InProgress": "进行中",
+		"Done": "已完成",
+		"Archived": "已归档"
+	},
+	"training": {
+		"FullstackAI": "全栈 AI 开发",
+		"AIEngineer": "AI Engineer",
+		"badge": "培训项目 · OpenClassrooms · {course}",
+		"badgeShort": "OC 培训 · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "持续集成",
+		"Containerization": "容器化",
+		"ContinuousDeployment": "自动部署",
+		"AutomatedTesting": "自动化测试",
+		"Observability": "可观测性",
+		"DependencyUpdates": "依赖监控",
+		"StaticAnalysis": "代码分析（SAST）",
+		"SecretsManagement": "密钥管理",
+		"Hardening": "安全加固",
+		"ExperimentTracking": "实验追踪",
+		"ModelRegistry": "模型注册表",
+		"DataVersioning": "数据版本管理",
+		"ModelServing": "模型服务",
+		"LlmEvaluation": "LLM 评估 / 监控"
+	},
+	"domains": {
+		"DataAnalysis": "数据分析",
+		"Classifier": "分类",
+		"Regressor": "回归",
+		"Agents": "智能体",
+		"Speech": "语音"
+	},
+	"clusters": {
+		"c1": "大语言模型与智能体",
+		"c2": "服务与 API",
+		"c3": "数据与 Web",
+		"c4": "视觉与分类",
+		"c5": "开发工具"
+	},
+	"instruments": {
+		"data-ml": "数据与机器学习",
+		"backend": "后端与 API",
+		"frontend": "前端",
+		"devops": "DevOps 与工具"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "自动化工程师",
+			"description": "在能源行业担任自动化工程师七年，建造小型发电厂。人工智能的兴起极大丰富了我对计算机的兴趣与求知欲。"
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "C++ 开发者",
+			"description": "通过一个专业的 C++ 项目转向软件开发，随后完成多个探索不同技术的个人项目。"
+		},
+		"adminSysteme": {
+			"year": "2024 年 11 月",
+			"title": "系统管理员",
+			"description": "以系统管理员身份入职法国国民教育部，至今仍担任该职务，职责不断扩大。"
+		},
+		"fullstack": {
+			"year": "2025 年 9 月 – 2026 年 7 月",
+			"title": "全栈开发专业毕业生",
+			"description": "在 OpenClassrooms 修读全栈 AI 开发课程，2026 年 7 月以「全栈开发」认证通过考核。"
+		},
+		"celluleIa": {
+			"year": "2026 年 1 月",
+			"title": "人工智能单元 — 区域信息技术部",
+			"description": "区域信息技术部人工智能单元的活跃成员，致力于把挖掘人工智能潜力的项目落地为解决业务需求的作品。"
+		},
+		"aiEngineer": {
+			"year": "2026 年 9 月 – 进行中",
+			"title": "AI Engineer 课程",
+			"description": "延续前路，在 OpenClassrooms 修读 AI Engineer 课程。"
+		}
 	}
 }

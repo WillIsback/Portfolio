@@ -1,10 +1,15 @@
 import Image from "next/image";
-import { INSTRUMENTS } from "@/lib/instruments";
+import { useTranslations } from "next-intl";
+import { INSTRUMENTS, instrumentTitle } from "@/lib/instruments";
 import { invertOnDark } from "@/lib/theme-icons";
 import { cn } from "@/lib/utils";
 
 /** Instruments (spec §6.5) : une ligne par domaine, détail derrière une divulgation. */
 export default function Instruments() {
+	// `useTranslations` et non `getTranslations` : le composant reste synchrone, donc
+	// restituable par `renderToStaticMarkup` dans les tests. Les libellés JSX eux-mêmes
+	// restent en dur — ils relèvent de la tâche 8.
+	const t = useTranslations("instruments");
 	return (
 		<ul className="divide-y divide-border/70 border-y border-border/70">
 			{INSTRUMENTS.map((instrument) => (
@@ -13,7 +18,7 @@ export default function Instruments() {
 					className="grid gap-3 py-4 sm:grid-cols-[12rem_1fr]"
 				>
 					<h3 className="font-display text-base font-semibold">
-						{instrument.title}
+						{instrumentTitle(t, instrument.id)}
 					</h3>
 					<div>
 						<ul className="flex flex-wrap items-center gap-x-5 gap-y-2">

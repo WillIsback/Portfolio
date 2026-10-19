@@ -1,6 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import type { AdminProject } from "@/schemas";
+import { renderFr } from "@/tests/i18n-render";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push() {} }) }));
 vi.mock("sonner", () => ({ toast: { success() {}, error() {} } }));
@@ -31,7 +31,7 @@ const base: AdminProject = {
 };
 
 const render = (over: Partial<AdminProject> = {}) =>
-	renderToStaticMarkup(
+	renderFr(
 		<ProjectEditForm
 			id={3}
 			initial={{ ...base, ...over }}
@@ -99,7 +99,7 @@ describe("capture distante", () => {
 
 describe("ImagePicker", () => {
 	it("propose « Retirer » pour une capture du dépôt", () => {
-		const html = renderToStaticMarkup(
+		const html = renderFr(
 			<ImagePicker
 				projectId={1}
 				isPrivate={false}

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { applySync } from "@/app/actions/admin.action";
+import { frTranslator } from "@/i18n/fr";
 import { FIELD_LABELS, formatValue } from "@/lib/github/board";
 import type { FieldDiff } from "@/lib/github/sync";
-import { PRACTICE_LABELS, type Practice } from "@/lib/practices";
+import { type Practice, practiceLabels } from "@/lib/practices";
 
 const chip = "inline-block rounded px-1.5 py-0.5 text-xs font-mono";
 
@@ -101,7 +102,9 @@ export function DiffPanel({
 												>
 													<span className="sr-only">Ajout : </span>+{" "}
 													{d.field === "practices"
-														? (PRACTICE_LABELS[v as Practice] ?? v)
+														? (practiceLabels(frTranslator("practices"))[
+																v as Practice
+															] ?? v)
 														: v}
 												</span>
 											))}

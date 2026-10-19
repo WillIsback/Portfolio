@@ -26,5 +26,84 @@
 			"en": "English",
 			"zh": "中文"
 		}
+	},
+	"status": {
+		"InProgress": "in progress",
+		"Done": "completed",
+		"Archived": "archived"
+	},
+	"training": {
+		"FullstackAI": "Full-Stack AI Developer",
+		"AIEngineer": "AI Engineer",
+		"badge": "Training project · OpenClassrooms · {course}",
+		"badgeShort": "OC training · {course}"
+	},
+	"practices": {
+		"ContinuousIntegration": "Continuous integration",
+		"Containerization": "Containerization",
+		"ContinuousDeployment": "Automated deployment",
+		"AutomatedTesting": "Automated testing",
+		"Observability": "Observability",
+		"DependencyUpdates": "Dependency monitoring",
+		"StaticAnalysis": "Code analysis (SAST)",
+		"SecretsManagement": "Secrets management",
+		"Hardening": "Hardening",
+		"ExperimentTracking": "Experiment tracking",
+		"ModelRegistry": "Model registry",
+		"DataVersioning": "Data versioning",
+		"ModelServing": "Model serving",
+		"LlmEvaluation": "LLM evaluation / monitoring"
+	},
+	"domains": {
+		"DataAnalysis": "Data analysis",
+		"Classifier": "Classification",
+		"Regressor": "Regression",
+		"Agents": "Agents",
+		"Speech": "Speech"
+	},
+	"clusters": {
+		"c1": "LLM and agents",
+		"c2": "Services and APIs",
+		"c3": "Data and web",
+		"c4": "Vision and classification",
+		"c5": "Developer tooling"
+	},
+	"instruments": {
+		"data-ml": "Data & ML",
+		"backend": "Back-end & API",
+		"frontend": "Front-end",
+		"devops": "DevOps & tooling"
+	},
+	"parcours": {
+		"automaticien": {
+			"year": "2015-2022",
+			"title": "Automation engineer",
+			"description": "Seven years as an automation engineer in the energy sector, building small power plants. The rise of AI greatly enriched my interest in computing and my thirst for knowledge."
+		},
+		"developpeurCpp": {
+			"year": "2023-2024",
+			"title": "C++ developer",
+			"description": "A move into software development with a professional C++ project, followed by several personal projects exploring different technologies."
+		},
+		"adminSysteme": {
+			"year": "November 2024",
+			"title": "Systems administrator",
+			"description": "Joined the French Ministry of Education as a systems administrator, a role I still hold with growing responsibilities."
+		},
+		"fullstack": {
+			"year": "September 2025 – July 2026",
+			"title": "Graduate full-stack developer",
+			"description": "Full-Stack AI Developer track at OpenClassrooms, validated in July 2026 with the “full-stack developer” title."
+		},
+		"celluleIa": {
+			"year": "January 2026",
+			"title": "Regional AI unit — IT department",
+			"description": "Active member of the regional IT department's AI unit, determined to turn projects that harness the potential of AI into real answers to business needs."
+		},
+		"aiEngineer": {
+			"year": "September 2026 – ongoing",
+			"title": "AI Engineer track",
+			"description": "Carrying on with the AI Engineer track at OpenClassrooms."
+		}
 	}
 }

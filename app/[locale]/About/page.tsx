@@ -1,8 +1,8 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import Chronology from "@/components/about/Chronology";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
-import { ageOn, PARCOURS } from "@/lib/about";
+import { ageOn, parcours } from "@/lib/about";
 
 export const revalidate = 86400;
 
@@ -13,6 +13,7 @@ export default async function About({
 }) {
 	const { locale } = await params;
 	setRequestLocale(locale);
+	const steps = parcours(await getTranslations("parcours"));
 
 	return (
 		<main className="relative flex min-h-screen flex-col">
@@ -35,7 +36,7 @@ export default async function About({
 						</p>
 					</header>
 
-					<Chronology steps={PARCOURS} />
+					<Chronology steps={steps} />
 				</div>
 			</div>
 			<Footer />

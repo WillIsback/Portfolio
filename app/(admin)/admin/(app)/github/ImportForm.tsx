@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { importRepo } from "@/app/actions/admin.action";
-import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
+import { frTranslator } from "@/i18n/fr";
+import { AI_DOMAINS, domainLabels } from "@/lib/domains";
 import { type AnalyzeOk, formatPushed, repoName } from "@/lib/github/board";
 import { looksLikeOpenClassrooms, type Training } from "@/lib/training";
 import {
@@ -148,7 +149,11 @@ export function ImportForm({
 					legend={g.legend}
 					options={g.options}
 					selected={lists[g.key]}
-					labels={g.key === "domains" ? DOMAIN_LABELS : undefined}
+					labels={
+						g.key === "domains"
+							? domainLabels(frTranslator("domains"))
+							: undefined
+					}
 					onToggle={(v) => toggle(g.key, v)}
 				/>
 			))}

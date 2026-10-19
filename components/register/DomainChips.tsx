@@ -1,10 +1,12 @@
-import { domainLabels } from "@/lib/domains";
+import { useTranslations } from "next-intl";
+import { domainLabelList } from "@/lib/domains";
 
 export default function DomainChips({
 	domains,
 	className = "",
 }: Readonly<{ domains: { domain: string }[]; className?: string }>) {
-	const labels = domainLabels(domains);
+	const t = useTranslations("domains");
+	const labels = domainLabelList(t, domains);
 	if (labels.length === 0) return null;
 	return (
 		<ul

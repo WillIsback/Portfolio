@@ -8,10 +8,11 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateProject } from "@/app/actions/admin.action";
 import { IconPickerModal } from "@/components/admin/IconPickerModal";
+import { frTranslator } from "@/i18n/fr";
 import { buildSavePayload, PITCH_MAX } from "@/lib/admin/project-form";
-import { AI_DOMAINS, DOMAIN_LABELS } from "@/lib/domains";
+import { AI_DOMAINS, domainLabels } from "@/lib/domains";
 import { LUCIDE_ICONS } from "@/lib/icon-bank";
-import { PROJECT_STATUSES, STATUS_LABELS } from "@/lib/status";
+import { PROJECT_STATUSES, statusLabels } from "@/lib/status";
 import {
 	BACKEND_LABELS,
 	DATABASE_LABELS,
@@ -216,7 +217,7 @@ export function ProjectEditForm({
 						<option value="">Non renseigné</option>
 						{PROJECT_STATUSES.map((s) => (
 							<option key={s} value={s}>
-								{STATUS_LABELS[s]}
+								{statusLabels(frTranslator("status"))[s]}
 							</option>
 						))}
 					</select>
@@ -327,7 +328,7 @@ export function ProjectEditForm({
 								checked={form.domains.includes(domain)}
 								onChange={() => toggleArrayValue("domains", domain)}
 							/>
-							{DOMAIN_LABELS[domain]}
+							{domainLabels(frTranslator("domains"))[domain]}
 						</label>
 					))}
 				</div>

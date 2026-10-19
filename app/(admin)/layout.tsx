@@ -1,4 +1,7 @@
+import { NextIntlClientProvider } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { fontVariables } from "@/lib/fonts";
+import fr from "@/messages/fr.json";
 
 import "../globals.css";
 
@@ -15,15 +18,29 @@ import "../globals.css";
  * Pas de `paper` ici, contrairement au root public : l'admin peint déjà son fond
  * (`bg-zinc-950` sur un div plein écran) et n'instancie pas de ThemeProvider, donc
  * la trame de points de `.paper::before` s'afficherait en clair sur clair, inerte.
+ *
+ * Le provider next-intl est là pour les composants du registre public
+ * (`components/register/*`), réutilisés par l'aperçu projet : ils sont localisés et
+ * lisent la locale par hook. L'admin, elle, reste figée en français (`<html lang="fr">`
+ * ci-dessus) ; ses propres libellés passent par `frTranslator()` (`i18n/fr.ts`), pas par
+ * le provider.
+ *
+ * `setRequestLocale("fr")` avant le provider : sans lui, `NextIntlClientProvider`
+ * résout la locale par `headers()` et `/admin/login` bascule de `○` (statique) à `ƒ`.
  */
 export default function AdminRootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	setRequestLocale("fr");
 	return (
 		<html lang="fr" suppressHydrationWarning className={fontVariables}>
-			<body className="antialiased">{children}</body>
+			<body className="antialiased">
+				<NextIntlClientProvider locale="fr" messages={fr}>
+					{children}
+				</NextIntlClientProvider>
+			</body>
 		</html>
 	);
 }

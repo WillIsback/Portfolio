@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -21,7 +21,6 @@ import { toMapView } from "@/lib/carnet/map-view";
 import { mapNeighbors } from "@/lib/register";
 
 const map = MapDataSchema.parse(mapJson);
-const view = toMapView(map, clusterLabels);
 const entries = latestArticles(3);
 const byProject = projectEntries(getAllArticles());
 const neighbors = mapNeighbors(map);
@@ -33,6 +32,10 @@ export default async function Home({
 }) {
 	const { locale } = await params;
 	setRequestLocale(locale);
+
+	// Les noms de groupes sont traduits : la vue se construit donc dans le composant,
+	// et plus au niveau du module où aucune locale n'est encore connue.
+	const view = toMapView(map, clusterLabels(await getTranslations("clusters")));
 
 	return (
 		<main className="relative flex min-h-screen flex-col">

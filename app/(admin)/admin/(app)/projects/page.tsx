@@ -1,9 +1,10 @@
 // app/(admin)/projects/page.tsx
 import Link from "next/link";
+import { frTranslator } from "@/i18n/fr";
 import { needsCompletion } from "@/lib/admin/project-form";
 import prisma from "@/lib/db";
-import { DOMAIN_LABELS } from "@/lib/domains";
-import { PROJECT_STATUSES, STATUS_LABELS } from "@/lib/status";
+import { domainLabels } from "@/lib/domains";
+import { PROJECT_STATUSES, statusLabels } from "@/lib/status";
 import { DeleteProjectButton } from "./DeleteProjectButton";
 
 const dash = "—";
@@ -31,9 +32,14 @@ export default async function AdminProjectsPage({
 				needsCompletion({ pitch: p.pitch, domainCount: p.domains.length }),
 			)
 		: all;
+	// L'admin est figé en français : pas de locale de requête à lire (cf. `i18n/fr.ts`).
+	const labels = {
+		status: statusLabels(frTranslator("status")),
+		domains: domainLabels(frTranslator("domains")),
+	};
 	const statusLabel = (s: string | null) =>
 		(PROJECT_STATUSES as readonly string[]).includes(s ?? "")
-			? STATUS_LABELS[s as (typeof PROJECT_STATUSES)[number]]
+			? labels.status[s as (typeof PROJECT_STATUSES)[number]]
 			: dash;
 
 	return (
@@ -99,7 +105,7 @@ export default async function AdminProjectsPage({
 								{project.domains
 									.map(
 										(d) =>
-											DOMAIN_LABELS[d.domain as keyof typeof DOMAIN_LABELS] ??
+											labels.domains[d.domain as keyof typeof labels.domains] ??
 											d.domain,
 									)
 									.join(", ") || dash}
