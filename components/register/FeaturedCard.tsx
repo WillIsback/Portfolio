@@ -36,7 +36,7 @@ export default function FeaturedCard({
 	const mapId = `project:${project.id}`;
 	const onMap = points.some((pt) => pt.id === mapId);
 	const capture = isCapture(project.imagePath) ? project.imagePath : null;
-	const shares = techComposition(project);
+	const shares = techComposition(project, t);
 	return (
 		<article className="flex h-full flex-col rounded-md border border-border bg-background/70 p-5">
 			<figure className="m-0">
@@ -66,8 +66,8 @@ export default function FeaturedCard({
 					{capture
 						? project.title
 						: onMap
-							? `${project.title} parmi ses voisins`
-							: `Composition de ${project.title}`}
+							? t("amongNeighbors", { title: project.title })
+							: t("composition", { title: project.title })}
 				</FigureCaption>
 			</figure>
 			<h3 className="mt-4 font-display text-xl font-semibold">

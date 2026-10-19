@@ -37,9 +37,10 @@ interface MultiSelectProps {
 }
 
 /**
- * Les libellés par défaut (sélection, état vide, recherche, décompte) viennent de
- * `multiSelect`. `placeholder` et `emptyMessage` restent des props : l'appelant les
- * connaît au moment du rendu, là où le dictionnaire n'a pas encore été consulté.
+ * Les libellés par défaut (recherche, état vide de repli, décompte) viennent de
+ * `multiSelect` ; le décompte est un pluriel ICU (`selected`). `placeholder` et
+ * `emptyMessage` restent des props : l'appelant les connaît au moment du rendu, là où
+ * le dictionnaire n'a pas encore été consulté.
  */
 export function MultiSelect({
 	options,
@@ -79,7 +80,9 @@ export function MultiSelect({
 						) : selected.length === 1 ? (
 							<Badge variant="secondary">{selectedLabels[0]}</Badge>
 						) : (
-							<Badge variant="secondary">{selected.length} sélectionnés</Badge>
+							<Badge variant="secondary">
+								{t("selected", { count: selected.length })}
+							</Badge>
 						)}
 					</div>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

@@ -14,12 +14,15 @@
 			"portfolio"
 		],
 		"about": {
-			"title": "About | William Derue",
-			"description": "Background, experience and education of William Derue, an AI developer on the AI Engineer track."
+			"title": "About | William Derue - AI Developer · AI Engineer track",
+			"description": "Discover my journey - from automation engineer to AI developer, now on the AI Engineer track. 7 years of expertise in technology and artificial intelligence."
 		},
 		"contact": {
-			"title": "Contact | William Derue",
-			"description": "A question about a project, an experiment or an article? Get in touch with William Derue through the contact form."
+			"title": "Contact form | William Derue",
+			"description": "Contact William Derue to discuss your AI or fullstack projects. Send me a message and I will reply quickly."
+		},
+		"articles": {
+			"title": "Articles | William Derue - AI Developer · AI Engineer track"
 		}
 	},
 	"figure": {
@@ -244,7 +247,15 @@
 		"captureAlt": "Screenshot of {title}",
 		"amongNeighbors": "{title} among its neighbours",
 		"composition": "Composition of {title}",
-		"techComposition": "Tech composition: {list}"
+		"techComposition": "Tech composition: {list}",
+		"tech": {
+			"languages": "Languages",
+			"mlStack": "ML & Data",
+			"databases": "Databases",
+			"backends": "Back-end",
+			"frontends": "Front-end",
+			"devops": "DevOps"
+		}
 	},
 	"mdx": {
 		"tasksTitle": "Kanban tasks created per day",

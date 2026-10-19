@@ -38,7 +38,7 @@ export default function Instruments() {
 						</ul>
 						<details className="mt-2">
 							<summary className="cursor-pointer rounded-sm font-mono text-[11px] text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-								voir le détail
+								{t("seeDetail")}
 							</summary>
 							<dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
 								<div>

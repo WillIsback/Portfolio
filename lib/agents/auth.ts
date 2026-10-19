@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
+import { isAdminSession } from "@/lib/admin-guard";
 
 /** Vrai si la session appartient à l'admin (`ADMIN_GITHUB_ID` non vide). */
 export async function requireAdmin(): Promise<boolean> {
-	const adminId = process.env.ADMIN_GITHUB_ID;
 	const session = await auth();
-	return Boolean(adminId) && session?.user?.githubId === adminId;
+	return isAdminSession(session);
 }

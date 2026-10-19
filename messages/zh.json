@@ -14,12 +14,15 @@
 			"作品集"
 		],
 		"about": {
-			"title": "关于 | William Derue",
-			"description": "William Derue 的经历、经验与教育背景 —— AI Engineer 方向的 AI 开发工程师。"
+			"title": "关于 | William Derue - AI 开发工程师 · AI Engineer 方向",
+			"description": "了解我的经历 —— 从自动化工程师到 AI 开发工程师，如今正走在 AI Engineer 方向上。在技术与人工智能领域拥有 7 年经验。"
 		},
 		"contact": {
-			"title": "联系 | William Derue",
-			"description": "对某个项目、某次实践或某篇文章有疑问？通过联系表单与 William Derue 取得联系。"
+			"title": "联系表单 | William Derue",
+			"description": "联系 William Derue，聊聊你的 AI 或全栈项目。给我留言，我会尽快回复。"
+		},
+		"articles": {
+			"title": "文章 | William Derue - AI 开发工程师 · AI Engineer 方向"
 		}
 	},
 	"figure": {
@@ -244,7 +247,15 @@
 		"captureAlt": "{title} 的截图",
 		"amongNeighbors": "{title} 及其邻居",
 		"composition": "{title} 的构成",
-		"techComposition": "技术构成：{list}"
+		"techComposition": "技术构成：{list}",
+		"tech": {
+			"languages": "语言",
+			"mlStack": "ML 与数据",
+			"databases": "数据库",
+			"backends": "后端",
+			"frontends": "前端",
+			"devops": "DevOps"
+		}
 	},
 	"mdx": {
 		"tasksTitle": "每日创建的看板任务数",

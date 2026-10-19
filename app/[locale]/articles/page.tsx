@@ -18,8 +18,9 @@ export async function generateMetadata({
 	const { locale } = await params;
 	if (!hasLocale(routing.locales, locale)) return {};
 	const t = await getTranslations({ locale, namespace: "articles" });
+	const meta = await getTranslations({ locale, namespace: "meta.articles" });
 	return pageMetadata(locale, "/articles", {
-		title: t("title"),
+		title: meta("title"),
 		description: t("description"),
 	});
 }

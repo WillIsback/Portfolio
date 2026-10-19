@@ -8,6 +8,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import ThemedToaster from "@/components/theme/ThemedToaster";
+import { isAdminSession } from "@/lib/admin-guard";
 
 export default async function AdminLayout({
 	children,
@@ -15,8 +16,7 @@ export default async function AdminLayout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
-	if (!session?.user || session.user.githubId !== process.env.ADMIN_GITHUB_ID)
-		redirect("/admin/login");
+	if (!isAdminSession(session)) redirect("/admin/login");
 
 	return (
 		<div className="flex min-h-screen font-sans bg-zinc-950 text-zinc-100">
@@ -56,7 +56,7 @@ export default async function AdminLayout({
 				</Link>
 				<div className="mt-auto pt-4 border-t border-zinc-800">
 					<p className="text-xs text-zinc-600 mb-2 truncate">
-						{session.user?.name}
+						{session?.user?.name}
 					</p>
 					<form
 						action={async () => {

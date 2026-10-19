@@ -11,7 +11,7 @@
 //
 // Pas de `setRequestLocale("fr")` ici contrairement au segment `[locale]` : cette route
 // est déjà `ƒ` (elle lit la base), donc la lecture de `headers()` que le provider
-// undertake ne coûte rien. Au niveau racine, elle faisait basculer `/admin/login` de `○`
+// provoque ne coûte rien. Au niveau racine, elle faisait basculer `/admin/login` de `○`
 // à `ƒ`.
 
 import { NextIntlClientProvider } from "next-intl";

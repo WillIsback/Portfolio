@@ -14,12 +14,15 @@
 			"portfolio"
 		],
 		"about": {
-			"title": "À propos | William Derue",
-			"description": "Parcours, expériences et formation de William Derue, développeur IA en parcours AI Engineer."
+			"title": "À propos | William Derue - Développeur IA · parcours AI Engineer",
+			"description": "Découvrez mon parcours - De l'automaticien au développeur IA, aujourd'hui en parcours AI Engineer. 7 ans d'expertise en technologie et intelligence artificielle."
 		},
 		"contact": {
-			"title": "Contact | William Derue",
-			"description": "Une question sur un projet, une expérience ou un article ? Écrivez à William Derue via le formulaire de contact."
+			"title": "Formulaire de contact | William Derue",
+			"description": "Contactez William Derue pour discuter de vos projets IA ou fullstack. Envoyez-moi un message et je vous répondrai rapidement."
+		},
+		"articles": {
+			"title": "Articles | William Derue - Développeur IA · parcours AI Engineer"
 		}
 	},
 	"figure": {
@@ -244,7 +247,15 @@
 		"captureAlt": "Capture de {title}",
 		"amongNeighbors": "{title} parmi ses voisins",
 		"composition": "Composition de {title}",
-		"techComposition": "Composition technique : {list}"
+		"techComposition": "Composition technique : {list}",
+		"tech": {
+			"languages": "Langages",
+			"mlStack": "ML & Data",
+			"databases": "Bases de données",
+			"backends": "Back-end",
+			"frontends": "Front-end",
+			"devops": "DevOps"
+		}
 	},
 	"mdx": {
 		"tasksTitle": "Tâches Kanban créées par jour",

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { frTranslator } from "@/i18n/fr";
 import type { MapData } from "@/lib/carnet/map-types";
 import type { NormalizedProject } from "@/lib/projects-data";
 import {
@@ -10,6 +11,8 @@ import {
 	techComposition,
 	techNames,
 } from "./register";
+
+const t = frTranslator("register");
 
 const project = (
 	id: number,
@@ -149,7 +152,7 @@ describe("techComposition", () => {
 			backends: [{ backend: "FastAPI" }],
 			devops: [{ devops: "Docker" }],
 		});
-		expect(techComposition(p)).toEqual([
+		expect(techComposition(p, t)).toEqual([
 			{ key: "languages", label: "Langages", count: 2, share: 0.5 },
 			{ key: "backends", label: "Back-end", count: 1, share: 0.25 },
 			{ key: "devops", label: "DevOps", count: 1, share: 0.25 },
@@ -157,7 +160,7 @@ describe("techComposition", () => {
 	});
 
 	it("est vide pour un projet sans technologie", () => {
-		expect(techComposition(project(1))).toEqual([]);
+		expect(techComposition(project(1), t)).toEqual([]);
 	});
 });
 
@@ -178,12 +181,12 @@ describe("ML & Data", () => {
 			languages: [{ language: "Python" }],
 			mlStack: [{ ml: "PyTorch" }, { ml: "ScikitLearn" }],
 		});
-		expect(techComposition(p).map((s) => s.key)).toEqual([
+		expect(techComposition(p, t).map((s) => s.key)).toEqual([
 			"languages",
 			"mlStack",
 			"databases",
 		]);
-		expect(techComposition(p)[1]).toEqual({
+		expect(techComposition(p, t)[1]).toEqual({
 			key: "mlStack",
 			label: "ML & Data",
 			count: 2,
