@@ -25,6 +25,21 @@
 		"ariaLabel": "Footer links",
 		"articles": "Articles"
 	},
+	"multiSelect": {
+		"placeholder": "Select...",
+		"noResults": "No results.",
+		"selected": "{count, plural, one {# selected} other {# selected}}",
+		"search": "Search..."
+	},
+	"errorBoundary": {
+		"title": "Something went wrong",
+		"unknown": "Unknown error",
+		"retry": "Try again"
+	},
+	"theme": {
+		"toggle": "Switch between the light and dark theme",
+		"toggleTitle": "Change theme"
+	},
 	"notFound": {
 		"title": "Page not found",
 		"body": "This page does not exist or has been moved.",

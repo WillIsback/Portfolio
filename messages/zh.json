@@ -25,6 +25,21 @@
 		"ariaLabel": "页脚链接",
 		"articles": "文章"
 	},
+	"multiSelect": {
+		"placeholder": "选择…",
+		"noResults": "没有结果。",
+		"selected": "已选 {count} 项",
+		"search": "搜索…"
+	},
+	"errorBoundary": {
+		"title": "出现了一个错误",
+		"unknown": "未知错误",
+		"retry": "重试"
+	},
+	"theme": {
+		"toggle": "在浅色主题与深色主题之间切换",
+		"toggleTitle": "切换主题"
+	},
 	"notFound": {
 		"title": "页面不存在",
 		"body": "该页面不存在或已被移动。",

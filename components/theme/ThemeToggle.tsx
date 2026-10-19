@@ -1,6 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,6 +10,7 @@ export default function ThemeToggle({
 	className,
 }: Readonly<{ className?: string }>) {
 	const { resolvedTheme, setTheme } = useTheme();
+	const t = useTranslations("theme");
 
 	return (
 		<Button
@@ -16,8 +18,8 @@ export default function ThemeToggle({
 			variant="ghost"
 			size="icon"
 			onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-			aria-label="Basculer entre le thème clair et le thème sombre"
-			title="Changer de thème"
+			aria-label={t("toggle")}
+			title={t("toggleTitle")}
 			className={cn(
 				"size-9 shrink-0 rounded-full bg-secondary/60 ring-1 ring-border/70 backdrop-blur hover:bg-primary/10 hover:text-primary",
 				className,

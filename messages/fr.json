@@ -25,6 +25,21 @@
 		"ariaLabel": "Liens du pied de page",
 		"articles": "Articles"
 	},
+	"multiSelect": {
+		"placeholder": "Sélectionner...",
+		"noResults": "Aucun résultat.",
+		"selected": "{count, plural, one {# sélectionné} other {# sélectionnés}}",
+		"search": "Rechercher..."
+	},
+	"errorBoundary": {
+		"title": "Une erreur est survenue",
+		"unknown": "Erreur inconnue",
+		"retry": "Réessayer"
+	},
+	"theme": {
+		"toggle": "Basculer entre le thème clair et le thème sombre",
+		"toggleTitle": "Changer de thème"
+	},
 	"notFound": {
 		"title": "Page introuvable",
 		"body": "Cette page n'existe pas ou a été déplacée.",

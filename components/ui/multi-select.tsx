@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, ChevronsUpDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,19 +29,28 @@ interface MultiSelectProps {
 	options: Option[];
 	selected: string[];
 	onChange: (selected: string[]) => void;
+	/** Remplace le libellé traduit du bouton. */
 	placeholder?: string;
+	/** Remplace le libellé traduit de l'état vide. */
 	emptyMessage?: string;
 	className?: string;
 }
 
+/**
+ * Les libellés par défaut (`Sélectionner...`, `Aucun résultat.`, `Rechercher...`, le
+ * décompte de sélection) viennent de `multiSelect`. `placeholder` et `emptyMessage`
+ * restent des props : l'appelant les connaît au moment du rendu, là où le dictionnaire
+ * n'a pas encore été consulté.
+ */
 export function MultiSelect({
 	options,
 	selected,
 	onChange,
-	placeholder = "Sélectionner...",
-	emptyMessage = "Aucun résultat.",
+	placeholder,
+	emptyMessage,
 	className,
 }: MultiSelectProps) {
+	const t = useTranslations("multiSelect");
 	const [open, setOpen] = React.useState(false);
 
 	const handleSelect = (value: string) => {
@@ -78,9 +88,9 @@ export function MultiSelect({
 			</PopoverTrigger>
 			<PopoverContent className="w-50 p-0">
 				<Command>
-					<CommandInput placeholder="Rechercher..." />
+					<CommandInput placeholder={t("search")} />
 					<CommandList>
-						<CommandEmpty>{emptyMessage}</CommandEmpty>
+						<CommandEmpty>{emptyMessage ?? t("noResults")}</CommandEmpty>
 						<CommandGroup>
 							{options.map((option) => (
 								<CommandItem
