@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -17,6 +17,10 @@ describe("ThemedToaster", () => {
 		for (const layout of ROOT_LAYOUTS) {
 			expect(read(layout)).not.toContain("ThemedToaster");
 		}
+	});
+
+	it("n'a pas de root layout global (les deux groupes le remplacent)", () => {
+		expect(existsSync(path.join(process.cwd(), "app/layout.tsx"))).toBe(false);
 	});
 
 	it("est monté là où des toasts sont émis", () => {
