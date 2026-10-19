@@ -214,6 +214,11 @@
 		"registerUnavailable": "项目登记表暂时无法访问。",
 		"instruments": "工具箱"
 	},
+	"about": {
+		"eyebrow": "实验笔记 · 经历",
+		"tagline": "AI 开发工程师 · AI Engineer 方向",
+		"ageLine": "{age} 岁 — 法国南部"
+	},
 	"articles": {
 		"eyebrow": "实验笔记 · 条目",
 		"title": "文章",

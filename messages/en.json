@@ -214,6 +214,11 @@
 		"registerUnavailable": "The project register is temporarily unavailable.",
 		"instruments": "Instruments"
 	},
+	"about": {
+		"eyebrow": "Logbook · path",
+		"tagline": "AI developer · AI Engineer track",
+		"ageLine": "{age} years old — Southern France"
+	},
 	"articles": {
 		"eyebrow": "Logbook · entries",
 		"title": "Articles",

@@ -214,6 +214,11 @@
 		"registerUnavailable": "Le registre des projets est momentanément indisponible.",
 		"instruments": "Instruments"
 	},
+	"about": {
+		"eyebrow": "Carnet · parcours",
+		"tagline": "Développeur IA · parcours AI Engineer",
+		"ageLine": "{age} ans — Sud de la France"
+	},
 	"articles": {
 		"eyebrow": "Carnet · entrées",
 		"title": "Articles",
