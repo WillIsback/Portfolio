@@ -8,10 +8,13 @@ export default function LatestEntries({
 	articles,
 	showAllLink = true,
 	headingLevel = 3,
+	fallbackSlugs = [],
 }: Readonly<{
 	articles: ArticleMeta[];
 	showAllLink?: boolean;
 	headingLevel?: 2 | 3;
+	/** Slugs servis en français faute de traduction : signalés avant le clic. */
+	fallbackSlugs?: readonly string[];
 }>) {
 	const locale = useLocale();
 	const t = useTranslations("readingTime");
@@ -41,6 +44,11 @@ export default function LatestEntries({
 									{article.title}
 								</Link>
 							</Heading>
+							{fallbackSlugs.includes(article.slug) ? (
+								<p className="mt-1 text-xs text-ink-soft">
+									{tArticles("untranslatedNotice")}
+								</p>
+							) : null}
 							<p className="mt-1 line-clamp-2 text-base leading-relaxed">
 								{article.description}
 							</p>

@@ -274,6 +274,7 @@
 		"periodLabel": "Période : ",
 		"tagsLabel": "Thèmes",
 		"onTheMap": "Sur la carte",
-		"onTheMapCaption": "Cette entrée parmi ses voisins"
+		"onTheMapCaption": "Cette entrée parmi ses voisins",
+		"untranslatedNotice": "Cet article n'est pas encore traduit dans cette langue. Version française ci-dessous."
 	}
 }

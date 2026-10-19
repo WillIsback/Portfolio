@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { routing } from "@/i18n/routing";
 
 export const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
 
@@ -159,4 +160,41 @@ export function projectEntries(
 		for (const id of article.projects ?? [])
 			out[id] ??= { slug: article.slug, title: article.title };
 	return out;
+}
+
+/** Dossier d'une locale, ou `null` si cette locale n'a pas encore de traductions. */
+export function localeDir(locale: string): string | null {
+	if (locale === routing.defaultLocale) return null;
+	const dir = path.join(ARTICLES_DIR, locale);
+	return fs.existsSync(dir) ? dir : null;
+}
+
+/** Dossier effectif : celui de la locale si les traductions existent, sinon le français. */
+export function articlesDir(locale: string): string {
+	return localeDir(locale) ?? ARTICLES_DIR;
+}
+
+export function listArticleSlugs(locale: string): string[] {
+	return getArticleSlugs(articlesDir(locale));
+}
+
+export interface ResolvedArticle {
+	article: Article | null;
+	/** `true` quand l'article servi est en français alors qu'une autre langue était demandée. */
+	fallback: boolean;
+}
+
+export function readArticle(slug: string, locale: string): ResolvedArticle {
+	const dir = localeDir(locale);
+	if (dir) {
+		const translated = getArticleBySlug(slug, dir);
+		if (translated) return { article: translated, fallback: false };
+	}
+	// Aucun dossier de traductions, ou article absent de ce dossier : on sert le
+	// français. C'est un repli dès lors qu'une autre langue que le français était
+	// demandée — y compris tant que le dossier de la locale n'existe pas encore.
+	return {
+		article: getArticleBySlug(slug, ARTICLES_DIR),
+		fallback: locale !== routing.defaultLocale,
+	};
 }

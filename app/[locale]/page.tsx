@@ -12,17 +12,17 @@ import RegisterView from "@/components/register/RegisterView";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
 import {
+	articlesDir,
 	getAllArticles,
 	latestArticles,
 	projectEntries,
+	readArticle,
 } from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { mapNeighbors } from "@/lib/register";
 
 const map = MapDataSchema.parse(mapJson);
-const entries = latestArticles(3);
-const byProject = projectEntries(getAllArticles());
 const neighbors = mapNeighbors(map);
 
 export default async function Home({
@@ -32,6 +32,13 @@ export default async function Home({
 }) {
 	const { locale } = await params;
 	setRequestLocale(locale);
+
+	const dir = articlesDir(locale);
+	const entries = latestArticles(3, dir);
+	const byProject = projectEntries(getAllArticles(dir));
+	const fallbackSlugs = entries
+		.filter((entry) => readArticle(entry.slug, locale).fallback)
+		.map((entry) => entry.slug);
 
 	// Les noms de groupes sont traduits : la vue se construit donc dans le composant,
 	// et plus au niveau du module où aucune locale n'est encore connue.
@@ -75,7 +82,7 @@ export default async function Home({
 							{t("latestEntries")}
 						</h2>
 						<div className="mt-6">
-							<LatestEntries articles={entries} />
+							<LatestEntries articles={entries} fallbackSlugs={fallbackSlugs} />
 						</div>
 					</section>
 				) : null}

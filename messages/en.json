@@ -274,6 +274,7 @@
 		"periodLabel": "Period: ",
 		"tagsLabel": "Topics",
 		"onTheMap": "On the map",
-		"onTheMapCaption": "This entry among its neighbours"
+		"onTheMapCaption": "This entry among its neighbours",
+		"untranslatedNotice": "This article has not been translated into this language yet. French version below."
 	}
 }

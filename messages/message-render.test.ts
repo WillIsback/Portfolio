@@ -1,5 +1,6 @@
 import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
+import type { Translator } from "@/i18n/translator";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 import zh from "@/messages/zh.json";
@@ -17,7 +18,7 @@ const MESSAGES: Record<
 	string,
 	{
 		catalog: Catalog;
-		translator: (key: string, values?: Record<string, unknown>) => string;
+		translator: Translator;
 	}
 > = {
 	fr: {

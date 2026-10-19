@@ -1,6 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import LatestEntries from "@/components/home/LatestEntries";
-import { getAllArticles } from "@/lib/articles/loader";
+import {
+	articlesDir,
+	getAllArticles,
+	readArticle,
+} from "@/lib/articles/loader";
 
 export default async function ArticlesPage({
 	params,
@@ -13,7 +17,10 @@ export default async function ArticlesPage({
 	setRequestLocale(locale);
 
 	const t = await getTranslations("articles");
-	const articles = getAllArticles();
+	const articles = getAllArticles(articlesDir(locale));
+	const fallbackSlugs = articles
+		.filter((article) => readArticle(article.slug, locale).fallback)
+		.map((article) => article.slug);
 
 	return (
 		<div className="mx-auto w-full max-w-3xl">
@@ -34,6 +41,7 @@ export default async function ArticlesPage({
 			) : (
 				<LatestEntries
 					articles={articles}
+					fallbackSlugs={fallbackSlugs}
 					showAllLink={false}
 					headingLevel={2}
 				/>

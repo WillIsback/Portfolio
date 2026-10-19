@@ -10,9 +10,10 @@ import OnTheMap from "@/components/articles/OnTheMap";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
 import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { numberFigures } from "@/lib/articles/figures";
 import { formatDate, formatReadingTime } from "@/lib/articles/format";
-import { getArticleBySlug, getArticleSlugs } from "@/lib/articles/loader";
+import { listArticleSlugs, readArticle } from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { nearestTo } from "@/lib/carnet/neighbors";
@@ -28,14 +29,16 @@ interface ArticlePageProps {
 }
 
 export function generateStaticParams() {
-	return getArticleSlugs().map((slug) => ({ slug }));
+	return routing.locales.flatMap((locale) =>
+		listArticleSlugs(locale).map((slug) => ({ locale, slug })),
+	);
 }
 
 export async function generateMetadata({
 	params,
 }: ArticlePageProps): Promise<Metadata> {
-	const { slug } = await params;
-	const article = getArticleBySlug(slug);
+	const { locale, slug } = await params;
+	const { article } = readArticle(slug, locale);
 	if (!article) return {};
 	const url = `${SITE_URL}/articles/${article.slug}`;
 	return {
@@ -65,7 +68,7 @@ export async function generateMetadata({
 export default async function ArticlePage({ params }: ArticlePageProps) {
 	const { locale, slug } = await params;
 	setRequestLocale(locale);
-	const article = getArticleBySlug(slug);
+	const { article, fallback } = readArticle(slug, locale);
 	if (!article) notFound();
 
 	// Les noms de groupes sont traduits : la vue se construit ici, et plus au niveau du
@@ -122,6 +125,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					{tArticles("allArticles")}
 				</Link>
 			</nav>
+
+			{fallback ? (
+				<p className="mb-8 rounded-md border border-border/70 bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
+					{tArticles("untranslatedNotice")}
+				</p>
+			) : null}
 
 			<header className="mb-10 space-y-5 border-b border-border pb-8">
 				{article.status ? (
