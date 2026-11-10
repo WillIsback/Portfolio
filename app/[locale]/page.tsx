@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import CarnetExplorer from "@/components/carnet/CarnetExplorer";
@@ -9,8 +11,10 @@ import LatestEntries from "@/components/home/LatestEntries";
 import MarginNote from "@/components/notebook/MarginNote";
 import ProjectRegister from "@/components/register/ProjectRegister";
 import RegisterView from "@/components/register/RegisterView";
+import JsonLd from "@/components/seo/JsonLd";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
+import { routing } from "@/i18n/routing";
 import {
 	articlesDir,
 	getAllArticles,
@@ -21,6 +25,7 @@ import {
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { mapNeighbors } from "@/lib/register";
+import { personJsonLd, websiteJsonLd } from "@/lib/structured-data";
 
 const map = MapDataSchema.parse(mapJson);
 const neighbors = mapNeighbors(map);
@@ -31,6 +36,7 @@ export default async function Home({
 	params: Promise<{ locale: string }>;
 }) {
 	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) notFound();
 	setRequestLocale(locale);
 
 	const dir = articlesDir(locale);
@@ -44,9 +50,13 @@ export default async function Home({
 	// et plus au niveau du module où aucune locale n'est encore connue.
 	const view = toMapView(map, clusterLabels(await getTranslations("clusters")));
 	const t = await getTranslations("home");
+	const tAbout = await getTranslations("about");
 
 	return (
 		<main className="relative flex min-h-screen flex-col">
+			<JsonLd
+				data={[websiteJsonLd(locale), personJsonLd(locale, tAbout("tagline"))]}
+			/>
 			<div className="sticky top-0 z-50 w-full">
 				<Header />
 			</div>

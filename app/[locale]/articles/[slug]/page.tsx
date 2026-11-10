@@ -8,13 +8,18 @@ import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
 import { mdxComponents } from "@/components/articles/mdx";
 import OnTheMap from "@/components/articles/OnTheMap";
+import JsonLd from "@/components/seo/JsonLd";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { numberFigures } from "@/lib/articles/figures";
 import { formatDate, formatReadingTime } from "@/lib/articles/format";
-import { listArticleSlugs, readArticle } from "@/lib/articles/loader";
+import {
+	articleLocales,
+	listArticleSlugs,
+	readArticle,
+} from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { nearestTo } from "@/lib/carnet/neighbors";
@@ -23,8 +28,10 @@ import {
 	inLanguage,
 	languageAlternates,
 	ogLocale,
+	SITE_NAME,
 	SITE_URL,
 } from "@/lib/seo";
+import { PERSON_ID } from "@/lib/structured-data";
 
 const map = MapDataSchema.parse(mapJson);
 
@@ -45,22 +52,28 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
 	const { locale, slug } = await params;
 	if (!hasLocale(routing.locales, locale)) return {};
-	const { article } = readArticle(slug, locale);
+	const { article, fallback } = readArticle(slug, locale);
 	if (!article) return {};
 	const path = `/articles/${article.slug}`;
 	const url = canonicalUrl(locale, path);
+	// Un repli français n'est pas une page à part : son canonical vise l'original, et
+	// les `hreflang` n'annoncent que les langues où l'article existe, comme le sitemap.
+	const canonical = fallback ? canonicalUrl(routing.defaultLocale, path) : url;
 	return {
 		title: `${article.title} | William Derue`,
 		description: article.description,
 		keywords: article.tags,
-		alternates: { canonical: url, languages: languageAlternates(path) },
+		alternates: {
+			canonical,
+			languages: languageAlternates(path, articleLocales(article.slug)),
+		},
 		openGraph: {
 			type: "article",
 			locale: ogLocale(locale),
 			url,
 			title: article.title,
 			description: article.description,
-			siteName: "Portfolio WillisBack",
+			siteName: SITE_NAME,
 			publishedTime: article.date,
 			authors: ["William Derue"],
 			tags: article.tags,
@@ -112,19 +125,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 		datePublished: article.date,
 		inLanguage: inLanguage(locale),
 		keywords: article.tags.join(", "),
-		author: { "@type": "Person", name: "William Derue", url: SITE_URL },
+		author: {
+			"@id": PERSON_ID,
+			"@type": "Person",
+			name: "William Derue",
+			url: SITE_URL,
+		},
 		mainEntityOfPage: canonicalUrl(locale, `/articles/${article.slug}`),
 	};
 
 	return (
 		<article className="mx-auto w-full max-w-[44rem]">
-			<script
-				type="application/ld+json"
-				// biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD built from our own frontmatter
-				dangerouslySetInnerHTML={{
-					__html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-				}}
-			/>
+			<JsonLd data={jsonLd} />
 			<nav className="mb-8">
 				<Link
 					href="/articles"

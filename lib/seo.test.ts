@@ -5,6 +5,7 @@ import {
 	inLanguage,
 	languageAlternates,
 	ogLocale,
+	pageMetadata,
 	SITE_URL,
 } from "./seo";
 
@@ -87,5 +88,48 @@ describe("étiquettes de langue", () => {
 			expect(ogLocale(locale)).toMatch(/^[a-z]{2}_[A-Z]{2}$/);
 			expect(inLanguage(locale)).toMatch(/^[a-z]{2}-[A-Z]{2}$/);
 		}
+	});
+});
+
+describe("marque", () => {
+	it("nomme le site WillisBack dans OpenGraph", () => {
+		const meta = pageMetadata("fr", "/About", { title: "t", description: "d" });
+		expect(meta.openGraph?.siteName).toBe("WillisBack");
+	});
+});
+
+describe("image de partage des pages éditoriales", () => {
+	// `pageMetadata` redéfinit `openGraph` : l'image héritée du layout est perdue,
+	// il faut donc la redéclarer ici.
+	it("annonce l'image du site dans la locale, pour OpenGraph et Twitter", () => {
+		const meta = pageMetadata("en", "/About", { title: "t", description: "d" });
+		const image = {
+			url: `${SITE_URL}/en/opengraph-image`,
+			width: 1200,
+			height: 630,
+		};
+		expect(meta.openGraph?.images).toEqual([image]);
+		expect(meta.twitter?.images).toEqual([image]);
+		expect(
+			pageMetadata("fr", "/Contact", { title: "t", description: "d" }).openGraph
+				?.images,
+		).toEqual([{ ...image, url: `${SITE_URL}/fr/opengraph-image` }]);
+	});
+});
+
+describe("liens alternés limités aux locales existantes", () => {
+	it("n'annonce que les locales données, x-default sur le français", () => {
+		expect(languageAlternates("/articles/seul", ["fr"])).toEqual({
+			fr: `${SITE_URL}/articles/seul`,
+			"x-default": `${SITE_URL}/articles/seul`,
+		});
+	});
+
+	it("sans français, x-default vise la première locale disponible", () => {
+		expect(languageAlternates("/articles/x", ["en", "zh"])).toEqual({
+			en: `${SITE_URL}/en/articles/x`,
+			zh: `${SITE_URL}/zh/articles/x`,
+			"x-default": `${SITE_URL}/en/articles/x`,
+		});
 	});
 });

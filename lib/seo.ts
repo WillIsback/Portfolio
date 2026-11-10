@@ -4,6 +4,9 @@ import { type Locale, routing } from "@/i18n/routing";
 /** Origine canonique du site, sans barre oblique finale. */
 export const SITE_URL = "https://www.willisback.fr";
 
+/** Nom de marque du site (`og:site_name`). */
+export const SITE_NAME = "WillisBack";
+
 /**
  * Locale OpenGraph (`fr` → `fr_FR`) et langue du document Schema.org (`fr` → `fr-FR`).
  *
@@ -43,16 +46,35 @@ export function canonicalUrl(locale: Locale, path = ""): string {
 }
 
 /**
- * `alternates.languages` pour une route : une entrée par locale déclarée, plus
- * `x-default` sur la locale par défaut. Dérivé de `routing.locales`, donc ajouter une
- * locale met les `hreflang` à jour sans toucher aux pages.
+ * `alternates.languages` pour une route : une entrée par locale où la page existe
+ * (toutes par défaut, dérivées de `routing.locales`), plus `x-default` sur la locale
+ * par défaut, ou sur la première disponible si la page n'existe pas en français.
  */
-export function languageAlternates(path = ""): Record<string, string> {
+export function languageAlternates(
+	path = "",
+	locales: readonly Locale[] = routing.locales,
+): Record<string, string> {
+	const fallback = locales.includes(routing.defaultLocale)
+		? routing.defaultLocale
+		: locales[0];
 	return {
 		...Object.fromEntries(
-			routing.locales.map((locale) => [locale, canonicalUrl(locale, path)]),
+			locales.map((locale) => [locale, canonicalUrl(locale, path)]),
 		),
-		"x-default": canonicalUrl(routing.defaultLocale, path),
+		...(fallback ? { "x-default": canonicalUrl(fallback, path) } : {}),
+	};
+}
+
+/**
+ * Image de partage du site (`app/[locale]/opengraph-image.tsx`). Toujours préfixée,
+ * français compris : le proxy laisse passer `/<locale>/opengraph-image` sans
+ * redirection.
+ */
+export function siteOgImage(locale: Locale) {
+	return {
+		url: `${SITE_URL}/${locale}/opengraph-image`,
+		width: 1200,
+		height: 630,
 	};
 }
 
@@ -77,12 +99,15 @@ export function pageMetadata(
 			url,
 			title: content.title,
 			description: content.description,
-			siteName: "Portfolio WillisBack",
+			siteName: SITE_NAME,
+			// Redéfinir `openGraph` ici écrase l'image héritée du layout : on la redéclare.
+			images: [siteOgImage(locale)],
 		},
 		twitter: {
 			card: "summary_large_image",
 			title: content.title,
 			description: content.description,
+			images: [siteOgImage(locale)],
 		},
 	};
 }

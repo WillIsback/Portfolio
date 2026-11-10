@@ -9,6 +9,7 @@ import {
 	canonicalUrl,
 	languageAlternates,
 	ogLocale,
+	SITE_NAME,
 	SITE_URL,
 } from "@/lib/seo";
 
@@ -26,7 +27,6 @@ export async function generateMetadata({
 	return {
 		title: t("title"),
 		description: t("description"),
-		keywords: t.raw("keywords"),
 		authors: [{ name: "William Derue" }],
 		creator: "William Derue",
 		metadataBase: new URL(SITE_URL),
@@ -40,7 +40,7 @@ export async function generateMetadata({
 			url: canonicalUrl(locale),
 			title: t("title"),
 			description: t("description"),
-			siteName: "Portfolio WillisBack",
+			siteName: SITE_NAME,
 		},
 		twitter: {
 			card: "summary_large_image",

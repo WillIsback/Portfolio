@@ -1,3 +1,4 @@
+import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 import { NextRequest } from "next/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { config, default as proxyHandler } from "./proxy";
@@ -39,7 +40,25 @@ afterEach(() => {
 describe("proxy", () => {
 	it("couvre les routes admin et les routes publiques, hors api et assets", () => {
 		expect(config.matcher).toContain("/admin/:path*");
-		expect(config.matcher).toContain("/((?!api|_next|_vercel|.*\\..*).*)");
+		expect(config.matcher).toContain(
+			"/((?!api|_next|_vercel|.*opengraph-image|.*\\..*).*)",
+		);
+	});
+
+	// Next annonce l'image de partage française sous `/fr/opengraph-image?<hash>`.
+	// Si le proxy la captait, next-intl la redirigerait (307) vers une URL sans
+	// préfixe, avec une requête altérée et un cookie : les robots d'aperçu suivent
+	// mal ce détour.
+	it("laisse passer les images de partage et les fichiers, capte les pages", () => {
+		const matches = (url: string) =>
+			unstable_doesMiddlewareMatch({ config, url });
+		expect(matches("/fr/opengraph-image")).toBe(false);
+		expect(matches("/fr/articles/syntheo-beta-0-7/opengraph-image")).toBe(false);
+		expect(matches("/robots.txt")).toBe(false);
+		expect(matches("/sitemap.xml")).toBe(false);
+		expect(matches("/articles")).toBe(true);
+		expect(matches("/en/About")).toBe(true);
+		expect(matches("/admin")).toBe(true);
 	});
 
 	it("laisse passer une URL française sans préfixe", async () => {
