@@ -15,7 +15,11 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { numberFigures } from "@/lib/articles/figures";
 import { formatDate, formatReadingTime } from "@/lib/articles/format";
-import { listArticleSlugs, readArticle } from "@/lib/articles/loader";
+import {
+	articleLocales,
+	listArticleSlugs,
+	readArticle,
+} from "@/lib/articles/loader";
 import { MapDataSchema } from "@/lib/carnet/map-types";
 import { toMapView } from "@/lib/carnet/map-view";
 import { nearestTo } from "@/lib/carnet/neighbors";
@@ -48,15 +52,21 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
 	const { locale, slug } = await params;
 	if (!hasLocale(routing.locales, locale)) return {};
-	const { article } = readArticle(slug, locale);
+	const { article, fallback } = readArticle(slug, locale);
 	if (!article) return {};
 	const path = `/articles/${article.slug}`;
 	const url = canonicalUrl(locale, path);
+	// Un repli français n'est pas une page à part : son canonical vise l'original, et
+	// les `hreflang` n'annoncent que les langues où l'article existe, comme le sitemap.
+	const canonical = fallback ? canonicalUrl(routing.defaultLocale, path) : url;
 	return {
 		title: `${article.title} | William Derue`,
 		description: article.description,
 		keywords: article.tags,
-		alternates: { canonical: url, languages: languageAlternates(path) },
+		alternates: {
+			canonical,
+			languages: languageAlternates(path, articleLocales(article.slug)),
+		},
 		openGraph: {
 			type: "article",
 			locale: ogLocale(locale),

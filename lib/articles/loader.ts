@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import { routing } from "@/i18n/routing";
+import { type Locale, routing } from "@/i18n/routing";
 
 export const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
 
@@ -197,4 +197,12 @@ export function readArticle(slug: string, locale: string): ResolvedArticle {
 		article: getArticleBySlug(slug, ARTICLES_DIR),
 		fallback: locale !== routing.defaultLocale,
 	};
+}
+
+/** Locales où l'article est réellement écrit (les replis français sont exclus). */
+export function articleLocales(slug: string): Locale[] {
+	return routing.locales.filter((locale) => {
+		const { article, fallback } = readArticle(slug, locale);
+		return article !== null && !fallback;
+	});
 }
