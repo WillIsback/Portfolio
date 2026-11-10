@@ -20,6 +20,7 @@
 		"catalogue:domains": "tsx --env-file=.env.local scripts/catalogue/apply-domains.ts",
 		"catalogue:training": "tsx --env-file=.env.local scripts/catalogue/apply-training.ts",
 		"catalogue:init-admin": "tsx --env-file=.env.local scripts/catalogue/init-admin-fields.ts",
+		"catalogue:syntheo": "tsx --env-file=.env.local scripts/catalogue/apply-syntheo.ts",
 		"embeddings": "tsx --env-file=.env.local scripts/carnet/build-map.ts"
 	},
 	"prisma": {

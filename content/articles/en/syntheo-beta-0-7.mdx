@@ -1,0 +1,116 @@
+---
+title: "Syntheo 0.7: a meeting notepad that never leaves your premises"
+description: "Why I built a fully local meeting notepad for civil servants, what the 0.7.0 beta contains, and the method that shipped it: semver batches, Claude Code agents across three machines, alphas tested in real conditions. Plus what is still missing before 1.0."
+date: "2026-11-10"
+period: "27 Oct → 10 Nov 2026"
+tags: ["Local AI", "Data sovereignty", "Desktop app", "Coding agents", "Method"]
+status: "Public beta"
+projects: [20]
+---
+
+I work for the French civil service. Using a cloud meeting-notes tool such as Granola would require a sign-off from my hierarchy that would take longer than the tool's own lifespan. So I built Syntheo: an open-source meeting notepad that transcribes and writes the meeting summary with models running on my own machine or on a server inside my organisation. The 0.7.0 beta shipped on 10 November 2026. Here is why it exists, what it contains, how I shipped it, and what is still missing.
+
+<KeyFigures
+  items={[
+    { value: "20", label: "releases between 0.1.0 (27 October) and 0.7.0 (10 November)" },
+    { value: "48", label: "issues closed by the 0.7.0 batch PR, including 3 epics: clean-up, automations, project folders" },
+    { value: "7", label: "diagnostic alphas tested on Linux and Windows before the merge" },
+    { value: "43 / 48", label: "sign-off checks cleared on an alpha before the merge; the other 5 deferred with their reason, macOS among them for lack of a Mac", alert: true },
+    { value: "− 75,000", label: "lines removed by the clean-up, against roughly + 31,000 lines of features" },
+    { value: "155 → 52", label: "files over 500 lines, tests excluded" },
+    { value: "≈ 4,000", label: "green Vitest tests on the app just before the merge, on top of the Rust tests" },
+    { value: "2", label: "breaking database migrations: a 0.6.x can no longer open a database upgraded to 0.7.0", alert: true },
+  ]}
+/>
+
+## Why fully local
+
+The need is simple: take notes during a meeting, see the transcript as it happens, and get a clean summary at the end. Tools that do this very well already exist. They send the meeting's audio and text to a vendor, which is exactly what a public administration cannot do without a long approval process.
+
+Syntheo turns the problem around: nothing leaves the user's premises. No account, no telemetry, no bot joining the call. The app captures the microphone and the system audio, sends the audio to a transcription server the user chooses, then asks a language model the user also hosts for the summary. The audio lives in memory just long enough to be transcribed, then it is gone.
+
+The hardware bet is reasonable for 2026: a transcription model of about 800M parameters and a mid-sized language model fit on a Mac with MLX, on an RTX 3090, or on a DGX Spark. That is a well-equipped employee's workstation, or a server shared by a department. It does not cover everyone, and that is the project's main limitation.
+
+## From a fork to an identity
+
+I did not start from scratch. Syntheo is a fork of Anarlog, an MIT-licensed meeting-notes app. I renamed it first, then reworked it: a French interface, servers configured by the user, and a visual identity I called "Green Tea".
+
+The name reads Syn·thé·o, "thé" being French for tea: what you gather around tea. In Japan, a _chakai_ (茶会) brings a host and their guests together. A participant then keeps the _kaiki_ (会記), their own record of the gathering; the oldest known ones, such as the _Matsuya kaiki_, begin in 1533. The idea served as a specification more than as decoration:
+
+- **the summary starts from the user's notes**: Syntheo completes them with the transcript instead of replacing them. The user's notes stay in green, the added text in ink;
+- **the audio is never kept**, on principle: 一期一会, "one encounter, one time only";
+- **a finished note receives the 記 seal**, "to record", the character in _kaiki_.
+
+An earlier generation of Syntheo existed: a Next.js and PostgreSQL web app, since renamed `Syntheo-web`. The desktop app took over the name.
+
+## What 0.7.0 contains
+
+0.7.0 runs on Linux and Windows. It is built with Tauri 2 (Rust) and React 19, on a local SQLite database. Real-time transcription goes through NVIDIA NIM or Whisper via speaches, and writing goes through any OpenAI-compatible API (vLLM, Ollama, MLX). DTLN echo cancellation (ONNX) keeps the loudspeaker sound from coming back through the microphone.
+
+What the batch adds:
+
+- **Project folders**: one page per folder, with a _common thread_ the model updates on request, which keeps the user's corrections and links back to the source meetings. From that thread, Syntheo proposes the agenda of the **next meeting** and prepares its note.
+- **Automations**: a single model, seven actions (including "Extract tasks"), launched from a menu or with **Ctrl+J**. Sensitive actions, webhook and system command, ask for confirmation.
+- **Listening**: the microphone and the system audio can be muted **separately**, and a floating pill lets you pause and resume without going back to the window.
+- **Import** of audio and video files with the real-time model alone, with progress and duplicate-free resumption after a network cut.
+
+## The clean-up
+
+Part of the batch is invisible. Before opening a minor version, I measure the code and remove what is no longer used. This one removed the calendar, cloud sync and sharing, the Pro subscription and the old vault. They were leftovers from the fork that made no sense in an app with no account and no vendor server.
+
+| | Lines |
+| --- | --- |
+| Start of the batch (0.6.3) | 481,074 |
+| Clean-up, sum of merges | ≈ − 75,000 |
+| Features added | ≈ + 31,000 |
+| End of the batch | ≈ 437,500 |
+| Files over 500 lines, tests excluded | 155 → 52 |
+
+The figure that matters to me is the last one. A file that is too long is a file neither a human nor an agent reads in full. The clean-up has a cost: two database migrations with no way back. A database upgraded to 0.7.0 no longer opens with a 0.6.x, and the app tells the user instead of failing.
+
+## The method
+
+This is the part I am most pleased with, because it keeps the pace without giving up on verification.
+
+**Version batches.** Each version is a batch: a `feat/0.7.0` branch, one sub-branch per issue, and a single PR to `main` that carries the whole batch. Fixes come before features, and the release is automatic on merge. The version number is computed from the commit messages.
+
+**Claude Code agents across three machines.** One session orchestrates from my home server: it splits the work, opens the issues and writes the PRs. A Remote Control session on a 32-core desktop compiles and runs the heavy tests. A third one, on the DGX Spark, serves and tests the models.
+
+```text
+home server ── orchestrating session: issues, sub-branches, PRs, sign-off checks
+   │
+   ├─▶ 32-core desktop (Remote Control): Rust builds, tests, alphas
+   └─▶ DGX Spark: transcription and language models, measurements
+```
+
+**Alphas tested in real conditions.** Automated tests do not prove that system audio is captured correctly on Windows, or that a pill displays properly under Hyprland. Before each merge, I build a diagnostic alpha (inspector, detailed logs, metrics bar) and the PR lists **sign-off checks**. Each box states the platform and the expected signal: a log line, a measurement, a visible behaviour. 0.7.0 took seven alphas. A check never disappears silently: it is either cleared, or deferred with its reason and its issue.
+
+**Security gates in CI.** Every PR goes through code quality, tests, CodeQL, cargo-deny, Trivy, Gitleaks and Aikido. The release adds an SBOM and a build provenance attestation for the packages, and the Windows packages are signed with Azure Artifact Signing. For an app meant for public administrations, being able to verify what you install is part of the product.
+
+<Lesson title="The agent writes, the alpha decides">
+Agents produce code fast and unit-test it well. What they do not see is the real OS: a video import that returned zero samples on Linux, a second resume that cut the recording on Windows. Both defects were found on an alpha, not in CI.
+</Lesson>
+
+<Lesson title="One check, one signal">
+Writing the expected signal next to each check ("about 1 s between the two streams, no gap at the start") turns a vague manual test into a reproducible measurement that the agent can read back in the logs.
+</Lesson>
+
+<Lesson title="Tidy up before adding">
+Cleaning up before each minor version keeps the codebase readable for the agents as well as for me. Without it, every batch of fixes adds code and never removes any.
+</Lesson>
+
+## What is still missing
+
+0.7.0 is a beta, and the word is deserved:
+
+- **no macOS**: the app has not been tested there;
+- **no automatic updates**: each new version has to be downloaded;
+- **the pill is imperfect under Hyprland**: an ordinary floating window, slightly too large; the fix is planned for 0.7.1;
+- **automatic folder suggestion stays disabled** until I have the data to measure its precision;
+- **hardware**: without a machine able to run the models, or a shared server, Syntheo is of no use.
+
+1.0 will come after several weeks of use in real meetings, not after a feature list. The website is [syntheo.studio](https://syntheo.studio/), the documentation is at [docs.syntheo.studio](https://docs.syntheo.studio) and the code on [GitHub](https://github.com/WillIsback/Syntheo).
+
+<Sources>
+Release v0.7.0 and batch PR (#489) of the WillIsback/Syntheo repository: list of closed issues, "sign-off checks" section (48 boxes: 43 cleared, 5 deferred; 7 alphas), lines-of-code table and test evidence (3,881 Vitest tests in the PR body; 3,988 in the last full run on the batch head, just before the merge). The repository's release history (20 releases from 27 October to 10 November 2026). The repository's GitHub Actions workflows for the security gates. The documentation page "L'esprit Syntheo" for the story behind the name.
+</Sources>

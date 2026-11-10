@@ -1,0 +1,116 @@
+---
+title: "Syntheo 0.7 : un bloc-notes de réunion qui ne sort pas de chez vous"
+description: "Pourquoi j'ai construit un bloc-notes de réunion 100 % local pour les agents publics, ce que contient la bêta 0.7.0, et la méthode qui l'a livrée : lots semver, agents Claude Code sur trois machines, alphas testées en conditions réelles. Avec ce qui manque encore avant la 1.0."
+date: "2026-11-10"
+period: "27 oct. → 10 nov. 2026"
+tags: ["IA locale", "Souveraineté des données", "Application desktop", "Agents de code", "Méthode"]
+status: "Bêta publique"
+projects: [20]
+---
+
+Je suis agent de l'État. Pour utiliser un outil de prise de notes en réunion dans le cloud, comme Granola, il me faudrait une validation hiérarchique plus longue que la durée de vie de l'outil. J'ai donc construit Syntheo : un bloc-notes de réunion open source qui transcrit et rédige le compte rendu avec des modèles qui tournent sur ma machine ou sur un serveur de mon organisation. La bêta 0.7.0 est sortie le 10 novembre 2026. Voici pourquoi elle existe, ce qu'elle contient, comment je l'ai livrée, et ce qui manque encore.
+
+<KeyFigures
+  items={[
+    { value: "20", label: "versions publiées entre la 0.1.0 (27 octobre) et la 0.7.0 (10 novembre)" },
+    { value: "48", label: "issues fermées par la PR du lot 0.7.0, dont 3 epics : ménage, automatisations, dossiers projet" },
+    { value: "7", label: "alphas de diagnostic testées sur Linux et Windows avant la fusion" },
+    { value: "43 / 48", label: "réserves levées sur une alpha avant la fusion ; les 5 autres reportées avec leur raison, dont macOS faute de Mac", alert: true },
+    { value: "− 75 000", label: "lignes retirées par le ménage, pour environ + 31 000 lignes de fonctionnalités" },
+    { value: "155 → 52", label: "fichiers de plus de 500 lignes, hors tests" },
+    { value: "≈ 4 000", label: "tests Vitest verts sur l'application juste avant la fusion, en plus des tests Rust" },
+    { value: "2", label: "migrations de base bloquantes : une 0.6.x ne peut plus ouvrir une base passée en 0.7.0", alert: true },
+  ]}
+/>
+
+## Pourquoi 100 % local
+
+Le besoin est simple : prendre des notes pendant une réunion, avoir la transcription sous les yeux, et obtenir un compte rendu propre à la fin. Les outils qui font ça très bien existent. Ils envoient l'audio et le texte de la réunion chez un éditeur, et c'est précisément ce qu'une administration ne peut pas faire sans un long circuit de validation.
+
+Syntheo prend le problème à l'envers : rien ne sort de chez l'utilisateur. Pas de compte, pas de télémétrie, pas de robot qui rejoint l'appel. L'application capte le micro et le son du système, envoie l'audio à un serveur de transcription que l'utilisateur choisit, puis demande le compte rendu à un modèle de langage qu'il héberge aussi. L'audio vit en mémoire le temps d'être transcrit, puis disparaît.
+
+Le pari matériel est raisonnable pour 2026 : un modèle de transcription d'environ 800 M de paramètres et un modèle de langage de taille moyenne tiennent sur un Mac avec MLX, sur une carte RTX 3090, ou sur un DGX Spark. C'est le poste de travail d'un agent bien équipé, ou un serveur partagé par un service. Ça ne couvre pas tout le monde, et c'est la principale limite du projet.
+
+## D'un fork à une identité
+
+Je ne suis pas parti de zéro. Syntheo est un fork d'Anarlog, une application de prise de notes de réunion sous licence MIT. Je l'ai d'abord rebaptisé, puis refondu : interface en français, serveurs configurés par l'utilisateur, et une identité visuelle que j'ai appelée « Thé vert ».
+
+Le nom se lit Syn·thé·o : ce qu'on rassemble autour du thé. Au Japon, un _chakai_ (茶会) réunit un hôte et ses invités. Un participant en garde ensuite le _kaiki_ (会記), son propre carnet de la rencontre ; les plus anciens connus, comme le _Matsuya kaiki_, commencent en 1533. L'idée m'a servi de cahier des charges plus que de décor :
+
+- **le compte rendu part des notes de l'utilisateur** : Syntheo les complète avec la transcription, sans les remplacer. Les notes restent en vert, le texte ajouté à l'encre ;
+- **l'audio n'est jamais conservé**, par principe : 一期一会, « une rencontre, une seule fois » ;
+- **une note terminée reçoit le sceau 記**, « consigner », le caractère de _kaiki_.
+
+Une génération précédente de Syntheo existait : une application web Next.js et PostgreSQL, aujourd'hui renommée `Syntheo-web`. L'application desktop a repris le nom.
+
+## Ce que contient la 0.7.0
+
+La 0.7.0 tourne sous Linux et Windows. Elle est construite avec Tauri 2 (Rust) et React 19, sur une base SQLite locale. La transcription temps réel passe par NVIDIA NIM ou par Whisper via speaches, et la rédaction par n'importe quelle API compatible OpenAI (vLLM, Ollama, MLX). Une annulation d'écho DTLN (ONNX) évite que le son des haut-parleurs revienne par le micro.
+
+Les nouveautés du lot :
+
+- **Dossiers projet** : une page par dossier, avec un _fil rouge_ que le modèle met à jour à la demande, qui garde les corrections de l'utilisateur et renvoie aux réunions sources. À partir de ce fil rouge, Syntheo propose l'ordre du jour de la **prochaine réunion** et prépare la note.
+- **Automatisations** : un seul modèle, sept actions (dont « Extraire les tâches »), lancées depuis un menu ou par **Ctrl+J**. Les actions sensibles, webhook et commande système, demandent une confirmation.
+- **Écoute** : le micro et le son système se coupent **séparément**, et une pastille flottante permet de mettre en pause et de reprendre sans revenir à la fenêtre.
+- **Import** de fichiers audio et vidéo avec le seul modèle temps réel, avec progression et reprise sans doublon après une coupure réseau.
+
+## Le ménage
+
+Une partie du lot ne se voit pas. Avant d'ouvrir une version mineure, je mesure le code et je retire ce qui ne sert plus. Celle-ci a retiré le calendrier, la synchronisation et le partage cloud, l'abonnement Pro et l'ancien coffre. C'étaient des héritages du fork, qui n'avaient pas de sens dans une application sans compte ni serveur d'éditeur.
+
+| | Lignes |
+| --- | --- |
+| Début du lot (0.6.3) | 481 074 |
+| Ménage, somme des fusions | ≈ − 75 000 |
+| Fonctionnalités ajoutées | ≈ + 31 000 |
+| Fin du lot | ≈ 437 500 |
+| Fichiers de plus de 500 lignes, hors tests | 155 → 52 |
+
+Le chiffre qui compte pour moi est le dernier. Un fichier trop long est un fichier que ni un humain ni un agent ne relit en entier. Le ménage a un coût : deux migrations de base sans retour possible. Une base passée en 0.7.0 ne s'ouvre plus avec une 0.6.x, et l'application le dit à l'utilisateur au lieu d'échouer.
+
+## La méthode
+
+C'est la partie dont je suis le plus content, parce qu'elle tient la cadence sans sacrifier la vérification.
+
+**Des lots de version.** Chaque version est un lot : une branche `feat/0.7.0`, une sous-branche par issue, et une seule PR vers `main` qui embarque tout le lot. Les correctifs passent avant les fonctionnalités, et la release est automatique à la fusion. Le numéro de version se calcule à partir des messages de commit.
+
+**Des agents Claude Code répartis sur trois machines.** Une session orchestre depuis mon home-server : elle découpe le travail, ouvre les issues et rédige les PR. Une session en Remote Control sur un desktop 32 cœurs compile et lance les tests lourds. Une troisième, sur le DGX Spark, sert et teste les modèles.
+
+```text
+home-server ── session orchestratrice : issues, sous-branches, PR, réserves
+   │
+   ├─▶ desktop 32 cœurs (Remote Control) : compilation Rust, tests, alphas
+   └─▶ DGX Spark : modèles de transcription et de langage, mesures
+```
+
+**Des alphas testées en conditions réelles.** Les tests automatiques ne prouvent pas qu'un son système est bien capté sous Windows, ni qu'une pastille s'affiche correctement sous Hyprland. Avant chaque fusion, je construis une alpha de diagnostic (inspecteur, journaux détaillés, barre de mesures) et la PR liste des **réserves à lever**. Chaque case indique la plateforme et le signal attendu : une ligne de journal, une mesure, un comportement visible. Pour la 0.7.0, il a fallu sept alphas. Une réserve ne disparaît jamais en silence : elle est levée, ou reportée avec sa raison et son issue.
+
+**Des gates de sécurité en CI.** Chaque PR passe la qualité de code, les tests, CodeQL, cargo-deny, Trivy, Gitleaks et Aikido. La release ajoute un SBOM et une attestation de provenance des paquets, et les paquets Windows sont signés via Azure Artifact Signing. Pour une application destinée à des administrations, pouvoir vérifier ce qu'on installe fait partie du produit.
+
+<Lesson title="L'agent écrit, l'alpha tranche">
+Les agents produisent du code vite et le testent bien en unitaire. Ce qu'ils ne voient pas, c'est le vrai OS : un import vidéo qui renvoyait zéro échantillon sous Linux, une deuxième reprise qui coupait l'écoute sous Windows. Ces deux défauts ont été trouvés sur une alpha, pas en CI.
+</Lesson>
+
+<Lesson title="Une réserve, un signal">
+Écrire le signal attendu à côté de chaque vérification (« écart d'environ 1 s entre les deux flux, aucun trou au début ») transforme un test manuel flou en mesure reproductible, que l'agent peut relire dans les journaux.
+</Lesson>
+
+<Lesson title="Ranger avant d'ajouter">
+Le ménage avant chaque version mineure garde la base lisible pour les agents comme pour moi. Sans lui, chaque lot de correctifs ajoute du code sans jamais en retirer.
+</Lesson>
+
+## Ce qui manque encore
+
+La 0.7.0 est une bêta, et le mot est mérité :
+
+- **pas de macOS** : l'application n'y est pas testée ;
+- **pas de mise à jour automatique** : il faut télécharger chaque nouvelle version ;
+- **la pastille est imparfaite sous Hyprland** : une fenêtre flottante ordinaire, un peu trop grande ; le correctif est prévu en 0.7.1 ;
+- **la suggestion automatique de dossier reste désactivée**, tant que je n'ai pas de quoi mesurer sa précision ;
+- **le matériel** : sans une machine capable de faire tourner les modèles, ou un serveur partagé, Syntheo ne sert à rien.
+
+La 1.0 viendra après plusieurs semaines d'usage en réunions réelles, pas après une liste de fonctionnalités. Le site est [syntheo.studio](https://syntheo.studio/fr/), la documentation sur [docs.syntheo.studio](https://docs.syntheo.studio) et le code sur [GitHub](https://github.com/WillIsback/Syntheo).
+
+<Sources>
+Release v0.7.0 et PR du lot (#489) du dépôt WillIsback/Syntheo : liste des issues fermées, section « Réserves à lever » (48 cases : 43 levées, 5 reportées ; 7 alphas), tableau des lignes de code et preuves de tests (3 881 tests Vitest dans le corps de la PR ; 3 988 au dernier passage complet sur la tête du lot, juste avant la fusion). Historique des releases du dépôt (20 versions du 27 octobre au 10 novembre 2026). Workflows GitHub Actions du dépôt pour les gates de sécurité. Page « L'esprit Syntheo » de la documentation pour le récit du nom.
+</Sources>
