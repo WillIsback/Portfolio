@@ -24,6 +24,7 @@ import {
 	inLanguage,
 	languageAlternates,
 	ogLocale,
+	SITE_NAME,
 	SITE_URL,
 } from "@/lib/seo";
 import { PERSON_ID } from "@/lib/structured-data";
@@ -62,7 +63,7 @@ export async function generateMetadata({
 			url,
 			title: article.title,
 			description: article.description,
-			siteName: "Portfolio WillisBack",
+			siteName: SITE_NAME,
 			publishedTime: article.date,
 			authors: ["William Derue"],
 			tags: article.tags,

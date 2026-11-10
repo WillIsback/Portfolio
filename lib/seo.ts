@@ -4,6 +4,9 @@ import { type Locale, routing } from "@/i18n/routing";
 /** Origine canonique du site, sans barre oblique finale. */
 export const SITE_URL = "https://www.willisback.fr";
 
+/** Nom de marque du site (`og:site_name`). */
+export const SITE_NAME = "WillisBack";
+
 /**
  * Locale OpenGraph (`fr` → `fr_FR`) et langue du document Schema.org (`fr` → `fr-FR`).
  *
@@ -77,7 +80,7 @@ export function pageMetadata(
 			url,
 			title: content.title,
 			description: content.description,
-			siteName: "Portfolio WillisBack",
+			siteName: SITE_NAME,
 		},
 		twitter: {
 			card: "summary_large_image",
