@@ -18,7 +18,7 @@ projects: [20]
     { value: "43 / 48", label: "项待确认检查在合并前通过 alpha 验证；其余 5 项注明理由后推迟，其中包括因没有 Mac 而无法测试的 macOS", alert: true },
     { value: "− 75,000", label: "行代码在清理中删除，新增功能约 + 31,000 行" },
     { value: "155 → 52", label: "个超过 500 行的文件（不含测试）" },
-    { value: "3,881", label: "个 Vitest 测试在批次分支上全部通过，另有 Rust 测试" },
+    { value: "≈ 4,000", label: "个 Vitest 测试在合并前夕全部通过，另有 Rust 测试" },
     { value: "2", label: "次不可回退的数据库迁移：升级到 0.7.0 的数据库，0.6.x 再也打不开", alert: true },
   ]}
 />
@@ -112,5 +112,5 @@ Syntheo 之前还有一代：一个 Next.js 加 PostgreSQL 的网页应用，现
 1.0 会在真实会议中使用几周之后到来，而不是在完成某张功能清单之后。文档见 [docs.syntheo.studio](https://docs.syntheo.studio)，代码在 [GitHub](https://github.com/WillIsback/Syntheo)。
 
 <Sources>
-WillIsback/Syntheo 仓库的 v0.7.0 发布说明和批次 PR（#489）：已关闭 issue 列表、“待确认检查”部分（48 项：43 项通过，5 项推迟；7 个 alpha）、代码行数表和测试证据（批次分支上 3,881 个 Vitest 测试）。仓库的发布历史（2026 年 10 月 27 日至 11 月 10 日共 20 个版本）。仓库中用于安全关卡的 GitHub Actions 工作流。文档页面“L'esprit Syntheo”，用于名字的由来。
+WillIsback/Syntheo 仓库的 v0.7.0 发布说明和批次 PR（#489）：已关闭 issue 列表、“待确认检查”部分（48 项：43 项通过，5 项推迟；7 个 alpha）、代码行数表和测试证据（PR 正文中为 3,881 个 Vitest 测试；合并前夕在批次最新提交上完整运行为 3,988 个）。仓库的发布历史（2026 年 10 月 27 日至 11 月 10 日共 20 个版本）。仓库中用于安全关卡的 GitHub Actions 工作流。文档页面“L'esprit Syntheo”，用于名字的由来。
 </Sources>
