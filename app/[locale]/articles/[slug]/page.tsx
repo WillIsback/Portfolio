@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { ArticleTags } from "@/components/articles/ArticleMeta";
 import { mdxComponents } from "@/components/articles/mdx";
 import OnTheMap from "@/components/articles/OnTheMap";
+import JsonLd from "@/components/seo/JsonLd";
 import mapJson from "@/content/map.json";
 import { clusterLabels } from "@/content/map-clusters";
 import { Link } from "@/i18n/navigation";
@@ -25,6 +26,7 @@ import {
 	ogLocale,
 	SITE_URL,
 } from "@/lib/seo";
+import { PERSON_ID } from "@/lib/structured-data";
 
 const map = MapDataSchema.parse(mapJson);
 
@@ -112,19 +114,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 		datePublished: article.date,
 		inLanguage: inLanguage(locale),
 		keywords: article.tags.join(", "),
-		author: { "@type": "Person", name: "William Derue", url: SITE_URL },
+		author: {
+			"@id": PERSON_ID,
+			"@type": "Person",
+			name: "William Derue",
+			url: SITE_URL,
+		},
 		mainEntityOfPage: canonicalUrl(locale, `/articles/${article.slug}`),
 	};
 
 	return (
 		<article className="mx-auto w-full max-w-[44rem]">
-			<script
-				type="application/ld+json"
-				// biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD built from our own frontmatter
-				dangerouslySetInnerHTML={{
-					__html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-				}}
-			/>
+			<JsonLd data={jsonLd} />
 			<nav className="mb-8">
 				<Link
 					href="/articles"
