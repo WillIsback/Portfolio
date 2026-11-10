@@ -5,6 +5,7 @@ import {
 	inLanguage,
 	languageAlternates,
 	ogLocale,
+	pageMetadata,
 	SITE_URL,
 } from "./seo";
 
@@ -87,5 +88,12 @@ describe("étiquettes de langue", () => {
 			expect(ogLocale(locale)).toMatch(/^[a-z]{2}_[A-Z]{2}$/);
 			expect(inLanguage(locale)).toMatch(/^[a-z]{2}-[A-Z]{2}$/);
 		}
+	});
+});
+
+describe("marque", () => {
+	it("nomme le site WillisBack dans OpenGraph", () => {
+		const meta = pageMetadata("fr", "/About", { title: "t", description: "d" });
+		expect(meta.openGraph?.siteName).toBe("WillisBack");
 	});
 });
