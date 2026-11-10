@@ -1,5 +1,5 @@
 /**
- * Bloc `<script type="application/ld+json">`. Les `<` sont échappés en `<` :
+ * Bloc `<script type="application/ld+json">`. Les `<` sont échappés en `\u003c` :
  * une valeur contenant `</script>` ne peut pas fermer la balise.
  */
 export default function JsonLd({

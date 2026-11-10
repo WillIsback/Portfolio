@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { type Locale, routing } from "@/i18n/routing";
-import { canonicalUrl } from "@/lib/seo";
+import { canonicalUrl, languageAlternates } from "@/lib/seo";
 
 export interface SitemapArticle {
 	slug: string;
@@ -22,13 +22,7 @@ function entriesFor(
 	lastModified?: string,
 ): MetadataRoute.Sitemap {
 	if (locales.length === 0) return [];
-	const fallback = locales.includes(routing.defaultLocale)
-		? routing.defaultLocale
-		: locales[0];
-	const languages: Record<string, string> = {
-		...Object.fromEntries(locales.map((l) => [l, canonicalUrl(l, path)])),
-		"x-default": canonicalUrl(fallback, path),
-	};
+	const languages = languageAlternates(path, locales);
 	return locales.map((locale) => ({
 		url: canonicalUrl(locale, path),
 		...(lastModified ? { lastModified } : {}),
