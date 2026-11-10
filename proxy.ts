@@ -38,6 +38,11 @@ export default auth((req) => {
 	return intlProxy(req);
 });
 
+// Les images de partage (`opengraph-image`) n'ont pas d'extension : sans exclusion
+// explicite, next-intl redirigerait `/fr/opengraph-image` vers l'URL sans préfixe.
 export const config = {
-	matcher: ["/admin/:path*", "/((?!api|_next|_vercel|.*\\..*).*)"],
+	matcher: [
+		"/admin/:path*",
+		"/((?!api|_next|_vercel|.*opengraph-image|.*\\..*).*)",
+	],
 };
