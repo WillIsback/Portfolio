@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Chronology from "@/components/about/Chronology";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import JsonLd from "@/components/seo/JsonLd";
 import { routing } from "@/i18n/routing";
 import { ageOn, parcours } from "@/lib/about";
 import { pageMetadata } from "@/lib/seo";
+import { personJsonLd } from "@/lib/structured-data";
 
 export const revalidate = 86400;
 
@@ -30,12 +33,14 @@ export default async function About({
 	params: Promise<{ locale: string }>;
 }) {
 	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) notFound();
 	setRequestLocale(locale);
 	const steps = parcours(await getTranslations("parcours"));
 	const t = await getTranslations("about");
 
 	return (
 		<main className="relative flex min-h-screen flex-col">
+			<JsonLd data={personJsonLd(locale, t("tagline"))} />
 			<div className="sticky top-0 z-50 w-full">
 				<Header />
 			</div>

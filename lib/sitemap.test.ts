@@ -19,9 +19,7 @@ describe("sitemap", () => {
 		const map = buildSitemap({ articles: { fr: [a], en: [a], zh: [a] } });
 		const entries = map.filter((e) => e.url.includes("/articles/syntheo"));
 		expect(entries).toHaveLength(3);
-		const fr = entries.find(
-			(e) => e.url === `${S}/articles/syntheo-beta-0-7`,
-		);
+		const fr = entries.find((e) => e.url === `${S}/articles/syntheo-beta-0-7`);
 		expect(fr?.lastModified).toBe("2026-11-10");
 		expect(fr?.alternates?.languages).toEqual({
 			fr: `${S}/articles/syntheo-beta-0-7`,
