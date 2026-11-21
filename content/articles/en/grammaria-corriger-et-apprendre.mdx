@@ -14,7 +14,7 @@ An automatic proofreader has a perverse effect: you paste your text, copy the re
   items={[
     { value: "< 21 h", label: "between grammaria-rc's first commit and its merge: LanguageTool's French pipeline ported to Rust" },
     { value: "99.97%", label: "of the benchmark's 29,047 texts give exactly the same results as the reference, with its own rules only" },
-    { value: "76.4 → 86.4%", label: "of mistakes found across all benchmarks, once the engine's own 1,320 rules are added" },
+    { value: "76.4 → 86.4%", label: "of mistakes found across all benchmarks, once the engine's own 1,320 rules and its profile are added" },
     { value: "21.6 → 8.8", label: "alarms per 1,000 words on polished prose, where almost every alarm is false" },
     { value: "4.5 s → 0.5 s", label: "to start the engine; its memory drops from about 930 MiB to 220–250 MiB" },
     { value: "0", label: "texts kept by the mistake log since 0.5: rule identifiers, dates, counters" },
@@ -24,7 +24,7 @@ An automatic proofreader has a perverse effect: you paste your text, copy the re
 
 ## From ai_corrector to Grammaria
 
-The project began on 30 March 2026 under the name ai_corrector: an editor, a call to a language model, a display of the differences. The target was already Grammaria's today: people who write in French every day (emails, reports, messages), who carry gaps in their written French without the time to fill them, and who want a fast proofreader plugged into their own models.
+The project began on 30 March 2026 under the name ai_corrector: an editor, a call to a language model, a display of the differences. Its README described it as a "French writing corrector and reformulator powered by an LLM".
 
 At the end of June, I compared the two possible approaches on faulty sentences whose correction is known. The language model reproduced the reference far better than LanguageTool, the free rule-based proofreader: an average score of 0.93 against 0.76 (average of BLEU and ROUGE-L, on 50 sentences for the model and 200 for LanguageTool, so treat it as an indication). The model corrects better. But it cannot say, in a stable way, _which_ mistake it corrected. LanguageTool can: every detection carries the name of a rule.
 
@@ -56,18 +56,18 @@ The rule I set myself: first **match** the reference, result for result, before 
 
 <Timeline
   items={[
-    { date: "19 Nov, 9:06 pm", title: "Foundations", text: "XML reader, trie dictionary, regular-expression engine over tags, French word splitting." },
-    { date: "19 Nov, 10:04 pm", text: "Tagging and disambiguation: 58% agreement with LanguageTool on grammatical categories." },
-    { date: "19 Nov, 10:51 pm", text: "Complete rule engine (patterns, anti-patterns, unification, filters), first Java filters ported." },
+    { date: "19 Nov, 10:06 pm", title: "Foundations", text: "XML reader, trie dictionary, regular-expression engine over tags, French word splitting." },
+    { date: "19 Nov, 11:04 pm", text: "Tagging and disambiguation: 58% agreement with LanguageTool on grammatical categories." },
+    { date: "19 Nov, 11:51 pm", text: "Complete rule engine (patterns, anti-patterns, unification, filters), first Java filters ported." },
     { date: "20 Nov, morning", text: "Agents in parallel on the remaining gap: Java regular-expression semantics, filters, oracle tooling." },
-    { date: "20 Nov, 12:27 pm", text: "Memory reduced (shared patterns, trimmed vectors) and README with the measurements." },
+    { date: "20 Nov, 1:27 pm", text: "Memory reduced (shared patterns, trimmed vectors) and README with the measurements." },
     { date: "20 Nov, 6:03 pm", title: "Merge", text: "The rebuilt engine enters the repository: LanguageTool's French pipeline in Rust, plus Grammaria's rules.", key: true },
     { date: "20 Nov", text: "Grammaria 0.4.0 replaces the old proofreader with grammaria-rc." },
     { date: "21 Nov", text: "LGPL-2.1 licence for the whole engine, published on crates.io." },
   ]}
 />
 
-The work was carried out with Claude Code agents: 72 of the repository's 125 commits are co-signed by Claude. What made it possible in a day was the **oracle**. One script runs the reference on any text and produces its results, or its tags at each stage of the analysis. Another classifies each discrepancy by cause. The agents therefore had a measurable target at every moment: you do not argue about a rule, you check whether the two engines say the same thing in the same place.
+The work was carried out with Claude Code agents: 75 of the repository's 125 commits are co-signed by Claude. What made it possible in a day was the **oracle**. One script runs the reference on any text and produces its results, or its tags at each stage of the analysis. Another classifies each discrepancy by cause. The agents therefore had a measurable target at every moment: you do not argue about a rule, you check whether the two engines say the same thing in the same place.
 
 The result, with LanguageTool's own rules only, on 29,047 texts:
 
@@ -76,7 +76,7 @@ The result, with LanguageTool's own rules only, on 29,047 texts:
 | texts with exactly the same results as the reference | 29,038 (99.97%) |
 | reference detections found (same rule, same passage) | 22,159 out of 22,168 |
 | of which with the same suggestions | 99.65% |
-| analysis (words, tags, disambiguation) identical | 500,000 words out of 500,000 |
+| analysis (words, tags, disambiguation) identical | 500,000 tokens (words and punctuation) out of 500,000 |
 
 Seven of the nine missing detections are false alarms from the reference: a repeated-word rule that fires on "on dit ou on écrit" ("one says or one writes"). The differences in suggestions concern spelling, and there it is the JavaScript port that departs from LanguageTool in Java: checked against Java, grammaria-rc's suggestions are LanguageTool's.
 
@@ -144,5 +144,5 @@ Grammaria is licensed under GPL-3.0, its engine under LGPL-2.1, LanguageTool's l
 Grammaria can be downloaded from [grammaria.fr](https://grammaria.fr), and the engine is on [GitHub](https://github.com/WillIsback/grammaria-rc) and on crates.io. The [Solutions](/solutions/grammaria) page summarises what the application does.
 
 <Sources>
-README and history of the WillIsback/Grammaria repositories (358 commits since 30 March 2026; releases 0.2.0 to 0.5.1, from 19 to 21 November 2026) and WillIsback/grammaria-rc (125 commits, from 19 to 21 November 2026, of which 72 co-signed by Claude). grammaria-rc measurements: "Results" section of its README, against LanguageTool 6.9-SNAPSHOT in the `@valueerror/ltjs` 0.3.0 port, same 4-vCPU machine. In-application measurements: "Versions" page of the Grammaria documentation (0.4.0). Language model versus LanguageTool comparison: report `benchmark/report_20260629_183904.md` in the Grammaria repository. Beta method: "Beta: approach and test method" page on grammaria.fr.
+README and history of the WillIsback/Grammaria repositories (358 commits since 30 March 2026; releases 0.2.0 to 0.5.1, from 19 to 21 November 2026) and WillIsback/grammaria-rc (125 commits, from 19 to 21 November 2026, of which 75 co-signed by Claude). grammaria-rc measurements: "Results" section of its README, against LanguageTool 6.9-SNAPSHOT in the `@valueerror/ltjs` 0.3.0 port, same 4-vCPU machine. In-application measurements: "Versions" page of the Grammaria documentation (0.4.0). Language model versus LanguageTool comparison: report `benchmark/report_20260629_183904.md` in the Grammaria repository. Beta method: "Beta: approach and test method" page on grammaria.fr.
 </Sources>

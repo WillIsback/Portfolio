@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import type { SolutionCopy } from "@/lib/solutions";
 
@@ -33,6 +34,7 @@ export default function CorrectionDemo({
 	label,
 	caption,
 }: Readonly<{ demo: Demo; label: string; caption: string }>) {
+	const t = useTranslations("solutions");
 	const parts = highlightFaults(
 		demo.input,
 		demo.faults.map((f) => f.wrong),
@@ -65,13 +67,15 @@ export default function CorrectionDemo({
 					{demo.faults.map((fault) => (
 						<li key={fault.rule} className="border-l-2 border-primary/60 pl-4">
 							<p className="font-display font-semibold">
-								<span lang="fr" className="text-ink-soft line-through">
-									{fault.wrong}
-								</span>
+								<del className="text-ink-soft">
+									<span className="sr-only">{t("demoWrong")} </span>
+									<span lang="fr">{fault.wrong}</span>
+								</del>
 								<span aria-hidden="true"> → </span>
-								<span lang="fr" className="text-primary">
-									{fault.right}
-								</span>
+								<ins className="text-primary no-underline">
+									<span className="sr-only">{t("demoRight")} </span>
+									<span lang="fr">{fault.right}</span>
+								</ins>
 							</p>
 							<p className="mt-1 text-sm leading-relaxed text-muted-foreground">
 								{fault.why}

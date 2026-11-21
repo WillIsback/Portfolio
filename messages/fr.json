@@ -307,6 +307,8 @@
 		"under": "Sous le capot",
 		"limits": "Ce qu'il faut savoir",
 		"license": "Licence {license}",
-		"demoLabel": "Exemple d'analyse"
+		"demoLabel": "Exemple d'analyse",
+		"demoWrong": "Faute :",
+		"demoRight": "Correction :"
 	}
 }

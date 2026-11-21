@@ -14,12 +14,16 @@ export default function ProductVisual({
 		width: visual.width,
 		height: visual.height,
 		sizes: "(max-width: 56rem) 100vw, 56rem",
-		priority: true,
 	};
 	return (
 		<figure>
 			<div className="overflow-hidden rounded-xl border border-border shadow-sm">
-				<Image src={visual.light} className="dark:hidden" {...common} />
+				<Image
+					src={visual.light}
+					className="dark:hidden"
+					{...common}
+					priority
+				/>
 				{/* Une seule des deux est affichée : `display: none` retire l'autre de l'arbre d'accessibilité. */}
 				<Image src={visual.dark} className="hidden dark:block" {...common} />
 			</div>

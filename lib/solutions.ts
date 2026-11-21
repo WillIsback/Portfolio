@@ -92,7 +92,7 @@ export const SOLUTIONS: Record<SolutionSlug, SolutionFacts> = {
 		site: "https://grammaria.fr",
 		siteLabel: "grammaria.fr",
 		github: "https://github.com/WillIsback/Grammaria",
-		license: "GPL-3.0",
+		license: "GPL-3.0-or-later",
 		version: "0.5",
 		operatingSystems: ["Linux", "Windows"],
 		applicationCategory: "UtilitiesApplication",

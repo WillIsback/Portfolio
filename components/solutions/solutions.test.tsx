@@ -67,6 +67,13 @@ describe("SolutionPage", () => {
 		);
 		expect(grammaria).toContain("ACCORD_SUJET_VERBE");
 		expect(grammaria).toContain('lang="fr"');
+		// La faute et sa correction se distinguent aussi pour un lecteur d'écran.
+		expect(grammaria).toMatch(
+			/<del[^>]*>[\s\S]*?Mistake:[\s\S]*?mange[\s\S]*?<\/del>/,
+		);
+		expect(grammaria).toMatch(
+			/<ins[^>]*>[\s\S]*?Correction:[\s\S]*?mangent[\s\S]*?<\/ins>/,
+		);
 	});
 });
 

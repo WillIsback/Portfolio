@@ -54,6 +54,8 @@ export const GRAMMARIA_COPY: Record<Locale, SolutionCopy> = {
 			"L'analyse des fautes et le journal restent sur votre poste.",
 			"Le journal ne garde aucun texte : des identifiants de règles, des dates et des compteurs.",
 			"Pas de compte, pas de serveur central, pas de télémétrie vers l'auteur ; la clé API est rangée dans le trousseau du système.",
+			"Seul autre flux de l'application de bureau : à chaque démarrage, elle lit sur GitHub le petit fichier qui annonce la dernière version, sans aucune donnée de l'utilisateur.",
+			"Sur le serveur Docker, la télémétrie OpenTelemetry est désactivée par défaut ; si l'exploitant l'active, les traces envoyées à son collecteur contiennent les textes.",
 		],
 		figures: [
 			{
@@ -63,7 +65,8 @@ export const GRAMMARIA_COPY: Record<Locale, SolutionCopy> = {
 			},
 			{
 				value: "86,4 %",
-				label: "des fautes trouvées sur les bancs d'essai, contre 76,4 %",
+				label:
+					"des fautes trouvées sur les bancs d'essai, contre 76,4 % ; 82,7 % contre 76,2 % sur la moitié jamais vue pendant l'écriture des règles",
 			},
 			{
 				value: "8,8",
@@ -147,6 +150,8 @@ export const GRAMMARIA_COPY: Record<Locale, SolutionCopy> = {
 			"Mistake analysis and the log stay on your computer.",
 			"The log keeps no text at all: rule identifiers, dates and counters.",
 			"No account, no central server, no telemetry to the author; the API key is stored in the system keychain.",
+			"The desktop application's only other connection: at each start, it reads the small file on GitHub that announces the latest version, with no user data.",
+			"On the Docker server, OpenTelemetry telemetry is off by default; if the operator turns it on, the traces sent to their collector contain the texts.",
 		],
 		figures: [
 			{
@@ -156,7 +161,8 @@ export const GRAMMARIA_COPY: Record<Locale, SolutionCopy> = {
 			},
 			{
 				value: "86.4%",
-				label: "of mistakes found across the benchmarks, against 76.4%",
+				label:
+					"of mistakes found across the benchmarks, against 76.4%; 82.7% against 76.2% on the half never looked at while writing the rules",
 			},
 			{
 				value: "8.8",
@@ -239,13 +245,19 @@ export const GRAMMARIA_COPY: Record<Locale, SolutionCopy> = {
 			"错误分析和日志都留在你的电脑上。",
 			"日志不保存任何文本：只有规则标识、日期和计数。",
 			"无需账号，没有中央服务器，不向作者发送遥测；API 密钥存放在系统钥匙串中。",
+			"桌面应用唯一的其他连接：每次启动时从 GitHub 读取一个公布最新版本的小文件，不含任何用户数据。",
+			"Docker 服务器上的 OpenTelemetry 遥测默认关闭；如果运维者开启，发送到其收集器的追踪数据会包含文本。",
 		],
 		figures: [
 			{
 				value: "0.5 秒",
 				label: "启动 grammaria-rc 引擎，JavaScript 版 LanguageTool 需要 4.5 秒",
 			},
-			{ value: "86.4%", label: "基准测试中找出的错误比例，对照为 76.4%" },
+			{
+				value: "86.4%",
+				label:
+					"基准测试中找出的错误比例，对照为 76.4%；在编写规则时从未查看过的那一半上为 82.7%，对照为 76.2%",
+			},
 			{ value: "8.8", label: "每千词规范文本的报警数，对照为 21.6" },
 			{ value: "7 MB", label: "Windows 安装程序大小；.deb 包约 9 MB" },
 		],

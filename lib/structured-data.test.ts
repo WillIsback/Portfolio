@@ -56,13 +56,14 @@ describe("données structurées", () => {
 			operatingSystem: "Linux, Windows",
 			applicationCategory: "UtilitiesApplication",
 			softwareVersion: "0.5",
-			license: "https://spdx.org/licenses/GPL-3.0.html",
+			license: "https://spdx.org/licenses/GPL-3.0-or-later.html",
 			isAccessibleForFree: true,
 			offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
 			author: { "@id": PERSON_ID },
 			codeRepository: "https://github.com/WillIsback/Grammaria",
-			inLanguage: "en-US",
 		});
 		expect(data.description).toBe(solutionCopy("grammaria", "en").summary);
+		// La langue du logiciel n'est pas celle de la page : pas de `inLanguage`.
+		expect(data).not.toHaveProperty("inLanguage");
 	});
 });

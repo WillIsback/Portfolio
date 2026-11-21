@@ -14,7 +14,7 @@ projects: [37, 38, 22]
   items={[
     { value: "< 21 小时", label: "从 grammaria-rc 的第一次提交到合并：LanguageTool 的法语处理链被移植到 Rust" },
     { value: "99.97%", label: "测试集中 29,047 条文本的结果与原版完全一致，此时只使用原版自带的规则" },
-    { value: "76.4 → 86.4%", label: "在所有测试集上找到的错误比例，加入引擎自有的 1,320 条规则之后" },
+    { value: "76.4 → 86.4%", label: "在所有测试集上找到的错误比例，加入引擎自有的 1,320 条规则和配置档之后" },
     { value: "21.6 → 8.8", label: "在经过精心润色的文章上每 1,000 词的误报数，这类文本里几乎所有警报都是误报" },
     { value: "4.5 秒 → 0.5 秒", label: "引擎启动时间；内存从约 930 MiB 降到 220–250 MiB" },
     { value: "0", label: "自 0.5 起错误日志保存的文本数量：只有规则标识符、日期和计数" },
@@ -24,7 +24,7 @@ projects: [37, 38, 22]
 
 ## 从 ai_corrector 到 Grammaria
 
-项目始于 2026 年 3 月 30 日，当时叫 ai_corrector：一个编辑器、一次对语言模型的调用、一个差异显示。目标用户从那时起就和今天的 Grammaria 一样：每天用法语写作的人（邮件、会议纪要、消息），书面表达上有些短板，却没时间补，并且想要一个接到自己模型上的快速校对工具。
+项目始于 2026 年 3 月 30 日，当时叫 ai_corrector：一个编辑器、一次对语言模型的调用、一个差异显示。它的 README 将其介绍为“由 LLM 驱动的法语写作校对与改写工具”。
 
 6 月底，我在已知正确答案的错误句子上比较了两种可能的做法。语言模型复现参考答案的程度远好于 LanguageTool（基于规则的开源校对工具）：平均得分 0.93 对 0.76（BLEU 与 ROUGE-L 的平均值，模型用了 50 个句子，LanguageTool 用了 200 个，所以只能当作参考）。模型纠错更好。但它无法稳定地说出自己纠正的是_哪一种_错误。LanguageTool 却可以：每一次检测都带有一条规则的名称。
 
@@ -56,18 +56,18 @@ projects: [37, 38, 22]
 
 <Timeline
   items={[
-    { date: "11 月 19 日 21:06", title: "地基", text: "XML 读取器、字典树词典、基于标签的正则表达式引擎、法语分词。" },
-    { date: "11 月 19 日 22:04", text: "词性标注和消歧：词性类别与 LanguageTool 的一致率为 58%。" },
-    { date: "11 月 19 日 22:51", text: "完整的规则引擎（模式、反模式、合一、过滤器），首批 Java 过滤器已移植。" },
+    { date: "11 月 19 日 22:06", title: "地基", text: "XML 读取器、字典树词典、基于标签的正则表达式引擎、法语分词。" },
+    { date: "11 月 19 日 23:04", text: "词性标注和消歧：词性类别与 LanguageTool 的一致率为 58%。" },
+    { date: "11 月 19 日 23:51", text: "完整的规则引擎（模式、反模式、合一、过滤器），首批 Java 过滤器已移植。" },
     { date: "11 月 20 日上午", text: "多个智能体并行处理剩余差距：Java 正则表达式语义、过滤器、oracle 工具。" },
-    { date: "11 月 20 日 12:27", text: "内存缩减（共享模式、调整后的向量）以及附带测量数据的 README。" },
+    { date: "11 月 20 日 13:27", text: "内存缩减（共享模式、调整后的向量）以及附带测量数据的 README。" },
     { date: "11 月 20 日 18:03", title: "合并", text: "重建的引擎进入仓库：用 Rust 实现的 LanguageTool 法语处理链，外加 Grammaria 自己的规则。", key: true },
     { date: "11 月 20 日", text: "Grammaria 0.4.0 用 grammaria-rc 取代旧的校对器。" },
     { date: "11 月 21 日", text: "整个引擎采用 LGPL-2.1 许可证，发布到 crates.io。" },
   ]}
 />
 
-这项工作是和 Claude Code 智能体一起完成的：仓库 125 次提交中有 72 次由 Claude 共同署名。让它能在一天内完成的，是 **oracle**。一个脚本在任意文本上运行原版，输出它的结果，或分析每一步的标签。另一个脚本按原因对每个差异分类。这样，智能体在任何时刻都有一个可测量的目标：不必争论某条规则，只要看两个引擎是否在同一位置说了同样的话。
+这项工作是和 Claude Code 智能体一起完成的：仓库 125 次提交中有 75 次由 Claude 共同署名。让它能在一天内完成的，是 **oracle**。一个脚本在任意文本上运行原版，输出它的结果，或分析每一步的标签。另一个脚本按原因对每个差异分类。这样，智能体在任何时刻都有一个可测量的目标：不必争论某条规则，只要看两个引擎是否在同一位置说了同样的话。
 
 结果如下，只使用 LanguageTool 的规则，在 29,047 条文本上：
 
@@ -76,7 +76,7 @@ projects: [37, 38, 22]
 | 结果与原版完全一致的文本 | 29,038（99.97%） |
 | 找回的原版检测（规则相同、位置相同） | 22,168 条中的 22,159 条 |
 | 其中建议也相同的比例 | 99.65% |
-| 分析（词、标签、消歧）完全一致 | 500,000 个词中的 500,000 个 |
+| 分析（词、标签、消歧）完全一致 | 500,000 个词元（词和标点）中的 500,000 个 |
 
 缺失的九条检测中，有七条是原版的误报：一条重复词规则在“on dit ou on écrit”（法语“人们说还是人们写”）上被触发。建议上的差异出在拼写上，而这里是 JavaScript 移植版偏离了 Java 版的 LanguageTool：对照 Java 验证后，grammaria-rc 的建议与 LanguageTool 相同。
 
@@ -144,5 +144,5 @@ Grammaria 采用 GPL-3.0 许可证，它的引擎采用 LGPL-2.1，也就是 Lan
 Grammaria 可在 [grammaria.fr](https://grammaria.fr) 下载，引擎在 [GitHub](https://github.com/WillIsback/grammaria-rc) 和 crates.io 上。[解决方案](/solutions/grammaria)页面概述了这个应用的功能。
 
 <Sources>
-WillIsback/Grammaria 仓库的 README 和历史（自 2026 年 3 月 30 日起 358 次提交；2026 年 11 月 19 日至 21 日发布的 0.2.0 至 0.5.1 版本），以及 WillIsback/grammaria-rc 仓库（2026 年 11 月 19 日至 21 日共 125 次提交，其中 72 次由 Claude 共同署名）。grammaria-rc 的测量：其 README 的 “Results” 部分，对照 `@valueerror/ltjs` 0.3.0 移植版中的 LanguageTool 6.9-SNAPSHOT，同一台 4 个虚拟核心的机器。应用内的测量：Grammaria 文档的“Versions”页面（0.4.0）。语言模型与 LanguageTool 的比较：Grammaria 仓库的报告 `benchmark/report_20260629_183904.md`。测试版的方法：grammaria.fr 的“Bêta : démarche et méthode de test”页面。
+WillIsback/Grammaria 仓库的 README 和历史（自 2026 年 3 月 30 日起 358 次提交；2026 年 11 月 19 日至 21 日发布的 0.2.0 至 0.5.1 版本），以及 WillIsback/grammaria-rc 仓库（2026 年 11 月 19 日至 21 日共 125 次提交，其中 75 次由 Claude 共同署名）。grammaria-rc 的测量：其 README 的 “Results” 部分，对照 `@valueerror/ltjs` 0.3.0 移植版中的 LanguageTool 6.9-SNAPSHOT，同一台 4 个虚拟核心的机器。应用内的测量：Grammaria 文档的“Versions”页面（0.4.0）。语言模型与 LanguageTool 的比较：Grammaria 仓库的报告 `benchmark/report_20260629_183904.md`。测试版的方法：grammaria.fr 的“Bêta : démarche et méthode de test”页面。
 </Sources>

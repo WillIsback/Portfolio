@@ -307,6 +307,8 @@
 		"under": "Under the hood",
 		"limits": "Good to know",
 		"license": "{license} licence",
-		"demoLabel": "Analysis example"
+		"demoLabel": "Analysis example",
+		"demoWrong": "Mistake:",
+		"demoRight": "Correction:"
 	}
 }

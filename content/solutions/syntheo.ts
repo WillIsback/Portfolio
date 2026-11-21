@@ -19,7 +19,7 @@ export const SYNTHEO_COPY: Record<Locale, SolutionCopy> = {
 			},
 			{
 				title: "Entreprises soumises au RGPD",
-				text: "Aucun sous-traitant à déclarer, aucun transfert de données à justifier.",
+				text: "Avec des modèles hébergés chez vous, aucun sous-traitant à déclarer ni transfert de données à justifier.",
 			},
 			{
 				title: "Passionnés d'IA locale",
@@ -90,7 +90,7 @@ export const SYNTHEO_COPY: Record<Locale, SolutionCopy> = {
 			},
 			{
 				title: "GDPR-bound companies",
-				text: "No processor to declare, no data transfer to justify.",
+				text: "With models hosted on your premises, no processor to declare and no data transfer to justify.",
 			},
 			{
 				title: "Local AI enthusiasts",
@@ -158,7 +158,7 @@ export const SYNTHEO_COPY: Record<Locale, SolutionCopy> = {
 			},
 			{
 				title: "受 GDPR 约束的企业",
-				text: "没有需要申报的数据处理方，也没有需要说明的数据传输。",
+				text: "模型部署在自己的环境中时，没有需要申报的数据处理方，也没有需要说明的数据传输。",
 			},
 			{
 				title: "本地 AI 爱好者",

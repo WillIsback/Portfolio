@@ -73,6 +73,5 @@ export function softwareApplicationJsonLd(
 		offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
 		author: { "@id": PERSON_ID },
 		codeRepository: facts.github,
-		inLanguage: inLanguage(locale),
 	};
 }

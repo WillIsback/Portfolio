@@ -307,6 +307,8 @@
 		"under": "技术实现",
 		"limits": "须知",
 		"license": "{license} 许可证",
-		"demoLabel": "分析示例"
+		"demoLabel": "分析示例",
+		"demoWrong": "错误：",
+		"demoRight": "修改："
 	}
 }

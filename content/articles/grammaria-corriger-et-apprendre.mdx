@@ -14,7 +14,7 @@ Un correcteur automatique a un effet pervers : on colle son texte, on copie le r
   items={[
     { value: "< 21 h", label: "entre le premier commit de grammaria-rc et sa fusion : la chaîne française de LanguageTool portée en Rust" },
     { value: "99,97 %", label: "des 29 047 textes du banc d'essai donnent exactement les mêmes résultats que la référence, avec ses seules règles" },
-    { value: "76,4 → 86,4 %", label: "de fautes trouvées sur l'ensemble des bancs, une fois ajoutées les 1 320 règles propres au moteur" },
+    { value: "76,4 → 86,4 %", label: "de fautes trouvées sur l'ensemble des bancs, une fois ajoutés les 1 320 règles propres au moteur et son profil" },
     { value: "21,6 → 8,8", label: "alarmes pour 1 000 mots sur de la prose soignée, où presque toute alarme est fausse" },
     { value: "4,5 s → 0,5 s", label: "pour démarrer le moteur ; sa mémoire passe d'environ 930 Mio à 220–250 Mio" },
     { value: "0", label: "texte gardé par le journal des fautes depuis la 0.5 : des identifiants de règles, des dates, des compteurs" },
@@ -24,7 +24,7 @@ Un correcteur automatique a un effet pervers : on colle son texte, on copie le r
 
 ## D'ai_corrector à Grammaria
 
-Le projet commence le 30 mars 2026 sous le nom d'ai_corrector : un éditeur, un appel à un modèle de langage, un affichage des différences. La cible était déjà celle de Grammaria aujourd'hui : ceux qui écrivent en français tous les jours (courriels, comptes rendus, messages), qui traînent des lacunes à l'écrit sans avoir le temps de les combler, et qui veulent un correcteur rapide branché sur leurs propres modèles.
+Le projet commence le 30 mars 2026 sous le nom d'ai_corrector : un éditeur, un appel à un modèle de langage, un affichage des différences. Son README le présentait comme un « correcteur et reformateur de rédaction en français alimenté par LLM ».
 
 Fin juin, j'ai comparé les deux approches possibles sur des phrases fautives dont on connaît la correction. Le modèle de langage reproduisait la référence bien mieux que LanguageTool, le correcteur libre à base de règles : un score moyen de 0,93 contre 0,76 (moyenne de BLEU et ROUGE-L, sur 50 phrases pour le modèle et 200 pour LanguageTool, donc à prendre comme une indication). Le modèle corrige mieux. Mais il ne sait pas dire, de façon stable, _quelle_ faute il a corrigée. LanguageTool, lui, le sait : chaque détection porte le nom d'une règle.
 
@@ -56,18 +56,18 @@ La règle que je me suis fixée : d'abord **égaler** la référence, résultat 
 
 <Timeline
   items={[
-    { date: "19 nov., 21 h 06", title: "Fondations", text: "Lecteur XML, dictionnaire en trie, moteur d'expressions régulières sur les étiquettes, découpage en mots du français." },
-    { date: "19 nov., 22 h 04", text: "Étiquetage et désambiguïsation : 58 % d'accord avec LanguageTool sur les catégories grammaticales." },
-    { date: "19 nov., 22 h 51", text: "Moteur de règles complet (motifs, anti-motifs, unification, filtres), premiers filtres Java portés." },
+    { date: "19 nov., 22 h 06", title: "Fondations", text: "Lecteur XML, dictionnaire en trie, moteur d'expressions régulières sur les étiquettes, découpage en mots du français." },
+    { date: "19 nov., 23 h 04", text: "Étiquetage et désambiguïsation : 58 % d'accord avec LanguageTool sur les catégories grammaticales." },
+    { date: "19 nov., 23 h 51", text: "Moteur de règles complet (motifs, anti-motifs, unification, filtres), premiers filtres Java portés." },
     { date: "20 nov., matin", text: "Agents en parallèle sur l'écart restant : sémantique des expressions régulières Java, filtres, outillage d'oracle." },
-    { date: "20 nov., 12 h 27", text: "Mémoire réduite (motifs partagés, vecteurs ajustés) et README avec les mesures." },
+    { date: "20 nov., 13 h 27", text: "Mémoire réduite (motifs partagés, vecteurs ajustés) et README avec les mesures." },
     { date: "20 nov., 18 h 03", title: "Fusion", text: "Le moteur reconstruit entre dans le dépôt : chaîne française de LanguageTool en Rust, plus les règles de Grammaria.", key: true },
     { date: "20 nov.", text: "Grammaria 0.4.0 remplace l'ancien correcteur par grammaria-rc." },
     { date: "21 nov.", text: "Licence LGPL-2.1 pour tout le moteur, publication sur crates.io." },
   ]}
 />
 
-Le travail a été mené avec des agents Claude Code : 72 des 125 commits du dépôt sont co-signés par Claude. Ce qui l'a rendu possible en une journée, c'est l'**oracle**. Un script fait tourner la référence sur n'importe quel texte et produit ses résultats, ou ses étiquettes à chaque étape de l'analyse. Un autre classe chaque écart par cause. Les agents avaient ainsi une cible mesurable à chaque instant : on ne discute pas d'une règle, on regarde si les deux moteurs disent la même chose au même endroit.
+Le travail a été mené avec des agents Claude Code : 75 des 125 commits du dépôt sont co-signés par Claude. Ce qui l'a rendu possible en une journée, c'est l'**oracle**. Un script fait tourner la référence sur n'importe quel texte et produit ses résultats, ou ses étiquettes à chaque étape de l'analyse. Un autre classe chaque écart par cause. Les agents avaient ainsi une cible mesurable à chaque instant : on ne discute pas d'une règle, on regarde si les deux moteurs disent la même chose au même endroit.
 
 Le résultat, avec les seules règles de LanguageTool, sur 29 047 textes :
 
@@ -76,7 +76,7 @@ Le résultat, avec les seules règles de LanguageTool, sur 29 047 textes :
 | textes avec exactement les mêmes résultats que la référence | 29 038 (99,97 %) |
 | détections de la référence retrouvées (même règle, même passage) | 22 159 sur 22 168 |
 | dont avec les mêmes suggestions | 99,65 % |
-| analyse (mots, étiquettes, désambiguïsation) identique | 500 000 mots sur 500 000 |
+| analyse (mots, étiquettes, désambiguïsation) identique | 500 000 unités (mots et ponctuation) sur 500 000 |
 
 Sept des neuf détections manquantes sont des fausses alarmes de la référence : une règle de mot répété qui se déclenche sur « on dit ou on écrit ». Les différences de suggestions portent sur l'orthographe, et là, c'est le portage JavaScript qui s'écarte de LanguageTool en Java : vérifiées contre Java, les suggestions de grammaria-rc sont celles de LanguageTool.
 
@@ -144,5 +144,5 @@ Grammaria est sous licence GPL-3.0, son moteur sous LGPL-2.1, la licence de Lang
 Grammaria se télécharge sur [grammaria.fr](https://grammaria.fr), et le moteur se trouve sur [GitHub](https://github.com/WillIsback/grammaria-rc) et sur crates.io. La page [Solutions](/solutions/grammaria) résume ce que fait l'application.
 
 <Sources>
-README et historique des dépôts WillIsback/Grammaria (358 commits depuis le 30 mars 2026 ; releases 0.2.0 à 0.5.1, du 19 au 21 novembre 2026) et WillIsback/grammaria-rc (125 commits, du 19 au 21 novembre 2026, dont 72 co-signés par Claude). Mesures de grammaria-rc : section « Results » de son README, contre LanguageTool 6.9-SNAPSHOT dans le portage `@valueerror/ltjs` 0.3.0, même machine à 4 cœurs virtuels. Mesures dans l'application : page « Versions » de la documentation de Grammaria (0.4.0). Comparaison modèle de langage contre LanguageTool : rapport `benchmark/report_20260629_183904.md` du dépôt Grammaria. Méthode de la bêta : page « Bêta : démarche et méthode de test » de grammaria.fr.
+README et historique des dépôts WillIsback/Grammaria (358 commits depuis le 30 mars 2026 ; releases 0.2.0 à 0.5.1, du 19 au 21 novembre 2026) et WillIsback/grammaria-rc (125 commits, du 19 au 21 novembre 2026, dont 75 co-signés par Claude). Mesures de grammaria-rc : section « Results » de son README, contre LanguageTool 6.9-SNAPSHOT dans le portage `@valueerror/ltjs` 0.3.0, même machine à 4 cœurs virtuels. Mesures dans l'application : page « Versions » de la documentation de Grammaria (0.4.0). Comparaison modèle de langage contre LanguageTool : rapport `benchmark/report_20260629_183904.md` du dépôt Grammaria. Méthode de la bêta : page « Bêta : démarche et méthode de test » de grammaria.fr.
 </Sources>
