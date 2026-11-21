@@ -53,7 +53,9 @@ describe("proxy", () => {
 		const matches = (url: string) =>
 			unstable_doesMiddlewareMatch({ config, url });
 		expect(matches("/fr/opengraph-image")).toBe(false);
-		expect(matches("/fr/articles/syntheo-beta-0-7/opengraph-image")).toBe(false);
+		expect(matches("/fr/articles/syntheo-beta-0-7/opengraph-image")).toBe(
+			false,
+		);
 		expect(matches("/robots.txt")).toBe(false);
 		expect(matches("/sitemap.xml")).toBe(false);
 		expect(matches("/articles")).toBe(true);
