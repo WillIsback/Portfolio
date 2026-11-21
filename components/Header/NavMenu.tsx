@@ -13,12 +13,17 @@ import { cn } from "@/lib/utils";
  * locale, ce qu'attend `isActive`. Celui de `next/navigation` renverrait `/en/articles`,
  * jamais actif.
  */
-const TARGETS = [
+export const NAV_TARGETS = [
 	{ href: "/", key: "home", isActive: (p: string) => p === "/" },
 	{
 		href: "/articles",
 		key: "articles",
 		isActive: (p: string) => p.startsWith("/articles"),
+	},
+	{
+		href: "/solutions",
+		key: "solutions",
+		isActive: (p: string) => p === "/solutions" || p.startsWith("/solutions/"),
 	},
 	{
 		href: "/About",
@@ -38,7 +43,7 @@ export default function NavMenu() {
 	return (
 		<nav aria-label={t("ariaLabel")}>
 			<ul className="flex flex-wrap items-center gap-0.5 sm:gap-1">
-				{TARGETS.map((target) => {
+				{NAV_TARGETS.map((target) => {
 					const active = target.isActive(pathname);
 					return (
 						<li key={target.href}>

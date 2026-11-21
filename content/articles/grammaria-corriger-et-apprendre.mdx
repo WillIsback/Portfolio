@@ -1,0 +1,148 @@
+---
+title: "Grammaria : corriger tout de suite, apprendre quand même"
+description: "Un correcteur de français qui corrige avec un modèle de langage, nomme chaque faute et repère celles qui reviennent, sans garder vos textes. Et son moteur, grammaria-rc : le correcteur français de LanguageTool porté en Rust en moins d'une journée, résultat pour résultat, puis amélioré. Avec les mesures, la méthode de la bêta et les limites."
+date: "2026-11-21"
+period: "30 mars → 21 nov. 2026"
+tags: ["Traitement du langage", "IA locale", "Rust", "Agents de code", "Méthode"]
+status: "Bêta publique"
+projects: [37, 38, 22]
+---
+
+Un correcteur automatique a un effet pervers : on colle son texte, on copie le résultat, et on n'apprend rien. Grammaria garde la vitesse du correcteur et y ajoute une couche d'observation : il nomme chaque faute, repère celles qui reviennent et le dit, brièvement, au moment où l'on copie. La bêta 0.5 est sortie le 21 novembre 2026. Pour en arriver là, il a fallu remplacer le moteur de grammaire, trop lourd, par un moteur maison en Rust : grammaria-rc. Voici les deux.
+
+<KeyFigures
+  items={[
+    { value: "< 21 h", label: "entre le premier commit de grammaria-rc et sa fusion : la chaîne française de LanguageTool portée en Rust" },
+    { value: "99,97 %", label: "des 29 047 textes du banc d'essai donnent exactement les mêmes résultats que la référence, avec ses seules règles" },
+    { value: "76,4 → 86,4 %", label: "de fautes trouvées sur l'ensemble des bancs, une fois ajoutés les 1 320 règles propres au moteur et son profil" },
+    { value: "21,6 → 8,8", label: "alarmes pour 1 000 mots sur de la prose soignée, où presque toute alarme est fausse" },
+    { value: "4,5 s → 0,5 s", label: "pour démarrer le moteur ; sa mémoire passe d'environ 930 Mio à 220–250 Mio" },
+    { value: "0", label: "texte gardé par le journal des fautes depuis la 0.5 : des identifiants de règles, des dates, des compteurs" },
+    { value: "?", label: "l'effet des astuces sur la progression n'a jamais été mesuré : c'est l'objet de la bêta", alert: true },
+  ]}
+/>
+
+## D'ai_corrector à Grammaria
+
+Le projet commence le 30 mars 2026 sous le nom d'ai_corrector : un éditeur, un appel à un modèle de langage, un affichage des différences. Son README le présentait comme un « correcteur et reformateur de rédaction en français alimenté par LLM ».
+
+Fin juin, j'ai comparé les deux approches possibles sur des phrases fautives dont on connaît la correction. Le modèle de langage reproduisait la référence bien mieux que LanguageTool, le correcteur libre à base de règles : un score moyen de 0,93 contre 0,76 (moyenne de BLEU et ROUGE-L, sur 50 phrases pour le modèle et 200 pour LanguageTool, donc à prendre comme une indication). Le modèle corrige mieux. Mais il ne sait pas dire, de façon stable, _quelle_ faute il a corrigée. LanguageTool, lui, le sait : chaque détection porte le nom d'une règle.
+
+D'où l'idée qui structure Grammaria : ne pas choisir. Le modèle corrige, le moteur de règles explique.
+
+## Corriger et expliquer, deux tâches séparées
+
+1. **Le modèle de langage corrige, et rien d'autre.** Il renvoie seulement le texte corrigé, qui s'affiche à mesure qu'il est écrit. Le bouton **Copier** est utilisable dès les premiers mots. Lui demander aussi la liste de ses corrections rallongeait la réponse, et cette liste changeait d'une fois à l'autre.
+2. **Grammaria calcule les modifications** en comparant mot à mot le texte d'origine et le texte corrigé. Ce calcul est déterministe et ne coûte rien au modèle.
+3. **Le moteur de grammaire nomme les fautes** dans le texte d'origine, en parallèle. Une détection n'est retenue que si le modèle a réellement modifié le passage, ce qui écarte les fausses alertes, comme un nom propre signalé à tort.
+
+Le modèle est celui que l'utilisateur choisit : Ollama sur son poste, vLLM sur un serveur interne, ou n'importe quelle API compatible OpenAI. C'est le seul endroit où part le texte. L'analyse des fautes, le journal et les calculs de progression restent sur le poste.
+
+## Les fautes qui reviennent
+
+Une fois les fautes nommées, Grammaria peut les compter. Un journal local garde, pour chaque faute, l'identifiant de la règle (par exemple `PAIRE:a/à`), sa catégorie et la date. Quand une faute revient, une astuce s'affiche près du bouton **Copier**, puis, la fois suivante, un choix entre deux formes. Rien ne retarde la copie : quand on est pressé, on veut un texte propre, pas une leçon. Treize confusions courantes (_a/à_, _on/ont_, _ces/ses_, _-er/-é_…) ont une fiche « remplacez par X, car Y ». Une note sur 20, un écran **Progression** et dix-huit badges sobres montrent le chemin parcouru, sans série à ne pas casser.
+
+Jusqu'à la 0.4, le journal gardait aussi des phrases. La 0.5 n'en garde plus aucune : ni phrase, ni mot, ni correction, ni message de règle, qui peut citer un mot du texte. Les journaux existants sont nettoyés à la mise à jour, jusque dans le fichier. Pour le prouver, les tests corrigent des textes qui contiennent des mots improbables, comme « Kwaxolotl » ou « zorglubienne », puis les cherchent dans les octets du journal et dans les réponses de toutes les routes de consultation. Un seul mot retrouvé, et le test échoue. L'application construite est vérifiée de la même façon sous Linux et sous Windows.
+
+## Le goulot : un LanguageTool de 930 Mio
+
+Jusqu'à la 0.3, le moteur de règles était LanguageTool 6.9 dans son portage JavaScript, `@valueerror/ltjs`. Il faisait le travail, mais il coûtait cher : 4,3 à 4,6 secondes pour démarrer, plus de 900 Mio de mémoire. Dans l'application de bureau, le correcteur n'était prêt qu'environ six secondes après le lancement, et l'application occupait environ 1,1 Go. Pour un outil qu'on ouvre en passant, c'était rédhibitoire.
+
+Réécrire un correcteur grammatical complet n'était pas envisageable. En revanche, toute l'intelligence de LanguageTool pour le français tient dans des fichiers de données : 5 343 règles de grammaire et 1 674 de style en XML, un dictionnaire de 666 726 formes, des règles de désambiguïsation. Le code qui les exécute, lui, est une chaîne d'analyse bien délimitée. Porter la chaîne et lire les données telles quelles, c'était à portée.
+
+## grammaria-rc : reproduire avant d'améliorer
+
+La règle que je me suis fixée : d'abord **égaler** la référence, résultat pour résultat, avant d'y toucher. Sans cette étape, impossible de savoir si une différence vient d'une amélioration ou d'un bug du portage.
+
+<Timeline
+  items={[
+    { date: "19 nov., 22 h 06", title: "Fondations", text: "Lecteur XML, dictionnaire en trie, moteur d'expressions régulières sur les étiquettes, découpage en mots du français." },
+    { date: "19 nov., 23 h 04", text: "Étiquetage et désambiguïsation : 58 % d'accord avec LanguageTool sur les catégories grammaticales." },
+    { date: "19 nov., 23 h 51", text: "Moteur de règles complet (motifs, anti-motifs, unification, filtres), premiers filtres Java portés." },
+    { date: "20 nov., matin", text: "Agents en parallèle sur l'écart restant : sémantique des expressions régulières Java, filtres, outillage d'oracle." },
+    { date: "20 nov., 13 h 27", text: "Mémoire réduite (motifs partagés, vecteurs ajustés) et README avec les mesures." },
+    { date: "20 nov., 18 h 03", title: "Fusion", text: "Le moteur reconstruit entre dans le dépôt : chaîne française de LanguageTool en Rust, plus les règles de Grammaria.", key: true },
+    { date: "20 nov.", text: "Grammaria 0.4.0 remplace l'ancien correcteur par grammaria-rc." },
+    { date: "21 nov.", text: "Licence LGPL-2.1 pour tout le moteur, publication sur crates.io." },
+  ]}
+/>
+
+Le travail a été mené avec des agents Claude Code : 75 des 125 commits du dépôt sont co-signés par Claude. Ce qui l'a rendu possible en une journée, c'est l'**oracle**. Un script fait tourner la référence sur n'importe quel texte et produit ses résultats, ou ses étiquettes à chaque étape de l'analyse. Un autre classe chaque écart par cause. Les agents avaient ainsi une cible mesurable à chaque instant : on ne discute pas d'une règle, on regarde si les deux moteurs disent la même chose au même endroit.
+
+Le résultat, avec les seules règles de LanguageTool, sur 29 047 textes :
+
+| | |
+| --- | --- |
+| textes avec exactement les mêmes résultats que la référence | 29 038 (99,97 %) |
+| détections de la référence retrouvées (même règle, même passage) | 22 159 sur 22 168 |
+| dont avec les mêmes suggestions | 99,65 % |
+| analyse (mots, étiquettes, désambiguïsation) identique | 500 000 unités (mots et ponctuation) sur 500 000 |
+
+Sept des neuf détections manquantes sont des fausses alarmes de la référence : une règle de mot répété qui se déclenche sur « on dit ou on écrit ». Les différences de suggestions portent sur l'orthographe, et là, c'est le portage JavaScript qui s'écarte de LanguageTool en Java : vérifiées contre Java, les suggestions de grammaria-rc sont celles de LanguageTool.
+
+<Lesson title="Égaler, puis dépasser">
+Un oracle exécutable transforme un portage flou en une suite de mesures. Les agents de code travaillent très bien contre une cible chiffrée ; ils travaillent mal contre « fais comme LanguageTool ».
+</Lesson>
+
+## Puis faire mieux que la référence
+
+Une fois l'égalité atteinte, le moteur pouvait diverger. Il ajoute 1 320 règles propres, écrites dans le même format XML que celles de LanguageTool et accompagnées de 3 081 exemples testés : accords du participe et de l'adjectif à travers _être_ et les verbes d'état, mode après les conjonctions, infinitif attendu, 686 règles de confusions (_a/à_, _peu/peut_, _différent/différend_…), groupe nominal, typographie. Quand une de ces règles et une règle de LanguageTool signalent les mêmes mots, celle de LanguageTool est gardée.
+
+S'y ajoute un **profil** : sept règles de LanguageTool sont coupées parce qu'elles dérangent surtout sur une prose bien écrite, et les mots inconnus qui ressemblent à des noms propres ou à des sigles ne sont plus signalés comme fautes. Sur de la prose encyclopédique et littéraire, 3 100 des 3 800 alarmes d'orthographe de la référence étaient des noms comme _Fogg_ ou _Allahabad_.
+
+<CompareChart
+  series={["Référence (LanguageTool)", "grammaria-rc"]}
+  groups={[
+    ["Exemples LanguageTool", 88.3, 88.3],
+    ["Phrases Grammalecte", 59.6, 83.5],
+    ["Moitié jamais vue", 76.2, 82.7],
+    ["Tous les bancs", 76.4, 86.4],
+  ]}
+  title="Fautes trouvées selon le banc d'essai"
+  unit="%"
+  step={20}
+  caption="Part des fautes marquées que chaque moteur trouve. La « moitié jamais vue » n'a jamais été regardée pendant l'écriture des règles."
+/>
+
+Les chiffres doivent se lire avec une réserve que j'écris dans le README du moteur : les règles propres ont été écrites contre un banc d'essai, les phrases de test de Grammalecte. Sur la moitié du banc jamais regardée pendant l'écriture, elles ajoutent 6,5 points de détection, contre 13,5 sur la moitié qui a servi à les régler. Le gain est réel, mais moitié moindre que ce que le banc d'entraînement laisse croire.
+
+L'autre mesure qui compte, pour un outil qu'on utilise tous les jours, ce sont les fausses alarmes. Sur 234 000 mots de prose soignée, présumée correcte, la référence lève 21,6 alarmes pour 1 000 mots, grammaria-rc 8,8. Et les textes corrects laissés tranquilles passent de 63,8 % à 67,0 % sur l'ensemble des bancs.
+
+## Plus rapide, plus léger
+
+| | référence | grammaria-rc |
+| --- | --- | --- |
+| démarrage (tout charger, première vérification) | 4,3–4,6 s | **0,5 s** |
+| mémoire | 924–937 Mio | **220–250 Mio** |
+| texte de 160 mots, première vérification | 531–608 ms | **124–180 ms** |
+| le même, moteur chaud | 179–192 ms | **47–58 ms** |
+
+Dans Grammaria, ça se traduit ainsi : l'application de bureau a son correcteur prêt environ 1,5 seconde après le lancement au lieu de six, et passe d'environ 1,1 Go à 0,63 Go de mémoire. Le serveur Docker passe de 1 087 Mo à 290 Mo. Le moteur a aussi résisté à 40 000 textes mutés au hasard (émojis, apostrophes typographiques, espaces insécables, autres alphabets, lignes très longues) sans planter.
+
+grammaria-rc est indépendant de Grammaria : c'est une bibliothèque Rust (`Engine` est partageable entre fils d'exécution), une ligne de commande qui sait rendre le format JSON de LanguageTool, et un mode serveur qui charge les données une fois. Les fichiers de règles sont lus tels quels : modifier un fichier suffit à changer le correcteur, sans étape de construction.
+
+## La bêta : vérifier que ça fait progresser
+
+La correction est éprouvée : je m'en sers tous les jours depuis des mois. L'effet des astuces, lui, n'a jamais été vérifié. C'est tout l'objet de la bêta 0.5, et je préfère le dire ainsi que le laisser supposer.
+
+La question est simple : après une astuce, une faute revient-elle moins souvent qu'avant ? Quelques volontaires utilisent Grammaria comme d'habitude pendant quatre à six semaines, puis transmettent, s'ils le veulent, un fichier de chiffres. Ce fichier ne contient aucun texte ni aucune date, il est montré en entier avant d'être enregistré, et Grammaria ne l'envoie jamais lui-même. Pour chaque faute qui a reçu une astuce, l'écran **Progression** compare sa fréquence avant et depuis, et la rapporte à celle des fautes de frappe, qui servent de témoin.
+
+Avec peu de participants et sans tirage au sort, le résultat sera une indication, pas une preuve. La page de la bêta le dit en toutes lettres.
+
+## Ce qui manque
+
+- **L'effet sur la progression reste à démontrer.** Si les astuces ne changent rien, Grammaria restera un bon correcteur, et la promesse d'aider à « ne plus refaire les mêmes fautes » devra tomber.
+- **Pas de Mac.** Windows et Linux seulement.
+- **Le serveur Docker ne gère qu'un utilisateur et n'a pas d'authentification.** Depuis la 0.5.1, il n'écoute que la machine qui l'héberge ; l'ouvrir à d'autres postes demande un proxy inverse qui authentifie.
+- **Le texte part chez le modèle choisi.** Avec un modèle sur le poste ou sur un serveur interne, rien ne sort de l'organisation ; avec un fournisseur en ligne, le texte va chez lui. L'application de bureau n'a pas de réglage verrouillé pour l'empêcher.
+- **Le moteur ne fait que le français**, et pas les règles statistiques ni les règles distantes de LanguageTool.
+
+## Ce qui rend tout ça possible
+
+Grammaria est sous licence GPL-3.0, son moteur sous LGPL-2.1, la licence de LanguageTool. Le moteur repose entièrement sur le travail d'autres projets libres : **LanguageTool** (Daniel Naber et ses contributeurs), dont les fichiers de règles et dictionnaires français sont lus tels quels et dont la chaîne d'analyse a été portée de Java vers Rust ; **Grammalecte et Dicollecte** (Olivier R.), dont dérive le dictionnaire et dont les phrases de test ont servi de banc d'essai pour écrire les règles propres, d'après le comportement attendu et sans reprendre de code ; **Morfologik** (Dawid Weiss et Marcin Miłkowski), dont le lecteur de dictionnaire et le correcteur orthographique ont été portés en Rust.
+
+Grammaria se télécharge sur [grammaria.fr](https://grammaria.fr), et le moteur se trouve sur [GitHub](https://github.com/WillIsback/grammaria-rc) et sur crates.io. La page [Solutions](/solutions/grammaria) résume ce que fait l'application.
+
+<Sources>
+README et historique des dépôts WillIsback/Grammaria (358 commits depuis le 30 mars 2026 ; releases 0.2.0 à 0.5.1, du 19 au 21 novembre 2026) et WillIsback/grammaria-rc (125 commits, du 19 au 21 novembre 2026, dont 75 co-signés par Claude). Mesures de grammaria-rc : section « Results » de son README, contre LanguageTool 6.9-SNAPSHOT dans le portage `@valueerror/ltjs` 0.3.0, même machine à 4 cœurs virtuels. Mesures dans l'application : page « Versions » de la documentation de Grammaria (0.4.0). Comparaison modèle de langage contre LanguageTool : rapport `benchmark/report_20260629_183904.md` du dépôt Grammaria. Méthode de la bêta : page « Bêta : démarche et méthode de test » de grammaria.fr.
+</Sources>

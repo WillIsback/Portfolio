@@ -1,0 +1,148 @@
+---
+title: "Grammaria: fix it now, learn anyway"
+description: "A French proofreader that corrects with a language model, names every mistake and spots the ones that keep coming back, without keeping your texts. And its engine, grammaria-rc: LanguageTool's French proofreader ported to Rust in under a day, result for result, then improved. With the measurements, the beta's method and the limits."
+date: "2026-11-21"
+period: "30 Mar → 21 Nov 2026"
+tags: ["Language processing", "Local AI", "Rust", "Coding agents", "Method"]
+status: "Public beta"
+projects: [37, 38, 22]
+---
+
+An automatic proofreader has a perverse effect: you paste your text, copy the result, and learn nothing. Grammaria keeps the speed of a proofreader and adds a layer of observation: it names every mistake, spots the ones that keep coming back and says so, briefly, at the moment you copy. The 0.5 beta came out on 21 November 2026. To get there, I had to replace the grammar engine, which was too heavy, with an engine of my own in Rust: grammaria-rc. Here are both.
+
+<KeyFigures
+  items={[
+    { value: "< 21 h", label: "between grammaria-rc's first commit and its merge: LanguageTool's French pipeline ported to Rust" },
+    { value: "99.97%", label: "of the benchmark's 29,047 texts give exactly the same results as the reference, with its own rules only" },
+    { value: "76.4 → 86.4%", label: "of mistakes found across all benchmarks, once the engine's own 1,320 rules and its profile are added" },
+    { value: "21.6 → 8.8", label: "alarms per 1,000 words on polished prose, where almost every alarm is false" },
+    { value: "4.5 s → 0.5 s", label: "to start the engine; its memory drops from about 930 MiB to 220–250 MiB" },
+    { value: "0", label: "texts kept by the mistake log since 0.5: rule identifiers, dates, counters" },
+    { value: "?", label: "the effect of the tips on progress has never been measured: that is what the beta is for", alert: true },
+  ]}
+/>
+
+## From ai_corrector to Grammaria
+
+The project began on 30 March 2026 under the name ai_corrector: an editor, a call to a language model, a display of the differences. Its README described it as a "French writing corrector and reformulator powered by an LLM".
+
+At the end of June, I compared the two possible approaches on faulty sentences whose correction is known. The language model reproduced the reference far better than LanguageTool, the free rule-based proofreader: an average score of 0.93 against 0.76 (average of BLEU and ROUGE-L, on 50 sentences for the model and 200 for LanguageTool, so treat it as an indication). The model corrects better. But it cannot say, in a stable way, _which_ mistake it corrected. LanguageTool can: every detection carries the name of a rule.
+
+Hence the idea that structures Grammaria: do not choose. The model corrects, the rule engine explains.
+
+## Correcting and explaining, two separate tasks
+
+1. **The language model corrects, and nothing else.** It returns only the corrected text, which is displayed as it is written. The **Copy** button is usable from the first words. Asking it for the list of its corrections as well made the answer longer, and that list changed from one run to the next.
+2. **Grammaria computes the changes** by comparing the original text and the corrected text word by word. This computation is deterministic and costs the model nothing.
+3. **The grammar engine names the mistakes** in the original text, in parallel. A detection is kept only if the model actually changed the passage, which rules out false alerts, such as a proper noun flagged by mistake.
+
+The model is the one the user chooses: Ollama on their machine, vLLM on an internal server, or any OpenAI-compatible API. It is the only place the text goes. Mistake analysis, the log and the progress calculations stay on the machine.
+
+## The mistakes that keep coming back
+
+Once mistakes are named, Grammaria can count them. A local log keeps, for each mistake, the rule identifier (for example `PAIRE:a/à`), its category and the date. When a mistake comes back, a tip appears next to the **Copy** button, then, the next time, a choice between two forms. Nothing delays the copy: when you are in a hurry, you want clean text, not a lesson. Thirteen common confusions (_a/à_, _on/ont_, _ces/ses_, _-er/-é_…) have a "replace with X, because Y" card. A score out of 20, a **Progress** screen and eighteen understated badges show the distance covered, with no streak to keep alive.
+
+Up to 0.4, the log also kept sentences. 0.5 keeps none: no sentence, no word, no correction, no rule message, which can quote a word from the text. Existing logs are cleaned on update, down to the file itself. To prove it, the tests correct texts that contain improbable words, such as "Kwaxolotl" or "zorglubienne", then search for them in the log's bytes and in the responses of all the lookup routes. A single word found, and the test fails. The built application is checked the same way on Linux and on Windows.
+
+## The bottleneck: a 930 MiB LanguageTool
+
+Up to 0.3, the rule engine was LanguageTool 6.9 in its JavaScript port, `@valueerror/ltjs`. It did the job, but it was costly: 4.3 to 4.6 seconds to start, more than 900 MiB of memory. In the desktop application, the proofreader was only ready about six seconds after launch, and the application took about 1.1 GB. For a tool you open in passing, that was a deal-breaker.
+
+Rewriting a complete grammar checker was out of the question. However, all of LanguageTool's intelligence for French sits in data files: 5,343 grammar rules and 1,674 style rules in XML, a dictionary of 666,726 forms, disambiguation rules. The code that runs them is a well-delimited analysis pipeline. Porting the pipeline and reading the data as they are was within reach.
+
+## grammaria-rc: reproduce before improving
+
+The rule I set myself: first **match** the reference, result for result, before touching it. Without that step, there is no way to know whether a difference comes from an improvement or from a bug in the port.
+
+<Timeline
+  items={[
+    { date: "19 Nov, 10:06 pm", title: "Foundations", text: "XML reader, trie dictionary, regular-expression engine over tags, French word splitting." },
+    { date: "19 Nov, 11:04 pm", text: "Tagging and disambiguation: 58% agreement with LanguageTool on grammatical categories." },
+    { date: "19 Nov, 11:51 pm", text: "Complete rule engine (patterns, anti-patterns, unification, filters), first Java filters ported." },
+    { date: "20 Nov, morning", text: "Agents in parallel on the remaining gap: Java regular-expression semantics, filters, oracle tooling." },
+    { date: "20 Nov, 1:27 pm", text: "Memory reduced (shared patterns, trimmed vectors) and README with the measurements." },
+    { date: "20 Nov, 6:03 pm", title: "Merge", text: "The rebuilt engine enters the repository: LanguageTool's French pipeline in Rust, plus Grammaria's rules.", key: true },
+    { date: "20 Nov", text: "Grammaria 0.4.0 replaces the old proofreader with grammaria-rc." },
+    { date: "21 Nov", text: "LGPL-2.1 licence for the whole engine, published on crates.io." },
+  ]}
+/>
+
+The work was carried out with Claude Code agents: 75 of the repository's 125 commits are co-signed by Claude. What made it possible in a day was the **oracle**. One script runs the reference on any text and produces its results, or its tags at each stage of the analysis. Another classifies each discrepancy by cause. The agents therefore had a measurable target at every moment: you do not argue about a rule, you check whether the two engines say the same thing in the same place.
+
+The result, with LanguageTool's own rules only, on 29,047 texts:
+
+| | |
+| --- | --- |
+| texts with exactly the same results as the reference | 29,038 (99.97%) |
+| reference detections found (same rule, same passage) | 22,159 out of 22,168 |
+| of which with the same suggestions | 99.65% |
+| analysis (words, tags, disambiguation) identical | 500,000 tokens (words and punctuation) out of 500,000 |
+
+Seven of the nine missing detections are false alarms from the reference: a repeated-word rule that fires on "on dit ou on écrit" ("one says or one writes"). The differences in suggestions concern spelling, and there it is the JavaScript port that departs from LanguageTool in Java: checked against Java, grammaria-rc's suggestions are LanguageTool's.
+
+<Lesson title="Match, then surpass">
+An executable oracle turns a vague port into a series of measurements. Coding agents work very well against a numerical target; they work poorly against "do like LanguageTool".
+</Lesson>
+
+## Then do better than the reference
+
+Once parity was reached, the engine could diverge. It adds 1,320 rules of its own, written in the same XML format as LanguageTool's and accompanied by 3,081 tested examples: agreement of the participle and the adjective through _être_ and linking verbs, mood after conjunctions, expected infinitive, 686 confusion rules (_a/à_, _peu/peut_, _différent/différend_…), noun phrase, typography. When one of these rules and a LanguageTool rule flag the same words, LanguageTool's is kept.
+
+On top of that comes a **profile**: seven LanguageTool rules are switched off because they mostly get in the way on well-written prose, and unknown words that look like proper nouns or acronyms are no longer flagged as mistakes. On encyclopaedic and literary prose, 3,100 of the reference's 3,800 spelling alarms were names such as _Fogg_ or _Allahabad_.
+
+<CompareChart
+  series={["Reference (LanguageTool)", "grammaria-rc"]}
+  groups={[
+    ["LanguageTool examples", 88.3, 88.3],
+    ["Grammalecte sentences", 59.6, 83.5],
+    ["Never-seen half", 76.2, 82.7],
+    ["All benchmarks", 76.4, 86.4],
+  ]}
+  title="Mistakes found by benchmark"
+  unit="%"
+  step={20}
+  caption="Share of the marked mistakes that each engine finds. The “never-seen half” was never looked at while the rules were being written."
+/>
+
+The figures must be read with a caveat that I write in the engine's README: the engine's own rules were written against a benchmark, Grammalecte's test sentences. On the half of the benchmark never looked at while writing them, they add 6.5 points of detection, against 13.5 on the half that was used to tune them. The gain is real, but half of what the training benchmark suggests.
+
+The other measure that matters, for a tool you use every day, is false alarms. On 234,000 words of polished prose, presumed correct, the reference raises 21.6 alarms per 1,000 words, grammaria-rc 8.8. And correct texts left alone go from 63.8% to 67.0% across all benchmarks.
+
+## Faster, lighter
+
+| | reference | grammaria-rc |
+| --- | --- | --- |
+| start-up (load everything, first check) | 4.3–4.6 s | **0.5 s** |
+| memory | 924–937 MiB | **220–250 MiB** |
+| 160-word text, first check | 531–608 ms | **124–180 ms** |
+| the same, warm engine | 179–192 ms | **47–58 ms** |
+
+In Grammaria, that translates as follows: the desktop application has its proofreader ready about 1.5 seconds after launch instead of six, and goes from about 1.1 GB to 0.63 GB of memory. The Docker server goes from 1,087 MB to 290 MB. The engine also survived 40,000 randomly mutated texts (emojis, typographic apostrophes, non-breaking spaces, other alphabets, very long lines) without crashing.
+
+grammaria-rc is independent of Grammaria: it is a Rust library (`Engine` can be shared between threads), a command line that can render LanguageTool's JSON format, and a server mode that loads the data once. The rule files are read as they are: editing a file is enough to change the proofreader, with no build step.
+
+## The beta: checking that it makes people improve
+
+The correction is proven: I have used it every day for months. The effect of the tips, however, has never been verified. That is the whole point of the 0.5 beta, and I would rather say so than let it be assumed.
+
+The question is simple: after a tip, does a mistake come back less often than before? A few volunteers use Grammaria as usual for four to six weeks, then, if they wish, send in a file of figures. That file contains no text and no date, it is shown in full before being saved, and Grammaria never sends it itself. For each mistake that received a tip, the **Progress** screen compares its frequency before and since, and relates it to that of typos, which serve as a control.
+
+With few participants and no random assignment, the result will be an indication, not proof. The beta page says so in so many words.
+
+## What is missing
+
+- **The effect on progress remains to be shown.** If the tips change nothing, Grammaria will remain a good proofreader, and the promise of helping you "stop making the same mistakes" will have to go.
+- **No Mac.** Windows and Linux only.
+- **The Docker server handles a single user and has no authentication.** Since 0.5.1, it listens only on the machine that hosts it; opening it to other machines requires a reverse proxy that authenticates.
+- **The text goes to the model you choose.** With a model on the machine or on an internal server, nothing leaves the organisation; with an online provider, the text goes to them. The desktop application has no locked setting to prevent that.
+- **The engine only does French**, and neither LanguageTool's statistical rules nor its remote rules.
+
+## What makes all this possible
+
+Grammaria is licensed under GPL-3.0, its engine under LGPL-2.1, LanguageTool's licence. The engine rests entirely on the work of other free projects: **LanguageTool** (Daniel Naber and its contributors), whose French rule files and dictionaries are read as they are and whose analysis pipeline was ported from Java to Rust; **Grammalecte and Dicollecte** (Olivier R.), from which the dictionary derives and whose test sentences served as a benchmark for writing the engine's own rules, from the expected behaviour and without taking any code; **Morfologik** (Dawid Weiss and Marcin Miłkowski), whose dictionary reader and spell checker were ported to Rust.
+
+Grammaria can be downloaded from [grammaria.fr](https://grammaria.fr), and the engine is on [GitHub](https://github.com/WillIsback/grammaria-rc) and on crates.io. The [Solutions](/solutions/grammaria) page summarises what the application does.
+
+<Sources>
+README and history of the WillIsback/Grammaria repositories (358 commits since 30 March 2026; releases 0.2.0 to 0.5.1, from 19 to 21 November 2026) and WillIsback/grammaria-rc (125 commits, from 19 to 21 November 2026, of which 75 co-signed by Claude). grammaria-rc measurements: "Results" section of its README, against LanguageTool 6.9-SNAPSHOT in the `@valueerror/ltjs` 0.3.0 port, same 4-vCPU machine. In-application measurements: "Versions" page of the Grammaria documentation (0.4.0). Language model versus LanguageTool comparison: report `benchmark/report_20260629_183904.md` in the Grammaria repository. Beta method: "Beta: approach and test method" page on grammaria.fr.
+</Sources>
