@@ -21,6 +21,7 @@
 		"catalogue:training": "tsx --env-file=.env.local scripts/catalogue/apply-training.ts",
 		"catalogue:init-admin": "tsx --env-file=.env.local scripts/catalogue/init-admin-fields.ts",
 		"catalogue:syntheo": "tsx --env-file=.env.local scripts/catalogue/apply-syntheo.ts",
+		"catalogue:oc-naming": "tsx --env-file=.env.local scripts/catalogue/apply-oc-naming.ts",
 		"embeddings": "tsx --env-file=.env.local scripts/carnet/build-map.ts"
 	},
 	"prisma": {
