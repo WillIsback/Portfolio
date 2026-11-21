@@ -119,6 +119,8 @@
    "llm"
   ],
   "terms": [
+   "dia",
+   "p11",
    "abricot",
    "plateforme",
    "saas",
@@ -295,6 +297,7 @@
    "classification"
   ],
   "terms": [
+   "dia",
    "p10",
    "technova",
    "livrable",
@@ -317,6 +320,7 @@
    "tailwindcss"
   ],
   "terms": [
+   "dia",
    "fisheye",
    "openclassrooms",
    "photographie",
@@ -334,6 +338,7 @@
    "data analyse"
   ],
   "terms": [
+   "dia",
    "bottleneck",
    "openclassrooms",
    "analyse",
@@ -354,6 +359,7 @@
    "regression"
   ],
   "terms": [
+   "dia",
    "dataimmo",
    "openclassrooms",
    "analyse",
@@ -373,6 +379,7 @@
    "tailwindcss"
   ],
   "terms": [
+   "dia",
    "sportsee",
    "coaching",
    "sportif",
@@ -393,6 +400,7 @@
    "nextjs"
   ],
   "terms": [
+   "dia",
    "petits",
    "plats",
    "recherche",
@@ -416,6 +424,7 @@
    "vision"
   ],
   "terms": [
+   "dia",
    "fashion",
    "trend",
    "intelligence",
@@ -516,9 +525,10 @@
    "nlp"
   ],
   "terms": [
+   "dia",
    "p12",
-   "phase2",
    "zenassist",
+   "phase2",
    "priorisation",
    "version",
    "llm",
@@ -544,9 +554,10 @@
    "nlp"
   ],
   "terms": [
+   "dia",
    "p12",
-   "phase1",
    "zenassist",
+   "phase1",
    "comparez",
    "algorithmes",
    "machine",
@@ -570,13 +581,13 @@
    "nlp"
   ],
   "terms": [
+   "dia",
    "p12",
    "zenassist",
    "training",
-   "modernbert",
-   "cls",
    "fine",
    "tuned",
+   "modernbert",
    "large",
    "395m",
    "params",
@@ -606,6 +617,7 @@
    "llm"
   ],
   "terms": [
+   "dia",
    "p14",
    "newsfoundry",
    "revue",
@@ -798,6 +810,7 @@
    "vision"
   ],
   "terms": [
+   "dia",
    "p13",
    "fashion",
    "insta",
@@ -822,6 +835,7 @@
    "regression"
   ],
   "terms": [
+   "aie",
    "deployez",
    "modele",
    "machine",
@@ -841,13 +855,13 @@
    "regression"
   ],
   "terms": [
-   "engineer",
+   "aie",
    "anticipez",
    "besoins",
    "consommation",
    "batiments",
-   "ville",
    "seattle",
+   "ville",
    "vise",
    "neutralite",
    "carbone",
@@ -877,6 +891,286 @@
    "energie",
    "totalghgemissions",
    "co2e"
+  ]
+ },
+ {
+  "id": "project:29",
+  "keywords": [
+   "python",
+   "jupyternotebook",
+   "scikitlearn",
+   "pandas",
+   "data analyse",
+   "ml",
+   "classification"
+  ],
+  "terms": [
+   "aie",
+   "initiez",
+   "mlops",
+   "partie",
+   "pipeline",
+   "bout",
+   "scoring",
+   "credit",
+   "home",
+   "notebook",
+   "executable",
+   "eda",
+   "agregats",
+   "six",
+   "tables",
+   "secondaires",
+   "baselines",
+   "ponderees",
+   "regression",
+   "logistique",
+   "lightgbm",
+   "feature",
+   "engineering",
+   "automatise",
+   "openfe",
+   "selection",
+   "variables",
+   "borutashap",
+   "reglage",
+   "optuna",
+   "cout",
+   "metier",
+   "faux",
+   "negatif",
+   "coute",
+   "dix",
+   "positifs",
+   "mlflow",
+   "model",
+   "registry",
+   "serving",
+   "pyfunc",
+   "gradio",
+   "inference"
+  ]
+ },
+ {
+  "id": "project:30",
+  "keywords": [
+   "python",
+   "fastapi",
+   "docker",
+   "githubactions",
+   "llmsdk",
+   "llm",
+   "nlp"
+  ],
+  "terms": [
+   "aie",
+   "assistant",
+   "evenements",
+   "culturels",
+   "poc",
+   "conversationnel",
+   "recommande",
+   "recents",
+   "issus",
+   "api",
+   "open",
+   "agenda",
+   "rag",
+   "langchain",
+   "modeles",
+   "mistral",
+   "index",
+   "vectoriel",
+   "faiss",
+   "rest",
+   "fastapi",
+   "image",
+   "docker",
+   "publiee",
+   "ghcr",
+   "chaque",
+   "release",
+   "qualite",
+   "tests",
+   "securite",
+   "codeql",
+   "dependabot"
+  ]
+ },
+ {
+  "id": "project:31",
+  "keywords": [
+   "python",
+   "jupyternotebook",
+   "scikitlearn",
+   "pandas",
+   "xgboost",
+   "data analyse",
+   "ml",
+   "classification"
+  ],
+  "terms": [
+   "dia",
+   "p10",
+   "technova",
+   "depot",
+   "travail",
+   "machine",
+   "learning",
+   "analyse",
+   "exploratoire",
+   "modelisation",
+   "interpretation",
+   "xgboost",
+   "shap",
+   "reequilibrage",
+   "classes",
+   "version",
+   "presentee",
+   "soutenance",
+   "livrable"
+  ]
+ },
+ {
+  "id": "project:32",
+  "keywords": [
+   "typescript",
+   "sqlite",
+   "expressjs"
+  ],
+  "terms": [
+   "dia",
+   "p11",
+   "abricot",
+   "backend",
+   "api",
+   "rest",
+   "authentification",
+   "jwt",
+   "gestion",
+   "roles",
+   "permissions",
+   "documentation",
+   "swagger",
+   "openapi",
+   "script",
+   "donnees",
+   "test",
+   "express",
+   "prisma",
+   "sqlite"
+  ]
+ },
+ {
+  "id": "project:33",
+  "keywords": [
+   "python",
+   "typescript",
+   "postgresql",
+   "fastapi",
+   "react",
+   "nextjs",
+   "docker",
+   "githubactions",
+   "scikitlearn",
+   "ml",
+   "classification",
+   "nlp"
+  ],
+  "terms": [
+   "dia",
+   "p12",
+   "zenassist",
+   "phase3",
+   "phase",
+   "classifieur",
+   "llm",
+   "remplace",
+   "modele",
+   "scikit",
+   "learn",
+   "sgdclassifier",
+   "macro",
+   "685",
+   "moins",
+   "milliseconde",
+   "ticket",
+   "etiqueter",
+   "reclamations",
+   "consommateurs",
+   "moindre",
+   "cout",
+   "deploiement",
+   "full",
+   "stack",
+   "api",
+   "python",
+   "fastapi",
+   "frontend",
+   "next",
+   "postgresql"
+  ]
+ },
+ {
+  "id": "project:34",
+  "keywords": [
+   "javascript"
+  ],
+  "terms": [
+   "dia",
+   "print",
+   "decouverte",
+   "javascript",
+   "carrousel",
+   "dynamique",
+   "site",
+   "imprimerie",
+   "html",
+   "css"
+  ]
+ },
+ {
+  "id": "project:35",
+  "keywords": [
+   "javascript",
+   "sqlite",
+   "expressjs"
+  ],
+  "terms": [
+   "dia",
+   "sophie",
+   "bluel",
+   "portfolio",
+   "architecte",
+   "frontend",
+   "javascript",
+   "consomme",
+   "api",
+   "express",
+   "authentification",
+   "galerie",
+   "envoi",
+   "travaux",
+   "base",
+   "sqlite"
+  ]
+ },
+ {
+  "id": "project:36",
+  "keywords": [
+   "javascript",
+   "react",
+   "nextjs"
+  ],
+  "terms": [
+   "dia",
+   "ohmyfood",
+   "site",
+   "reservation",
+   "menus",
+   "realise",
+   "next",
+   "react"
   ]
  }
 ]
