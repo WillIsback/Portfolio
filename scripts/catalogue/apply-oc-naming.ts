@@ -1,10 +1,12 @@
-import { upsertProjectRelations } from "../../lib/admin/project-relations";
+import {
+	createProject,
+	pendingCreations,
+} from "../../lib/catalogue/create-projects";
 import {
 	NEW_OC_PROJECTS,
 	OC_TITLE_RENAMES,
 } from "../../lib/catalogue/oc-naming";
 import { prisma } from "../../lib/db";
-import { type AdminProject, AdminProjectSchema } from "../../schemas";
 
 /**
  * Applique la convention `OC-{Parcours}-{numéro}-{Nom}` : renomme les fiches OC
@@ -40,20 +42,7 @@ async function main() {
 		renames.push({ id, to });
 	}
 
-	const creations: AdminProject[] = [];
-	for (const raw of NEW_OC_PROJECTS) {
-		const data = AdminProjectSchema.parse(raw);
-		const existing = await prisma.project.findUnique({
-			where: { githubRepoId: data.githubRepoId },
-			select: { id: true, title: true },
-		});
-		if (existing) {
-			console.log(`déjà présent : #${existing.id} ${existing.title}`);
-			continue;
-		}
-		console.log(`nouvelle fiche : ${data.title} (${data.training})`);
-		creations.push(data);
-	}
+	const creations = await pendingCreations(prisma, NEW_OC_PROJECTS);
 
 	if (!apply) {
 		console.log(
@@ -67,24 +56,7 @@ async function main() {
 			await tx.project.update({ where: { id }, data: { title: to } });
 		}
 		for (const data of creations) {
-			const created = await tx.project.create({
-				data: {
-					title: data.title,
-					description: data.description,
-					imagePath: data.imagePath ?? null,
-					github: data.github ?? "",
-					lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : null,
-					isPrivate: data.isPrivate,
-					isAiGenerated: data.isAiGenerated,
-					pitch: data.pitch ?? null,
-					status: data.status ?? null,
-					period: data.period ?? null,
-					githubRepoId: data.githubRepoId ?? null,
-					featuredRank: data.featuredRank ?? null,
-					training: data.training ?? null,
-				},
-			});
-			await upsertProjectRelations(tx, created.id, data);
+			const created = await createProject(tx, data);
 			console.log(`créée : #${created.id} ${data.title}`);
 		}
 	});
