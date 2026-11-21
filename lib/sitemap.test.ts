@@ -6,12 +6,19 @@ const none = { fr: [], en: [], zh: [] };
 const urls = (map: ReturnType<typeof buildSitemap>) => map.map((e) => e.url);
 
 describe("sitemap", () => {
-	it("pages fixes : 4 pages × 3 locales, casse des canonicals", () => {
+	it("pages fixes : 7 pages × 3 locales, casse des canonicals", () => {
 		const map = buildSitemap({ articles: none });
-		expect(map).toHaveLength(12);
+		expect(map).toHaveLength(21);
 		expect(urls(map)).toContain(`${S}/About`);
 		expect(urls(map)).toContain(`${S}/en/Contact`);
 		expect(urls(map).some((u) => /\/(about|contact)$/.test(u))).toBe(false);
+	});
+
+	it("annonce l'onglet Solutions et chaque page produit", () => {
+		const map = urls(buildSitemap({ articles: none }));
+		expect(map).toContain(`${S}/solutions`);
+		expect(map).toContain(`${S}/en/solutions/syntheo`);
+		expect(map).toContain(`${S}/zh/solutions/grammaria`);
 	});
 
 	it("article traduit : une entrée par locale, hreflang complet", () => {

@@ -55,6 +55,8 @@ describe("rendu statique du segment [locale]", () => {
 			"app/[locale]/articles/page.tsx",
 			"app/[locale]/layout.tsx",
 			"app/[locale]/page.tsx",
+			"app/[locale]/solutions/[slug]/page.tsx",
+			"app/[locale]/solutions/page.tsx",
 		]);
 	});
 

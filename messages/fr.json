@@ -12,6 +12,11 @@
 		},
 		"articles": {
 			"title": "Articles | William Derue - Développeur IA · parcours AI Engineer"
+		},
+		"solutions": {
+			"title": "Solutions | William Derue · WillisBack",
+			"description": "Syntheo et Grammaria : les logiciels open source de William Derue, qui tournent avec vos propres modèles d'IA. Bloc-notes de réunion local et correcteur de français.",
+			"product": "{name} | Solutions · William Derue"
 		}
 	},
 	"figure": {
@@ -68,6 +73,7 @@
 		"ariaLabel": "Navigation principale",
 		"home": "Carnet",
 		"articles": "Articles",
+		"solutions": "Solutions",
 		"about": "À propos",
 		"contact": "Contact"
 	},
@@ -284,5 +290,23 @@
 		"onTheMap": "Sur la carte",
 		"onTheMapCaption": "Cette entrée parmi ses voisins",
 		"untranslatedNotice": "Cet article n'est pas encore traduit dans cette langue. Version française ci-dessous."
+	},
+	"solutions": {
+		"eyebrow": "Solutions",
+		"title": "Des logiciels libres, prêts à servir",
+		"intro": "Le carnet raconte comment je construis. Ici, ce que j'ai construit pour qu'on s'en serve : des applications open source qui tournent avec vos propres modèles, chacune avec son site.",
+		"visit": "Aller sur {site}",
+		"source": "Code source",
+		"readArticle": "Lire l'article du carnet",
+		"discover": "Découvrir {name}",
+		"allSolutions": "Toutes les solutions",
+		"forWho": "Pour qui",
+		"features": "Ce que ça fait",
+		"privacy": "Vos données",
+		"figures": "En chiffres",
+		"under": "Sous le capot",
+		"limits": "Ce qu'il faut savoir",
+		"license": "Licence {license}",
+		"demoLabel": "Exemple d'analyse"
 	}
 }

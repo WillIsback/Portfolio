@@ -57,6 +57,8 @@ const VALUES: Record<string, unknown> = {
 	title: "Project X",
 	full: "CI, tests",
 	list: "Python, Docker",
+	site: "grammaria.fr",
+	license: "MIT",
 };
 
 /** Exemples de noms de paramètres ICU dans un message : {count}, {n}. */

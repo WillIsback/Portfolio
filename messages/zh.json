@@ -12,6 +12,11 @@
 		},
 		"articles": {
 			"title": "文章 | William Derue - AI 开发工程师 · AI Engineer 方向"
+		},
+		"solutions": {
+			"title": "解决方案 | William Derue · WillisBack",
+			"description": "Syntheo 与 Grammaria：William Derue 开发的开源软件，使用你自己的 AI 模型运行。本地会议记事本与法语校对工具。",
+			"product": "{name} | 解决方案 · William Derue"
 		}
 	},
 	"figure": {
@@ -68,6 +73,7 @@
 		"ariaLabel": "主导航",
 		"home": "笔记",
 		"articles": "文章",
+		"solutions": "解决方案",
 		"about": "关于",
 		"contact": "联系"
 	},
@@ -284,5 +290,23 @@
 		"onTheMap": "地图位置",
 		"onTheMapCaption": "本条目及其邻居",
 		"untranslatedNotice": "本文尚未翻译成当前语言，以下为法语原文。"
+	},
+	"solutions": {
+		"eyebrow": "解决方案",
+		"title": "开源软件，拿来即用",
+		"intro": "笔记记录我如何构建。这里是我为大家使用而构建的成果：使用你自己的模型运行的开源应用，每个都有自己的网站。",
+		"visit": "访问 {site}",
+		"source": "源代码",
+		"readArticle": "阅读相关笔记",
+		"discover": "了解 {name}",
+		"allSolutions": "全部解决方案",
+		"forWho": "适用人群",
+		"features": "功能",
+		"privacy": "你的数据",
+		"figures": "数据一览",
+		"under": "技术实现",
+		"limits": "须知",
+		"license": "{license} 许可证",
+		"demoLabel": "分析示例"
 	}
 }

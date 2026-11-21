@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { type Locale, routing } from "@/i18n/routing";
 import { canonicalUrl, languageAlternates } from "@/lib/seo";
+import { SOLUTION_SLUGS } from "@/lib/solutions";
 
 export interface SitemapArticle {
 	slug: string;
@@ -9,7 +10,14 @@ export interface SitemapArticle {
 }
 
 /** Pages servies dans toutes les locales. La casse suit les canonicals (`/About`). */
-const FIXED_PATHS = ["", "/About", "/Contact", "/articles"] as const;
+const FIXED_PATHS = [
+	"",
+	"/About",
+	"/Contact",
+	"/articles",
+	"/solutions",
+	...SOLUTION_SLUGS.map((slug) => `/solutions/${slug}`),
+];
 
 /**
  * Entrées d'une page pour les seules locales où elle existe. Chacune annonce les

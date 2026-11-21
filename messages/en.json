@@ -12,6 +12,11 @@
 		},
 		"articles": {
 			"title": "Articles | William Derue - AI Developer · AI Engineer track"
+		},
+		"solutions": {
+			"title": "Solutions | William Derue · WillisBack",
+			"description": "Syntheo and Grammaria: open-source software by William Derue that runs with your own AI models. A local meeting notepad and a French grammar checker.",
+			"product": "{name} | Solutions · William Derue"
 		}
 	},
 	"figure": {
@@ -68,6 +73,7 @@
 		"ariaLabel": "Main navigation",
 		"home": "Logbook",
 		"articles": "Articles",
+		"solutions": "Solutions",
 		"about": "About",
 		"contact": "Contact"
 	},
@@ -284,5 +290,23 @@
 		"onTheMap": "On the map",
 		"onTheMapCaption": "This entry among its neighbours",
 		"untranslatedNotice": "This article has not been translated into this language yet. French version below."
+	},
+	"solutions": {
+		"eyebrow": "Solutions",
+		"title": "Free software, ready to use",
+		"intro": "The logbook tells how I build. This is what I built for people to use: open-source applications that run with your own models, each with its own website.",
+		"visit": "Go to {site}",
+		"source": "Source code",
+		"readArticle": "Read the logbook entry",
+		"discover": "Discover {name}",
+		"allSolutions": "All solutions",
+		"forWho": "Who it is for",
+		"features": "What it does",
+		"privacy": "Your data",
+		"figures": "In figures",
+		"under": "Under the hood",
+		"limits": "Good to know",
+		"license": "{license} licence",
+		"demoLabel": "Analysis example"
 	}
 }
